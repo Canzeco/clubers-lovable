@@ -926,7 +926,7 @@ function TinderMode() {
                     <br />
                     {pickedTime === "Right now"
                       ? "Walk-in within 20 min · table for 2"
-                      : `${days[pickedDay].label} · ${pickedTime} · table for 2`}
+                      : `${pickedTime} · table for 2`}
                   </p>
                   <div className="mt-4 w-full space-y-2 rounded-2xl border border-border bg-card/60 p-3 text-left">
                     <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
