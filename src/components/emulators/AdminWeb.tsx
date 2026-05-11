@@ -22,9 +22,20 @@ import {
   BarChart3,
   ShieldCheck,
   Crown,
+  PencilLine,
+  ImagePlus,
+  Link2,
+  Download,
+  GripVertical,
+  Eye,
+  Wand2,
+  Save,
+  Trash2,
+  Globe,
+  Tag,
 } from "lucide-react";
 
-type Tab = "pipeline" | "portfolio" | "discover" | "metrics" | "trust";
+type Tab = "pipeline" | "portfolio" | "editor" | "discover" | "metrics" | "trust";
 
 const stages = [
   { id: "lead", label: "Leads", color: "bg-muted-foreground/30", count: 84 },
@@ -82,6 +93,7 @@ export function AdminWeb() {
   const nav: { id: Tab; label: string; Icon: any }[] = [
     { id: "pipeline", label: "Sourcing pipeline", Icon: LayoutGrid },
     { id: "portfolio", label: "Venue portfolio", Icon: Building2 },
+    { id: "editor", label: "Venue editor", Icon: PencilLine },
     { id: "discover", label: "Discover venues", Icon: MapIcon },
     { id: "metrics", label: "Network metrics", Icon: BarChart3 },
     { id: "trust", label: "Trust & tier", Icon: ShieldCheck },
@@ -141,6 +153,7 @@ export function AdminWeb() {
 
         {tab === "pipeline" && <Pipeline />}
         {tab === "portfolio" && <Portfolio />}
+        {tab === "editor" && <VenueEditor />}
         {tab === "discover" && <DiscoverVenues />}
         {tab === "metrics" && <Metrics />}
         {tab === "trust" && <TrustTier />}
