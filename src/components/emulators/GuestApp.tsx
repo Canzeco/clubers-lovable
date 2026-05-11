@@ -424,19 +424,6 @@ function VenueDetailSheet({
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center px-4 pb-4">
           <div className="pointer-events-auto flex w-full items-center gap-2 rounded-full border border-border/60 bg-card/85 p-1.5 shadow-2xl backdrop-blur-xl">
-            <button
-              onClick={() => {
-                if (typeof navigator !== "undefined" && (navigator as any).share) {
-                  (navigator as any)
-                    .share({ title: venue.name, text: `Check out ${venue.name} on Mesita` })
-                    .catch(() => {});
-                }
-              }}
-              aria-label="Share venue"
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-foreground/70 transition hover:bg-card-soft hover:text-foreground"
-            >
-              <Share2 className="h-4 w-4" />
-            </button>
             <button className="flex-1 rounded-full px-4 py-2.5 text-sm font-medium text-foreground/80">
               Save coupon
             </button>
@@ -2299,12 +2286,23 @@ export function GuestApp() {
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
             { id: "coupons", Icon: Ticket, label: "Coupons" },
+            { id: "share", Icon: Share2, label: "Share" },
             { id: "wallet", Icon: Wallet, label: "Wallet" },
             { id: "profile", Icon: User, label: "Profile" },
           ].map(({ id, Icon, label }) => (
             <button
               key={id}
-              onClick={() => setTab(id as Tab)}
+              onClick={() => {
+                if (id === "share") {
+                  if (typeof navigator !== "undefined" && (navigator as any).share) {
+                    (navigator as any)
+                      .share({ title: "Mesita", text: "Check out Mesita 🦚" })
+                      .catch(() => {});
+                  }
+                  return;
+                }
+                setTab(id as Tab);
+              }}
               className={`flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition ${
                 tab === id ? "text-primary" : "text-muted-foreground"
               }`}
