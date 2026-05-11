@@ -36,7 +36,7 @@ import {
   Coins,
 } from "lucide-react";
 
-type Tab = "discover" | "wallet" | "profile";
+type Tab = "discover" | "coupons" | "wallet" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder";
 
 const venues = [
