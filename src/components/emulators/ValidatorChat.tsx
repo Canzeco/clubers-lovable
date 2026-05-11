@@ -33,10 +33,10 @@ export function ValidatorChat() {
     "idle",
   );
 
-  const push = (m: Omit<Msg, "id" | "time">) =>
+  const push = (m: Omit<Msg, "id" | "time"> & { time?: string }) =>
     setMsgs((prev) => [
       ...prev,
-      { ...m, id: Date.now() + Math.random(), time: "9:33 PM" },
+      { ...m, id: Date.now() + Math.random(), time: m.time ?? "9:33 PM" },
     ]);
 
   const startScan = () => {
