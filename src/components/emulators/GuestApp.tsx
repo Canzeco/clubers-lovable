@@ -1315,11 +1315,13 @@ function ProfileView() {
   const [igConnected, setIgConnected] = useState(false);
   const [showConnect, setShowConnect] = useState(false);
   const [showAppeal, setShowAppeal] = useState(false);
+  const [subTab, setSubTab] = useState<"general" | "stats">("general");
   const code = "MESITA-7K4Q";
   return (
     <>
       <TopBar title="Profile" />
       <div className="px-5 pb-24">
+        {/* GENERAL — identity card */}
         <div className="rounded-3xl bg-card-soft p-5 text-center">
           <div className="mx-auto h-20 w-20 overflow-hidden rounded-full ring-2 ring-secondary">
             <img
@@ -1330,16 +1332,44 @@ function ProfileView() {
           </div>
           <p className="mt-3 font-display text-xl font-semibold">Valentina R.</p>
           <p className="text-xs text-muted-foreground">@valenrose · CDMX</p>
-          <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-tier-gold px-4 py-1.5 text-xs font-bold text-black">
-            <Sparkles className="h-3 w-3" /> GOLD TIER
+          <div className="mt-2 flex items-center justify-center gap-2 text-[11px] text-muted-foreground">
+            <span>Female</span>
+            <span className="h-1 w-1 rounded-full bg-muted-foreground/50" />
+            <span>27 yrs</span>
           </div>
-          {igConnected ? (
-            <p className="mt-2 flex items-center justify-center gap-1 text-[11px] text-secondary">
-              <BadgeCheck className="h-3 w-3" /> Verified via Instagram · 126k followers
-            </p>
-          ) : (
-            <p className="mt-2 text-[11px] text-muted-foreground">Instagram not connected · Bronze cap</p>
-          )}
+        </div>
+
+        {/* Sub-tabs */}
+        <div className="mt-4 grid grid-cols-2 gap-1 rounded-full border border-border bg-card-soft p-1">
+          {([
+            { id: "general", label: "Tier & Identity" },
+            { id: "stats", label: "Gamification" },
+          ] as const).map((s) => (
+            <button
+              key={s.id}
+              onClick={() => setSubTab(s.id)}
+              className={`rounded-full px-3 py-1.5 text-[11px] font-semibold transition-colors ${
+                subTab === s.id
+                  ? "bg-peacock text-white shadow-glow"
+                  : "text-muted-foreground"
+              }`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+
+        {subTab === "general" && (
+          <>
+        {/* Tier banner */}
+        <div className="mt-4 rounded-2xl bg-tier-gold/10 border border-tier-gold/40 p-4 text-center">
+          <p className="flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-widest text-tier-gold">
+            <Sparkles className="h-3 w-3" /> Your tier
+          </p>
+          <p className="mt-1 font-display text-3xl font-semibold text-tier-gold">Gold</p>
+          <p className="mt-1 text-[11px] text-muted-foreground">
+            {igConnected ? "Verified · 126k IG followers" : "Instagram not connected · Bronze cap"}
+          </p>
         </div>
 
         {/* Tier ladder */}
@@ -1431,7 +1461,11 @@ function ProfileView() {
           </div>
           <span className="text-[11px] text-secondary">Apply →</span>
         </button>
+          </>
+        )}
 
+        {subTab === "stats" && (
+          <>
         {/* Gamified rank + XP */}
         <div className="mt-4 relative overflow-hidden rounded-2xl bg-peacock p-4 text-primary-foreground shadow-glow">
           <div className="flex items-start justify-between">
@@ -1516,6 +1550,8 @@ function ProfileView() {
             ))}
           </div>
         </div>
+          </>
+        )}
       </div>
 
       {/* Connect Instagram sheet */}
