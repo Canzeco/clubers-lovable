@@ -44,10 +44,10 @@ const venues = [
     ig: "3.2k mentions",
     quote: "“Best sunset terrace in the city.”",
     visitors: [
-      { name: "Valentina R.", handle: "@valenrose", tier: "gold", note: "visited Sat", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80" },
-      { name: "Lucas M.", handle: "@lucasm", tier: "gold", note: "posted a story", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80" },
-      { name: "Sofía P.", handle: "@sofip", tier: "silver", note: "rated 5★", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80" },
-      { name: "Diego A.", handle: "@diegoa", tier: "bronze", note: "tagged 2 friends", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80" },
+      { name: "Valentina R.", handle: "@valenrose", tier: "gold", score: 5.0, when: "Sat", comment: "Best sunset terrace in the city.", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80" },
+      { name: "Lucas M.", handle: "@lucasm", tier: "gold", score: 4.8, when: "Fri", comment: "The DJ set elevated everything.", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80" },
+      { name: "Sofía P.", handle: "@sofip", tier: "silver", score: 5.0, when: "Last week", comment: "Service was flawless.", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80" },
+      { name: "Diego A.", handle: "@diegoa", tier: "bronze", score: 4.5, when: "2 weeks ago", comment: "Worth the price tag.", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80" },
     ],
   },
   {
@@ -73,9 +73,9 @@ const venues = [
     ig: "1.8k mentions",
     quote: "“The mezcal flight is unreal.”",
     visitors: [
-      { name: "Camila V.", handle: "@camivb", tier: "gold", note: "5 Gold guests tonight", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&q=80" },
-      { name: "Mateo F.", handle: "@matef", tier: "gold", note: "DJ set tagged", img: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=120&q=80" },
-      { name: "Renata K.", handle: "@renatak", tier: "silver", note: "ordered the flight", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" },
+      { name: "Camila V.", handle: "@camivb", tier: "gold", score: 5.0, when: "Wed", comment: "Mezcal flight is unreal.", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&q=80" },
+      { name: "Mateo F.", handle: "@matef", tier: "gold", score: 4.7, when: "Last Sat", comment: "Best vinyl set in town.", img: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=120&q=80" },
+      { name: "Renata K.", handle: "@renatak", tier: "silver", score: 4.5, when: "Last week", comment: "Hidden gem, intimate vibe.", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" },
     ],
   },
   {
@@ -101,8 +101,8 @@ const venues = [
     ig: "920 mentions",
     quote: "“Brunch with ocean breeze.”",
     visitors: [
-      { name: "Ana T.", handle: "@anat", tier: "gold", note: "brunch yesterday", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&q=80" },
-      { name: "Tomás L.", handle: "@tomasl", tier: "silver", note: "tagged ocean view", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&q=80" },
+      { name: "Ana T.", handle: "@anat", tier: "gold", score: 4.8, when: "Yesterday", comment: "Brunch with ocean breeze, dreamy.", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&q=80" },
+      { name: "Tomás L.", handle: "@tomasl", tier: "silver", score: 4.6, when: "Last Sun", comment: "Seafood was incredibly fresh.", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&q=80" },
     ],
   },
 ];
