@@ -1039,94 +1039,10 @@ function WalletView() {
   return (
     <>
       <TopBar title="Coupon Wallet" subtitle={`${unused.length} unused · ${used.length} used`} />
-      {/* Gamified hero — rank, level progress, stats, badges */}
-      <div className="mx-5 mb-4 space-y-3">
-        <div className="relative overflow-hidden rounded-2xl bg-peacock p-4 text-primary-foreground shadow-glow">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest opacity-80">
-                <Crown className="h-3 w-3" /> Gold · Lv. 7
-              </p>
-              <p className="font-display text-3xl font-semibold leading-tight">Tastemaker</p>
-              <p className="mt-0.5 text-[11px] opacity-80">Top 4% in CDMX this month</p>
-            </div>
-            <div className="text-right">
-              <p className="text-[10px] uppercase tracking-widest opacity-80">Saved</p>
-              <p className="font-display text-2xl font-semibold leading-none">$1,840</p>
-            </div>
-          </div>
-          {/* XP bar */}
-          <div className="mt-3">
-            <div className="flex items-center justify-between text-[10px] opacity-90">
-              <span>620 XP</span>
-              <span>180 XP to Lv. 8 · Connoisseur</span>
-            </div>
-            <div className="mt-1 h-2 overflow-hidden rounded-full bg-black/25">
-              <div className="h-full rounded-full bg-tier-gold" style={{ width: "78%" }} />
-            </div>
-          </div>
-        </div>
-
-        {/* Stat tiles */}
-        <div className="grid grid-cols-3 gap-2">
-          <div className="rounded-2xl border border-border bg-card-soft p-2.5">
-            <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
-              <TrendingUp className="h-2.5 w-2.5" /> Visits
-            </p>
-            <p className="mt-1 font-display text-xl font-semibold leading-none">42</p>
-            <p className="mt-0.5 text-[9px] text-secondary">+6 this month</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-card-soft p-2.5">
-            <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
-              <Sparkles className="h-2.5 w-2.5" /> New spots
-            </p>
-            <p className="mt-1 font-display text-xl font-semibold leading-none">18</p>
-            <p className="mt-0.5 text-[9px] text-secondary">7 / 10 to badge</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-card-soft p-2.5">
-            <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
-              <Flame className="h-2.5 w-2.5" /> Streak
-            </p>
-            <p className="mt-1 font-display text-xl font-semibold leading-none">5 wks</p>
-            <p className="mt-0.5 text-[9px] text-tier-gold">Keep it alive 🔥</p>
-          </div>
-        </div>
-
-        {/* Badges / unlocks */}
-        <div className="rounded-2xl border border-border bg-card-soft p-3">
-          <div className="mb-2 flex items-center justify-between">
-            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-              <BadgeCheck className="h-3 w-3 text-tier-gold" /> Badges
-            </p>
-            <span className="text-[10px] text-secondary">6 / 12 unlocked</span>
-          </div>
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-            {[
-              { e: "🌃", n: "Night Owl", on: true },
-              { e: "🍷", n: "Sommelier", on: true },
-              { e: "🥂", n: "Brunch Club", on: true },
-              { e: "📸", n: "Storyteller", on: true },
-              { e: "🗺️", n: "Explorer 10", on: false, prog: "7/10" },
-              { e: "👑", n: "VIP 1k", on: false, prog: "$840 left" },
-              { e: "🔥", n: "10-wk streak", on: false, prog: "5/10" },
-            ].map((b) => (
-              <div
-                key={b.n}
-                className={`flex w-20 flex-shrink-0 flex-col items-center gap-1 rounded-xl p-2 text-center ${
-                  b.on
-                    ? "bg-tier-gold/15 ring-1 ring-tier-gold/40"
-                    : "bg-card opacity-60"
-                }`}
-              >
-                <span className={`text-2xl ${b.on ? "" : "grayscale"}`}>{b.e}</span>
-                <p className="text-[9px] font-semibold leading-tight">{b.n}</p>
-                {!b.on && b.prog && (
-                  <p className="text-[8px] text-muted-foreground">{b.prog}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="mx-5 mb-4 rounded-2xl bg-peacock p-4 text-primary-foreground shadow-glow">
+        <p className="text-xs uppercase tracking-widest opacity-80">Total saved</p>
+        <p className="font-display text-4xl font-semibold">$ 1,840</p>
+        <p className="mt-1 text-xs opacity-80">12 visits · this month</p>
       </div>
 
       {/* segmented control */}
@@ -1321,20 +1237,89 @@ function ProfileView() {
           <span className="text-[11px] text-secondary">Apply →</span>
         </button>
 
-        {/* Stats */}
-        <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-          {[
-            { k: "Visits", v: "47" },
-            { k: "Stories", v: "23" },
-            { k: "Saved", v: "$1.8k" },
-          ].map((s) => (
-            <div key={s.k} className="rounded-2xl bg-card p-3">
-              <p className="font-display text-xl font-semibold">{s.v}</p>
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                {s.k}
+        {/* Gamified rank + XP */}
+        <div className="mt-4 relative overflow-hidden rounded-2xl bg-peacock p-4 text-primary-foreground shadow-glow">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest opacity-80">
+                <Crown className="h-3 w-3" /> Gold · Lv. 7
               </p>
+              <p className="font-display text-3xl font-semibold leading-tight">Tastemaker</p>
+              <p className="mt-0.5 text-[11px] opacity-80">Top 4% in CDMX this month</p>
             </div>
-          ))}
+            <div className="text-right">
+              <p className="text-[10px] uppercase tracking-widest opacity-80">Saved</p>
+              <p className="font-display text-2xl font-semibold leading-none">$1,840</p>
+            </div>
+          </div>
+          <div className="mt-3">
+            <div className="flex items-center justify-between text-[10px] opacity-90">
+              <span>620 XP</span>
+              <span>180 XP to Lv. 8 · Connoisseur</span>
+            </div>
+            <div className="mt-1 h-2 overflow-hidden rounded-full bg-black/25">
+              <div className="h-full rounded-full bg-tier-gold" style={{ width: "78%" }} />
+            </div>
+          </div>
+        </div>
+
+        {/* Stat tiles */}
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          <div className="rounded-2xl border border-border bg-card-soft p-2.5">
+            <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
+              <TrendingUp className="h-2.5 w-2.5" /> Visits
+            </p>
+            <p className="mt-1 font-display text-xl font-semibold leading-none">42</p>
+            <p className="mt-0.5 text-[9px] text-secondary">+6 this month</p>
+          </div>
+          <div className="rounded-2xl border border-border bg-card-soft p-2.5">
+            <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
+              <Sparkles className="h-2.5 w-2.5" /> New spots
+            </p>
+            <p className="mt-1 font-display text-xl font-semibold leading-none">18</p>
+            <p className="mt-0.5 text-[9px] text-secondary">7 / 10 to badge</p>
+          </div>
+          <div className="rounded-2xl border border-border bg-card-soft p-2.5">
+            <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
+              <Flame className="h-2.5 w-2.5" /> Streak
+            </p>
+            <p className="mt-1 font-display text-xl font-semibold leading-none">5 wks</p>
+            <p className="mt-0.5 text-[9px] text-tier-gold">Keep it alive 🔥</p>
+          </div>
+        </div>
+
+        {/* Badges */}
+        <div className="mt-3 rounded-2xl border border-border bg-card-soft p-3">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+              <BadgeCheck className="h-3 w-3 text-tier-gold" /> Badges
+            </p>
+            <span className="text-[10px] text-secondary">6 / 12 unlocked</span>
+          </div>
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+            {[
+              { e: "🌃", n: "Night Owl", on: true },
+              { e: "🍷", n: "Sommelier", on: true },
+              { e: "🥂", n: "Brunch Club", on: true },
+              { e: "📸", n: "Storyteller", on: true },
+              { e: "🗺️", n: "Explorer 10", on: false, prog: "7/10" },
+              { e: "👑", n: "VIP 1k", on: false, prog: "$840 left" },
+              { e: "🔥", n: "10-wk streak", on: false, prog: "5/10" },
+            ].map((b) => (
+              <div
+                key={b.n}
+                className={`flex w-20 flex-shrink-0 flex-col items-center gap-1 rounded-xl p-2 text-center ${
+                  b.on ? "bg-tier-gold/15 ring-1 ring-tier-gold/40" : "bg-card opacity-60"
+                }`}
+              >
+                <span className={`text-2xl ${b.on ? "" : "grayscale"}`}>{b.e}</span>
+                <p className="text-[9px] font-semibold leading-tight">{b.n}</p>
+                {!b.on && b.prog && (
+                  <p className="text-[8px] text-muted-foreground">{b.prog}</p>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
