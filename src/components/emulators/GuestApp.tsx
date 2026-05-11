@@ -36,7 +36,7 @@ import {
   Coins,
 } from "lucide-react";
 
-type Tab = "discover" | "wallet" | "profile";
+type Tab = "discover" | "coupons" | "wallet" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder";
 
 const venues = [
@@ -1848,6 +1848,96 @@ function ProfileView() {
   );
 }
 
+function CreditsView() {
+  const balance = 1284;
+  const pending = 220;
+  const txs = [
+    { kind: "earn" as const, name: "Casa Luminar", note: "18% cashback · May 3", amt: 540 },
+    { kind: "spend" as const, name: "Neón Bar", note: "Paid with credits · Apr 28", amt: -380 },
+    { kind: "earn" as const, name: "Loto Café", note: "12% cashback · Apr 27", amt: 180 },
+    { kind: "earn" as const, name: "Story bonus", note: "Neón Bar · +10% boost", amt: 120 },
+    { kind: "spend" as const, name: "Mar Verde", note: "Paid with credits · Apr 19", amt: -260 },
+  ];
+  return (
+    <>
+      <TopBar title="Mesita Wallet" subtitle="Credits earned from cashback" />
+
+      {/* Balance hero */}
+      <div className="mx-5 mb-4 rounded-3xl bg-peacock p-5 text-primary-foreground shadow-glow">
+        <div className="flex items-center gap-2">
+          <Coins className="h-4 w-4" />
+          <p className="text-[10px] uppercase tracking-widest opacity-80">
+            Mesita Credits
+          </p>
+        </div>
+        <p className="mt-2 font-display text-4xl font-semibold leading-none">
+          ${balance.toLocaleString()}
+        </p>
+        <p className="mt-2 text-[11px] opacity-80">
+          +${pending.toLocaleString()} pending validation
+        </p>
+        <div className="mt-4 flex gap-2">
+          <button className="flex-1 rounded-full bg-white/15 px-3 py-2 text-xs font-semibold backdrop-blur">
+            Use at venue
+          </button>
+          <button className="flex-1 rounded-full bg-white/15 px-3 py-2 text-xs font-semibold backdrop-blur">
+            Send to friend
+          </button>
+        </div>
+      </div>
+
+      {/* Quick stats */}
+      <div className="mx-5 mb-4 grid grid-cols-3 gap-2">
+        <div className="rounded-2xl border border-border bg-card-soft p-3">
+          <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Earned · 90d</p>
+          <p className="mt-1 font-display text-lg font-semibold text-secondary">$2.4k</p>
+        </div>
+        <div className="rounded-2xl border border-border bg-card-soft p-3">
+          <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Spent · 90d</p>
+          <p className="mt-1 font-display text-lg font-semibold">$1.1k</p>
+        </div>
+        <div className="rounded-2xl border border-border bg-card-soft p-3">
+          <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Expires</p>
+          <p className="mt-1 font-display text-lg font-semibold">Aug 12</p>
+        </div>
+      </div>
+
+      {/* Activity */}
+      <div className="mx-5 mb-2 flex items-center justify-between">
+        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Activity</p>
+        <span className="text-[10px] text-secondary">See all</span>
+      </div>
+      <div className="space-y-2 px-5 pb-24">
+        {txs.map((t, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-3"
+          >
+            <div
+              className={`flex h-10 w-10 items-center justify-center rounded-xl ${
+                t.kind === "earn" ? "bg-secondary/15 text-secondary" : "bg-primary/15 text-primary"
+              }`}
+            >
+              {t.kind === "earn" ? <Coins className="h-5 w-5" /> : <CreditCard className="h-5 w-5" />}
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium">{t.name}</p>
+              <p className="text-[11px] text-muted-foreground">{t.note}</p>
+            </div>
+            <p
+              className={`font-display text-sm font-semibold ${
+                t.amt > 0 ? "text-secondary" : "text-foreground"
+              }`}
+            >
+              {t.amt > 0 ? "+" : ""}${Math.abs(t.amt).toLocaleString()}
+            </p>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
 export function GuestApp() {
   const [tab, setTab] = useState<Tab>("discover");
   return (
@@ -1855,9 +1945,14 @@ export function GuestApp() {
       <StatusBar />
       <div className="relative flex flex-1 flex-col overflow-hidden pb-20">
         {tab === "discover" && <Discover />}
-        {tab === "wallet" && (
+        {tab === "coupons" && (
           <div className="flex-1 overflow-y-auto scrollbar-hide">
             <WalletView />
+          </div>
+        )}
+        {tab === "wallet" && (
+          <div className="flex-1 overflow-y-auto scrollbar-hide">
+            <CreditsView />
           </div>
         )}
         {tab === "profile" && (
@@ -1870,13 +1965,14 @@ export function GuestApp() {
         <div className="flex justify-around">
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
-          { id: "wallet", Icon: Ticket, label: "Coupons" },
+            { id: "coupons", Icon: Ticket, label: "Coupons" },
+            { id: "wallet", Icon: Wallet, label: "Wallet" },
             { id: "profile", Icon: User, label: "Profile" },
           ].map(({ id, Icon, label }) => (
             <button
               key={id}
               onClick={() => setTab(id as Tab)}
-              className={`flex flex-col items-center gap-0.5 px-3 py-1 text-[10px] transition ${
+              className={`flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition ${
                 tab === id ? "text-primary" : "text-muted-foreground"
               }`}
             >
