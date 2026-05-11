@@ -594,32 +594,23 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
             className="relative flex w-full overflow-hidden rounded-2xl border border-border bg-card-soft text-left shadow-sm transition active:scale-[0.99]"
             style={{ aspectRatio: "2 / 1" }}
           >
-            {/* image */}
-            <div className="relative h-full flex-shrink-0" style={{ aspectRatio: "1 / 1" }}>
-              <img src={v.img} alt={v.name} className="h-full w-full object-cover" />
-              <div
-                className="absolute inset-0"
-                style={{ background: "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.75))" }}
-              />
-              {v.affiliated && (
-                <span className="absolute left-2 top-2 rounded-full bg-tier-gold px-2 py-0.5 text-[10px] font-bold text-black">
-                  {v.cashback}%
-                </span>
-              )}
-              <div className="absolute bottom-1.5 left-2 right-2 text-white">
-                <p className="truncate font-display text-base font-semibold leading-tight">
-                  {v.name}
+            {/* info — left */}
+            <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 px-4 py-3">
+              <div className="flex items-center gap-2">
+                <p className="truncate text-[9px] uppercase tracking-widest text-muted-foreground">
+                  {v.type}
                 </p>
-                <p className="truncate text-[10px] opacity-80">
-                  {v.distance} · {v.price}
-                </p>
+                {v.affiliated && (
+                  <span className="rounded-full bg-tier-gold px-1.5 py-0.5 text-[9px] font-bold text-black">
+                    {v.cashback}%
+                  </span>
+                )}
               </div>
-            </div>
-
-            {/* essential info only */}
-            <div className="flex min-w-0 flex-1 flex-col justify-center gap-2 px-4 py-2">
-              <p className="truncate text-[9px] uppercase tracking-widest text-muted-foreground">
-                {v.type}
+              <p className="truncate font-display text-base font-semibold leading-tight">
+                {v.name}
+              </p>
+              <p className="truncate text-[10px] text-muted-foreground">
+                {v.distance} · {v.price}
               </p>
               <div className="flex items-center gap-1.5">
                 <Star className="h-3 w-3 fill-secondary text-secondary" />
@@ -630,6 +621,11 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
                 <Sparkles className="h-2.5 w-2.5 flex-shrink-0" />
                 <span className="truncate">{v.vibe.split("·")[0].trim()}</span>
               </p>
+            </div>
+
+            {/* image — right, clean */}
+            <div className="relative h-full flex-shrink-0" style={{ aspectRatio: "1 / 1" }}>
+              <img src={v.img} alt={v.name} className="h-full w-full object-cover" />
             </div>
           </button>
         ))}
