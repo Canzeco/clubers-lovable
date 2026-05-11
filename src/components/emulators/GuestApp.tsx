@@ -2095,13 +2095,8 @@ function ShareView() {
     setPicking(null);
   };
 
-  const friends = [
-    { name: "Sofía P.", handle: "@sofip", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80" },
-    { name: "Diego A.", handle: "@diegoa", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80" },
-    { name: "Renata K.", handle: "@renatak", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" },
-    { name: "Tomás L.", handle: "@tomasl", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&q=80" },
-    { name: "Ana T.", handle: "@anat", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&q=80" },
-  ];
+  const code = "8F2K-9XQ7";
+  const message = `Hey! I'm sending you a $100 MXN gift card to try Mesita 🦚 — discover the best venues in CDMX. Claim it here: mesita.app/g/${code}`;
 
   return (
     <>
