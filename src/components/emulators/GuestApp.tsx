@@ -1855,9 +1855,14 @@ export function GuestApp() {
       <StatusBar />
       <div className="relative flex flex-1 flex-col overflow-hidden pb-20">
         {tab === "discover" && <Discover />}
-        {tab === "wallet" && (
+        {tab === "coupons" && (
           <div className="flex-1 overflow-y-auto scrollbar-hide">
             <WalletView />
+          </div>
+        )}
+        {tab === "wallet" && (
+          <div className="flex-1 overflow-y-auto scrollbar-hide">
+            <CreditsView />
           </div>
         )}
         {tab === "profile" && (
@@ -1870,13 +1875,14 @@ export function GuestApp() {
         <div className="flex justify-around">
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
-          { id: "wallet", Icon: Ticket, label: "Coupons" },
+            { id: "coupons", Icon: Ticket, label: "Coupons" },
+            { id: "wallet", Icon: Wallet, label: "Wallet" },
             { id: "profile", Icon: User, label: "Profile" },
           ].map(({ id, Icon, label }) => (
             <button
               key={id}
               onClick={() => setTab(id as Tab)}
-              className={`flex flex-col items-center gap-0.5 px-3 py-1 text-[10px] transition ${
+              className={`flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition ${
                 tab === id ? "text-primary" : "text-muted-foreground"
               }`}
             >
