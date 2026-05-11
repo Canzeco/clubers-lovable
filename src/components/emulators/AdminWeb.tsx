@@ -33,9 +33,15 @@ import {
   Trash2,
   Globe,
   Tag,
+  Radar,
+  Facebook,
+  Calendar,
+  Check,
+  X as XIcon,
+  RefreshCw,
 } from "lucide-react";
 
-type Tab = "pipeline" | "portfolio" | "editor" | "discover" | "metrics" | "trust";
+type Tab = "pipeline" | "portfolio" | "editor" | "discover" | "promos" | "metrics" | "trust";
 
 const stages = [
   { id: "lead", label: "Leads", color: "bg-muted-foreground/30", count: 84 },
@@ -95,6 +101,7 @@ export function AdminWeb() {
     { id: "portfolio", label: "Venue portfolio", Icon: Building2 },
     { id: "editor", label: "Venue editor", Icon: PencilLine },
     { id: "discover", label: "Discover venues", Icon: MapIcon },
+    { id: "promos", label: "Promo radar", Icon: Radar },
     { id: "metrics", label: "Network metrics", Icon: BarChart3 },
     { id: "trust", label: "Trust & tier", Icon: ShieldCheck },
   ];
@@ -155,6 +162,7 @@ export function AdminWeb() {
         {tab === "portfolio" && <Portfolio />}
         {tab === "editor" && <VenueEditor />}
         {tab === "discover" && <DiscoverVenues />}
+        {tab === "promos" && <PromoRadar />}
         {tab === "metrics" && <Metrics />}
         {tab === "trust" && <TrustTier />}
       </main>
