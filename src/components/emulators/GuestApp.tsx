@@ -212,74 +212,48 @@ function VenueDetailSheet({
         </div>
 
         <div className="space-y-4 px-5 pt-5">
-          {/* Experience intelligence — ratings */}
-          <div>
-            <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-              Experience intelligence
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <div className="rounded-xl bg-card-soft p-3 text-center">
-                <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Mesita</p>
-                <p className="mt-1 flex items-center justify-center gap-1 font-display text-lg font-semibold">
-                  <Star className="h-3.5 w-3.5 fill-secondary text-secondary" />
-                  {venue.mesita}
-                </p>
-                <p className="text-[10px] text-muted-foreground">{venue.mesitaCount} reviews</p>
-              </div>
-              <div className="rounded-xl bg-card-soft p-3 text-center">
-                <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Facebook</p>
-                <p className="mt-1 flex items-center justify-center gap-1 font-display text-lg font-semibold">
-                  <Star className="h-3.5 w-3.5 fill-blue-400 text-blue-400" />
-                  {venue.fb}
-                </p>
-                <p className="text-[10px] text-muted-foreground">{venue.fbCount} reviews</p>
-              </div>
-              <div className="rounded-xl bg-card-soft p-3 text-center">
-                <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Google</p>
-                <p className="mt-1 flex items-center justify-center gap-1 font-display text-lg font-semibold">
-                  <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-                  4.6
-                </p>
-                <p className="text-[10px] text-muted-foreground">428 reviews</p>
-              </div>
+          {/* Social proof signals */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="rounded-xl bg-card-soft p-3">
+              <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
+                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" /> Google
+              </p>
+              <p className="mt-1 font-display text-lg font-semibold leading-none">{venue.google}</p>
+              <p className="mt-0.5 text-[10px] text-muted-foreground">{venue.googleCount.toLocaleString()} reviews</p>
+            </div>
+            <div className="rounded-xl bg-card-soft p-3">
+              <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
+                <Instagram className="h-3 w-3 text-pink-400" /> Instagram
+              </p>
+              <p className="mt-1 font-display text-lg font-semibold leading-none">{venue.igFollowers}</p>
+              <p className="mt-0.5 text-[10px] text-muted-foreground">followers</p>
+            </div>
+            <div className="rounded-xl bg-card-soft p-3">
+              <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
+                <span className="flex h-3 w-3 items-center justify-center rounded-sm bg-blue-500 text-[8px] font-bold text-white">f</span>
+                Facebook
+              </p>
+              <p className="mt-1 font-display text-lg font-semibold leading-none">{venue.fbFollowers}</p>
+              <p className="mt-0.5 text-[10px] text-muted-foreground">followers</p>
             </div>
           </div>
 
-          {/* Social reach */}
+          {/* About the venue */}
           <div>
             <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-              Social reach
+              About
             </p>
-            <div className="grid grid-cols-3 gap-2">
-              <div className="flex items-center gap-2 rounded-xl bg-card-soft p-2.5">
-                <Instagram className="h-4 w-4 flex-shrink-0 text-pink-400" />
-                <div className="min-w-0">
-                  <p className="font-display text-sm font-semibold leading-none">{venue.igFollowers}</p>
-                  <p className="text-[9px] text-muted-foreground">followers</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 rounded-xl bg-card-soft p-2.5">
-                <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded bg-blue-500 text-[10px] font-bold text-white">f</span>
-                <div className="min-w-0">
-                  <p className="font-display text-sm font-semibold leading-none">{venue.fbFollowers}</p>
-                  <p className="text-[9px] text-muted-foreground">followers</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 rounded-xl bg-card-soft p-2.5">
-                <Sparkles className="h-4 w-4 flex-shrink-0 text-secondary" />
-                <div className="min-w-0">
-                  <p className="font-display text-sm font-semibold leading-none">{venue.igMentions}</p>
-                  <p className="text-[9px] text-muted-foreground">mentions / mo</p>
-                </div>
-              </div>
-            </div>
+            <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
           </div>
 
-          {/* Who's been here — social proof */}
+          {/* Mesita reviews — elitist social proof */}
           <div>
             <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
-              <span>Who's been here</span>
-              <span className="text-secondary">Mesita guests</span>
+              <span>Mesita reviews</span>
+              <span className="flex items-center gap-1 text-secondary">
+                <Star className="h-3 w-3 fill-secondary text-secondary" />
+                {venue.mesita} · {venue.mesitaCount}
+              </span>
             </p>
             <div className="space-y-2">
               {venue.visitors.map((u) => (
