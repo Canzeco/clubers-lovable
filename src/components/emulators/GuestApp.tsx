@@ -44,7 +44,7 @@ const venues = [
     name: "Casa Luminar",
     type: "Rooftop · Mediterranean",
     img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
-    cashback: 18,
+    cashback: 20,
     price: "$$$",
     rating: 4.8,
     distance: "0.4 km",
@@ -73,7 +73,7 @@ const venues = [
     name: "Neón Bar",
     type: "Cocktails · Late night",
     img: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80",
-    cashback: 25,
+    cashback: 20,
     price: "$$",
     rating: 4.6,
     distance: "0.9 km",
@@ -1018,10 +1018,10 @@ function MapMode() {
         </svg>
         {/* pins */}
         {[
-          { x: "25%", y: "30%", tier: "gold", n: "Casa Luminar", cb: 18 },
-          { x: "60%", y: "45%", tier: "silver", n: "Neón Bar", cb: 25 },
+          { x: "25%", y: "30%", tier: "gold", n: "Casa Luminar", cb: 20 },
+          { x: "60%", y: "45%", tier: "silver", n: "Neón Bar", cb: 20 },
           { x: "40%", y: "65%", tier: "bronze", n: "Mar Verde", cb: 0 },
-          { x: "75%", y: "75%", tier: "gold", n: "Loto Café", cb: 12 },
+          { x: "75%", y: "75%", tier: "gold", n: "Loto Café", cb: 10 },
         ].map((p, i) => (
           <div
             key={i}
@@ -1087,14 +1087,14 @@ function WalletView() {
   const [seg, setSeg] = useState<"unused" | "used">("unused");
   const [openCoupon, setOpenCoupon] = useState<any | null>(null);
   const unused = [
-    { name: "Casa Luminar", cb: 18, exp: "Fri · 9:30pm", color: "tier-gold", note: "Rooftop · 0.4 km", res: "pending" as const },
-    { name: "Loto Café", cb: 12, exp: "Expires tomorrow", color: "tier-silver", note: "Brunch · weekends", res: "confirmed" as const },
-    { name: "Neón Bar", cb: 25, exp: "+ Story bonus 10%", color: "tier-bronze", note: "Late night cocktails", res: null },
+    { name: "Casa Luminar", cb: 20, exp: "Fri · 9:30pm", color: "tier-gold", note: "Rooftop · 0.4 km", res: "pending" as const },
+    { name: "Loto Café", cb: 10, exp: "Expires tomorrow", color: "tier-silver", note: "Brunch · weekends", res: "confirmed" as const },
+    { name: "Neón Bar", cb: 20, exp: "+ Story bonus 10%", color: "tier-bronze", note: "Late night cocktails", res: null },
   ];
   const used = [
-    { name: "Mar Verde", cb: 15, when: "Sat · May 3", saved: "$ 320", color: "tier-gold" },
-    { name: "Loto Café", cb: 12, when: "Apr 27", saved: "$ 180", color: "tier-silver" },
-    { name: "Casa Luminar", cb: 18, when: "Apr 19", saved: "$ 540", color: "tier-gold" },
+    { name: "Mar Verde", cb: 10, when: "Sat · May 3", saved: "$ 320", color: "tier-gold" },
+    { name: "Loto Café", cb: 10, when: "Apr 27", saved: "$ 180", color: "tier-silver" },
+    { name: "Casa Luminar", cb: 20, when: "Apr 19", saved: "$ 540", color: "tier-gold" },
     { name: "Neón Bar", cb: 20, when: "Apr 12", saved: "$ 260", color: "tier-bronze" },
   ];
   return (
@@ -1852,9 +1852,9 @@ function CreditsView() {
   const balance = 1284;
   const pending = 220;
   const txs = [
-    { kind: "earn" as const, name: "Casa Luminar", note: "18% cashback · May 3", amt: 540 },
+    { kind: "earn" as const, name: "Casa Luminar", note: "20% cashback · May 3", amt: 540 },
     { kind: "spend" as const, name: "Neón Bar", note: "Paid with credits · Apr 28", amt: -380 },
-    { kind: "earn" as const, name: "Loto Café", note: "12% cashback · Apr 27", amt: 180 },
+    { kind: "earn" as const, name: "Loto Café", note: "10% cashback · Apr 27", amt: 180 },
     { kind: "earn" as const, name: "Story bonus", note: "Neón Bar · +10% boost", amt: 120 },
     { kind: "spend" as const, name: "Mar Verde", note: "Paid with credits · Apr 19", amt: -260 },
   ];

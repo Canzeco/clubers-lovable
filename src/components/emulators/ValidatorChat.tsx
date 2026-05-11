@@ -30,7 +30,7 @@ const initial: Msg[] = [
     payload: {
       name: "Valentina R.",
       tier: "GOLD",
-      coupon: "18% cashback",
+      coupon: "20% cashback",
       bill: "MXN 1,240",
       tip: "MXN 186 (15%)",
       total: "MXN 1,426",
