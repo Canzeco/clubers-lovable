@@ -44,7 +44,7 @@ const venues = [
     name: "Casa Luminar",
     type: "Rooftop · Mediterranean",
     img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
-    cashback: 18,
+    cashback: 20,
     price: "$$$",
     rating: 4.8,
     distance: "0.4 km",
@@ -73,7 +73,7 @@ const venues = [
     name: "Neón Bar",
     type: "Cocktails · Late night",
     img: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80",
-    cashback: 25,
+    cashback: 20,
     price: "$$",
     rating: 4.6,
     distance: "0.9 km",
@@ -1018,10 +1018,10 @@ function MapMode() {
         </svg>
         {/* pins */}
         {[
-          { x: "25%", y: "30%", tier: "gold", n: "Casa Luminar", cb: 18 },
-          { x: "60%", y: "45%", tier: "silver", n: "Neón Bar", cb: 25 },
+          { x: "25%", y: "30%", tier: "gold", n: "Casa Luminar", cb: 20 },
+          { x: "60%", y: "45%", tier: "silver", n: "Neón Bar", cb: 20 },
           { x: "40%", y: "65%", tier: "bronze", n: "Mar Verde", cb: 0 },
-          { x: "75%", y: "75%", tier: "gold", n: "Loto Café", cb: 12 },
+          { x: "75%", y: "75%", tier: "gold", n: "Loto Café", cb: 10 },
         ].map((p, i) => (
           <div
             key={i}
