@@ -980,7 +980,12 @@ function MapMode() {
 function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => void }) {
   type Msg =
     | { from: "user"; text: string }
-    | { from: "ai"; text: string; sources?: string[]; picks?: typeof venues };
+    | {
+        from: "ai";
+        text: string;
+        sources?: string[];
+        picks?: { venue: typeof venues[number]; reason: string }[];
+      };
   const suggestions = [
     "Rooftop with sunset views",
     "Late night mezcal & vinyl",
@@ -1008,12 +1013,18 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
         const hay = (v.type + " " + v.vibe + " " + v.info).toLowerCase();
         return lower.split(/\s+/).some((w) => w.length > 3 && hay.includes(w));
       });
-      const final = (picks.length ? picks : venues).slice(0, 3);
+      const finalVenues = (picks.length ? picks : venues).slice(0, 3);
+      const reasons = [
+        "best match for the vibe — Gold tastemakers rate it highest tonight.",
+        "strong runner-up with active cashback and live energy right now.",
+        "wildcard pick if the first two are full or you want something different.",
+      ];
+      const final = finalVenues.map((v, i) => ({ venue: v, reason: reasons[i] }));
       setMsgs((m) => [
         ...m,
         {
           from: "ai",
-          text: `Found ${final.length} spots that match. Ranked by Mesita Gold reviews & live activity tonight:`,
+          text: `Found ${final.length} spots that match. Tap any name to see details:`,
           sources: ["Mesita Gold reviews", "Instagram mentions", "Tonight's live activity"],
           picks: final,
         },
@@ -1054,50 +1065,25 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
                   </div>
                 )}
                 {m.picks && (
-                  <div className="space-y-2">
-                    {m.picks.map((v, idx) => (
-                      <button
-                        key={v.name}
-                        onClick={() => onSelect(v)}
-                        className="flex w-full gap-3 overflow-hidden rounded-2xl border border-border bg-card-soft p-2 text-left transition hover:border-tier-gold/60"
-                      >
-                        <img
-                          src={v.img}
-                          alt={v.name}
-                          className="h-16 w-16 shrink-0 rounded-xl object-cover"
-                        />
-                        <div className="flex min-w-0 flex-1 flex-col justify-center">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[10px] font-semibold text-tier-gold">
-                              #{idx + 1}
-                            </span>
-                            <p className="truncate text-sm font-semibold text-foreground">
-                              {v.name}
-                            </p>
-                          </div>
-                          <p className="truncate text-[11px] text-muted-foreground">
-                            {v.type}
-                          </p>
-                          <div className="mt-1 flex items-center gap-2 text-[10px] text-muted-foreground">
-                            <span className="flex items-center gap-0.5 text-foreground">
-                              <Star className="h-2.5 w-2.5 fill-tier-gold text-tier-gold" />
-                              {v.mesita}
-                            </span>
-                            <span>·</span>
-                            <span>{v.distance}</span>
-                            {v.cashback > 0 && (
-                              <>
-                                <span>·</span>
-                                <span className="font-semibold text-tier-gold">
-                                  {v.cashback}% cashback
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                        <ChevronRight className="h-4 w-4 self-center text-muted-foreground" />
-                      </button>
-                    ))}
+                  <div className="rounded-2xl rounded-tl-sm border border-border bg-card-soft px-3.5 py-2.5 text-[13px] leading-relaxed text-foreground">
+                    <ol className="space-y-2">
+                      {m.picks.map((p, idx) => (
+                        <li key={p.venue.name} className="flex gap-2">
+                          <span className="text-[11px] font-semibold text-tier-gold">
+                            {idx + 1}.
+                          </span>
+                          <span className="flex-1">
+                            <button
+                              onClick={() => onSelect(p.venue)}
+                              className="font-bold text-foreground underline decoration-tier-gold decoration-2 underline-offset-2 transition hover:text-tier-gold"
+                            >
+                              {p.venue.name}
+                            </button>
+                            <span className="text-muted-foreground"> — {p.reason}</span>
+                          </span>
+                        </li>
+                      ))}
+                    </ol>
                   </div>
                 )}
               </div>
