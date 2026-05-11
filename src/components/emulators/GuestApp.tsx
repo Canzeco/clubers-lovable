@@ -2,6 +2,8 @@ import { useState } from "react";
 import {
   Compass,
   Map as MapIcon,
+  LayoutGrid,
+  Flame,
   Wallet,
   User,
   Heart,
@@ -13,7 +15,8 @@ import {
   Calendar,
 } from "lucide-react";
 
-type Tab = "discover" | "map" | "wallet" | "profile";
+type Tab = "discover" | "wallet" | "profile";
+type DiscoverMode = "catalog" | "map" | "tinder";
 
 const venues = [
   {
@@ -81,7 +84,160 @@ function TopBar({ title, subtitle }: { title: string; subtitle?: string }) {
   );
 }
 
-function Discover() {
+function ModeSwitcher({
+  mode,
+  setMode,
+}: {
+  mode: DiscoverMode;
+  setMode: (m: DiscoverMode) => void;
+}) {
+  const modes: { id: DiscoverMode; label: string; Icon: any }[] = [
+    { id: "catalog", label: "Catalog", Icon: LayoutGrid },
+    { id: "map", label: "Map", Icon: MapIcon },
+    { id: "tinder", label: "Swipe", Icon: Flame },
+  ];
+  return (
+    <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
+      {modes.map((m) => (
+        <button
+          key={m.id}
+          onClick={() => setMode(m.id)}
+          className={`flex flex-1 items-center justify-center gap-1.5 rounded-full py-1.5 text-xs font-medium transition ${
+            mode === m.id
+              ? "bg-foreground text-background"
+              : "text-muted-foreground"
+          }`}
+        >
+          <m.Icon className="h-3.5 w-3.5" />
+          {m.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function CatalogMode() {
+  return (
+    <div className="space-y-3 px-5 pb-6">
+      {/* filter chips */}
+      <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+        {["All", "Tonight", "Cashback", "Rooftop", "Brunch", "Late night"].map(
+          (c, i) => (
+            <button
+              key={c}
+              className={`whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-medium ${
+                i === 0
+                  ? "bg-foreground text-background"
+                  : "border border-border text-muted-foreground"
+              }`}
+            >
+              {c}
+            </button>
+          ),
+        )}
+      </div>
+
+      {/* featured */}
+      {(() => {
+        const f = venues[0];
+        return (
+          <div className="relative overflow-hidden rounded-3xl">
+            <img src={f.img} alt={f.name} className="h-56 w-full object-cover" />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85))",
+              }}
+            />
+            <span className="absolute left-3 top-3 rounded-full bg-tier-gold px-2.5 py-1 text-[10px] font-bold text-black">
+              {f.cashback}% CASHBACK
+            </span>
+            <span className="absolute right-3 top-3 rounded-full bg-black/40 px-2 py-0.5 text-[10px] text-white backdrop-blur">
+              Featured tonight
+            </span>
+            <div className="absolute bottom-3 left-4 right-4 text-white">
+              <p className="text-[10px] uppercase tracking-widest opacity-80">
+                {f.type}
+              </p>
+              <p className="font-display text-2xl font-semibold leading-tight">
+                {f.name}
+              </p>
+              <p className="mt-0.5 flex items-center gap-2 text-[11px] opacity-90">
+                <MapPin className="h-3 w-3" />
+                {f.distance} · {f.price}
+                <Star className="h-3 w-3 fill-secondary text-secondary" />
+                {f.rating}
+              </p>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* sections */}
+      <p className="pt-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+        Cashback near you
+      </p>
+      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
+        {venues.map((v) => (
+          <div key={v.name} className="w-44 flex-shrink-0">
+            <div className="relative h-28 overflow-hidden rounded-2xl">
+              <img src={v.img} alt="" className="h-full w-full object-cover" />
+              {v.affiliated && (
+                <span className="absolute left-2 top-2 rounded-full bg-tier-gold px-2 py-0.5 text-[10px] font-bold text-black">
+                  {v.cashback}%
+                </span>
+              )}
+            </div>
+            <p className="mt-1.5 truncate text-sm font-medium">{v.name}</p>
+            <p className="truncate text-[10px] text-muted-foreground">
+              {v.distance} · {v.price}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <p className="pt-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+        Where Gold guests are tonight
+      </p>
+      <div className="space-y-2">
+        {venues.slice(0, 3).map((v) => (
+          <div
+            key={v.name + "row"}
+            className="flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-2"
+          >
+            <img
+              src={v.img}
+              alt=""
+              className="h-14 w-14 rounded-xl object-cover"
+            />
+            <div className="flex-1">
+              <p className="text-sm font-medium leading-none">{v.name}</p>
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                {v.type}
+              </p>
+              <p className="mt-1 flex items-center gap-2 text-[10px] text-secondary">
+                <Sparkles className="h-2.5 w-2.5" />
+                {v.vibe}
+              </p>
+            </div>
+            {v.affiliated ? (
+              <span className="rounded-full bg-tier-gold px-2 py-0.5 text-[10px] font-bold text-black">
+                {v.cashback}%
+              </span>
+            ) : (
+              <span className="rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground">
+                Reserve
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TinderMode() {
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState<"l" | "r" | null>(null);
   const v = venues[idx % venues.length];
@@ -96,7 +252,6 @@ function Discover() {
 
   return (
     <>
-      <TopBar title="Tonight" subtitle="Swipe to discover" />
       <div className="relative mx-5 h-[480px]">
         <div
           key={idx}
@@ -169,12 +324,10 @@ function Discover() {
   );
 }
 
-function MapView() {
+function MapMode() {
   return (
-    <>
-      <TopBar title="Near you" subtitle="3 affiliated · 12 nearby" />
-      <div
-        className="relative mx-5 h-[520px] overflow-hidden rounded-3xl"
+    <div
+      className="relative mx-5 h-[560px] overflow-hidden rounded-3xl"
         style={{
           background:
             "radial-gradient(circle at 30% 40%, oklch(0.30 0.05 200), oklch(0.16 0.02 220))",
@@ -225,6 +378,24 @@ function MapView() {
           </p>
         </div>
       </div>
+  );
+}
+
+function Discover() {
+  const [mode, setMode] = useState<DiscoverMode>("catalog");
+  const sub =
+    mode === "catalog"
+      ? "Curated for tonight"
+      : mode === "map"
+      ? "3 affiliated · 12 nearby"
+      : "Swipe to decide";
+  return (
+    <>
+      <TopBar title="Discover" subtitle={sub} />
+      <ModeSwitcher mode={mode} setMode={setMode} />
+      {mode === "catalog" && <CatalogMode />}
+      {mode === "map" && <MapMode />}
+      {mode === "tinder" && <TinderMode />}
     </>
   );
 }
@@ -329,7 +500,6 @@ export function GuestApp() {
       <StatusBar />
       <div className="flex-1 overflow-y-auto scrollbar-hide pb-20">
         {tab === "discover" && <Discover />}
-        {tab === "map" && <MapView />}
         {tab === "wallet" && <WalletView />}
         {tab === "profile" && <ProfileView />}
       </div>
@@ -337,7 +507,6 @@ export function GuestApp() {
         <div className="flex justify-around">
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
-            { id: "map", Icon: MapIcon, label: "Map" },
             { id: "wallet", Icon: Wallet, label: "Wallet" },
             { id: "profile", Icon: User, label: "Profile" },
           ].map(({ id, Icon, label }) => (
