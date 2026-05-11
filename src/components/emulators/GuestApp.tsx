@@ -6,7 +6,6 @@ import {
   Flame,
   Ticket,
   User,
-  Heart,
   X,
   Star,
   Sparkles,
@@ -15,6 +14,7 @@ import {
   Calendar,
   Check,
   Clock,
+  Bookmark,
 } from "lucide-react";
 
 type Tab = "discover" | "wallet" | "profile";
@@ -239,18 +239,21 @@ function CatalogMode() {
 function TinderMode() {
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState<"l" | "r" | null>(null);
+  const [saved, setSaved] = useState<typeof venues[number] | null>(null);
   const v = venues[idx % venues.length];
 
   const swipe = (d: "l" | "r") => {
+    const current = v;
     setDir(d);
     setTimeout(() => {
       setIdx((i) => i + 1);
       setDir(null);
+      if (d === "r") setSaved(current);
     }, 220);
   };
 
   return (
-    <>
+    <div className="relative flex-1">
       <div className="relative mx-5 h-[480px]">
         <div
           key={idx}
@@ -302,24 +305,69 @@ function TinderMode() {
           </div>
         </div>
       </div>
-      <div className="mt-5 flex items-center justify-center gap-6">
+      <div className="mt-5 flex items-center justify-center gap-4 px-5">
         <button
           onClick={() => swipe("l")}
-          className="flex h-14 w-14 items-center justify-center rounded-full border border-border bg-card text-destructive transition hover:scale-105"
+          className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:scale-[1.02]"
         >
-          <X className="h-6 w-6" />
-        </button>
-        <button className="flex h-12 w-12 items-center justify-center rounded-full bg-card text-secondary">
-          <Calendar className="h-5 w-5" />
+          <X className="h-4 w-4" /> Nope
         </button>
         <button
           onClick={() => swipe("r")}
-          className="flex h-14 w-14 items-center justify-center rounded-full bg-peacock text-white shadow-glow transition hover:scale-105"
+          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow transition hover:scale-[1.02]"
         >
-          <Heart className="h-6 w-6 fill-current" />
+          <Bookmark className="h-4 w-4 fill-current" /> Save coupon
         </button>
       </div>
-    </>
+
+      {saved && (
+        <div
+          className="absolute inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm"
+          onClick={() => setSaved(null)}
+        >
+          <div
+            className="w-full rounded-t-3xl border-t border-border bg-card p-5 pb-8 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tier-gold text-sm font-bold text-black">
+                {saved.cashback}%
+              </div>
+              <div className="flex-1">
+                <p className="text-[10px] uppercase tracking-widest text-secondary">
+                  Coupon saved
+                </p>
+                <p className="font-display text-lg font-semibold leading-tight">
+                  {saved.name}
+                </p>
+              </div>
+              <Check className="h-5 w-5 text-secondary" />
+            </div>
+            <p className="mt-4 text-sm text-foreground">
+              Want to make a reservation now?
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Lock a table tonight and your cashback activates automatically.
+            </p>
+            <div className="mt-4 flex gap-2">
+              <button
+                onClick={() => setSaved(null)}
+                className="flex-1 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground"
+              >
+                Not now
+              </button>
+              <button
+                onClick={() => setSaved(null)}
+                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
+              >
+                <Calendar className="h-4 w-4" /> Reserve
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
