@@ -4,7 +4,7 @@ import {
   Map as MapIcon,
   LayoutGrid,
   Flame,
-  Wallet,
+  Ticket,
   User,
   Heart,
   X,
@@ -13,6 +13,8 @@ import {
   Instagram,
   MapPin,
   Calendar,
+  Check,
+  Clock,
 } from "lucide-react";
 
 type Tab = "discover" | "wallet" | "profile";
@@ -401,42 +403,101 @@ function Discover() {
 }
 
 function WalletView() {
-  const coupons = [
-    { name: "Casa Luminar", cb: 18, exp: "Tonight · 11pm", color: "tier-gold" },
-    { name: "Loto Café", cb: 12, exp: "Tomorrow", color: "tier-silver" },
-    { name: "Neón Bar", cb: 25, exp: "+ Story bonus 10%", color: "tier-bronze" },
+  const [seg, setSeg] = useState<"unused" | "used">("unused");
+  const unused = [
+    { name: "Casa Luminar", cb: 18, exp: "Tonight · 11pm", color: "tier-gold", note: "Rooftop · 0.4 km" },
+    { name: "Loto Café", cb: 12, exp: "Expires tomorrow", color: "tier-silver", note: "Brunch · weekends" },
+    { name: "Neón Bar", cb: 25, exp: "+ Story bonus 10%", color: "tier-bronze", note: "Late night cocktails" },
+  ];
+  const used = [
+    { name: "Mar Verde", cb: 15, when: "Sat · May 3", saved: "$ 320", color: "tier-gold" },
+    { name: "Loto Café", cb: 12, when: "Apr 27", saved: "$ 180", color: "tier-silver" },
+    { name: "Casa Luminar", cb: 18, when: "Apr 19", saved: "$ 540", color: "tier-gold" },
+    { name: "Neón Bar", cb: 20, when: "Apr 12", saved: "$ 260", color: "tier-bronze" },
   ];
   return (
     <>
-      <TopBar title="Wallet" subtitle="3 active coupons" />
+      <TopBar title="Coupon Wallet" subtitle={`${unused.length} unused · ${used.length} used`} />
       <div className="mx-5 mb-4 rounded-2xl bg-peacock p-4 text-primary-foreground shadow-glow">
         <p className="text-xs uppercase tracking-widest opacity-80">Total saved</p>
         <p className="font-display text-4xl font-semibold">$ 1,840</p>
         <p className="mt-1 text-xs opacity-80">12 visits · this month</p>
       </div>
-      <div className="space-y-3 px-5 pb-24">
-        {coupons.map((c) => (
-          <div
-            key={c.name}
-            className="flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-3"
+
+      {/* segmented control */}
+      <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
+        {([
+          { id: "unused", label: "Unused", count: unused.length, Icon: Clock },
+          { id: "used", label: "Used", count: used.length, Icon: Check },
+        ] as const).map((s) => (
+          <button
+            key={s.id}
+            onClick={() => setSeg(s.id)}
+            className={`flex flex-1 items-center justify-center gap-1.5 rounded-full py-1.5 text-xs font-medium transition ${
+              seg === s.id ? "bg-foreground text-background" : "text-muted-foreground"
+            }`}
           >
-            <div className={`flex h-14 w-14 items-center justify-center rounded-xl ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-sm font-bold text-black`}>
-              {c.cb}%
-            </div>
-            <div className="flex-1">
-              <p className="font-medium">{c.name}</p>
-              <p className="text-xs text-muted-foreground">{c.exp}</p>
-            </div>
-            <button className="rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground">
-              QR
-            </button>
-          </div>
+            <s.Icon className="h-3.5 w-3.5" />
+            {s.label}
+            <span className={`rounded-full px-1.5 text-[10px] ${seg === s.id ? "bg-background/20" : "bg-muted"}`}>
+              {s.count}
+            </span>
+          </button>
         ))}
-        <div className="rounded-2xl border border-dashed border-border p-3 text-center text-xs text-muted-foreground">
-          <Instagram className="mx-auto mb-1 h-4 w-4" />
-          Post a story tagging the venue to unlock +10% extra cashback
-        </div>
       </div>
+
+      {seg === "unused" ? (
+        <div className="space-y-3 px-5 pb-24">
+          {unused.map((c) => (
+            <div
+              key={c.name}
+              className="flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-3"
+            >
+              <div className={`flex h-14 w-14 items-center justify-center rounded-xl ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-sm font-bold text-black`}>
+                {c.cb}%
+              </div>
+              <div className="flex-1">
+                <p className="font-medium">{c.name}</p>
+                <p className="text-[11px] text-muted-foreground">{c.note}</p>
+                <p className="mt-0.5 flex items-center gap-1 text-[11px] text-secondary">
+                  <Clock className="h-3 w-3" /> {c.exp}
+                </p>
+              </div>
+              <button className="rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground">
+                QR
+              </button>
+            </div>
+          ))}
+          <div className="rounded-2xl border border-dashed border-border p-3 text-center text-xs text-muted-foreground">
+            <Instagram className="mx-auto mb-1 h-4 w-4" />
+            Post a story tagging the venue to unlock +10% extra cashback
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-3 px-5 pb-24">
+          {used.map((c) => (
+            <div
+              key={c.name + c.when}
+              className="flex items-center gap-3 rounded-2xl border border-border bg-card/60 p-3 opacity-80"
+            >
+              <div className={`relative flex h-14 w-14 items-center justify-center rounded-xl ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-sm font-bold text-black grayscale`}>
+                {c.cb}%
+                <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/50">
+                  <Check className="h-6 w-6 text-white" />
+                </div>
+              </div>
+              <div className="flex-1">
+                <p className="font-medium line-through decoration-muted-foreground/50">{c.name}</p>
+                <p className="text-[11px] text-muted-foreground">Redeemed · {c.when}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Saved</p>
+                <p className="font-display text-sm font-semibold text-secondary">{c.saved}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
@@ -507,7 +568,7 @@ export function GuestApp() {
         <div className="flex justify-around">
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
-            { id: "wallet", Icon: Wallet, label: "Wallet" },
+          { id: "wallet", Icon: Ticket, label: "Coupons" },
             { id: "profile", Icon: User, label: "Profile" },
           ].map(({ id, Icon, label }) => (
             <button
