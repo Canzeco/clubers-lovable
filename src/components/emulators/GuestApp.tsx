@@ -31,6 +31,12 @@ const venues = [
     distance: "0.4 km",
     vibe: "Golden hour terrace · live DJ",
     affiliated: true,
+    fb: 4.7,
+    fbCount: 312,
+    mesita: 4.9,
+    mesitaCount: 84,
+    ig: "3.2k mentions",
+    quote: "“Best sunset terrace in the city.”",
   },
   {
     name: "Neón Bar",
@@ -42,6 +48,12 @@ const venues = [
     distance: "0.9 km",
     vibe: "Speakeasy · 5 Gold guests tonight",
     affiliated: true,
+    fb: 4.5,
+    fbCount: 198,
+    mesita: 4.8,
+    mesitaCount: 62,
+    ig: "1.8k mentions",
+    quote: "“The mezcal flight is unreal.”",
   },
   {
     name: "Mar Verde",
@@ -53,6 +65,12 @@ const venues = [
     distance: "1.2 km",
     vibe: "Reserve via Mesita · no cashback",
     affiliated: false,
+    fb: 4.3,
+    fbCount: 540,
+    mesita: 4.6,
+    mesitaCount: 41,
+    ig: "920 mentions",
+    quote: "“Brunch with ocean breeze.”",
   },
 ];
 
@@ -120,9 +138,9 @@ function ModeSwitcher({
 
 function CatalogMode() {
   return (
-    <div className="space-y-3 px-5 pb-6">
+    <div className="pb-6">
       {/* filter chips */}
-      <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+      <div className="flex gap-2 overflow-x-auto scrollbar-hide px-5 pb-3">
         {["All", "Tonight", "Cashback", "Rooftop", "Brunch", "Late night"].map(
           (c, i) => (
             <button
@@ -139,99 +157,78 @@ function CatalogMode() {
         )}
       </div>
 
-      {/* featured */}
-      {(() => {
-        const f = venues[0];
-        return (
-          <div className="relative overflow-hidden rounded-3xl">
-            <img src={f.img} alt={f.name} className="h-56 w-full object-cover" />
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85))",
-              }}
-            />
-            <span className="absolute left-3 top-3 rounded-full bg-tier-gold px-2.5 py-1 text-[10px] font-bold text-black">
-              {f.cashback}% CASHBACK
-            </span>
-            <span className="absolute right-3 top-3 rounded-full bg-black/40 px-2 py-0.5 text-[10px] text-white backdrop-blur">
-              Featured tonight
-            </span>
-            <div className="absolute bottom-3 left-4 right-4 text-white">
-              <p className="text-[10px] uppercase tracking-widest opacity-80">
-                {f.type}
-              </p>
-              <p className="font-display text-2xl font-semibold leading-tight">
-                {f.name}
-              </p>
-              <p className="mt-0.5 flex items-center gap-2 text-[11px] opacity-90">
-                <MapPin className="h-3 w-3" />
-                {f.distance} · {f.price}
-                <Star className="h-3 w-3 fill-secondary text-secondary" />
-                {f.rating}
-              </p>
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* sections */}
-      <p className="pt-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-        Cashback near you
-      </p>
-      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
-        {venues.map((v) => (
-          <div key={v.name} className="w-44 flex-shrink-0">
-            <div className="relative h-28 overflow-hidden rounded-2xl">
-              <img src={v.img} alt="" className="h-full w-full object-cover" />
-              {v.affiliated && (
+      {/* venue cards — full width, 5:2 ratio, image left 3:2 */}
+      <div className="flex flex-col gap-3 px-3">
+        {[...venues, ...venues].map((v, idx) => (
+          <div
+            key={v.name + idx}
+            className="flex w-full overflow-hidden rounded-2xl border border-border bg-card-soft"
+            style={{ aspectRatio: "5 / 2" }}
+          >
+            {/* image 3:2 of the height-based area, so width = height * 1.5 */}
+            <div className="relative h-full flex-shrink-0" style={{ aspectRatio: "3 / 2" }}>
+              <img src={v.img} alt={v.name} className="h-full w-full object-cover" />
+              <div
+                className="absolute inset-0"
+                style={{ background: "linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.7))" }}
+              />
+              {v.affiliated ? (
                 <span className="absolute left-2 top-2 rounded-full bg-tier-gold px-2 py-0.5 text-[10px] font-bold text-black">
                   {v.cashback}%
                 </span>
+              ) : (
+                <span className="absolute left-2 top-2 rounded-full bg-black/50 px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider text-white backdrop-blur">
+                  Discover
+                </span>
               )}
+              <div className="absolute bottom-1.5 left-2 right-2 text-white">
+                <p className="font-display text-sm font-semibold leading-tight drop-shadow">
+                  {v.name}
+                </p>
+                <p className="flex items-center gap-1 text-[9px] opacity-90">
+                  <MapPin className="h-2.5 w-2.5" /> {v.distance} · {v.price}
+                </p>
+              </div>
             </div>
-            <p className="mt-1.5 truncate text-sm font-medium">{v.name}</p>
-            <p className="truncate text-[10px] text-muted-foreground">
-              {v.distance} · {v.price}
-            </p>
-          </div>
-        ))}
-      </div>
 
-      <p className="pt-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-        Where Gold guests are tonight
-      </p>
-      <div className="space-y-2">
-        {venues.slice(0, 3).map((v) => (
-          <div
-            key={v.name + "row"}
-            className="flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-2"
-          >
-            <img
-              src={v.img}
-              alt=""
-              className="h-14 w-14 rounded-xl object-cover"
-            />
-            <div className="flex-1">
-              <p className="text-sm font-medium leading-none">{v.name}</p>
-              <p className="mt-1 text-[11px] text-muted-foreground">
+            {/* info — centralized intelligence */}
+            <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 px-2.5 py-2">
+              <p className="truncate text-[9px] uppercase tracking-widest text-muted-foreground">
                 {v.type}
               </p>
-              <p className="mt-1 flex items-center gap-2 text-[10px] text-secondary">
-                <Sparkles className="h-2.5 w-2.5" />
-                {v.vibe}
+
+              {/* rating grid */}
+              <div className="grid grid-cols-3 gap-1">
+                <div className="rounded-md bg-background/60 px-1.5 py-1">
+                  <p className="text-[8px] uppercase tracking-wider text-muted-foreground">Mesita</p>
+                  <p className="flex items-center gap-0.5 text-[11px] font-semibold">
+                    <Star className="h-2.5 w-2.5 fill-secondary text-secondary" /> {v.mesita}
+                    <span className="ml-0.5 text-[8px] font-normal text-muted-foreground">·{v.mesitaCount}</span>
+                  </p>
+                </div>
+                <div className="rounded-md bg-background/60 px-1.5 py-1">
+                  <p className="text-[8px] uppercase tracking-wider text-muted-foreground">Facebook</p>
+                  <p className="flex items-center gap-0.5 text-[11px] font-semibold">
+                    <Star className="h-2.5 w-2.5 fill-blue-400 text-blue-400" /> {v.fb}
+                    <span className="ml-0.5 text-[8px] font-normal text-muted-foreground">·{v.fbCount}</span>
+                  </p>
+                </div>
+                <div className="rounded-md bg-background/60 px-1.5 py-1">
+                  <p className="text-[8px] uppercase tracking-wider text-muted-foreground">Instagram</p>
+                  <p className="flex items-center gap-0.5 text-[11px] font-semibold">
+                    <Instagram className="h-2.5 w-2.5 text-pink-400" />
+                    <span className="truncate">{v.ig}</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* quote / vibe */}
+              <p className="truncate text-[10px] italic text-foreground/80">{v.quote}</p>
+              <p className="flex items-center gap-1 truncate text-[9px] text-secondary">
+                <Sparkles className="h-2.5 w-2.5 flex-shrink-0" />
+                <span className="truncate">{v.vibe}</span>
               </p>
             </div>
-            {v.affiliated ? (
-              <span className="rounded-full bg-tier-gold px-2 py-0.5 text-[10px] font-bold text-black">
-                {v.cashback}%
-              </span>
-            ) : (
-              <span className="rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground">
-                Reserve
-              </span>
-            )}
           </div>
         ))}
       </div>
