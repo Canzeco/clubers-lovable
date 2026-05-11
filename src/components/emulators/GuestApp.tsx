@@ -985,6 +985,8 @@ function Discover() {
       ? "Curated for tonight"
       : mode === "map"
       ? "3 affiliated · 12 nearby"
+      : mode === "ai"
+      ? "Ask Mesita anything"
       : "Swipe to decide";
   return (
     <div className="relative flex h-full flex-col overflow-hidden">
@@ -997,6 +999,7 @@ function Discover() {
       )}
       {mode === "map" && <MapMode />}
       {mode === "tinder" && <TinderMode />}
+      {mode === "ai" && <AISearchMode onSelect={setSelected} />}
       {selected && (
         <VenueDetailSheet venue={selected} onClose={() => setSelected(null)} />
       )}
