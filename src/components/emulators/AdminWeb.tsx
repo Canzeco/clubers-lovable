@@ -320,10 +320,6 @@ function Portfolio() {
 }
 
 function DiscoverVenues() {
-  return DiscoverVenuesImpl();
-}
-
-function DiscoverVenuesImpl() {
   const targets = [
     { n: "Galápago", area: "Roma Sur", ig: "14k", rating: 4.8, signals: ["3 Gold guests visitaron", "12 stories tagged"], fit: 92 },
     { n: "Patio Verde", area: "Condesa", ig: "31k", rating: 4.5, signals: ["Trending IG · 7d", "Ticket alto"], fit: 88 },
