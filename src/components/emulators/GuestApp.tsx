@@ -22,6 +22,11 @@ import {
   Eye,
   Phone,
   MessageCircle,
+  QrCode,
+  Wallet,
+  CreditCard,
+  Banknote,
+  ChevronRight,
 } from "lucide-react";
 
 type Tab = "discover" | "wallet" | "profile";
@@ -1043,6 +1048,7 @@ function Discover() {
 
 function WalletView() {
   const [seg, setSeg] = useState<"unused" | "used">("unused");
+  const [openCoupon, setOpenCoupon] = useState<any | null>(null);
   const unused = [
     { name: "Casa Luminar", cb: 18, exp: "Fri · 9:30pm", color: "tier-gold", note: "Rooftop · 0.4 km", res: "pending" as const },
     { name: "Loto Café", cb: 12, exp: "Expires tomorrow", color: "tier-silver", note: "Brunch · weekends", res: "confirmed" as const },
@@ -1082,9 +1088,10 @@ function WalletView() {
       {seg === "unused" ? (
         <div className="space-y-3 px-5 pb-24">
           {unused.map((c) => (
-            <div
+            <button
               key={c.name}
-              className="flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-3"
+              onClick={() => setOpenCoupon({ ...c, used: false })}
+              className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card-soft p-3 text-left transition active:scale-[0.99]"
             >
               <div className={`flex h-14 w-14 items-center justify-center rounded-xl ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-sm font-bold text-black`}>
                 {c.cb}%
@@ -1108,18 +1115,19 @@ function WalletView() {
                   </p>
                 </div>
               </div>
-              <button className="rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground">
+              <span className="rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground">
                 QR
-              </button>
-            </div>
+              </span>
+            </button>
           ))}
         </div>
       ) : (
         <div className="space-y-3 px-5 pb-24">
           {used.map((c) => (
-            <div
+            <button
               key={c.name + c.when}
-              className="flex items-center gap-3 rounded-2xl border border-border bg-card/60 p-3 opacity-80"
+              onClick={() => setOpenCoupon({ ...c, used: true })}
+              className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card/60 p-3 text-left opacity-80"
             >
               <div className={`relative flex h-14 w-14 items-center justify-center rounded-xl ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-sm font-bold text-black grayscale`}>
                 {c.cb}%
@@ -1135,11 +1143,171 @@ function WalletView() {
                 <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Saved</p>
                 <p className="font-display text-sm font-semibold text-secondary">{c.saved}</p>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       )}
+
+      {openCoupon && (
+        <CouponDetailSheet coupon={openCoupon} onClose={() => setOpenCoupon(null)} />
+      )}
     </>
+  );
+}
+
+function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+  const tierBg =
+    coupon.color === "tier-gold" ? "bg-tier-gold" :
+    coupon.color === "tier-silver" ? "bg-tier-silver" :
+    coupon.color === "tier-diamond" ? "bg-tier-diamond" : "bg-tier-bronze";
+  return (
+    <div className="absolute inset-0 z-30 flex items-end bg-black/50" onClick={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="max-h-[88%] w-full overflow-y-auto rounded-t-3xl border-t border-border bg-background p-5 shadow-elev scrollbar-hide"
+      >
+        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted-foreground/30" />
+
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <div className={`flex h-16 w-16 items-center justify-center rounded-2xl ${tierBg} text-base font-bold text-black`}>
+            {coupon.cb}%
+          </div>
+          <div className="flex-1">
+            <p className="text-[10px] uppercase tracking-widest text-secondary">
+              {coupon.used ? "Redeemed coupon" : "Cashback coupon"}
+            </p>
+            <p className="font-display text-2xl font-semibold leading-tight">{coupon.name}</p>
+            <p className="text-[11px] text-muted-foreground">
+              {coupon.note || (coupon.when ? `Used · ${coupon.when}` : "")}
+            </p>
+          </div>
+          <button onClick={onClose} className="rounded-full p-1 text-muted-foreground hover:bg-card">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Status row */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {coupon.res === "pending" && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-2.5 py-1 text-[11px] font-medium text-primary">
+              <Phone className="h-3 w-3 animate-pulse" /> AI agent calling venue
+            </span>
+          )}
+          {coupon.res === "confirmed" && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/15 px-2.5 py-1 text-[11px] font-medium text-secondary">
+              <Check className="h-3 w-3" /> Reservation confirmed
+            </span>
+          )}
+          {coupon.exp && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-card px-2.5 py-1 text-[11px] text-secondary">
+              <Clock className="h-3 w-3" /> {coupon.exp}
+            </span>
+          )}
+          {coupon.used && coupon.saved && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/15 px-2.5 py-1 text-[11px] font-medium text-secondary">
+              <Sparkles className="h-3 w-3" /> Saved {coupon.saved}
+            </span>
+          )}
+        </div>
+
+        {!coupon.used ? (
+          <>
+            {/* QR card */}
+            <div className="mt-5 rounded-3xl bg-peacock p-5 text-center text-primary-foreground shadow-glow">
+              <p className="text-[10px] uppercase tracking-widest opacity-80">Show at the venue</p>
+              <div className="mx-auto mt-3 flex h-40 w-40 items-center justify-center rounded-2xl bg-white">
+                <QrCode className="h-32 w-32 text-black" strokeWidth={1.2} />
+              </div>
+              <p className="mt-3 font-mono text-xs opacity-80">MESITA · {coupon.name.slice(0,3).toUpperCase()}-7K4Q</p>
+              <p className="mt-1 text-[10px] opacity-70">Valid for one visit · {coupon.cb}% cashback</p>
+            </div>
+
+            {/* How to use */}
+            <div className="mt-5">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">How to use</p>
+              <ol className="mt-2 space-y-2">
+                {[
+                  { i: "1", t: "Arrive at " + coupon.name, s: "Show this QR to your waiter when you sit." },
+                  { i: "2", t: "Order normally", s: "No menu changes, no haggling — just enjoy." },
+                  { i: "3", t: "Pay the bill", s: "Pick a method below. Cashback lands in your wallet in seconds." },
+                ].map((s) => (
+                  <li key={s.i} className="flex gap-3 rounded-2xl border border-border bg-card-soft p-3">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-bold text-secondary-foreground">
+                      {s.i}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">{s.t}</p>
+                      <p className="text-[11px] text-muted-foreground">{s.s}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            {/* Payment methods */}
+            <div className="mt-5">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Pay your bill</p>
+              <div className="mt-2 space-y-2">
+                {[
+                  { Icon: Wallet, t: "Mesita Wallet", s: "Bonus +2% cashback · instant", badge: "Best" },
+                  { Icon: CreditCard, t: "Card via Stripe Link", s: "Bill + tip · scan a 2nd QR from waiter" },
+                  { Icon: Banknote, t: "Cash", s: "Waiter validates on their tablet" },
+                ].map((p) => (
+                  <button
+                    key={p.t}
+                    className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card-soft p-3 text-left"
+                  >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                      <p.Icon className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium">{p.t}</p>
+                        {p.badge && (
+                          <span className="rounded-full bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-secondary-foreground">
+                            {p.badge}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-muted-foreground">{p.s}</p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Fine print */}
+            <div className="mt-5 rounded-2xl border border-border bg-card/40 p-3 text-[11px] text-muted-foreground">
+              <p className="flex items-center gap-1.5 font-medium text-foreground">
+                <BadgeCheck className="h-3.5 w-3.5 text-secondary" /> The fine print
+              </p>
+              <p className="mt-1">Cashback applies to food & drinks only — no tips, no service fee. One coupon per visit. If you no-show a reservation 2x, this coupon pauses for a week.</p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="mt-5 rounded-3xl bg-card-soft p-5">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Receipt</p>
+              <div className="mt-2 space-y-1.5 text-sm">
+                <div className="flex justify-between"><span className="text-muted-foreground">Venue</span><span>{coupon.name}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Date</span><span>{coupon.when}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Cashback rate</span><span>{coupon.cb}%</span></div>
+                <div className="flex justify-between border-t border-border pt-2 font-semibold"><span>You saved</span><span className="text-secondary">{coupon.saved}</span></div>
+              </div>
+            </div>
+            <button className="mt-4 w-full rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow">
+              Go again
+            </button>
+          </>
+        )}
+
+        <button onClick={onClose} className="mt-4 w-full rounded-full border border-border py-2.5 text-sm text-muted-foreground">
+          Close
+        </button>
+      </div>
+    </div>
   );
 }
 
