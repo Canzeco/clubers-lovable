@@ -15,7 +15,7 @@ import {
 
 export function ManagerWeb() {
   const [tab, setTab] = useState("dashboard");
-  const [cashback, setCashback] = useState(18);
+  const [cashback, setCashback] = useState(20);
 
   const nav = [
     { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
@@ -250,14 +250,21 @@ function Promos({ cashback, setCashback }: { cashback: number; setCashback: (n: 
               <span>Cashback</span>
               <span className="font-bold text-secondary">{cashback}%</span>
             </label>
-            <input
-              type="range"
-              min={5}
-              max={40}
-              value={cashback}
-              onChange={(e) => setCashback(Number(e.target.value))}
-              className="mt-2 w-full accent-[oklch(0.82_0.13_85)]"
-            />
+            <div className="mt-2 grid grid-cols-4 gap-1.5">
+              {[5, 10, 20, 50].map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setCashback(v)}
+                  className={`rounded-lg border px-2 py-1.5 text-xs font-semibold transition ${
+                    cashback === v
+                      ? "border-secondary bg-secondary text-secondary-foreground"
+                      : "border-border text-muted-foreground"
+                  }`}
+                >
+                  {v}%
+                </button>
+              ))}
+            </div>
           </div>
           <div className="rounded-lg bg-peacock/10 p-3 text-xs text-muted-foreground">
             <p className="text-foreground">Estimado de Mesita AI</p>
