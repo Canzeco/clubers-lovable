@@ -1833,6 +1833,12 @@ function ProfileView() {
         </div>
           </>
         )}
+
+        {subTab === "wallet" && (
+          <div className="-mx-5 mt-4">
+            <CreditsView />
+          </div>
+        )}
       </div>
 
       {/* Connect Instagram sheet */}
@@ -2271,11 +2277,6 @@ export function GuestApp() {
             <WalletView />
           </div>
         )}
-        {tab === "wallet" && (
-          <div className="flex-1 overflow-y-auto scrollbar-hide">
-            <CreditsView />
-          </div>
-        )}
         {tab === "profile" && (
           <div className="flex-1 overflow-y-auto scrollbar-hide">
             <ProfileView />
@@ -2287,23 +2288,11 @@ export function GuestApp() {
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
             { id: "coupons", Icon: Ticket, label: "Coupons" },
-            { id: "share", Icon: Share2, label: "Share" },
-            { id: "wallet", Icon: Wallet, label: "Wallet" },
             { id: "profile", Icon: User, label: "Profile" },
           ].map(({ id, Icon, label }) => (
             <button
               key={id}
-              onClick={() => {
-                if (id === "share") {
-                  if (typeof navigator !== "undefined" && (navigator as any).share) {
-                    (navigator as any)
-                      .share({ title: "Mesita", text: "Check out Mesita 🦚" })
-                      .catch(() => {});
-                  }
-                  return;
-                }
-                setTab(id as Tab);
-              }}
+              onClick={() => setTab(id as Tab)}
               className={`flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition ${
                 tab === id ? "text-primary" : "text-muted-foreground"
               }`}
