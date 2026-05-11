@@ -1483,6 +1483,11 @@ function RedeemFlow({ coupon }: { coupon: any }) {
         <div className="flex justify-between"><span className="text-muted-foreground">Tip</span><span>${tipNum.toLocaleString()}</span></div>
         <div className="mt-1.5 flex justify-between border-t border-border pt-1.5 font-semibold"><span>Pay from Credits</span><span>${total.toLocaleString()}</span></div>
         <div className="flex justify-between text-secondary"><span>Cashback ({coupon.cb}%)</span><span>+${cashback.toLocaleString()}</span></div>
+        <p className={`mt-2 text-[10px] leading-snug ${capped ? "text-tier-gold" : "text-muted-foreground"}`}>
+          {capped
+            ? `Cashback capped at $1,000 MXN. You cover the remaining $${(total - cashback).toLocaleString()} of the bill.`
+            : "Cashback covers up to $1,000 MXN per visit. Anything above is paid in full."}
+        </p>
       </div>
 
       <button
