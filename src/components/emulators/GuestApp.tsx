@@ -565,8 +565,16 @@ export function GuestApp() {
       <StatusBar />
       <div className="relative flex flex-1 flex-col overflow-hidden pb-20">
         {tab === "discover" && <Discover />}
-        {tab === "wallet" && <WalletView />}
-        {tab === "profile" && <ProfileView />}
+        {tab === "wallet" && (
+          <div className="flex-1 overflow-y-auto scrollbar-hide">
+            <WalletView />
+          </div>
+        )}
+        {tab === "profile" && (
+          <div className="flex-1 overflow-y-auto scrollbar-hide">
+            <ProfileView />
+          </div>
+        )}
       </div>
       <div className="absolute bottom-0 left-0 right-0 border-t border-border bg-card/95 px-4 py-2 backdrop-blur">
         <div className="flex justify-around">
