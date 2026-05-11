@@ -1976,13 +1976,18 @@ function AddCreditsSheet({
   onClose: () => void;
   onConfirm: (amount: number) => void;
 }) {
-  const presets = [200, 500, 1000, 2500];
-  const [amount, setAmount] = useState(500);
-  const [custom, setCustom] = useState("");
+  const products = [
+    { id: "starter", price: 500, bonus: 0, label: "Starter", note: "One drink at any Mesita venue" },
+    { id: "regular", price: 1000, bonus: 50, label: "Regular", note: "+$50 bonus credits" },
+    { id: "popular", price: 2000, bonus: 150, label: "Popular", note: "+$150 bonus · best value", featured: true },
+    { id: "vip", price: 5000, bonus: 500, label: "VIP", note: "+$500 bonus credits" },
+  ];
+  const [productId, setProductId] = useState("regular");
   const [method, setMethod] = useState<"card" | "apple" | "link">("card");
   const [step, setStep] = useState<"choose" | "processing" | "done">("choose");
-  const final = parseFloat(custom) || amount;
-  const bonus = final >= 1000 ? Math.round(final * 0.05) : 0;
+  const product = products.find((p) => p.id === productId)!;
+  const final = product.price;
+  const bonus = product.bonus;
 
   const pay = () => {
     setStep("processing");
@@ -2016,55 +2021,45 @@ function AddCreditsSheet({
               </button>
             </div>
 
-            {/* Amount presets */}
-            <div className="mt-4 grid grid-cols-4 gap-2">
-              {presets.map((p) => {
-                const active = !custom && amount === p;
+            {/* Stripe product packs */}
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              {products.map((p) => {
+                const active = productId === p.id;
                 return (
                   <button
-                    key={p}
-                    onClick={() => {
-                      setAmount(p);
-                      setCustom("");
-                    }}
-                    className={`rounded-xl border py-3 text-sm font-semibold transition ${
+                    key={p.id}
+                    onClick={() => setProductId(p.id)}
+                    className={`relative rounded-2xl border p-3 text-left transition ${
                       active
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "border-border bg-card-soft text-foreground"
+                        ? "border-primary bg-primary/5 shadow-sm"
+                        : "border-border bg-card-soft"
                     }`}
                   >
-                    ${p.toLocaleString()}
+                    {p.featured && (
+                      <span className="absolute -top-2 right-3 rounded-full bg-secondary px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-secondary-foreground">
+                        Best
+                      </span>
+                    )}
+                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                      {p.label}
+                    </p>
+                    <p className="mt-1 font-display text-xl font-semibold leading-none">
+                      ${p.price.toLocaleString()}
+                      <span className="ml-1 text-[10px] font-medium text-muted-foreground">
+                        MXN
+                      </span>
+                    </p>
+                    <p
+                      className={`mt-1 text-[10px] ${
+                        p.bonus > 0 ? "text-secondary" : "text-muted-foreground"
+                      }`}
+                    >
+                      {p.note}
+                    </p>
                   </button>
                 );
               })}
             </div>
-
-            {/* Custom */}
-            <div className="mt-3">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                Or custom amount
-              </p>
-              <div className="mt-1 flex items-center gap-2 rounded-2xl border border-border bg-card-soft px-4 py-3">
-                <span className="text-lg font-semibold text-muted-foreground">$</span>
-                <input
-                  inputMode="decimal"
-                  value={custom}
-                  onChange={(e) => setCustom(e.target.value.replace(/[^0-9.]/g, ""))}
-                  placeholder="0"
-                  className="flex-1 bg-transparent text-2xl font-semibold outline-none placeholder:text-muted-foreground/40"
-                />
-              </div>
-            </div>
-
-            {bonus > 0 && (
-              <div className="mt-3 flex items-center gap-2 rounded-2xl border border-secondary/30 bg-secondary/10 p-3 text-[11px] text-secondary">
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>
-                  <span className="font-semibold">+${bonus.toLocaleString()} bonus</span>{" "}
-                  credits for topping up over $1,000
-                </span>
-              </div>
-            )}
 
             {/* Payment method */}
             <p className="mt-5 text-[10px] uppercase tracking-widest text-muted-foreground">
