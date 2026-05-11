@@ -2086,8 +2086,6 @@ function ShareView() {
   const [picking, setPicking] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const redeemed = cards.filter((c) => c.status === "redeemed").length;
-  const sent = cards.filter((c) => c.status === "sent").length;
   const available = cards.filter((c) => c.status === "available").length;
 
   const link = "mesita.app/g/valenrose-X9F2";
