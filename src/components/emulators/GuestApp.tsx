@@ -312,212 +312,72 @@ function VenueDetailSheet({
             <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
           </div>
 
-          {/* Who's been here — heavy social proof */}
-          <div className="space-y-3">
-            <p className="flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
-              <span>Who's been here</span>
-              <span className="flex items-center gap-1 text-secondary">
-                <Flame className="h-3 w-3" /> Hot tonight
-              </span>
-            </p>
-
-            {/* Status banner */}
-            <div
-              className="relative overflow-hidden rounded-2xl p-3"
-              style={{
-                background:
-                  "linear-gradient(120deg, oklch(0.78 0.16 85 / 0.15), oklch(0.55 0.18 280 / 0.18))",
-                border: "1px solid oklch(0.78 0.16 85 / 0.35)",
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <Crown className="h-4 w-4 text-tier-gold" />
-                <p className="text-[11px] font-semibold tracking-wide text-tier-gold">
-                  TOP 1% GOLD VENUE · CDMX THIS WEEK
-                </p>
-              </div>
-              <p className="mt-1 text-[11px] text-foreground/80">
-                Visited by <span className="font-semibold">38 Gold guests</span> in the last 7 days
-              </p>
-            </div>
-
-            {/* Tier breakdown */}
-            <div className="grid grid-cols-4 gap-1.5">
-              <div className="rounded-xl border border-tier-diamond/40 bg-tier-diamond/10 p-2.5 text-center">
-                <span className="inline-block rounded-full bg-tier-diamond px-1.5 py-px text-[8px] font-bold uppercase text-black">
-                  Diamond
-                </span>
-                <p className="mt-1.5 font-display text-2xl font-semibold leading-none text-tier-diamond">
-                  12
-                </p>
-                <p className="mt-0.5 text-[9px] text-muted-foreground">guests · 90 d</p>
-              </div>
-              <div className="rounded-xl border border-tier-gold/40 bg-tier-gold/10 p-2.5 text-center">
-                <span className="inline-block rounded-full bg-tier-gold px-1.5 py-px text-[8px] font-bold uppercase text-black">
-                  Gold
-                </span>
-                <p className="mt-1.5 font-display text-2xl font-semibold leading-none text-tier-gold">
-                  142
-                </p>
-                <p className="mt-0.5 text-[9px] text-muted-foreground">guests · 90 d</p>
-              </div>
-              <div className="rounded-xl border border-tier-silver/40 bg-tier-silver/10 p-2.5 text-center">
-                <span className="inline-block rounded-full bg-tier-silver px-1.5 py-px text-[8px] font-bold uppercase text-black">
-                  Silver
-                </span>
-                <p className="mt-1.5 font-display text-2xl font-semibold leading-none text-tier-silver">
-                  318
-                </p>
-                <p className="mt-0.5 text-[9px] text-muted-foreground">guests · 90 d</p>
-              </div>
-              <div className="rounded-xl border border-tier-bronze/40 bg-tier-bronze/10 p-2.5 text-center">
-                <span className="inline-block rounded-full bg-tier-bronze px-1.5 py-px text-[8px] font-bold uppercase text-black">
-                  Bronze
-                </span>
-                <p className="mt-1.5 font-display text-2xl font-semibold leading-none text-tier-bronze">
-                  604
-                </p>
-                <p className="mt-0.5 text-[9px] text-muted-foreground">guests · 90 d</p>
-              </div>
-            </div>
-
-            {/* Featured tastemakers — horizontal scroll */}
-            <div>
-              <p className="mb-2 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-                <Crown className="h-3 w-3 text-tier-gold" /> Featured Gold tastemakers
-              </p>
-              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-                {venue.visitors.concat(venue.visitors).slice(0, 6).map((u, i) => (
-                  <div
-                    key={u.handle + "tm" + i}
-                    className="w-28 flex-shrink-0 rounded-2xl border border-border bg-card-soft p-2.5 text-center"
-                  >
-                    <div className="relative mx-auto w-fit">
-                      <img
-                        src={u.img}
-                        alt={u.name}
-                        className={`h-14 w-14 rounded-full object-cover ring-2 ${
-                          u.tier === "gold"
-                            ? "ring-tier-gold"
-                            : u.tier === "silver"
-                            ? "ring-tier-silver"
-                            : "ring-tier-bronze"
-                        }`}
-                      />
-                      <BadgeCheck className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full bg-card text-peacock" />
-                    </div>
-                    <p className="mt-1.5 truncate text-[11px] font-medium leading-tight">
-                      {u.name.split(" ")[0]}
-                    </p>
-                    <p className="truncate text-[9px] text-muted-foreground">{u.handle}</p>
-                    <p className="mt-1 flex items-center justify-center gap-0.5 text-[9px] text-pink-400">
-                      <Instagram className="h-2.5 w-2.5" />
-                      {(12 + i * 7).toString()}.{i}k
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Live activity feed */}
-            <div className="rounded-2xl border border-border bg-card-soft">
-              <p className="flex items-center gap-1.5 border-b border-border px-3 py-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-                <TrendingUp className="h-3 w-3 text-secondary" /> Live activity
-              </p>
-              <ul className="divide-y divide-border">
-                {[
-                  { u: venue.visitors[0], action: "just checked in", time: "2m ago" },
-                  { u: venue.visitors[1] ?? venue.visitors[0], action: "posted a story", time: "14m ago" },
-                  { u: venue.visitors[2] ?? venue.visitors[0], action: "rated 5★", time: "1h ago" },
-                  { u: venue.visitors[0], action: "tagged 3 friends", time: "3h ago" },
-                ].map((row, i) => (
-                  <li key={i} className="flex items-center gap-2 px-3 py-2">
-                    <img
-                      src={row.u.img}
-                      alt=""
-                      className={`h-7 w-7 rounded-full object-cover ring-2 ${
-                        row.u.tier === "gold"
-                          ? "ring-tier-gold"
-                          : row.u.tier === "silver"
-                          ? "ring-tier-silver"
-                          : "ring-tier-bronze"
-                      }`}
-                    />
-                    <p className="min-w-0 flex-1 truncate text-[11px] leading-snug">
-                      <span className="font-semibold">{row.u.name.split(" ")[0]}</span>{" "}
-                      <span className="text-muted-foreground">{row.action}</span>
-                    </p>
-                    <span className="flex items-center gap-1 text-[9px] text-muted-foreground">
-                      <Clock className="h-2.5 w-2.5" /> {row.time}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Mesita reviews — exclusively from Mesita users */}
+          {/* Mesita Visitors — sorted by relevance (recency × tier × influence) */}
           <div>
             <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
-              <span>Mesita reviews</span>
+              <span>Mesita Visitors</span>
               <span className="flex items-center gap-1 text-secondary">
-                <Star className="h-3 w-3 fill-secondary text-secondary" />
-                {venue.mesita} · {venue.mesitaCount} reviews
+                <Flame className="h-3 w-3" /> Top 10
               </span>
             </p>
             <div className="space-y-2">
-              {venue.visitors.map((u) => (
-                <div
-                  key={u.handle}
-                  className="rounded-2xl border border-border bg-card-soft p-3"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <div className="relative">
-                      <img
-                        src={u.img}
-                        alt={u.name}
-                        className={`h-10 w-10 rounded-full object-cover ring-2 ${
-                          u.tier === "gold"
-                            ? "ring-tier-gold"
-                            : u.tier === "silver"
-                            ? "ring-tier-silver"
-                            : "ring-tier-bronze"
-                        }`}
-                      />
-                      <span
-                        className={`absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px text-[8px] font-bold uppercase text-black ${
-                          u.tier === "gold"
-                            ? "bg-tier-gold"
-                            : u.tier === "silver"
-                            ? "bg-tier-silver"
-                            : "bg-tier-bronze"
-                        }`}
-                      >
-                        {u.tier}
-                      </span>
+              {Array.from({ length: 10 }).map((_, i) => {
+                const u = venue.visitors[i % venue.visitors.length];
+                const ig = `${(126 - i * 9).toString()}.${(i * 3) % 10}k`;
+                return (
+                  <div
+                    key={"mv" + i}
+                    className="rounded-2xl border border-border bg-card-soft p-3"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="relative">
+                        <img
+                          src={u.img}
+                          alt={u.name}
+                          className={`h-10 w-10 rounded-full object-cover ring-2 ${
+                            u.tier === "gold"
+                              ? "ring-tier-gold"
+                              : u.tier === "silver"
+                              ? "ring-tier-silver"
+                              : "ring-tier-bronze"
+                          }`}
+                        />
+                        <span
+                          className={`absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px text-[8px] font-bold uppercase text-black ${
+                            u.tier === "gold"
+                              ? "bg-tier-gold"
+                              : u.tier === "silver"
+                              ? "bg-tier-silver"
+                              : "bg-tier-bronze"
+                          }`}
+                        >
+                          {u.tier}
+                        </span>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium leading-tight">{u.name}</p>
+                        <p className="flex items-center gap-1.5 truncate text-[10px] text-muted-foreground">
+                          <span>{u.handle}</span>
+                          <span className="flex items-center gap-0.5 text-pink-400">
+                            <Instagram className="h-2.5 w-2.5" />
+                            {ig}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1">
+                        <Star className="h-3 w-3 fill-secondary text-secondary" />
+                        <span className="font-display text-sm font-semibold text-secondary">
+                          {u.score.toFixed(1)}
+                        </span>
+                      </div>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium leading-tight">{u.name}</p>
-                      <p className="truncate text-[10px] text-muted-foreground">
-                        {u.handle} · {u.when}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1">
-                      <Star className="h-3 w-3 fill-secondary text-secondary" />
-                      <span className="font-display text-sm font-semibold text-secondary">
-                        {u.score.toFixed(1)}
-                      </span>
-                    </div>
+                    <p className="mt-2 text-[12px] italic leading-snug text-foreground/85">
+                      “{u.comment}”
+                    </p>
                   </div>
-                  <p className="mt-2 text-[12px] italic leading-snug text-foreground/85">
-                    “{u.comment}”
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
-            <button className="mt-2 w-full rounded-full border border-border bg-card py-2 text-[11px] font-medium text-muted-foreground">
-              See all {venue.mesitaCount} Mesita reviews
-            </button>
           </div>
 
           <div className="rounded-2xl border border-border bg-card-soft p-3">
