@@ -1160,9 +1160,10 @@ function ProfileView() {
           </div>
           <div className="space-y-2">
             {[
-              { t: "Bronze", min: "0 followers", color: "tier-bronze", done: true, perk: "Discovery only" },
-              { t: "Silver", min: "5k+ Instagram followers", color: "tier-silver", done: true, perk: "Cashback unlocked" },
-              { t: "Gold", min: "50k+ followers · or Aura list", color: "tier-gold", done: true, perk: "VIP perks · top venues", active: true },
+              { t: "Bronze", min: "Everyone — sign up & go", color: "tier-bronze", done: true, perk: "Discovery + base cashback" },
+              { t: "Silver", min: "Female · or 1k+ IG followers", color: "tier-silver", done: true, perk: "Boosted cashback · priority list" },
+              { t: "Gold", min: "5k+ Instagram followers", color: "tier-gold", done: true, perk: "VIP perks · top venues", active: true },
+              { t: "Diamond", min: "By invitation — celebrities & insiders", color: "tier-diamond", done: false, perk: "Comped tables · private rooms" },
             ].map((r) => (
               <div
                 key={r.t}
@@ -1172,7 +1173,9 @@ function ProfileView() {
               >
                 <span
                   className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold text-black ${
-                    r.color === "tier-gold" ? "bg-tier-gold" : r.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"
+                    r.color === "tier-gold" ? "bg-tier-gold" :
+                    r.color === "tier-silver" ? "bg-tier-silver" :
+                    r.color === "tier-diamond" ? "bg-tier-diamond" : "bg-tier-bronze"
                   }`}
                 >
                   {r.done ? <Check className="h-3.5 w-3.5" /> : r.t[0]}
@@ -1188,8 +1191,8 @@ function ProfileView() {
             ))}
           </div>
           <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">
-            Tier is set automatically from your Instagram following or Aura/Gold list verification.
-            Manual upgrades to Silver/Bronze are rare and require approval.
+            Silver/Gold are auto-assigned from Instagram (followers or female + 1k+).
+            Diamond is a curated manual list of celebrities and insiders — invite only.
           </p>
         </div>
 
