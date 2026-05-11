@@ -79,7 +79,6 @@ function InstagramLogo({ className = "" }: { className?: string }) {
   );
 }
 
-function GoogleLogoWrap(_: { className?: string }) { return null; }
 
 const venues = [
   {
