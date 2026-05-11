@@ -34,6 +34,7 @@ import {
   Send,
   Loader2,
   Coins,
+  Share2,
 } from "lucide-react";
 
 type Tab = "discover" | "coupons" | "profile";
@@ -2287,11 +2288,22 @@ export function GuestApp() {
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
             { id: "coupons", Icon: Ticket, label: "Coupons" },
+            { id: "share", Icon: Share2, label: "Share" },
             { id: "profile", Icon: User, label: "Profile" },
           ].map(({ id, Icon, label }) => (
             <button
               key={id}
-              onClick={() => setTab(id as Tab)}
+              onClick={() => {
+                if (id === "share") {
+                  if (typeof navigator !== "undefined" && (navigator as any).share) {
+                    (navigator as any)
+                      .share({ title: "Mesita", text: "Check out Mesita 🦚" })
+                      .catch(() => {});
+                  }
+                  return;
+                }
+                setTab(id as Tab);
+              }}
               className={`flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition ${
                 tab === id ? "text-primary" : "text-muted-foreground"
               }`}
