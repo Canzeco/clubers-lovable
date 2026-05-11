@@ -190,30 +190,25 @@ function VenueDetailSheet({
         className="max-h-[88%] w-full overflow-y-auto rounded-t-3xl border-t border-border bg-card pb-8 shadow-2xl scrollbar-hide"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative h-48 w-full overflow-hidden rounded-t-3xl">
-          <img src={venue.img} alt={venue.name} className="h-full w-full object-cover" />
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85))" }}
-          />
+        <div className="relative px-5 pt-5">
           <button
             onClick={onClose}
-            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur"
+            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-card-soft text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
-          {venue.affiliated && (
-            <span className="absolute left-3 top-3 rounded-full bg-tier-gold px-2.5 py-1 text-[11px] font-bold text-black">
-              {venue.cashback}% CASHBACK
-            </span>
-          )}
-          <div className="absolute bottom-3 left-4 right-4 text-white">
-            <p className="text-[10px] uppercase tracking-widest opacity-80">{venue.type}</p>
-            <p className="font-display text-2xl font-semibold leading-tight">{venue.name}</p>
-            <p className="mt-0.5 flex items-center gap-2 text-[11px] opacity-90">
-              <MapPin className="h-3 w-3" /> {venue.distance} · {venue.price}
-            </p>
+          <div className="flex items-center gap-2">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{venue.type}</p>
+            {venue.affiliated && (
+              <span className="rounded-full bg-tier-gold px-2 py-0.5 text-[9px] font-bold text-black">
+                {venue.cashback}% CASHBACK
+              </span>
+            )}
           </div>
+          <p className="mt-1 font-display text-2xl font-semibold leading-tight">{venue.name}</p>
+          <p className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
+            <MapPin className="h-3 w-3" /> {venue.distance} · {venue.price}
+          </p>
         </div>
 
         <div className="space-y-4 px-5 pt-5">
