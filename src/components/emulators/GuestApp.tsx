@@ -688,7 +688,7 @@ function TinderMode() {
 
   return (
     <div className="relative flex-1">
-      <div className="relative mx-5 h-[480px] select-none">
+      <div className="relative mx-5 h-[420px] select-none">
         {/* next card peek */}
         <div className="absolute inset-0 scale-[0.96] overflow-hidden rounded-3xl opacity-70">
           <img src={next.img} alt="" className="h-full w-full object-cover" />
