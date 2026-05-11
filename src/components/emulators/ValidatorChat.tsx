@@ -14,24 +14,44 @@ const initial: Msg[] = [
   {
     id: 1,
     from: "bot",
-    text: "Hola Carlos 👋 Soy Mesita. Lista para validar cupones de *Casa Luminar*.",
+    text: "Hola Carlos 👋 Soy Mesita. Aquí te llegan los tickets de tus clientes en *Casa Luminar*.",
     time: "9:32 PM",
   },
   {
     id: 2,
     from: "bot",
-    text: "Escanea el QR del cliente o pega el código.",
+    text: "📩 *Nuevo ticket entrante* — Valentina R. está pidiendo tu validación.",
+    time: "9:32 PM",
+  },
+  {
+    id: 3,
+    from: "bot",
+    type: "card",
+    payload: {
+      name: "Valentina R.",
+      tier: "GOLD",
+      coupon: "18% cashback",
+      bill: "MXN 1,240",
+      tip: "MXN 186 (15%)",
+      total: "MXN 1,426",
+      waiter: "Carlos",
+      story: true,
+    },
+    time: "9:32 PM",
+  },
+  {
+    id: 4,
+    from: "bot",
+    text: "¿Confirmas que el ticket es correcto? Se cobrará en Mesita Credits de la clienta.",
     type: "buttons",
-    payload: ["📷 Escanear QR", "⌨️ Ingresar código"],
+    payload: ["✅ Confirmar", "❌ Rechazar"],
     time: "9:32 PM",
   },
 ];
 
 export function ValidatorChat() {
   const [msgs, setMsgs] = useState<Msg[]>(initial);
-  const [step, setStep] = useState<"idle" | "scanning" | "found" | "validated">(
-    "idle",
-  );
+  const [step, setStep] = useState<"pending" | "validated">("pending");
 
   const push = (m: Omit<Msg, "id" | "time"> & { time?: string }) =>
     setMsgs((prev) => [
@@ -39,53 +59,26 @@ export function ValidatorChat() {
       { ...m, id: Date.now() + Math.random(), time: m.time ?? "9:33 PM" },
     ]);
 
-  const startScan = () => {
-    push({ from: "me", text: "📷 Escanear QR" });
-    setStep("scanning");
-    setTimeout(() => {
-      push({
-        from: "bot",
-        type: "card",
-        payload: {
-          name: "Valentina R.",
-          tier: "GOLD",
-          coupon: "18% cashback",
-          ticket: "MXN 1,240",
-          extra: "+10% por story verificada",
-        },
-        time: "9:33 PM",
-      });
-      push({
-        from: "bot",
-        text: "Confirmas la validación?",
-        type: "buttons",
-        payload: ["✅ Validar", "❌ Cancelar"],
-      });
-      setStep("found");
-    }, 1100);
-  };
-
   const confirm = () => {
-    push({ from: "me", text: "✅ Validar" });
+    push({ from: "me", text: "✅ Confirmar" });
     setTimeout(() => {
       push({
         from: "bot",
         type: "success",
-        payload: { amount: "MXN 347.20", saved: "para Valentina" },
+        payload: { amount: "MXN 1,426", saved: "cobrado · +MXN 223 cashback a Valentina" },
       });
       push({
         from: "bot",
-        text: "Listo. Mesa #12 · GOLD · ticket registrado. ¿Otra validación?",
+        text: "Listo. Pago acreditado al venue en Mesita Credits. Te aviso del próximo ticket.",
         type: "buttons",
-        payload: ["📷 Escanear QR", "📊 Cierre del turno"],
+        payload: ["📊 Cierre del turno"],
       });
       setStep("validated");
     }, 700);
   };
 
   const handleButton = (label: string) => {
-    if (label.includes("Escanear")) return startScan();
-    if (label.includes("Validar")) return confirm();
+    if (label.includes("Confirmar")) return confirm();
     push({ from: "me", text: label });
   };
 
@@ -165,19 +158,27 @@ export function ValidatorChat() {
                   </div>
                   <div className="space-y-1 text-[12px] text-white/80">
                     <div className="flex justify-between">
-                      <span>Cashback</span>
-                      <span className="font-semibold text-emerald-300">
-                        {m.payload.coupon}
-                      </span>
+                      <span>Cuenta</span>
+                      <span className="font-semibold">{m.payload.bill}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Ticket</span>
-                      <span>{m.payload.ticket}</span>
+                      <span>Propina · {m.payload.waiter}</span>
+                      <span>{m.payload.tip}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Bonus</span>
-                      <span className="text-secondary">{m.payload.extra}</span>
+                    <div className="flex justify-between border-t border-white/10 pt-1">
+                      <span className="font-semibold">Total</span>
+                      <span className="font-semibold text-emerald-300">{m.payload.total}</span>
                     </div>
+                    <div className="flex justify-between text-[11px] text-white/60">
+                      <span>Cupón</span>
+                      <span>{m.payload.coupon}</span>
+                    </div>
+                    {m.payload.story && (
+                      <div className="flex justify-between text-[11px] text-sky-300">
+                        <span>📸 Story IG</span>
+                        <span>verificada</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -203,16 +204,6 @@ export function ValidatorChat() {
             </div>
           </div>
         ))}
-        {step === "scanning" && (
-          <div className="flex justify-start">
-            <div
-              className="rounded-lg px-3 py-2 text-xs text-white/70"
-              style={{ background: "var(--wa-bubble-in)" }}
-            >
-              escaneando QR…
-            </div>
-          </div>
-        )}
       </div>
 
       {/* input bar */}
@@ -227,7 +218,7 @@ export function ValidatorChat() {
           <Camera className="h-5 w-5 text-white/60" />
         </div>
         <button
-          onClick={startScan}
+          onClick={confirm}
           className="flex h-10 w-10 items-center justify-center rounded-full"
           style={{ background: "var(--wa-accent)" }}
         >
