@@ -1123,33 +1123,44 @@ function WalletView() {
             <button
               key={c.name}
               onClick={() => setOpenCoupon({ ...c, used: false })}
-              className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card-soft p-3 text-left transition active:scale-[0.99]"
+              className="relative flex w-full items-stretch overflow-hidden rounded-2xl border border-border bg-card-soft text-left shadow-sm transition active:scale-[0.99]"
             >
-              <div className={`flex h-14 w-14 items-center justify-center rounded-xl ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-sm font-bold text-black`}>
-                {c.cb}%
+              {/* left — cashback stub */}
+              <div className={`relative flex w-20 flex-shrink-0 flex-col items-center justify-center ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-black`}>
+                <p className="font-display text-2xl font-bold leading-none">{c.cb}%</p>
+                <p className="mt-1 text-[8px] font-semibold uppercase tracking-widest opacity-80">cashback</p>
               </div>
-              <div className="flex-1">
-                <p className="font-medium">{c.name}</p>
-                <p className="text-[11px] text-muted-foreground">{c.note}</p>
-                <div className="mt-0.5 flex items-center gap-1.5">
-                  {c.res === "pending" && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-                      <Phone className="h-2.5 w-2.5 animate-pulse" /> AI calling…
+
+              {/* perforation */}
+              <span aria-hidden className="pointer-events-none absolute top-0 z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-border bg-background" style={{ left: "5rem" }} />
+              <span aria-hidden className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full border border-border bg-background" style={{ left: "5rem" }} />
+              <span aria-hidden className="pointer-events-none absolute top-2 bottom-2 border-l border-dashed border-border" style={{ left: "5rem" }} />
+
+              {/* right — info */}
+              <div className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-display text-sm font-semibold leading-tight">{c.name}</p>
+                  <p className="truncate text-[10px] uppercase tracking-widest text-muted-foreground">{c.note}</p>
+                  <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                    {c.res === "pending" && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-1.5 py-0.5 text-[9px] font-semibold text-primary">
+                        <Phone className="h-2.5 w-2.5 animate-pulse" /> AI calling…
+                      </span>
+                    )}
+                    {c.res === "confirmed" && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-secondary/15 px-1.5 py-0.5 text-[9px] font-semibold text-secondary">
+                        <Check className="h-2.5 w-2.5" /> Reserved
+                      </span>
+                    )}
+                    <span className="inline-flex items-center gap-1 text-[10px] text-secondary">
+                      <Clock className="h-2.5 w-2.5" /> {c.exp}
                     </span>
-                  )}
-                  {c.res === "confirmed" && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-secondary/15 px-1.5 py-0.5 text-[10px] font-medium text-secondary">
-                      <Check className="h-2.5 w-2.5" /> Reserved
-                    </span>
-                  )}
-                  <p className="flex items-center gap-1 text-[11px] text-secondary">
-                    <Clock className="h-3 w-3" /> {c.exp}
-                  </p>
+                  </div>
                 </div>
+                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-secondary text-[10px] font-bold text-secondary-foreground shadow-sm">
+                  QR
+                </span>
               </div>
-              <span className="rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground">
-                QR
-              </span>
             </button>
           ))}
         </div>
@@ -1159,21 +1170,24 @@ function WalletView() {
             <button
               key={c.name + c.when}
               onClick={() => setOpenCoupon({ ...c, used: true })}
-              className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card/60 p-3 text-left opacity-80"
+              className="relative flex w-full items-stretch overflow-hidden rounded-2xl border border-dashed border-border bg-card/60 text-left opacity-90"
             >
-              <div className={`relative flex h-14 w-14 items-center justify-center rounded-xl ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-sm font-bold text-black grayscale`}>
-                {c.cb}%
-                <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/50">
+              <div className={`relative flex w-20 flex-shrink-0 flex-col items-center justify-center ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-black grayscale`}>
+                <p className="font-display text-2xl font-bold leading-none">{c.cb}%</p>
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                   <Check className="h-6 w-6 text-white" />
                 </div>
               </div>
-              <div className="flex-1">
-                <p className="font-medium line-through decoration-muted-foreground/50">{c.name}</p>
-                <p className="text-[11px] text-muted-foreground">Redeemed · {c.when}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Saved</p>
-                <p className="font-display text-sm font-semibold text-secondary">{c.saved}</p>
+              <span aria-hidden className="pointer-events-none absolute top-2 bottom-2 border-l border-dashed border-border" style={{ left: "5rem" }} />
+              <div className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-display text-sm font-semibold leading-tight line-through decoration-muted-foreground/50">{c.name}</p>
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Redeemed · {c.when}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Saved</p>
+                  <p className="font-display text-sm font-semibold text-secondary">{c.saved}</p>
+                </div>
               </div>
             </button>
           ))}
