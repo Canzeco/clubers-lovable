@@ -1180,15 +1180,15 @@ function WalletView() {
   const [seg, setSeg] = useState<"unused" | "used">("unused");
   const [openCoupon, setOpenCoupon] = useState<any | null>(null);
   const unused = [
-    { name: "Casa Luminar", cb: 20, exp: "Fri · 9:30pm", color: "tier-gold", note: "Rooftop · 0.4 km", res: "pending" as const },
-    { name: "Loto Café", cb: 10, exp: "Expires tomorrow", color: "tier-silver", note: "Brunch · weekends", res: "confirmed" as const },
-    { name: "Neón Bar", cb: 20, exp: "+ Story bonus 10%", color: "tier-bronze", note: "Late night cocktails", res: null },
+    { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, exp: "Fri · 9:30pm", note: "Rooftop · 0.4 km", res: "pending" as const },
+    { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, exp: "Expires tomorrow", note: "Brunch · weekends", res: "confirmed" as const },
+    { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, exp: "+ Story bonus 10%", note: "Late night cocktails", res: null },
   ];
   const used = [
-    { name: "Mar Verde", cb: 10, when: "Sat · May 3", saved: "$ 320", color: "tier-gold" },
-    { name: "Loto Café", cb: 10, when: "Apr 27", saved: "$ 180", color: "tier-silver" },
-    { name: "Casa Luminar", cb: 20, when: "Apr 19", saved: "$ 540", color: "tier-gold" },
-    { name: "Neón Bar", cb: 20, when: "Apr 12", saved: "$ 260", color: "tier-bronze" },
+    { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, when: "Sat · May 3", saved: "$ 320" },
+    { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, when: "Apr 27", saved: "$ 180" },
+    { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, when: "Apr 19", saved: "$ 540" },
+    { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, when: "Apr 12", saved: "$ 260" },
   ];
   return (
     <>
