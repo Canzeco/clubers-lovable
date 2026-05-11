@@ -243,7 +243,7 @@ function VenueDetailSheet({
       onClick={onClose}
     >
       <div
-        className="flex max-h-[88%] w-full flex-col rounded-t-3xl border-t border-border bg-card shadow-2xl"
+        className="relative flex max-h-[88%] w-full flex-col rounded-t-3xl border-t border-border bg-card shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative flex-1 overflow-y-auto scrollbar-hide pb-24">
