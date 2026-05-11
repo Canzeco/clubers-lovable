@@ -801,7 +801,7 @@ function TinderMode() {
       {saved && (
         <div
           className="absolute inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm"
-          onClick={() => { setSaved(null); setStep("ask"); setPickedTime(null); setPickedDay(0); }}
+          onClick={() => { setSaved(null); setStep("ask"); setPickedTime(null); setPickedDay(0); setPartySize(2); setPrefs([]); }}
         >
           <div
             className="w-full rounded-t-3xl border-t border-border bg-card p-5 pb-8 shadow-2xl"
