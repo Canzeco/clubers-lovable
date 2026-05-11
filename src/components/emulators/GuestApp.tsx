@@ -15,6 +15,11 @@ import {
   Check,
   Clock,
   Bookmark,
+  TrendingUp,
+  Users,
+  BadgeCheck,
+  Crown,
+  Eye,
 } from "lucide-react";
 
 type Tab = "discover" | "wallet" | "profile";
