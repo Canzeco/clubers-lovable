@@ -51,7 +51,6 @@ const products: { id: Product; label: string; tag: string; desc: string }[] = [
 
 function Index() {
   const [active, setActive] = useState<Product>("admin");
-  const current = products.find((p) => p.id === active)!;
 
   return (
     <div className="flex min-h-screen flex-col bg-hero">
