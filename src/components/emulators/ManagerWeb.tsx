@@ -174,10 +174,10 @@ function Dashboard() {
 
 function Promos({ cashback, setCashback }: { cashback: number; setCashback: (n: number) => void }) {
   const promos = [
-    { name: "Jueves Gold", tier: "Gold", cb: 22, status: "Activa", redeems: 38 },
-    { name: "Brunch sábado", tier: "Silver+", cb: 12, status: "Activa", redeems: 91 },
+    { name: "Jueves Gold", tier: "Gold", cb: 20, status: "Activa", redeems: 38 },
+    { name: "Brunch sábado", tier: "Silver+", cb: 10, status: "Activa", redeems: 91 },
     { name: "Story bonus", tier: "Todos", cb: 10, status: "Activa", redeems: 46 },
-    { name: "Cumpleaños", tier: "Gold", cb: 30, status: "Pausada", redeems: 6 },
+    { name: "Cumpleaños", tier: "Gold", cb: 50, status: "Pausada", redeems: 6 },
   ];
   return (
     <div className="grid grid-cols-5 gap-5 p-6">
