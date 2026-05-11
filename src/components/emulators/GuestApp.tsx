@@ -52,18 +52,18 @@ function GoogleLogo({ className = "" }: { className?: string }) {
 
 function FacebookLogo({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <path fill="#1877F2" d="M24 12c0-6.6-5.4-12-12-12S0 5.4 0 12c0 6 4.4 11 10.1 11.9V15.5H7.1V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5h-2.8v8.4C19.6 23 24 18 24 12z"/>
-      <path fill="#fff" d="M16.7 15.5l.5-3.5h-3.3v-2.3c0-1 .5-1.9 2-1.9h1.5v-3s-1.4-.2-2.7-.2c-2.7 0-4.5 1.7-4.5 4.7V12h-3v3.5h3v8.4c.6.1 1.3.1 1.9.1s1.3 0 1.9-.1v-8.4h2.7z"/>
+    <svg viewBox="0 0 24 24" width="12" height="12" className={className} aria-hidden="true">
+      <rect width="24" height="24" rx="5" fill="#1877F2"/>
+      <path fill="#fff" d="M15.3 12.5h-2.4V21h-3.4v-8.5H7.7V9.7h1.8V7.9c0-2 1-3.4 3.4-3.4h2v2.8h-1.3c-.8 0-.9.3-.9.9v1.5h2.2l-.6 2.8z"/>
     </svg>
   );
 }
 
 function InstagramLogo({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="12" height="12" className={className} aria-hidden="true">
       <defs>
-        <radialGradient id="ig-grad" cx="0.3" cy="1" r="1">
+        <radialGradient id="ig-grad" cx="0.3" cy="1.1" r="1.3">
           <stop offset="0" stopColor="#FFD776"/>
           <stop offset="0.25" stopColor="#F58529"/>
           <stop offset="0.5" stopColor="#DD2A7B"/>
@@ -71,12 +71,15 @@ function InstagramLogo({ className = "" }: { className?: string }) {
           <stop offset="1" stopColor="#515BD4"/>
         </radialGradient>
       </defs>
-      <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig-grad)"/>
-      <circle cx="12" cy="12" r="4.2" fill="none" stroke="#fff" strokeWidth="1.7"/>
-      <circle cx="17.4" cy="6.6" r="1.1" fill="#fff"/>
+      <rect width="24" height="24" rx="6" fill="url(#ig-grad)"/>
+      <rect x="4.5" y="4.5" width="15" height="15" rx="4.5" fill="none" stroke="#fff" strokeWidth="1.8"/>
+      <circle cx="12" cy="12" r="3.5" fill="none" stroke="#fff" strokeWidth="1.8"/>
+      <circle cx="17" cy="7" r="1.1" fill="#fff"/>
     </svg>
   );
 }
+
+function GoogleLogoWrap(_: { className?: string }) { return null; }
 
 const venues = [
   {
