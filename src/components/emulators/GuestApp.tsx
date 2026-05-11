@@ -302,7 +302,16 @@ function VenueDetailSheet({
             </div>
 
             {/* Tier breakdown */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-4 gap-1.5">
+              <div className="rounded-xl border border-tier-diamond/40 bg-tier-diamond/10 p-2.5 text-center">
+                <span className="inline-block rounded-full bg-tier-diamond px-1.5 py-px text-[8px] font-bold uppercase text-black">
+                  Diamond
+                </span>
+                <p className="mt-1.5 font-display text-2xl font-semibold leading-none text-tier-diamond">
+                  12
+                </p>
+                <p className="mt-0.5 text-[9px] text-muted-foreground">guests · 90 d</p>
+              </div>
               <div className="rounded-xl border border-tier-gold/40 bg-tier-gold/10 p-2.5 text-center">
                 <span className="inline-block rounded-full bg-tier-gold px-1.5 py-px text-[8px] font-bold uppercase text-black">
                   Gold
