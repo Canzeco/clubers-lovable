@@ -828,6 +828,9 @@ function TinderMode() {
                 <p className="mt-1 text-xs text-muted-foreground">
                   Your cashback activates automatically when you sit down.
                 </p>
+                <p className="mt-1 text-[10px] text-muted-foreground">
+                  Covers up to <span className="font-semibold text-foreground">$1,000 MXN</span> per visit — anything over is paid in full.
+                </p>
                 <div className="mt-4 flex gap-2">
                   <button
                     onClick={() => { setSaved(null); setStep("ask"); }}
@@ -1303,7 +1306,9 @@ function RedeemFlow({ coupon }: { coupon: any }) {
 
   const billNum = parseFloat(bill) || 0;
   const tipNum = parseFloat(tip) || 0;
-  const cashback = Math.round(billNum * (coupon.cb / 100));
+  const rawCashback = Math.round(billNum * (coupon.cb / 100));
+  const cashback = Math.min(rawCashback, 1000);
+  const capped = rawCashback > 1000;
   const total = billNum + tipNum;
 
   const canSend =
@@ -1481,6 +1486,11 @@ function RedeemFlow({ coupon }: { coupon: any }) {
         <div className="flex justify-between"><span className="text-muted-foreground">Tip</span><span>${tipNum.toLocaleString()}</span></div>
         <div className="mt-1.5 flex justify-between border-t border-border pt-1.5 font-semibold"><span>Pay from Credits</span><span>${total.toLocaleString()}</span></div>
         <div className="flex justify-between text-secondary"><span>Cashback ({coupon.cb}%)</span><span>+${cashback.toLocaleString()}</span></div>
+        <p className={`mt-2 text-[10px] leading-snug ${capped ? "text-tier-gold" : "text-muted-foreground"}`}>
+          {capped
+            ? `Cashback capped at $1,000 MXN. You cover the remaining $${(total - cashback).toLocaleString()} of the bill.`
+            : "Cashback covers up to $1,000 MXN per visit. Anything above is paid in full."}
+        </p>
       </div>
 
       <button
