@@ -1768,7 +1768,7 @@ function ProfileView() {
               </li>
               <li className="flex gap-3">
                 <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">2</span>
-                <p className="flex-1 text-foreground/85">Chambi will reply with a unique code. Paste it here.</p>
+                <p className="flex-1 text-foreground/85">Chambi will reply with an 8-digit verification code. Paste it here.</p>
               </li>
               <li className="flex gap-3">
                 <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">3</span>
@@ -1776,14 +1776,10 @@ function ProfileView() {
               </li>
             </ol>
 
-            <div className="mt-4 rounded-xl border border-border bg-card-soft p-3 text-center">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Your reference</p>
-              <p className="mt-1 font-mono text-lg font-semibold tracking-widest text-secondary">{code}</p>
-            </div>
-
             <input
-              placeholder="Paste Chambi code here"
-              className="mt-3 w-full rounded-full border border-border bg-card-soft px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-secondary"
+              placeholder="Paste 8-digit code"
+              maxLength={8}
+              className="mt-4 w-full rounded-full border border-border bg-card-soft px-4 py-2.5 text-center font-mono text-base tracking-[0.4em] placeholder:font-sans placeholder:text-sm placeholder:tracking-normal placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-secondary"
             />
 
             <div className="mt-3 flex gap-2">
