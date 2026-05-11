@@ -1383,8 +1383,8 @@ function ProfileView() {
           <div className="space-y-2">
             {[
               { t: "Bronze", min: "Everyone — sign up & go", color: "tier-bronze", done: true, perk: "Discovery + base cashback" },
-              { t: "Silver", min: "Female · or 1k+ IG followers", color: "tier-silver", done: true, perk: "Boosted cashback · priority list" },
-              { t: "Gold", min: "5k+ Instagram followers", color: "tier-gold", done: true, perk: "VIP perks · top venues", active: true },
+              { t: "Silver", min: "1k+ Instagram followers", color: "tier-silver", done: true, perk: "Boosted cashback · priority list" },
+              { t: "Gold", min: "10k+ Instagram followers", color: "tier-gold", done: true, perk: "VIP perks · top venues", active: true },
               { t: "Diamond", min: "By invitation — celebrities & insiders", color: "tier-diamond", done: false, perk: "Comped tables · private rooms" },
             ].map((r) => (
               <div
@@ -1413,8 +1413,8 @@ function ProfileView() {
             ))}
           </div>
           <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">
-            Silver/Gold are auto-assigned from Instagram (followers or female + 1k+).
-            Diamond is a curated manual list of celebrities and insiders — invite only.
+            Silver and Gold are auto-assigned from your Instagram follower count.
+            Diamond is a curated, invite-only list.
           </p>
         </div>
 
