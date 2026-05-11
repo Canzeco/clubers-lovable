@@ -1292,6 +1292,211 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
   );
 }
 
+function RedeemFlow({ coupon }: { coupon: any }) {
+  const requireStory = (coupon.cb ?? 0) >= 15;
+  const [step, setStep] = useState<"form" | "sending" | "waiting" | "approved">("form");
+  const [bill, setBill] = useState("");
+  const [tip, setTip] = useState("");
+  const [waiter, setWaiter] = useState("");
+  const [story, setStory] = useState(false);
+
+  const billNum = parseFloat(bill) || 0;
+  const tipNum = parseFloat(tip) || 0;
+  const cashback = Math.round(billNum * (coupon.cb / 100));
+  const total = billNum + tipNum;
+
+  const canSend =
+    billNum > 0 && waiter.trim().length > 1 && (!requireStory || story);
+
+  const send = () => {
+    setStep("sending");
+    setTimeout(() => setStep("waiting"), 800);
+    setTimeout(() => setStep("approved"), 2600);
+  };
+
+  if (step === "approved") {
+    return (
+      <div className="mt-5 space-y-4">
+        <div className="rounded-3xl bg-peacock p-5 text-center text-primary-foreground shadow-glow">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white/15">
+            <Check className="h-6 w-6" strokeWidth={3} />
+          </div>
+          <p className="mt-3 text-[10px] uppercase tracking-widest opacity-80">
+            Validated by waiter
+          </p>
+          <p className="mt-1 font-display text-2xl font-semibold">
+            ${total.toLocaleString()} paid
+          </p>
+          <p className="text-[11px] opacity-80">in Mesita Credits · no card charge</p>
+        </div>
+
+        <div className="rounded-2xl border border-secondary/30 bg-secondary/10 p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
+              <Coins className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Cashback earned
+              </p>
+              <p className="text-lg font-semibold text-secondary">
+                +${cashback.toLocaleString()} Mesita Credits
+              </p>
+            </div>
+          </div>
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Use on your next visit at any Mesita venue.
+          </p>
+        </div>
+
+        <div className="rounded-2xl bg-card-soft p-4 text-sm">
+          <div className="flex justify-between"><span className="text-muted-foreground">Bill</span><span>${billNum.toLocaleString()}</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">Tip for {waiter}</span><span>${tipNum.toLocaleString()}</span></div>
+          <div className="mt-2 flex justify-between border-t border-border pt-2 font-semibold"><span>Total</span><span>${total.toLocaleString()}</span></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === "sending" || step === "waiting") {
+    return (
+      <div className="mt-5 space-y-3">
+        <div className="rounded-3xl bg-card-soft p-6 text-center">
+          <Loader2 className="mx-auto h-10 w-10 animate-spin text-secondary" />
+          <p className="mt-3 text-sm font-medium">
+            {step === "sending" ? "Sending to validator…" : "Waiting for waiter to confirm"}
+          </p>
+          <p className="mt-1 text-[11px] text-muted-foreground">
+            Validator received your ticket on WhatsApp · ${total.toLocaleString()}
+          </p>
+        </div>
+        <ol className="space-y-2 text-[12px]">
+          <li className="flex items-center gap-2 rounded-xl border border-border bg-card/40 p-2.5">
+            <Check className="h-4 w-4 text-secondary" />
+            <span>Bill & tip submitted</span>
+          </li>
+          <li className="flex items-center gap-2 rounded-xl border border-border bg-card/40 p-2.5">
+            {step === "waiting" ? <Check className="h-4 w-4 text-secondary" /> : <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+            <span>Delivered to {waiter} on WhatsApp</span>
+          </li>
+          <li className="flex items-center gap-2 rounded-xl border border-border bg-card/40 p-2.5">
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            <span>Awaiting tap-to-confirm</span>
+          </li>
+        </ol>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-5 space-y-4">
+      <div className="rounded-2xl border border-secondary/30 bg-secondary/5 p-3">
+        <p className="flex items-center gap-1.5 text-[11px] font-medium text-secondary">
+          <Coins className="h-3.5 w-3.5" /> Pays from Mesita Credits — no card, no cash
+        </p>
+        <p className="mt-1 text-[11px] text-muted-foreground">
+          Earn {coupon.cb}% back as Mesita Credits for your next visit.
+        </p>
+      </div>
+
+      <div>
+        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Bill amount</p>
+        <div className="mt-1 flex items-center gap-2 rounded-2xl border border-border bg-card-soft px-4 py-3">
+          <span className="text-lg font-semibold text-muted-foreground">$</span>
+          <input
+            inputMode="decimal"
+            value={bill}
+            onChange={(e) => setBill(e.target.value.replace(/[^0-9.]/g, ""))}
+            placeholder="0"
+            className="flex-1 bg-transparent text-2xl font-semibold outline-none placeholder:text-muted-foreground/40"
+          />
+        </div>
+      </div>
+
+      <div>
+        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Tip</p>
+        <div className="mt-1 grid grid-cols-4 gap-1.5">
+          {[10, 15, 20].map((pct) => {
+            const v = Math.round(billNum * (pct / 100));
+            const active = parseFloat(tip) === v && v > 0;
+            return (
+              <button
+                key={pct}
+                onClick={() => setTip(String(v))}
+                className={`rounded-xl border py-2 text-xs font-medium transition ${
+                  active
+                    ? "border-secondary bg-secondary text-secondary-foreground"
+                    : "border-border bg-card-soft text-foreground"
+                }`}
+              >
+                {pct}%
+              </button>
+            );
+          })}
+          <input
+            inputMode="decimal"
+            value={tip}
+            onChange={(e) => setTip(e.target.value.replace(/[^0-9.]/g, ""))}
+            placeholder="$"
+            className="rounded-xl border border-border bg-card-soft py-2 text-center text-xs outline-none placeholder:text-muted-foreground"
+          />
+        </div>
+      </div>
+
+      <div>
+        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Waiter name (for the tip)</p>
+        <input
+          value={waiter}
+          onChange={(e) => setWaiter(e.target.value)}
+          placeholder="e.g. Carlos"
+          className="mt-1 w-full rounded-2xl border border-border bg-card-soft px-4 py-3 text-sm outline-none"
+        />
+      </div>
+
+      {requireStory && (
+        <button
+          onClick={() => setStory((s) => !s)}
+          className={`flex w-full items-center gap-3 rounded-2xl border p-3 text-left transition ${
+            story ? "border-secondary bg-secondary/10" : "border-border bg-card-soft"
+          }`}
+        >
+          <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${story ? "bg-secondary text-secondary-foreground" : "bg-primary/15 text-primary"}`}>
+            {story ? <Check className="h-5 w-5" /> : <Camera className="h-5 w-5" />}
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-medium">
+              {story ? "Story attached" : "Attach Instagram story"}
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              Required for {coupon.cb}% tier · unlocks bonus
+            </p>
+          </div>
+        </button>
+      )}
+
+      {/* Summary */}
+      <div className="rounded-2xl bg-card-soft p-4 text-sm">
+        <div className="flex justify-between"><span className="text-muted-foreground">Bill</span><span>${billNum.toLocaleString()}</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Tip</span><span>${tipNum.toLocaleString()}</span></div>
+        <div className="mt-1.5 flex justify-between border-t border-border pt-1.5 font-semibold"><span>Pay from Credits</span><span>${total.toLocaleString()}</span></div>
+        <div className="flex justify-between text-secondary"><span>Cashback ({coupon.cb}%)</span><span>+${cashback.toLocaleString()}</span></div>
+      </div>
+
+      <button
+        disabled={!canSend}
+        onClick={send}
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow disabled:opacity-40"
+      >
+        <Send className="h-4 w-4" />
+        Send to validator on WhatsApp
+      </button>
+      <p className="text-center text-[11px] text-muted-foreground">
+        Waiter taps ✅ to confirm. No card needed.
+      </p>
+    </div>
+  );
+}
+
 function ProfileView() {
   const [igConnected, setIgConnected] = useState(false);
   const [showConnect, setShowConnect] = useState(false);
