@@ -164,9 +164,9 @@ function ModeSwitcher({
   setMode: (m: DiscoverMode) => void;
 }) {
   const modes: { id: DiscoverMode; label: string; Icon: any }[] = [
-    { id: "catalog", label: "Catalog", Icon: LayoutGrid },
-    { id: "map", label: "Map", Icon: MapIcon },
     { id: "tinder", label: "Swipe", Icon: Flame },
+    { id: "map", label: "Map", Icon: MapIcon },
+    { id: "catalog", label: "Catalog", Icon: LayoutGrid },
   ];
   return (
     <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
