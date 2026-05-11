@@ -381,39 +381,6 @@ function VenueDetailSheet({
               </div>
             </div>
 
-            {/* People you follow */}
-            <div className="rounded-2xl border border-border bg-card-soft p-3">
-              <div className="flex items-center justify-between">
-                <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-                  <Users className="h-3 w-3" /> 3 people you follow went here
-                </p>
-                <span className="text-[10px] text-secondary">See all</span>
-              </div>
-              <div className="mt-2.5 flex items-center gap-3">
-                <div className="flex -space-x-2">
-                  {venue.visitors.slice(0, 3).map((u) => (
-                    <img
-                      key={u.handle + "follow"}
-                      src={u.img}
-                      alt=""
-                      className={`h-9 w-9 rounded-full border-2 border-card object-cover ring-2 ${
-                        u.tier === "gold"
-                          ? "ring-tier-gold"
-                          : u.tier === "silver"
-                          ? "ring-tier-silver"
-                          : "ring-tier-bronze"
-                      }`}
-                    />
-                  ))}
-                </div>
-                <p className="flex-1 text-[11px] leading-snug text-foreground/80">
-                  <span className="font-semibold">{venue.visitors[0].name.split(" ")[0]}</span>,{" "}
-                  <span className="font-semibold">{venue.visitors[1]?.name.split(" ")[0]}</span> and{" "}
-                  <span className="font-semibold">1 other</span> from your network have been here
-                </p>
-              </div>
-            </div>
-
             {/* Featured tastemakers — horizontal scroll */}
             <div>
               <p className="mb-2 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
