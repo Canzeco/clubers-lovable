@@ -283,21 +283,21 @@ function VenueDetailSheet({
             </div>
             <div className="rounded-xl bg-card-soft p-2.5">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
-                <GoogleLogo className="h-2.5 w-2.5" /> Google
+                <GoogleLogo className="h-3 w-3" /> Google
               </p>
               <p className="mt-1 font-display text-base font-semibold leading-none">{venue.google}</p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.googleCount.toLocaleString()} reviews</p>
             </div>
             <div className="rounded-xl bg-card-soft p-2.5">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
-                <FacebookLogo className="h-2.5 w-2.5" /> Facebook
+                <FacebookLogo className="h-3 w-3" /> Facebook
               </p>
               <p className="mt-1 font-display text-base font-semibold leading-none">{venue.fb}</p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.fbCount} reviews</p>
             </div>
             <div className="rounded-xl bg-card-soft p-2.5">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
-                <InstagramLogo className="h-2.5 w-2.5" /> Instagram
+                <InstagramLogo className="h-3 w-3" /> Instagram
               </p>
               <p className="mt-1 font-display text-base font-semibold leading-none">{venue.igFollowers}</p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.igMentions} mentions</p>
