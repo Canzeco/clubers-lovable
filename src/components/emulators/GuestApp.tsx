@@ -380,13 +380,6 @@ function VenueDetailSheet({
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border bg-card-soft p-3">
-            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-              <Sparkles className="h-3 w-3 text-secondary" /> Tonight
-            </p>
-            <p className="mt-1 text-sm text-secondary">{venue.vibe}</p>
-          </div>
-
           <div className="flex gap-2 pt-1">
             <button className="flex-1 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground">
               Save coupon
