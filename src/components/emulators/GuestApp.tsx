@@ -273,8 +273,8 @@ function VenueDetailSheet({
           {/* Instagram-style 4:3 carousel with dots */}
           <PhotoCarousel />
 
-          {/* Scores + share */}
-          <div className="grid grid-cols-5 gap-1.5">
+          {/* Four scores */}
+          <div className="grid grid-cols-4 gap-1.5">
             <div className="rounded-xl border border-secondary/30 bg-secondary/10 p-2.5">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-secondary">
                 <Sparkles className="h-2.5 w-2.5" /> Mesita
@@ -305,20 +305,6 @@ function VenueDetailSheet({
               <p className="mt-1 font-display text-base font-semibold leading-none">{venue.igFollowers}</p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.igMentions} mentions</p>
             </div>
-            <button
-              onClick={() => {
-                if (typeof navigator !== "undefined" && (navigator as any).share) {
-                  (navigator as any)
-                    .share({ title: venue.name, text: `Check out ${venue.name} on Mesita` })
-                    .catch(() => {});
-                }
-              }}
-              className="flex flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-border bg-card-soft p-2.5 text-muted-foreground transition hover:border-secondary hover:text-secondary"
-              aria-label="Share venue"
-            >
-              <Share2 className="h-4 w-4" />
-              <span className="text-[9px] uppercase tracking-widest">Share</span>
-            </button>
           </div>
 
           {/* About the venue */}
@@ -438,6 +424,19 @@ function VenueDetailSheet({
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center px-4 pb-4">
           <div className="pointer-events-auto flex w-full items-center gap-2 rounded-full border border-border/60 bg-card/85 p-1.5 shadow-2xl backdrop-blur-xl">
+            <button
+              onClick={() => {
+                if (typeof navigator !== "undefined" && (navigator as any).share) {
+                  (navigator as any)
+                    .share({ title: venue.name, text: `Check out ${venue.name} on Mesita` })
+                    .catch(() => {});
+                }
+              }}
+              aria-label="Share venue"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-foreground/70 transition hover:bg-card-soft hover:text-foreground"
+            >
+              <Share2 className="h-4 w-4" />
+            </button>
             <button className="flex-1 rounded-full px-4 py-2.5 text-sm font-medium text-foreground/80">
               Save coupon
             </button>
