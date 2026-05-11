@@ -20,6 +20,8 @@ import {
   BadgeCheck,
   Crown,
   Eye,
+  Phone,
+  MessageCircle,
 } from "lucide-react";
 
 type Tab = "discover" | "wallet" | "profile";
@@ -914,15 +916,31 @@ function TinderMode() {
             {step === "done" && (
               <>
                 <div className="mt-5 flex flex-col items-center text-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary/15 text-secondary">
-                    <Check className="h-6 w-6" />
+                  <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+                    <Phone className="h-6 w-6" />
+                    <span className="absolute inset-0 animate-ping rounded-full bg-primary/30" />
                   </div>
-                  <p className="mt-2 font-display text-lg font-semibold">Reservation confirmed</p>
+                  <p className="mt-3 font-display text-lg font-semibold">Reservation pending</p>
                   <p className="mt-1 text-xs text-muted-foreground">
+                    Our AI agent is calling {saved.name} now.
+                    <br />
                     {pickedTime === "Right now"
-                      ? "Walk in within 20 min — table is being held."
-                      : `Table for 2 · ${pickedTime}`}
+                      ? "Walk-in within 20 min · table for 2"
+                      : `${days[pickedDay].label} · ${pickedTime} · table for 2`}
                   </p>
+                  <div className="mt-4 w-full space-y-2 rounded-2xl border border-border bg-card/60 p-3 text-left">
+                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                      You'll hear back in ~30s
+                    </p>
+                    <div className="flex items-center gap-2 text-xs">
+                      <MessageCircle className="h-3.5 w-3.5 text-[var(--wa-accent)]" />
+                      <span>WhatsApp message with the result</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <Phone className="h-3.5 w-3.5 text-primary" />
+                      <span>A quick call from Mesita to confirm</span>
+                    </div>
+                  </div>
                 </div>
                 <button
                   onClick={() => { setSaved(null); setStep("ask"); setPickedTime(null); setPickedDay(0); }}
