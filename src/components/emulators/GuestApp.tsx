@@ -970,53 +970,17 @@ function TinderMode() {
 }
 
 function MapMode() {
-  const [pickup, setPickup] = useState("Current location");
-  const [destination, setDestination] = useState("");
-  const recents = ["Casa Luminar", "Centro histórico", "Zona Rosa"];
+  const [locating, setLocating] = useState(false);
+  const [located, setLocated] = useState(false);
+  const useMyLocation = () => {
+    setLocating(true);
+    setTimeout(() => {
+      setLocating(false);
+      setLocated(true);
+    }, 900);
+  };
   return (
     <div className="flex flex-1 flex-col gap-3 overflow-hidden">
-      {/* Uber-style location bar */}
-      <div className="mx-5 rounded-2xl border border-border bg-card/80 p-3 backdrop-blur">
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col items-center pt-1">
-            <span className="h-2 w-2 rounded-full bg-primary" />
-            <span className="my-1 h-6 w-px bg-border" />
-            <span className="h-2 w-2 rounded-sm bg-foreground" />
-          </div>
-          <div className="flex flex-1 flex-col gap-1">
-            <div className="flex items-center gap-2 rounded-lg bg-muted/40 px-3 py-2">
-              <Locate className="h-3.5 w-3.5 text-primary" />
-              <input
-                value={pickup}
-                onChange={(e) => setPickup(e.target.value)}
-                className="flex-1 bg-transparent text-sm outline-none"
-                placeholder="Your location"
-              />
-            </div>
-            <div className="flex items-center gap-2 rounded-lg bg-muted/40 px-3 py-2">
-              <Search className="h-3.5 w-3.5 text-muted-foreground" />
-              <input
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-                placeholder="Where to?"
-              />
-              <Navigation className="h-3.5 w-3.5 text-muted-foreground" />
-            </div>
-          </div>
-        </div>
-        <div className="mt-3 flex gap-2 overflow-x-auto scrollbar-hide">
-          {recents.map((r) => (
-            <button
-              key={r}
-              onClick={() => setDestination(r)}
-              className="flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1 text-[11px] text-muted-foreground hover:text-foreground"
-            >
-              <MapPin className="h-3 w-3" /> {r}
-            </button>
-          ))}
-        </div>
-      </div>
     <div
       className="relative mx-5 mb-4 flex-1 overflow-hidden rounded-3xl"
         style={{
@@ -1024,6 +988,25 @@ function MapMode() {
             "radial-gradient(circle at 30% 40%, oklch(0.30 0.05 200), oklch(0.16 0.02 220))",
         }}
       >
+        {/* Recenter / locate-me FAB (Google-Maps style) */}
+        <button
+          onClick={useMyLocation}
+          className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/90 text-foreground shadow-elev backdrop-blur transition active:scale-95"
+          aria-label="Use my current location"
+        >
+          <Locate className={`h-4 w-4 ${located ? "text-primary" : "text-foreground"} ${locating ? "animate-pulse" : ""}`} />
+        </button>
+        {located && (
+          <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
+            <span className="absolute inset-0 -m-3 animate-ping rounded-full bg-primary/30" />
+            <span className="relative block h-4 w-4 rounded-full border-2 border-background bg-primary shadow-glow" />
+          </div>
+        )}
+        {!located && (
+          <div className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 rounded-full border border-border bg-background/80 px-3 py-1 text-[10px] text-muted-foreground backdrop-blur">
+            Drag to explore · tap <Locate className="inline h-2.5 w-2.5" /> to center
+          </div>
+        )}
         {/* grid lines */}
         <svg className="absolute inset-0 h-full w-full opacity-20">
           {Array.from({ length: 10 }).map((_, i) => (
