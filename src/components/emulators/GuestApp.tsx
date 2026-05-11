@@ -217,29 +217,38 @@ function VenueDetailSheet({
         </div>
 
         <div className="space-y-4 px-5 pt-5">
-          {/* Social proof signals */}
-          <div className="grid grid-cols-3 gap-2">
-            <div className="rounded-xl bg-card-soft p-3">
-              <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
-                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" /> Google
+          {/* Four scores */}
+          <div className="grid grid-cols-4 gap-1.5">
+            <div className="rounded-xl border border-secondary/30 bg-secondary/10 p-2.5">
+              <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-secondary">
+                <Sparkles className="h-2.5 w-2.5" /> Mesita
               </p>
-              <p className="mt-1 font-display text-lg font-semibold leading-none">{venue.google}</p>
-              <p className="mt-0.5 text-[10px] text-muted-foreground">{venue.googleCount.toLocaleString()} reviews</p>
-            </div>
-            <div className="rounded-xl bg-card-soft p-3">
-              <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
-                <Instagram className="h-3 w-3 text-pink-400" /> Instagram
+              <p className="mt-1 font-display text-base font-semibold leading-none text-secondary">
+                {venue.mesita}
               </p>
-              <p className="mt-1 font-display text-lg font-semibold leading-none">{venue.igFollowers}</p>
-              <p className="mt-0.5 text-[10px] text-muted-foreground">followers</p>
+              <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.mesitaCount} reviews</p>
             </div>
-            <div className="rounded-xl bg-card-soft p-3">
-              <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
-                <span className="flex h-3 w-3 items-center justify-center rounded-sm bg-blue-500 text-[8px] font-bold text-white">f</span>
+            <div className="rounded-xl bg-card-soft p-2.5">
+              <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
+                <Star className="h-2.5 w-2.5 fill-yellow-400 text-yellow-400" /> Google
+              </p>
+              <p className="mt-1 font-display text-base font-semibold leading-none">{venue.google}</p>
+              <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.googleCount.toLocaleString()} reviews</p>
+            </div>
+            <div className="rounded-xl bg-card-soft p-2.5">
+              <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
+                <span className="flex h-2.5 w-2.5 items-center justify-center rounded-sm bg-blue-500 text-[7px] font-bold text-white">f</span>
                 Facebook
               </p>
-              <p className="mt-1 font-display text-lg font-semibold leading-none">{venue.fbFollowers}</p>
-              <p className="mt-0.5 text-[10px] text-muted-foreground">followers</p>
+              <p className="mt-1 font-display text-base font-semibold leading-none">{venue.fb}</p>
+              <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.fbCount} reviews</p>
+            </div>
+            <div className="rounded-xl bg-card-soft p-2.5">
+              <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
+                <Instagram className="h-2.5 w-2.5 text-pink-400" /> Instagram
+              </p>
+              <p className="mt-1 font-display text-base font-semibold leading-none">{venue.igFollowers}</p>
+              <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.igMentions} mentions</p>
             </div>
           </div>
 
