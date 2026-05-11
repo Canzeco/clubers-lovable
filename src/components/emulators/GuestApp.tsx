@@ -2425,7 +2425,7 @@ export function GuestApp() {
           </div>
         )}
         {tab === "share" && (
-          <div className="flex-1 overflow-y-auto scrollbar-hide">
+          <div className="flex-1 overflow-hidden">
             <ShareView />
           </div>
         )}
