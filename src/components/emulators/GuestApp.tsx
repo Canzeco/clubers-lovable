@@ -649,6 +649,8 @@ function TinderMode() {
   const [step, setStep] = useState<"ask" | "pick" | "done">("ask");
   const [pickedDay, setPickedDay] = useState<number>(0);
   const [pickedTime, setPickedTime] = useState<string | null>(null);
+  const [partySize, setPartySize] = useState<number>(2);
+  const [prefs, setPrefs] = useState<string[]>([]);
   const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
   const startRef = useRef<{ x: number; y: number; id: number } | null>(null);
   const v = venues[idx % venues.length];
