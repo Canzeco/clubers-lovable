@@ -2088,20 +2088,13 @@ function ShareView() {
 
   const available = cards.filter((c) => c.status === "available").length;
 
-  const link = "mesita.app/g/valenrose-X9F2";
-
   const sendCard = (id: number, friend: string) => {
     setCards((cs) => cs.map((c) => (c.id === id ? { ...c, status: "sent", to: friend, when: "Today" } : c)));
     setPicking(null);
   };
 
-  const friends = [
-    { name: "Sofía P.", handle: "@sofip", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80" },
-    { name: "Diego A.", handle: "@diegoa", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80" },
-    { name: "Renata K.", handle: "@renatak", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" },
-    { name: "Tomás L.", handle: "@tomasl", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&q=80" },
-    { name: "Ana T.", handle: "@anat", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&q=80" },
-  ];
+  const code = "8F2K-9XQ7";
+  const message = `Hey! I'm sending you a $100 MXN gift card to try Mesita 🦚 — discover the best venues in CDMX. Claim it here: mesita.app/g/${code}`;
 
   return (
     <>
@@ -2177,17 +2170,41 @@ function ShareView() {
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
             <p className="font-display text-lg font-semibold leading-tight">Send a $100 gift card</p>
             <p className="mt-1 text-[11px] text-muted-foreground">
-              Pick a friend or share the link directly.
+              Share the message on WhatsApp or Instagram, or send the 8-character code directly.
             </p>
 
-            {/* Personal link */}
-            <div className="mt-4 flex items-center gap-2 rounded-2xl border border-border bg-card-soft px-3 py-2.5">
-              <Gift className="h-4 w-4 shrink-0 text-secondary" />
-              <span className="flex-1 truncate font-mono text-[12px]">{link}</span>
+            {/* Message template preview */}
+            <div className="mt-4 rounded-2xl border border-border bg-card-soft p-3">
+              <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Message</p>
+              <p className="mt-1 text-[12px] leading-snug text-foreground/85">{message}</p>
+            </div>
+
+            {/* Share buttons */}
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <button
+                onClick={() => sendCard(picking!, "WhatsApp")}
+                className="flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-3 py-3 text-sm font-semibold text-white"
+              >
+                <MessageCircle className="h-4 w-4" /> WhatsApp
+              </button>
+              <button
+                onClick={() => sendCard(picking!, "Instagram")}
+                className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-[#F58529] via-[#DD2A7B] to-[#8134AF] px-3 py-3 text-sm font-semibold text-white"
+              >
+                <Instagram className="h-4 w-4" /> Instagram
+              </button>
+            </div>
+
+            {/* 8-character code */}
+            <p className="mt-5 mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+              Or share the code
+            </p>
+            <div className="flex items-center gap-2 rounded-2xl border border-border bg-card-soft px-3 py-2.5">
+              <span className="flex-1 font-mono text-base tracking-[0.25em]">{code}</span>
               <button
                 onClick={() => {
                   if (typeof navigator !== "undefined" && navigator.clipboard) {
-                    navigator.clipboard.writeText(link).catch(() => {});
+                    navigator.clipboard.writeText(code).catch(() => {});
                   }
                   setCopied(true);
                   setTimeout(() => setCopied(false), 1500);
@@ -2197,26 +2214,6 @@ function ShareView() {
                 {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
                 {copied ? "Copied" : "Copy"}
               </button>
-            </div>
-
-            <p className="mt-5 mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-              Suggested friends
-            </p>
-            <div className="space-y-1.5">
-              {friends.map((f) => (
-                <button
-                  key={f.handle}
-                  onClick={() => sendCard(picking!, f.name)}
-                  className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card-soft p-2.5 text-left transition hover:border-secondary/60"
-                >
-                  <img src={f.img} alt="" className="h-10 w-10 rounded-full object-cover" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold leading-tight">{f.name}</p>
-                    <p className="text-[11px] text-muted-foreground">{f.handle}</p>
-                  </div>
-                  <Send className="h-4 w-4 text-secondary" />
-                </button>
-              ))}
             </div>
 
             <button
