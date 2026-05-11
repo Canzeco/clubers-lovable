@@ -723,13 +723,13 @@ function TinderMode() {
             className="pointer-events-none absolute left-5 top-5 rotate-[-12deg] rounded-md border-2 border-secondary px-3 py-1 text-sm font-bold uppercase tracking-widest text-secondary"
             style={{ opacity: likeOp }}
           >
-            Save
+            Yes
           </div>
           <div
             className="pointer-events-none absolute right-5 top-5 rotate-[12deg] rounded-md border-2 border-destructive px-3 py-1 text-sm font-bold uppercase tracking-widest text-destructive"
             style={{ opacity: nopeOp }}
           >
-            Nope
+            No
           </div>
           <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
             {v.affiliated ? (
@@ -765,13 +765,13 @@ function TinderMode() {
           onClick={() => fly("l")}
           className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:scale-[1.02]"
         >
-          <X className="h-4 w-4" /> Nope
+          <X className="h-4 w-4" /> No
         </button>
         <button
           onClick={() => fly("r")}
           className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow transition hover:scale-[1.02]"
         >
-          <Bookmark className="h-4 w-4 fill-current" /> Save coupon
+          <Check className="h-4 w-4" /> Yes
         </button>
       </div>
 
@@ -791,7 +791,7 @@ function TinderMode() {
               </div>
               <div className="flex-1">
                 <p className="text-[10px] uppercase tracking-widest text-secondary">
-                  Coupon saved
+                  Nice pick · coupon saved
                 </p>
                 <p className="font-display text-lg font-semibold leading-tight">
                   {saved.name}
@@ -799,8 +799,8 @@ function TinderMode() {
               </div>
               <Check className="h-5 w-5 text-secondary" />
             </div>
-            <p className="mt-4 text-sm text-foreground">
-              Want to make a reservation now?
+            <p className="mt-4 text-sm font-semibold text-foreground">
+              Want to make a reservation?
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
               Lock a table tonight and your cashback activates automatically.
@@ -810,13 +810,13 @@ function TinderMode() {
                 onClick={() => setSaved(null)}
                 className="flex-1 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground"
               >
-                Not now
+                No, just save
               </button>
               <button
                 onClick={() => setSaved(null)}
                 className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
               >
-                <Calendar className="h-4 w-4" /> Reserve
+                <Calendar className="h-4 w-4" /> Yes, reserve
               </button>
             </div>
           </div>
