@@ -234,10 +234,9 @@ function VenueDetailSheet({
   );
 }
 
-function CatalogMode() {
-  const [selected, setSelected] = useState<typeof venues[number] | null>(null);
+function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => void }) {
   return (
-    <div className="relative pb-6">
+    <div className="pb-6">
       {/* filter chips */}
       <div className="flex gap-2 overflow-x-auto scrollbar-hide px-5 pb-3">
         {["All", "Tonight", "Cashback", "Rooftop", "Brunch", "Late night"].map(
@@ -261,7 +260,7 @@ function CatalogMode() {
         {[...venues, ...venues].map((v, idx) => (
           <button
             key={v.name + idx}
-            onClick={() => setSelected(v)}
+            onClick={() => onSelect(v)}
             className="flex w-full overflow-hidden rounded-2xl border border-border bg-card-soft text-left transition active:scale-[0.99]"
             style={{ aspectRatio: "5 / 2" }}
           >
@@ -305,8 +304,6 @@ function CatalogMode() {
           </button>
         ))}
       </div>
-
-      {selected && <VenueDetailSheet venue={selected} onClose={() => setSelected(null)} />}
     </div>
   );
 }
@@ -505,6 +502,7 @@ function MapMode() {
 
 function Discover() {
   const [mode, setMode] = useState<DiscoverMode>("catalog");
+  const [selected, setSelected] = useState<typeof venues[number] | null>(null);
   const sub =
     mode === "catalog"
       ? "Curated for tonight"
@@ -512,16 +510,19 @@ function Discover() {
       ? "3 affiliated · 12 nearby"
       : "Swipe to decide";
   return (
-    <div className="flex h-full flex-col overflow-hidden">
+    <div className="relative flex h-full flex-col overflow-hidden">
       <TopBar title="Discover" subtitle={sub} />
       <ModeSwitcher mode={mode} setMode={setMode} />
       {mode === "catalog" && (
         <div className="flex-1 overflow-y-auto scrollbar-hide">
-          <CatalogMode />
+          <CatalogMode onSelect={setSelected} />
         </div>
       )}
       {mode === "map" && <MapMode />}
       {mode === "tinder" && <TinderMode />}
+      {selected && (
+        <VenueDetailSheet venue={selected} onClose={() => setSelected(null)} />
+      )}
     </div>
   );
 }
