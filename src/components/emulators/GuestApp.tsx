@@ -37,7 +37,7 @@ import {
   Share2,
 } from "lucide-react";
 
-type Tab = "discover" | "coupons" | "wallet" | "profile";
+type Tab = "discover" | "coupons" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
 
 function GoogleLogo({ className = "" }: { className?: string }) {
@@ -1596,7 +1596,7 @@ function ProfileView() {
   const [igConnected, setIgConnected] = useState(false);
   const [showConnect, setShowConnect] = useState(false);
   const [showAppeal, setShowAppeal] = useState(false);
-  const [subTab, setSubTab] = useState<"general" | "stats">("general");
+  const [subTab, setSubTab] = useState<"general" | "stats" | "wallet">("general");
   return (
     <>
       <TopBar title="Profile" />
@@ -1620,10 +1620,11 @@ function ProfileView() {
         </div>
 
         {/* Sub-tabs */}
-        <div className="mt-4 grid grid-cols-2 gap-1 rounded-full border border-border bg-card-soft p-1">
+        <div className="mt-4 grid grid-cols-3 gap-1 rounded-full border border-border bg-card-soft p-1">
           {([
-            { id: "general", label: "Tier & Identity" },
-            { id: "stats", label: "Gamification" },
+            { id: "general", label: "Tier" },
+            { id: "wallet", label: "Wallet" },
+            { id: "stats", label: "Stats" },
           ] as const).map((s) => (
             <button
               key={s.id}
