@@ -94,6 +94,7 @@
   --tier-bronze: oklch(0.62 0.13 55);
   --tier-silver: oklch(0.82 0.02 250);
   --tier-gold: oklch(0.84 0.16 88);
+  --tier-diamond: oklch(0.85 0.12 200);
 
   /* WhatsApp */
   --wa-bg: oklch(0.22 0.02 150);
@@ -192,9 +193,11 @@
   .text-gold { color: var(--tier-gold); }
   .text-silver { color: var(--tier-silver); }
   .text-bronze { color: var(--tier-bronze); }
+  .text-diamond { color: var(--tier-diamond); }
   .bg-tier-gold { background: var(--gradient-gold); }
   .bg-tier-silver { background: linear-gradient(135deg, oklch(0.88 0.02 250), oklch(0.72 0.02 250)); }
   .bg-tier-bronze { background: linear-gradient(135deg, oklch(0.68 0.13 55), oklch(0.52 0.12 45)); }
+  .bg-tier-diamond { background: linear-gradient(135deg, oklch(0.92 0.10 200), oklch(0.70 0.16 280)); }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
   .scrollbar-hide { scrollbar-width: none; }
 }
