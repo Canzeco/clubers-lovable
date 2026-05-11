@@ -1621,9 +1621,9 @@ function ProfileView() {
         {/* Sub-tabs */}
         <div className="mt-4 grid grid-cols-3 gap-1 rounded-full border border-border bg-card-soft p-1">
           {([
-            { id: "general", label: "Tier" },
+            { id: "general", label: "Class" },
             { id: "wallet", label: "Wallet" },
-            { id: "stats", label: "Stats" },
+            { id: "stats", label: "Level" },
           ] as const).map((s) => (
             <button
               key={s.id}
@@ -1644,7 +1644,7 @@ function ProfileView() {
         {/* Tier banner */}
         <div className="mt-4 rounded-2xl bg-tier-gold/10 border border-tier-gold/40 p-4 text-center">
           <p className="flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-widest text-tier-gold">
-            <Sparkles className="h-3 w-3" /> Your tier
+            <Sparkles className="h-3 w-3" /> Your class
           </p>
           <p className="mt-1 font-display text-3xl font-semibold text-tier-gold">Gold</p>
           <p className="mt-1 text-[11px] text-muted-foreground">
@@ -1652,11 +1652,11 @@ function ProfileView() {
           </p>
         </div>
 
-        {/* Tier ladder */}
+        {/* Class ladder */}
         <div className="mt-4 rounded-2xl border border-border bg-card p-4">
           <div className="mb-3 flex items-center justify-between">
             <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-              <Crown className="h-3 w-3 text-tier-gold" /> Tier ladder
+              <Crown className="h-3 w-3 text-tier-gold" /> Class ladder
             </p>
             <span className="text-[10px] text-secondary">Instagram = main signal</span>
           </div>
@@ -1876,7 +1876,7 @@ function ProfileView() {
               </li>
               <li className="flex gap-3">
                 <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">4</span>
-                <p className="flex-1 text-foreground/85">Your tier is set instantly from your follower count.</p>
+                <p className="flex-1 text-foreground/85">Your class is set instantly from your follower count.</p>
               </li>
             </ol>
 
@@ -1921,7 +1921,7 @@ function ProfileView() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
-            <p className="font-display text-lg font-semibold leading-tight">Appeal for tier upgrade</p>
+            <p className="font-display text-lg font-semibold leading-tight">Appeal for class upgrade</p>
             <p className="mt-1 text-[11px] text-muted-foreground">
               Tier is mostly automatic from Instagram. We review manual cases: models, chefs, press, athletes, founders.
             </p>
