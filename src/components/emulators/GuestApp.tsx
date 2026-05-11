@@ -1039,12 +1039,6 @@ function WalletView() {
   return (
     <>
       <TopBar title="Coupon Wallet" subtitle={`${unused.length} unused · ${used.length} used`} />
-      <div className="mx-5 mb-4 rounded-2xl bg-peacock p-4 text-primary-foreground shadow-glow">
-        <p className="text-xs uppercase tracking-widest opacity-80">Total saved</p>
-        <p className="font-display text-4xl font-semibold">$ 1,840</p>
-        <p className="mt-1 text-xs opacity-80">12 visits · this month</p>
-      </div>
-
       {/* segmented control */}
       <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
         {([
