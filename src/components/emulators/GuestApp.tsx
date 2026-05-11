@@ -591,7 +591,7 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
           <button
             key={v.name + idx}
             onClick={() => onSelect(v)}
-            className="flex w-full overflow-hidden rounded-2xl border border-border bg-card-soft text-left transition active:scale-[0.99]"
+            className="relative flex w-full overflow-hidden rounded-2xl border border-border bg-card-soft text-left shadow-sm transition active:scale-[0.99]"
             style={{ aspectRatio: "5 / 2" }}
           >
             {/* image 3:2 */}
@@ -616,8 +616,25 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
               </div>
             </div>
 
+            {/* coupon ticket notches + dashed perforation */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute top-0 z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-border bg-background"
+              style={{ left: "60%" }}
+            />
+            <span
+              aria-hidden
+              className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full border border-border bg-background"
+              style={{ left: "60%" }}
+            />
+            <span
+              aria-hidden
+              className="pointer-events-none absolute top-2 bottom-2 border-l border-dashed border-border/70"
+              style={{ left: "60%" }}
+            />
+
             {/* essential info only */}
-            <div className="flex min-w-0 flex-1 flex-col justify-center gap-2 px-3 py-2">
+            <div className="flex min-w-0 flex-1 flex-col justify-center gap-2 px-4 py-2">
               <p className="truncate text-[9px] uppercase tracking-widest text-muted-foreground">
                 {v.type}
               </p>
