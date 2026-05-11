@@ -217,33 +217,8 @@ function VenueDetailSheet({
         </div>
 
         <div className="space-y-4 px-5 pt-5">
-          {/* Instagram-style photo scroller */}
-          <div className="-mx-5">
-            <div className="flex gap-1.5 overflow-x-auto scrollbar-hide px-5">
-              {[
-                "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80",
-                "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600&q=80",
-                "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80",
-                "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&q=80",
-                "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&q=80",
-                "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&q=80",
-                "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&q=80",
-                "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=600&q=80",
-                "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80",
-                "https://images.unsplash.com/photo-1481833761820-0509d3217039?w=600&q=80",
-              ].map((src, i) => (
-                <div
-                  key={src}
-                  className="relative h-44 w-32 flex-shrink-0 overflow-hidden rounded-2xl"
-                >
-                  <img src={src} alt="" className="h-full w-full object-cover" />
-                  <span className="absolute right-1.5 top-1.5 rounded-full bg-black/50 px-1.5 py-px text-[9px] font-medium text-white backdrop-blur">
-                    {i + 1}/10
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* Instagram-style 4:3 carousel with dots */}
+          <PhotoCarousel />
 
           {/* Four scores */}
           <div className="grid grid-cols-4 gap-1.5">
@@ -1130,6 +1105,50 @@ export function GuestApp() {
           ))}
         </div>
         <div className="mx-auto mt-1 h-1 w-32 rounded-full bg-foreground/40" />
+      </div>
+    </div>
+  );
+}
+function PhotoCarousel() {
+  const photos = [
+    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=80",
+    "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=900&q=80",
+    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80",
+    "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=900&q=80",
+    "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=900&q=80",
+    "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=900&q=80",
+    "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=900&q=80",
+    "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=900&q=80",
+  ];
+  const ref = useRef<HTMLDivElement>(null);
+  const [idx, setIdx] = useState(0);
+
+  return (
+    <div className="-mx-5">
+      <div
+        ref={ref}
+        onScroll={(e) => {
+          const el = e.currentTarget;
+          const i = Math.round(el.scrollLeft / el.clientWidth);
+          if (i !== idx) setIdx(i);
+        }}
+        className="flex snap-x snap-mandatory overflow-x-auto scrollbar-hide"
+      >
+        {photos.map((src) => (
+          <div key={src} className="aspect-[4/3] w-full flex-shrink-0 snap-center">
+            <img src={src} alt="" className="h-full w-full object-cover" />
+          </div>
+        ))}
+      </div>
+      <div className="mt-2 flex justify-center gap-1.5">
+        {photos.map((_, i) => (
+          <span
+            key={i}
+            className={`h-1.5 rounded-full transition-all ${
+              i === idx ? "w-4 bg-foreground" : "w-1.5 bg-foreground/30"
+            }`}
+          />
+        ))}
       </div>
     </div>
   );
