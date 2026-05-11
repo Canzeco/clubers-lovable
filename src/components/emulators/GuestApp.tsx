@@ -556,10 +556,11 @@ function ProfileView() {
 
 export function GuestApp() {
   const [tab, setTab] = useState<Tab>("discover");
+  const scrollable = tab !== "discover" ? true : false;
   return (
     <div className="flex h-full flex-col bg-background text-foreground">
       <StatusBar />
-      <div className="flex-1 overflow-y-auto scrollbar-hide pb-20">
+      <div className={`flex-1 ${scrollable ? "overflow-y-auto" : "overflow-hidden"} scrollbar-hide pb-20`}>
         {tab === "discover" && <Discover />}
         {tab === "wallet" && <WalletView />}
         {tab === "profile" && <ProfileView />}
