@@ -628,6 +628,9 @@ function TinderMode() {
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState<"l" | "r" | null>(null);
   const [saved, setSaved] = useState<typeof venues[number] | null>(null);
+  const [step, setStep] = useState<"ask" | "pick" | "done">("ask");
+  const [pickedDay, setPickedDay] = useState<number>(0);
+  const [pickedTime, setPickedTime] = useState<string | null>(null);
   const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
   const startRef = useRef<{ x: number; y: number; id: number } | null>(null);
   const v = venues[idx % venues.length];
@@ -778,7 +781,7 @@ function TinderMode() {
       {saved && (
         <div
           className="absolute inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm"
-          onClick={() => setSaved(null)}
+          onClick={() => { setSaved(null); setStep("ask"); setPickedTime(null); setPickedDay(0); }}
         >
           <div
             className="w-full rounded-t-3xl border-t border-border bg-card p-5 pb-8 shadow-2xl"
@@ -799,26 +802,136 @@ function TinderMode() {
               </div>
               <Check className="h-5 w-5 text-secondary" />
             </div>
-            <p className="mt-4 text-sm font-semibold text-foreground">
-              Want to make a reservation?
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Lock a table tonight and your cashback activates automatically.
-            </p>
-            <div className="mt-4 flex gap-2">
-              <button
-                onClick={() => setSaved(null)}
-                className="flex-1 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground"
-              >
-                No, just save
-              </button>
-              <button
-                onClick={() => setSaved(null)}
-                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
-              >
-                <Calendar className="h-4 w-4" /> Yes, reserve
-              </button>
-            </div>
+            {step === "ask" && (
+              <>
+                <p className="mt-4 text-sm font-semibold text-foreground">
+                  Want to make a reservation?
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Your cashback activates automatically when you sit down.
+                </p>
+                <div className="mt-4 flex gap-2">
+                  <button
+                    onClick={() => { setSaved(null); setStep("ask"); }}
+                    className="flex-1 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground"
+                  >
+                    No, just save
+                  </button>
+                  <button
+                    onClick={() => setStep("pick")}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
+                  >
+                    <Calendar className="h-4 w-4" /> Yes, reserve
+                  </button>
+                </div>
+              </>
+            )}
+
+            {step === "pick" && (() => {
+              const days = Array.from({ length: 7 }).map((_, i) => {
+                const d = new Date();
+                d.setDate(d.getDate() + i);
+                return {
+                  i,
+                  label: i === 0 ? "Today" : i === 1 ? "Tmrw" : d.toLocaleDateString(undefined, { weekday: "short" }),
+                  date: d.getDate(),
+                };
+              });
+              const slots: string[] = [];
+              for (let h = 12; h <= 23; h++) {
+                for (const m of [0, 30]) {
+                  slots.push(`${h % 12 === 0 ? 12 : h % 12}:${m.toString().padStart(2, "0")} ${h >= 12 ? "PM" : "AM"}`);
+                }
+              }
+              return (
+                <>
+                  {/* Right-now CTA */}
+                  <button
+                    onClick={() => { setPickedTime("Right now"); setStep("done"); }}
+                    className="mt-4 flex w-full items-center justify-between rounded-2xl bg-gradient-to-r from-secondary/30 to-tier-gold/30 p-3 ring-1 ring-tier-gold/40"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Flame className="h-5 w-5 text-tier-gold" />
+                      <div className="text-left">
+                        <p className="text-sm font-semibold leading-none">Reserve right now</p>
+                        <p className="mt-0.5 text-[10px] text-muted-foreground">Walk in within 20 min</p>
+                      </div>
+                    </div>
+                    <span className="rounded-full bg-tier-gold px-2.5 py-1 text-[10px] font-bold text-black">GO</span>
+                  </button>
+
+                  <p className="mt-4 mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+                    or pick a day
+                  </p>
+                  <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
+                    {days.map((d) => (
+                      <button
+                        key={d.i}
+                        onClick={() => setPickedDay(d.i)}
+                        className={`flex w-14 flex-shrink-0 flex-col items-center rounded-xl border py-2 ${
+                          pickedDay === d.i
+                            ? "border-secondary bg-secondary/15 text-secondary"
+                            : "border-border bg-card-soft text-foreground"
+                        }`}
+                      >
+                        <span className="text-[9px] uppercase tracking-widest opacity-80">{d.label}</span>
+                        <span className="font-display text-lg font-semibold leading-none">{d.date}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <p className="mt-4 mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+                    Time · every 30 min
+                  </p>
+                  <div className="grid max-h-40 grid-cols-3 gap-1.5 overflow-y-auto scrollbar-hide pr-1">
+                    {slots.map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => setPickedTime(t)}
+                        className={`rounded-lg border px-2 py-1.5 text-[11px] font-medium ${
+                          pickedTime === t
+                            ? "border-secondary bg-secondary text-secondary-foreground"
+                            : "border-border bg-card-soft text-foreground"
+                        }`}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    disabled={!pickedTime}
+                    onClick={() => setStep("done")}
+                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow disabled:opacity-40"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    {pickedTime ? `Confirm · ${days[pickedDay].label} ${pickedTime}` : "Pick a time"}
+                  </button>
+                </>
+              );
+            })()}
+
+            {step === "done" && (
+              <>
+                <div className="mt-5 flex flex-col items-center text-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary/15 text-secondary">
+                    <Check className="h-6 w-6" />
+                  </div>
+                  <p className="mt-2 font-display text-lg font-semibold">Reservation confirmed</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {pickedTime === "Right now"
+                      ? "Walk in within 20 min — table is being held."
+                      : `Table for 2 · ${pickedTime}`}
+                  </p>
+                </div>
+                <button
+                  onClick={() => { setSaved(null); setStep("ask"); setPickedTime(null); setPickedDay(0); }}
+                  className="mt-5 w-full rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
+                >
+                  Done
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
