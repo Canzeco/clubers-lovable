@@ -211,12 +211,12 @@ function ModeSwitcher({
     { id: "ai", label: "AI Search", Icon: Sparkles },
   ];
   return (
-    <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
+    <div className="mx-3 mb-3 grid grid-cols-4 items-center gap-1 rounded-full border border-border bg-card/60 p-1">
       {modes.map((m) => (
         <button
           key={m.id}
           onClick={() => setMode(m.id)}
-          className={`flex flex-1 items-center justify-center gap-1 rounded-full py-1.5 text-[11px] font-medium transition ${
+          className={`flex w-full items-center justify-center gap-1 rounded-full py-1.5 text-[11px] font-medium transition ${
             mode === m.id
               ? "bg-foreground text-background"
               : "text-muted-foreground"
