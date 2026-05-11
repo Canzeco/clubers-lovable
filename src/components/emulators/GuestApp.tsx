@@ -1235,29 +1235,22 @@ function WalletView() {
               <span aria-hidden className="pointer-events-none absolute top-2 bottom-2 border-l border-dashed border-border" style={{ left: "5rem" }} />
 
               {/* right — info */}
-              <div className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3">
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-display text-sm font-semibold leading-tight">{c.name}</p>
-                  <p className="truncate text-[10px] uppercase tracking-widest text-muted-foreground">{c.note}</p>
-                  <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                    {c.res === "pending" && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-1.5 py-0.5 text-[9px] font-semibold text-primary">
-                        <Phone className="h-2.5 w-2.5 animate-pulse" /> AI calling…
-                      </span>
-                    )}
-                    {c.res === "confirmed" && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-secondary/15 px-1.5 py-0.5 text-[9px] font-semibold text-secondary">
-                        <Check className="h-2.5 w-2.5" /> Reserved
-                      </span>
-                    )}
-                    <span className="inline-flex items-center gap-1 text-[10px] text-secondary">
-                      <Clock className="h-2.5 w-2.5" /> {c.exp}
-                    </span>
-                  </div>
+              <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4 py-3">
+                <p className="truncate font-display text-sm font-semibold leading-tight">{c.name}</p>
+                <p className="truncate text-[10px] text-muted-foreground">
+                  {c.category} · {c.distance} · <span className="tracking-wider">{"$".repeat(c.cost)}</span>
+                </p>
+                <div className="flex items-center gap-2 text-[10px]">
+                  <span className="inline-flex items-center gap-0.5 text-secondary">
+                    <Star className="h-2.5 w-2.5 fill-secondary text-secondary" /> {c.mesita.toFixed(1)}
+                    <span className="ml-0.5 text-muted-foreground/70">Mesita</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-muted-foreground">
+                    <span className="flex h-3 w-3 items-center justify-center rounded-full bg-muted text-[7px] font-bold text-foreground/70">G</span>
+                    {c.google.toFixed(1)}
+                    <span className="text-muted-foreground/70">Google</span>
+                  </span>
                 </div>
-                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-secondary text-[10px] font-bold text-secondary-foreground shadow-sm">
-                  QR
-                </span>
               </div>
             </button>
           ))}
@@ -1277,14 +1270,21 @@ function WalletView() {
                 </div>
               </div>
               <span aria-hidden className="pointer-events-none absolute top-2 bottom-2 border-l border-dashed border-border" style={{ left: "5rem" }} />
-              <div className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3">
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-display text-sm font-semibold leading-tight line-through decoration-muted-foreground/50">{c.name}</p>
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Redeemed · {c.when}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Saved</p>
-                  <p className="font-display text-sm font-semibold text-secondary">{c.saved}</p>
+              <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4 py-3 opacity-70">
+                <p className="truncate font-display text-sm font-semibold leading-tight">{c.name}</p>
+                <p className="truncate text-[10px] text-muted-foreground">
+                  {c.category} · {c.distance} · <span className="tracking-wider">{"$".repeat(c.cost)}</span>
+                </p>
+                <div className="flex items-center gap-2 text-[10px]">
+                  <span className="inline-flex items-center gap-0.5 text-secondary">
+                    <Star className="h-2.5 w-2.5 fill-secondary text-secondary" /> {c.mesita.toFixed(1)}
+                    <span className="ml-0.5 text-muted-foreground/70">Mesita</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-muted-foreground">
+                    <span className="flex h-3 w-3 items-center justify-center rounded-full bg-muted text-[7px] font-bold text-foreground/70">G</span>
+                    {c.google.toFixed(1)}
+                    <span className="text-muted-foreground/70">Google</span>
+                  </span>
                 </div>
               </div>
             </button>
