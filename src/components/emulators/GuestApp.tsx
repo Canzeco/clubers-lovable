@@ -35,9 +35,11 @@ import {
   Loader2,
   Coins,
   Share2,
+  Gift,
+  Copy,
 } from "lucide-react";
 
-type Tab = "discover" | "coupons" | "profile";
+type Tab = "discover" | "coupons" | "share" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
 
 function GoogleLogo({ className = "" }: { className?: string }) {
@@ -2070,6 +2072,228 @@ function CreditsView() {
   );
 }
 
+function ShareView() {
+  const totalCards = 5;
+  const [cards, setCards] = useState<
+    Array<{ id: number; status: "available" | "sent" | "redeemed"; to?: string; when?: string }>
+  >([
+    { id: 1, status: "redeemed", to: "Camila V.", when: "May 2" },
+    { id: 2, status: "sent", to: "Mateo F.", when: "May 5" },
+    { id: 3, status: "available" },
+    { id: 4, status: "available" },
+    { id: 5, status: "available" },
+  ]);
+  const [picking, setPicking] = useState<number | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const redeemed = cards.filter((c) => c.status === "redeemed").length;
+  const sent = cards.filter((c) => c.status === "sent").length;
+  const available = cards.filter((c) => c.status === "available").length;
+
+  const link = "mesita.app/g/valenrose-X9F2";
+
+  const sendCard = (id: number, friend: string) => {
+    setCards((cs) => cs.map((c) => (c.id === id ? { ...c, status: "sent", to: friend, when: "Today" } : c)));
+    setPicking(null);
+  };
+
+  const friends = [
+    { name: "Sofía P.", handle: "@sofip", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80" },
+    { name: "Diego A.", handle: "@diegoa", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80" },
+    { name: "Renata K.", handle: "@renatak", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" },
+    { name: "Tomás L.", handle: "@tomasl", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&q=80" },
+    { name: "Ana T.", handle: "@anat", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&q=80" },
+  ];
+
+  return (
+    <>
+      <TopBar title="Gift Cards" subtitle="Share Mesita with the people you love" />
+
+      {/* Hero */}
+      <div className="mx-5 mb-4 overflow-hidden rounded-3xl bg-peacock p-5 text-primary-foreground shadow-glow">
+        <div className="flex items-center gap-2">
+          <Gift className="h-4 w-4" />
+          <p className="text-[10px] uppercase tracking-widest opacity-80">Your gift cards</p>
+        </div>
+        <p className="mt-2 flex items-baseline gap-2 font-display text-4xl font-semibold leading-none">
+          {available}
+          <span className="text-base font-normal opacity-70">/ {totalCards} left</span>
+        </p>
+        <p className="mt-2 text-[11px] opacity-85">
+          Each card is <span className="font-semibold">$100 MXN</span> to spend on any Mesita venue. They expire in 14 days once sent.
+        </p>
+      </div>
+
+      {/* Stats */}
+      <div className="mx-5 mb-4 grid grid-cols-3 gap-2">
+        <div className="rounded-2xl bg-card-soft p-3">
+          <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Available</p>
+          <p className="mt-1 font-display text-xl font-semibold text-secondary">{available}</p>
+        </div>
+        <div className="rounded-2xl bg-card-soft p-3">
+          <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Sent</p>
+          <p className="mt-1 font-display text-xl font-semibold">{sent}</p>
+        </div>
+        <div className="rounded-2xl bg-card-soft p-3">
+          <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Redeemed</p>
+          <p className="mt-1 font-display text-xl font-semibold text-tier-gold">{redeemed}</p>
+        </div>
+      </div>
+
+      {/* Cards list */}
+      <div className="px-5">
+        <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+          The 5 cards
+        </p>
+        <div className="space-y-2 pb-6">
+          {cards.map((c) => {
+            const isAvail = c.status === "available";
+            const isRedeemed = c.status === "redeemed";
+            return (
+              <div
+                key={c.id}
+                className={`flex items-center gap-3 rounded-2xl border p-3 ${
+                  isAvail
+                    ? "border-secondary/40 bg-secondary/5"
+                    : isRedeemed
+                    ? "border-tier-gold/40 bg-tier-gold/5"
+                    : "border-border bg-card-soft"
+                }`}
+              >
+                <div
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${
+                    isAvail
+                      ? "bg-secondary text-secondary-foreground"
+                      : isRedeemed
+                      ? "bg-tier-gold text-black"
+                      : "bg-card text-muted-foreground"
+                  }`}
+                >
+                  <Gift className="h-5 w-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-display text-sm font-semibold leading-tight">
+                    $100 MXN gift card
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    {isAvail
+                      ? "Ready to share with a friend"
+                      : isRedeemed
+                      ? `Redeemed by ${c.to} · ${c.when}`
+                      : `Sent to ${c.to} · ${c.when} · awaiting redemption`}
+                  </p>
+                </div>
+                {isAvail ? (
+                  <button
+                    onClick={() => setPicking(c.id)}
+                    className="rounded-full bg-peacock px-3 py-1.5 text-[11px] font-semibold text-white shadow-glow"
+                  >
+                    Send
+                  </button>
+                ) : isRedeemed ? (
+                  <span className="flex items-center gap-1 rounded-full bg-tier-gold/20 px-2 py-1 text-[10px] font-semibold text-tier-gold">
+                    <Check className="h-3 w-3" /> Used
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1 rounded-full bg-card px-2 py-1 text-[10px] font-medium text-muted-foreground">
+                    <Clock className="h-3 w-3" /> Pending
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* How it works */}
+        <div className="mb-6 rounded-2xl border border-border bg-card-soft p-4">
+          <p className="mb-2 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <Sparkles className="h-3 w-3 text-secondary" /> How it works
+          </p>
+          <ol className="space-y-2 text-[12px] leading-snug">
+            <li className="flex gap-2">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">1</span>
+              <p className="flex-1 text-foreground/85">You have 5 gift cards. Each is $100 MXN of real Mesita balance.</p>
+            </li>
+            <li className="flex gap-2">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">2</span>
+              <p className="flex-1 text-foreground/85">Send one to a friend. They sign up and get $100 to try Mesita — on you.</p>
+            </li>
+            <li className="flex gap-2">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">3</span>
+              <p className="flex-1 text-foreground/85">When they redeem at any venue, you both get <span className="font-semibold text-secondary">+10% cashback</span> for a month.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      {/* Pick friend sheet */}
+      {picking !== null && (
+        <div
+          className="absolute inset-0 z-50 flex items-end bg-black/60 backdrop-blur-sm"
+          onClick={() => setPicking(null)}
+        >
+          <div
+            className="max-h-[88%] w-full overflow-y-auto rounded-t-3xl border-t border-border bg-card p-5 pb-8 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
+            <p className="font-display text-lg font-semibold leading-tight">Send a $100 gift card</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              Pick a friend or share the link directly.
+            </p>
+
+            {/* Personal link */}
+            <div className="mt-4 flex items-center gap-2 rounded-2xl border border-border bg-card-soft px-3 py-2.5">
+              <Gift className="h-4 w-4 shrink-0 text-secondary" />
+              <span className="flex-1 truncate font-mono text-[12px]">{link}</span>
+              <button
+                onClick={() => {
+                  if (typeof navigator !== "undefined" && navigator.clipboard) {
+                    navigator.clipboard.writeText(link).catch(() => {});
+                  }
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 1500);
+                }}
+                className="flex items-center gap-1 rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold text-background"
+              >
+                {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                {copied ? "Copied" : "Copy"}
+              </button>
+            </div>
+
+            <p className="mt-5 mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+              Suggested friends
+            </p>
+            <div className="space-y-1.5">
+              {friends.map((f) => (
+                <button
+                  key={f.handle}
+                  onClick={() => sendCard(picking!, f.name)}
+                  className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card-soft p-2.5 text-left transition hover:border-secondary/60"
+                >
+                  <img src={f.img} alt="" className="h-10 w-10 rounded-full object-cover" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold leading-tight">{f.name}</p>
+                    <p className="text-[11px] text-muted-foreground">{f.handle}</p>
+                  </div>
+                  <Send className="h-4 w-4 text-secondary" />
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setPicking(null)}
+              className="mt-4 w-full rounded-full border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 function AddCreditsSheet({
   onClose,
   onConfirm,
@@ -2277,6 +2501,11 @@ export function GuestApp() {
             <WalletView />
           </div>
         )}
+        {tab === "share" && (
+          <div className="flex-1 overflow-y-auto scrollbar-hide">
+            <ShareView />
+          </div>
+        )}
         {tab === "profile" && (
           <div className="flex-1 overflow-y-auto scrollbar-hide">
             <ProfileView />
@@ -2293,17 +2522,7 @@ export function GuestApp() {
           ].map(({ id, Icon, label }) => (
             <button
               key={id}
-              onClick={() => {
-                if (id === "share") {
-                  if (typeof navigator !== "undefined" && (navigator as any).share) {
-                    (navigator as any)
-                      .share({ title: "Mesita", text: "Check out Mesita 🦚" })
-                      .catch(() => {});
-                  }
-                  return;
-                }
-                setTab(id as Tab);
-              }}
+              onClick={() => setTab(id as Tab)}
               className={`flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition ${
                 tab === id ? "text-primary" : "text-muted-foreground"
               }`}
