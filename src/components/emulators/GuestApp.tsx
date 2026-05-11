@@ -2085,64 +2085,128 @@ function ShareView() {
   const code = "8F2K-9XQ7";
   const message = `Hey! I'm sending you a $100 MXN gift card to try Mesita 🦚 — discover the best venues in CDMX. Claim it here: mesita.app/g/${code}`;
 
+  const initials = (name: string) =>
+    name
+      .split(" ")
+      .map((p) => p[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+
   return (
     <>
-      <TopBar title="Gift Cards" subtitle={`${remaining} of ${totalCards} left · $100 MXN each`} />
+      <div className="flex h-full flex-col overflow-hidden">
+        <TopBar title="Gift Cards" subtitle={`${remaining} of ${totalCards} left · $100 MXN each`} />
 
-      <div className="px-5">
-        <p className="mb-3 text-[12px] leading-snug text-muted-foreground">
-          You have one code to share. The first 5 friends who sign up with it each get $100 MXN of Mesita balance.
-        </p>
+        <div className="flex flex-1 flex-col overflow-hidden px-5 pb-3">
+          <p className="text-[11px] leading-snug text-muted-foreground">
+            Share one code with friends. First {totalCards} sign-ups each get $100 MXN.
+          </p>
 
-        {/* Big share CTA with the code */}
-        <button
-          onClick={() => setSharing(true)}
-          className="mb-4 flex w-full items-center gap-3 rounded-2xl border border-border bg-card-soft p-4 text-left"
-        >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-secondary/15 text-secondary">
-            <Gift className="h-5 w-5" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="font-mono text-base tracking-[0.25em] leading-tight">{code}</p>
-            <p className="text-[11px] text-muted-foreground">Tap to share · {remaining} claims left</p>
-          </div>
-          <span className="rounded-full bg-foreground px-3 py-1.5 text-[11px] font-semibold text-background">
-            Share
-          </span>
-        </button>
+          {/* Hero gift card with stacked fan behind */}
+          <div className="relative mx-auto mt-4 h-44 w-full max-w-[300px]">
+            {/* Stacked ghost cards */}
+            <div className="absolute inset-0 -rotate-6 translate-y-1 rounded-3xl bg-peacock/25" />
+            <div className="absolute inset-0 -rotate-3 rounded-3xl bg-peacock/50" />
 
-        {/* Claims list */}
-        <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">Claims</p>
-        <div className="space-y-2 pb-4">
-          {Array.from({ length: totalCards }).map((_, i) => {
-            const c = claimed[i];
-            return (
-              <div
-                key={i}
-                className="flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-3"
-              >
-                <div
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                    c ? "bg-card text-muted-foreground/60" : "bg-secondary/15 text-secondary"
-                  }`}
-                >
-                  <Gift className="h-4 w-4" />
+            {/* Main card */}
+            <div className="absolute inset-0 overflow-hidden rounded-3xl bg-peacock p-5 text-white shadow-2xl">
+              {/* Pattern overlay */}
+              <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/5" />
+              <div className="pointer-events-none absolute -bottom-10 -left-10 h-28 w-28 rounded-full border border-white/10" />
+
+              {/* Ticket perforations */}
+              <div className="absolute -left-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-background" />
+              <div className="absolute -right-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-background" />
+
+              <div className="relative flex h-full flex-col">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.25em] text-white/50">Mesita</p>
+                    <p className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-white/70">Gift Card</p>
+                  </div>
+                  <p className="font-display text-xl font-semibold leading-none">$100 MXN</p>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-medium leading-tight">$100 MXN</p>
-                  <p className="text-[11px] text-muted-foreground">
-                    {c ? `${c.to} · claimed ${c.when}` : "Available"}
-                  </p>
+
+                <div className="mt-auto">
+                  <p className="text-[9px] uppercase tracking-[0.25em] text-white/50">Invite Code</p>
+                  <div className="mt-1 flex items-center justify-between gap-2">
+                    <span className="font-mono text-lg font-semibold tracking-[0.2em]">{code}</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (typeof navigator !== "undefined" && navigator.clipboard) {
+                          navigator.clipboard.writeText(code).catch(() => {});
+                        }
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 1500);
+                      }}
+                      className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/15 transition hover:bg-white/25"
+                    >
+                      {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                    </button>
+                  </div>
                 </div>
-                {c && <span className="text-[10px] font-medium text-muted-foreground">Used</span>}
               </div>
-            );
-          })}
-        </div>
+            </div>
+          </div>
 
-        <p className="mb-8 text-center text-[11px] text-muted-foreground">
-          A gift from you, on Mesita. No strings attached.
-        </p>
+          {/* Availability strip */}
+          <div className="mt-5">
+            <div className="mb-2 flex items-end justify-between">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Availability
+              </p>
+              <p className="text-[10px] font-medium text-secondary">
+                {remaining} of {totalCards} left
+              </p>
+            </div>
+
+            <div className="grid grid-cols-5 gap-2">
+              {Array.from({ length: totalCards }).map((_, i) => {
+                const c = claimed[i];
+                const openIndex = i - claimed.length;
+                return (
+                  <div key={i} className="flex flex-col items-center gap-1.5">
+                    {c ? (
+                      <div className="relative flex aspect-square w-full items-center justify-center rounded-xl bg-peacock text-[11px] font-semibold text-white">
+                        {initials(c.to)}
+                        <div className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-tier-gold ring-2 ring-background">
+                          <Check className="h-2.5 w-2.5 text-black" strokeWidth={3} />
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        className="flex aspect-square w-full items-center justify-center rounded-xl border-2 border-dashed border-foreground/15"
+                        style={{ opacity: 1 - openIndex * 0.18 }}
+                      >
+                        <span className="text-base font-light text-foreground/30">+</span>
+                      </div>
+                    )}
+                    <p className="text-center text-[8.5px] leading-tight text-muted-foreground">
+                      {c ? (
+                        <>
+                          <span className="block font-semibold text-foreground/80">{c.to.split(" ")[0]}</span>
+                          <span className="block opacity-60">{c.when}</span>
+                        </>
+                      ) : (
+                        <span className="block uppercase tracking-wider opacity-50">Open</span>
+                      )}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={() => setSharing(true)}
+            className="mt-auto flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 py-3.5 text-sm font-semibold text-background shadow-lg active:scale-[0.98]"
+          >
+            Share Gift Code <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       {/* Share sheet */}
