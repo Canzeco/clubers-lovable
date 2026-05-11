@@ -649,6 +649,8 @@ function TinderMode() {
   const [step, setStep] = useState<"ask" | "pick" | "done">("ask");
   const [pickedDay, setPickedDay] = useState<number>(0);
   const [pickedTime, setPickedTime] = useState<string | null>(null);
+  const [partySize, setPartySize] = useState<number>(2);
+  const [prefs, setPrefs] = useState<string[]>([]);
   const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
   const startRef = useRef<{ x: number; y: number; id: number } | null>(null);
   const v = venues[idx % venues.length];
@@ -799,7 +801,7 @@ function TinderMode() {
       {saved && (
         <div
           className="absolute inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm"
-          onClick={() => { setSaved(null); setStep("ask"); setPickedTime(null); setPickedDay(0); }}
+          onClick={() => { setSaved(null); setStep("ask"); setPickedTime(null); setPickedDay(0); setPartySize(2); setPrefs([]); }}
         >
           <div
             className="w-full rounded-t-3xl border-t border-border bg-card p-5 pb-8 shadow-2xl"
@@ -920,6 +922,53 @@ function TinderMode() {
                     ))}
                   </div>
 
+                  <div className="mt-4 flex items-center justify-between">
+                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                      Party size
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setPartySize(Math.max(1, partySize - 1))}
+                        className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card-soft text-sm font-semibold"
+                      >
+                        −
+                      </button>
+                      <span className="w-10 text-center font-display text-base font-semibold">
+                        {partySize}
+                      </span>
+                      <button
+                        onClick={() => setPartySize(Math.min(12, partySize + 1))}
+                        className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card-soft text-sm font-semibold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <p className="mt-4 mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+                    Preferences <span className="normal-case tracking-normal opacity-60">· optional</span>
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["Aire libre", "Interior", "Ventana", "Barra", "Tranquilo", "Cumpleaños", "Pet friendly"].map((p) => {
+                      const on = prefs.includes(p);
+                      return (
+                        <button
+                          key={p}
+                          onClick={() =>
+                            setPrefs(on ? prefs.filter((x) => x !== p) : [...prefs, p])
+                          }
+                          className={`rounded-full border px-3 py-1 text-[11px] font-medium ${
+                            on
+                              ? "border-secondary bg-secondary/15 text-secondary"
+                              : "border-border bg-card-soft text-muted-foreground"
+                          }`}
+                        >
+                          {p}
+                        </button>
+                      );
+                    })}
+                  </div>
+
                   <button
                     disabled={!pickedTime}
                     onClick={() => setStep("done")}
@@ -944,8 +993,14 @@ function TinderMode() {
                     Our AI agent is calling {saved.name} now.
                     <br />
                     {pickedTime === "Right now"
-                      ? "Walk-in within 20 min · table for 2"
-                      : `${pickedTime} · table for 2`}
+                      ? `Walk-in within 20 min · table for ${partySize}`
+                      : `${pickedTime} · table for ${partySize}`}
+                    {prefs.length > 0 && (
+                      <>
+                        <br />
+                        <span className="text-secondary">{prefs.join(" · ")}</span>
+                      </>
+                    )}
                   </p>
                   <div className="mt-4 w-full space-y-2 rounded-2xl border border-border bg-card/60 p-3 text-left">
                     <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
