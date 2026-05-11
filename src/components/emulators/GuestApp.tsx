@@ -2088,8 +2088,6 @@ function ShareView() {
 
   const available = cards.filter((c) => c.status === "available").length;
 
-  const link = "mesita.app/g/valenrose-X9F2";
-
   const sendCard = (id: number, friend: string) => {
     setCards((cs) => cs.map((c) => (c.id === id ? { ...c, status: "sent", to: friend, when: "Today" } : c)));
     setPicking(null);
