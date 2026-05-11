@@ -34,10 +34,9 @@ import {
   Send,
   Loader2,
   Coins,
-  Share2,
 } from "lucide-react";
 
-type Tab = "discover" | "coupons" | "wallet" | "profile";
+type Tab = "discover" | "coupons" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
 
 function GoogleLogo({ className = "" }: { className?: string }) {
@@ -1596,7 +1595,7 @@ function ProfileView() {
   const [igConnected, setIgConnected] = useState(false);
   const [showConnect, setShowConnect] = useState(false);
   const [showAppeal, setShowAppeal] = useState(false);
-  const [subTab, setSubTab] = useState<"general" | "stats">("general");
+  const [subTab, setSubTab] = useState<"general" | "stats" | "wallet">("general");
   return (
     <>
       <TopBar title="Profile" />
@@ -1620,10 +1619,11 @@ function ProfileView() {
         </div>
 
         {/* Sub-tabs */}
-        <div className="mt-4 grid grid-cols-2 gap-1 rounded-full border border-border bg-card-soft p-1">
+        <div className="mt-4 grid grid-cols-3 gap-1 rounded-full border border-border bg-card-soft p-1">
           {([
-            { id: "general", label: "Tier & Identity" },
-            { id: "stats", label: "Gamification" },
+            { id: "general", label: "Tier" },
+            { id: "wallet", label: "Wallet" },
+            { id: "stats", label: "Stats" },
           ] as const).map((s) => (
             <button
               key={s.id}
@@ -1831,6 +1831,12 @@ function ProfileView() {
           </div>
         </div>
           </>
+        )}
+
+        {subTab === "wallet" && (
+          <div className="-mx-5 mt-4">
+            <CreditsView />
+          </div>
         )}
       </div>
 
@@ -2270,11 +2276,6 @@ export function GuestApp() {
             <WalletView />
           </div>
         )}
-        {tab === "wallet" && (
-          <div className="flex-1 overflow-y-auto scrollbar-hide">
-            <CreditsView />
-          </div>
-        )}
         {tab === "profile" && (
           <div className="flex-1 overflow-y-auto scrollbar-hide">
             <ProfileView />
@@ -2286,23 +2287,11 @@ export function GuestApp() {
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
             { id: "coupons", Icon: Ticket, label: "Coupons" },
-            { id: "share", Icon: Share2, label: "Share" },
-            { id: "wallet", Icon: Wallet, label: "Wallet" },
             { id: "profile", Icon: User, label: "Profile" },
           ].map(({ id, Icon, label }) => (
             <button
               key={id}
-              onClick={() => {
-                if (id === "share") {
-                  if (typeof navigator !== "undefined" && (navigator as any).share) {
-                    (navigator as any)
-                      .share({ title: "Mesita", text: "Check out Mesita 🦚" })
-                      .catch(() => {});
-                  }
-                  return;
-                }
-                setTab(id as Tab);
-              }}
+              onClick={() => setTab(id as Tab)}
               className={`flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition ${
                 tab === id ? "text-primary" : "text-muted-foreground"
               }`}
