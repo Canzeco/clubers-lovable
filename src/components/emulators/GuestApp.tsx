@@ -15,6 +15,11 @@ import {
   Check,
   Clock,
   Bookmark,
+  TrendingUp,
+  Users,
+  BadgeCheck,
+  Crown,
+  Eye,
 } from "lucide-react";
 
 type Tab = "discover" | "wallet" | "profile";
@@ -244,6 +249,213 @@ function VenueDetailSheet({
               About
             </p>
             <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
+          </div>
+
+          {/* Who's been here — heavy social proof */}
+          <div className="space-y-3">
+            <p className="flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+              <span>Who's been here</span>
+              <span className="flex items-center gap-1 text-secondary">
+                <Flame className="h-3 w-3" /> Hot tonight
+              </span>
+            </p>
+
+            {/* Status banner */}
+            <div
+              className="relative overflow-hidden rounded-2xl p-3"
+              style={{
+                background:
+                  "linear-gradient(120deg, oklch(0.78 0.16 85 / 0.15), oklch(0.55 0.18 280 / 0.18))",
+                border: "1px solid oklch(0.78 0.16 85 / 0.35)",
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <Crown className="h-4 w-4 text-tier-gold" />
+                <p className="text-[11px] font-semibold tracking-wide text-tier-gold">
+                  TOP 1% GOLD VENUE · CDMX THIS WEEK
+                </p>
+              </div>
+              <p className="mt-1 text-[11px] text-foreground/80">
+                Visited by <span className="font-semibold">38 Gold guests</span> in the last 7 days
+              </p>
+            </div>
+
+            {/* Tier breakdown */}
+            <div className="grid grid-cols-3 gap-2">
+              <div className="rounded-xl border border-tier-gold/40 bg-tier-gold/10 p-2.5 text-center">
+                <span className="inline-block rounded-full bg-tier-gold px-1.5 py-px text-[8px] font-bold uppercase text-black">
+                  Gold
+                </span>
+                <p className="mt-1.5 font-display text-2xl font-semibold leading-none text-tier-gold">
+                  142
+                </p>
+                <p className="mt-0.5 text-[9px] text-muted-foreground">guests · 90 d</p>
+              </div>
+              <div className="rounded-xl border border-tier-silver/40 bg-tier-silver/10 p-2.5 text-center">
+                <span className="inline-block rounded-full bg-tier-silver px-1.5 py-px text-[8px] font-bold uppercase text-black">
+                  Silver
+                </span>
+                <p className="mt-1.5 font-display text-2xl font-semibold leading-none text-tier-silver">
+                  318
+                </p>
+                <p className="mt-0.5 text-[9px] text-muted-foreground">guests · 90 d</p>
+              </div>
+              <div className="rounded-xl border border-tier-bronze/40 bg-tier-bronze/10 p-2.5 text-center">
+                <span className="inline-block rounded-full bg-tier-bronze px-1.5 py-px text-[8px] font-bold uppercase text-black">
+                  Bronze
+                </span>
+                <p className="mt-1.5 font-display text-2xl font-semibold leading-none text-tier-bronze">
+                  604
+                </p>
+                <p className="mt-0.5 text-[9px] text-muted-foreground">guests · 90 d</p>
+              </div>
+            </div>
+
+            {/* People you follow */}
+            <div className="rounded-2xl border border-border bg-card-soft p-3">
+              <div className="flex items-center justify-between">
+                <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+                  <Users className="h-3 w-3" /> 3 people you follow went here
+                </p>
+                <span className="text-[10px] text-secondary">See all</span>
+              </div>
+              <div className="mt-2.5 flex items-center gap-3">
+                <div className="flex -space-x-2">
+                  {venue.visitors.slice(0, 3).map((u) => (
+                    <img
+                      key={u.handle + "follow"}
+                      src={u.img}
+                      alt=""
+                      className={`h-9 w-9 rounded-full border-2 border-card object-cover ring-2 ${
+                        u.tier === "gold"
+                          ? "ring-tier-gold"
+                          : u.tier === "silver"
+                          ? "ring-tier-silver"
+                          : "ring-tier-bronze"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <p className="flex-1 text-[11px] leading-snug text-foreground/80">
+                  <span className="font-semibold">{venue.visitors[0].name.split(" ")[0]}</span>,{" "}
+                  <span className="font-semibold">{venue.visitors[1]?.name.split(" ")[0]}</span> and{" "}
+                  <span className="font-semibold">1 other</span> from your network have been here
+                </p>
+              </div>
+            </div>
+
+            {/* Featured tastemakers — horizontal scroll */}
+            <div>
+              <p className="mb-2 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+                <Crown className="h-3 w-3 text-tier-gold" /> Featured Gold tastemakers
+              </p>
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+                {venue.visitors.concat(venue.visitors).slice(0, 6).map((u, i) => (
+                  <div
+                    key={u.handle + "tm" + i}
+                    className="w-28 flex-shrink-0 rounded-2xl border border-border bg-card-soft p-2.5 text-center"
+                  >
+                    <div className="relative mx-auto w-fit">
+                      <img
+                        src={u.img}
+                        alt={u.name}
+                        className={`h-14 w-14 rounded-full object-cover ring-2 ${
+                          u.tier === "gold"
+                            ? "ring-tier-gold"
+                            : u.tier === "silver"
+                            ? "ring-tier-silver"
+                            : "ring-tier-bronze"
+                        }`}
+                      />
+                      <BadgeCheck className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full bg-card text-peacock" />
+                    </div>
+                    <p className="mt-1.5 truncate text-[11px] font-medium leading-tight">
+                      {u.name.split(" ")[0]}
+                    </p>
+                    <p className="truncate text-[9px] text-muted-foreground">{u.handle}</p>
+                    <p className="mt-1 flex items-center justify-center gap-0.5 text-[9px] text-pink-400">
+                      <Instagram className="h-2.5 w-2.5" />
+                      {(12 + i * 7).toString()}.{i}k
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Stories from here */}
+            <div>
+              <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+                <span className="flex items-center gap-1.5">
+                  <Sparkles className="h-3 w-3 text-secondary" /> Stories tagged here
+                </span>
+                <span className="flex items-center gap-1 text-secondary">
+                  <Eye className="h-3 w-3" /> 1.2k views
+                </span>
+              </p>
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+                {[
+                  "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=300&q=80",
+                  "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=300&q=80",
+                  "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=300&q=80",
+                  "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=300&q=80",
+                ].map((src, i) => (
+                  <div
+                    key={src}
+                    className="relative h-28 w-20 flex-shrink-0 overflow-hidden rounded-xl"
+                  >
+                    <img src={src} alt="" className="h-full w-full object-cover" />
+                    <div
+                      className="absolute inset-0"
+                      style={{ background: "linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.85))" }}
+                    />
+                    <img
+                      src={venue.visitors[i % venue.visitors.length].img}
+                      alt=""
+                      className="absolute left-1.5 top-1.5 h-6 w-6 rounded-full object-cover ring-2 ring-tier-gold"
+                    />
+                    <p className="absolute bottom-1.5 left-1.5 right-1.5 truncate text-[9px] font-medium text-white">
+                      {venue.visitors[i % venue.visitors.length].handle}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Live activity feed */}
+            <div className="rounded-2xl border border-border bg-card-soft">
+              <p className="flex items-center gap-1.5 border-b border-border px-3 py-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+                <TrendingUp className="h-3 w-3 text-secondary" /> Live activity
+              </p>
+              <ul className="divide-y divide-border">
+                {[
+                  { u: venue.visitors[0], action: "just checked in", time: "2m ago" },
+                  { u: venue.visitors[1] ?? venue.visitors[0], action: "posted a story", time: "14m ago" },
+                  { u: venue.visitors[2] ?? venue.visitors[0], action: "rated 5★", time: "1h ago" },
+                  { u: venue.visitors[0], action: "tagged 3 friends", time: "3h ago" },
+                ].map((row, i) => (
+                  <li key={i} className="flex items-center gap-2 px-3 py-2">
+                    <img
+                      src={row.u.img}
+                      alt=""
+                      className={`h-7 w-7 rounded-full object-cover ring-2 ${
+                        row.u.tier === "gold"
+                          ? "ring-tier-gold"
+                          : row.u.tier === "silver"
+                          ? "ring-tier-silver"
+                          : "ring-tier-bronze"
+                      }`}
+                    />
+                    <p className="min-w-0 flex-1 truncate text-[11px] leading-snug">
+                      <span className="font-semibold">{row.u.name.split(" ")[0]}</span>{" "}
+                      <span className="text-muted-foreground">{row.action}</span>
+                    </p>
+                    <span className="flex items-center gap-1 text-[9px] text-muted-foreground">
+                      <Clock className="h-2.5 w-2.5" /> {row.time}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* Mesita reviews — exclusively from Mesita users */}
