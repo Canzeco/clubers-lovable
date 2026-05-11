@@ -595,37 +595,31 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
             style={{ aspectRatio: "2 / 1" }}
           >
             {/* info — left */}
-            <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 px-4 py-3">
-              <div className="flex items-center gap-2">
-                <p className="truncate text-[9px] uppercase tracking-widest text-muted-foreground">
-                  {v.type}
-                </p>
-              </div>
+            <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4 py-3">
               <p className="truncate font-display text-base font-semibold leading-tight">
                 {v.name}
               </p>
-              <p className="truncate text-[10px] text-muted-foreground">
-                {v.distance} · {v.price}
+              <p className="truncate text-[10px] uppercase tracking-widest text-muted-foreground">
+                {v.type}
               </p>
-              {v.affiliated ? (
-                <div className="flex items-center gap-1.5">
-                  <span className="rounded-full bg-tier-gold px-1.5 py-0.5 text-[9px] font-bold text-black">
-                    {v.cashback}% CASHBACK
-                  </span>
-                  <span className="text-[9px] font-semibold uppercase tracking-widest text-primary">
-                    Chambi partner
-                  </span>
-                </div>
-              ) : (
-                <span className="text-[9px] uppercase tracking-widest text-muted-foreground">
-                  Listed · no cashback
+              <p className="truncate text-[10px] text-muted-foreground">
+                {v.distance} · <span className="text-foreground">{v.price}</span>
+              </p>
+              <div className="mt-0.5 flex items-center gap-2 text-[10px] text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <Star className="h-2.5 w-2.5 fill-secondary text-secondary" />
+                  <span className="font-semibold text-foreground">{v.mesita}</span> Mesita
+                </span>
+                <span className="text-border">·</span>
+                <span>
+                  <span className="font-semibold text-foreground">{v.google}</span> Google
+                </span>
+              </div>
+              {v.affiliated && (
+                <span className="mt-1 w-fit rounded-full bg-tier-gold px-1.5 py-0.5 text-[9px] font-bold text-black">
+                  {v.cashback}% cashback
                 </span>
               )}
-              <div className="flex items-center gap-1.5">
-                <Star className="h-3 w-3 fill-secondary text-secondary" />
-                <span className="text-sm font-semibold">{v.mesita}</span>
-                <span className="text-[10px] text-muted-foreground">Mesita</span>
-              </div>
             </div>
 
             {/* image — right, clean */}
