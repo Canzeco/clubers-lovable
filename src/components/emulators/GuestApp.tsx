@@ -37,7 +37,7 @@ import {
 } from "lucide-react";
 
 type Tab = "discover" | "coupons" | "wallet" | "profile";
-type DiscoverMode = "catalog" | "map" | "tinder";
+type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
 
 function GoogleLogo({ className = "" }: { className?: string }) {
   return (
@@ -208,6 +208,7 @@ function ModeSwitcher({
     { id: "tinder", label: "Swipe", Icon: Flame },
     { id: "map", label: "Map", Icon: MapIcon },
     { id: "catalog", label: "Catalog", Icon: LayoutGrid },
+    { id: "ai", label: "AI Search", Icon: Sparkles },
   ];
   return (
     <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
@@ -215,13 +216,13 @@ function ModeSwitcher({
         <button
           key={m.id}
           onClick={() => setMode(m.id)}
-          className={`flex flex-1 items-center justify-center gap-1.5 rounded-full py-1.5 text-xs font-medium transition ${
+          className={`flex flex-1 items-center justify-center gap-1 rounded-full py-1.5 text-[11px] font-medium transition ${
             mode === m.id
               ? "bg-foreground text-background"
               : "text-muted-foreground"
           }`}
         >
-          <m.Icon className="h-3.5 w-3.5" />
+          <m.Icon className="h-3.5 w-3.5 shrink-0" />
           {m.label}
         </button>
       ))}
@@ -976,6 +977,182 @@ function MapMode() {
   );
 }
 
+function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => void }) {
+  type Msg =
+    | { from: "user"; text: string }
+    | { from: "ai"; text: string; sources?: string[]; picks?: typeof venues };
+  const suggestions = [
+    "Rooftop with sunset views",
+    "Late night mezcal & vinyl",
+    "Brunch by the ocean",
+    "Quiet date spot under $$",
+  ];
+  const [msgs, setMsgs] = useState<Msg[]>([
+    {
+      from: "ai",
+      text:
+        "Hey 👋 I'm Mesita AI. Tell me the vibe — neighborhood, mood, budget, who you're with — and I'll find the best spots curated by Gold tastemakers.",
+    },
+  ]);
+  const [input, setInput] = useState("");
+  const [thinking, setThinking] = useState(false);
+
+  const ask = (q: string) => {
+    if (!q.trim()) return;
+    setMsgs((m) => [...m, { from: "user", text: q }]);
+    setInput("");
+    setThinking(true);
+    setTimeout(() => {
+      const lower = q.toLowerCase();
+      const picks = venues.filter((v) => {
+        const hay = (v.type + " " + v.vibe + " " + v.info).toLowerCase();
+        return lower.split(/\s+/).some((w) => w.length > 3 && hay.includes(w));
+      });
+      const final = (picks.length ? picks : venues).slice(0, 3);
+      setMsgs((m) => [
+        ...m,
+        {
+          from: "ai",
+          text: `Found ${final.length} spots that match. Ranked by Mesita Gold reviews & live activity tonight:`,
+          sources: ["Mesita Gold reviews", "Instagram mentions", "Tonight's live activity"],
+          picks: final,
+        },
+      ]);
+      setThinking(false);
+    }, 900);
+  };
+
+  return (
+    <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex-1 space-y-3 overflow-y-auto scrollbar-hide px-5 pb-3">
+        {msgs.map((m, i) =>
+          m.from === "user" ? (
+            <div key={i} className="flex justify-end">
+              <div className="max-w-[80%] rounded-2xl rounded-tr-sm bg-foreground px-3.5 py-2 text-[13px] text-background">
+                {m.text}
+              </div>
+            </div>
+          ) : (
+            <div key={i} className="flex gap-2">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-peacock text-sm">
+                🦚
+              </div>
+              <div className="flex-1 space-y-2">
+                <div className="rounded-2xl rounded-tl-sm border border-border bg-card-soft px-3.5 py-2 text-[13px] text-foreground">
+                  {m.text}
+                </div>
+                {m.sources && (
+                  <div className="flex flex-wrap gap-1">
+                    {m.sources.map((s) => (
+                      <span
+                        key={s}
+                        className="rounded-full border border-border bg-card/60 px-2 py-0.5 text-[10px] text-muted-foreground"
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {m.picks && (
+                  <div className="space-y-2">
+                    {m.picks.map((v, idx) => (
+                      <button
+                        key={v.name}
+                        onClick={() => onSelect(v)}
+                        className="flex w-full gap-3 overflow-hidden rounded-2xl border border-border bg-card-soft p-2 text-left transition hover:border-tier-gold/60"
+                      >
+                        <img
+                          src={v.img}
+                          alt={v.name}
+                          className="h-16 w-16 shrink-0 rounded-xl object-cover"
+                        />
+                        <div className="flex min-w-0 flex-1 flex-col justify-center">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] font-semibold text-tier-gold">
+                              #{idx + 1}
+                            </span>
+                            <p className="truncate text-sm font-semibold text-foreground">
+                              {v.name}
+                            </p>
+                          </div>
+                          <p className="truncate text-[11px] text-muted-foreground">
+                            {v.type}
+                          </p>
+                          <div className="mt-1 flex items-center gap-2 text-[10px] text-muted-foreground">
+                            <span className="flex items-center gap-0.5 text-foreground">
+                              <Star className="h-2.5 w-2.5 fill-tier-gold text-tier-gold" />
+                              {v.mesita}
+                            </span>
+                            <span>·</span>
+                            <span>{v.distance}</span>
+                            {v.cashback > 0 && (
+                              <>
+                                <span>·</span>
+                                <span className="font-semibold text-tier-gold">
+                                  {v.cashback}% cashback
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        <ChevronRight className="h-4 w-4 self-center text-muted-foreground" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          ),
+        )}
+        {thinking && (
+          <div className="flex gap-2">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-peacock text-sm">
+              🦚
+            </div>
+            <div className="flex items-center gap-1 rounded-2xl rounded-tl-sm border border-border bg-card-soft px-3.5 py-2.5">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground" />
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground [animation-delay:150ms]" />
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground [animation-delay:300ms]" />
+            </div>
+          </div>
+        )}
+        {msgs.length === 1 && (
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                onClick={() => ask(s)}
+                className="rounded-full border border-border bg-card/60 px-3 py-1.5 text-[11px] text-foreground transition hover:border-tier-gold/60"
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      <div className="border-t border-border bg-background px-3 py-2.5">
+        <div className="flex items-center gap-2 rounded-full border border-border bg-card-soft px-3 py-2">
+          <Sparkles className="h-4 w-4 text-tier-gold" />
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && ask(input)}
+            placeholder="Ask anything: 'rooftop date under $$'"
+            className="flex-1 bg-transparent text-[13px] text-foreground outline-none placeholder:text-muted-foreground"
+          />
+          <button
+            onClick={() => ask(input)}
+            disabled={!input.trim()}
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-background disabled:opacity-40"
+          >
+            <Send className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Discover() {
   const [mode, setMode] = useState<DiscoverMode>("catalog");
   const [selected, setSelected] = useState<typeof venues[number] | null>(null);
@@ -984,6 +1161,8 @@ function Discover() {
       ? "Curated for tonight"
       : mode === "map"
       ? "3 affiliated · 12 nearby"
+      : mode === "ai"
+      ? "Ask Mesita anything"
       : "Swipe to decide";
   return (
     <div className="relative flex h-full flex-col overflow-hidden">
@@ -996,6 +1175,7 @@ function Discover() {
       )}
       {mode === "map" && <MapMode />}
       {mode === "tinder" && <TinderMode />}
+      {mode === "ai" && <AISearchMode onSelect={setSelected} />}
       {selected && (
         <VenueDetailSheet venue={selected} onClose={() => setSelected(null)} />
       )}
