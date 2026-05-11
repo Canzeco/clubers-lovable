@@ -203,38 +203,127 @@ function VenueDetailSheet({
         </div>
 
         <div className="space-y-4 px-5 pt-5">
-          <div className="grid grid-cols-3 gap-2">
-            <div className="rounded-xl bg-card-soft p-3 text-center">
-              <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Mesita</p>
-              <p className="mt-1 flex items-center justify-center gap-1 font-display text-lg font-semibold">
-                <Star className="h-3.5 w-3.5 fill-secondary text-secondary" />
-                {venue.mesita}
-              </p>
-              <p className="text-[10px] text-muted-foreground">{venue.mesitaCount} reviews</p>
-            </div>
-            <div className="rounded-xl bg-card-soft p-3 text-center">
-              <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Facebook</p>
-              <p className="mt-1 flex items-center justify-center gap-1 font-display text-lg font-semibold">
-                <Star className="h-3.5 w-3.5 fill-blue-400 text-blue-400" />
-                {venue.fb}
-              </p>
-              <p className="text-[10px] text-muted-foreground">{venue.fbCount} reviews</p>
-            </div>
-            <div className="rounded-xl bg-card-soft p-3 text-center">
-              <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Instagram</p>
-              <p className="mt-1 flex items-center justify-center gap-1 font-display text-sm font-semibold">
-                <Instagram className="h-3.5 w-3.5 text-pink-400" />
-              </p>
-              <p className="text-[10px] text-muted-foreground">{venue.ig}</p>
+          {/* Experience intelligence — ratings */}
+          <div>
+            <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+              Experience intelligence
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="rounded-xl bg-card-soft p-3 text-center">
+                <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Mesita</p>
+                <p className="mt-1 flex items-center justify-center gap-1 font-display text-lg font-semibold">
+                  <Star className="h-3.5 w-3.5 fill-secondary text-secondary" />
+                  {venue.mesita}
+                </p>
+                <p className="text-[10px] text-muted-foreground">{venue.mesitaCount} reviews</p>
+              </div>
+              <div className="rounded-xl bg-card-soft p-3 text-center">
+                <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Facebook</p>
+                <p className="mt-1 flex items-center justify-center gap-1 font-display text-lg font-semibold">
+                  <Star className="h-3.5 w-3.5 fill-blue-400 text-blue-400" />
+                  {venue.fb}
+                </p>
+                <p className="text-[10px] text-muted-foreground">{venue.fbCount} reviews</p>
+              </div>
+              <div className="rounded-xl bg-card-soft p-3 text-center">
+                <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Google</p>
+                <p className="mt-1 flex items-center justify-center gap-1 font-display text-lg font-semibold">
+                  <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
+                  4.6
+                </p>
+                <p className="text-[10px] text-muted-foreground">428 reviews</p>
+              </div>
             </div>
           </div>
 
+          {/* Social reach */}
+          <div>
+            <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+              Social reach
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="flex items-center gap-2 rounded-xl bg-card-soft p-2.5">
+                <Instagram className="h-4 w-4 flex-shrink-0 text-pink-400" />
+                <div className="min-w-0">
+                  <p className="font-display text-sm font-semibold leading-none">{venue.igFollowers}</p>
+                  <p className="text-[9px] text-muted-foreground">followers</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 rounded-xl bg-card-soft p-2.5">
+                <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded bg-blue-500 text-[10px] font-bold text-white">f</span>
+                <div className="min-w-0">
+                  <p className="font-display text-sm font-semibold leading-none">{venue.fbFollowers}</p>
+                  <p className="text-[9px] text-muted-foreground">followers</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 rounded-xl bg-card-soft p-2.5">
+                <Sparkles className="h-4 w-4 flex-shrink-0 text-secondary" />
+                <div className="min-w-0">
+                  <p className="font-display text-sm font-semibold leading-none">{venue.igMentions}</p>
+                  <p className="text-[9px] text-muted-foreground">mentions / mo</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Who's been here — social proof */}
+          <div>
+            <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+              <span>Who's been here</span>
+              <span className="text-secondary">Mesita guests</span>
+            </p>
+            <div className="space-y-2">
+              {venue.visitors.map((u) => (
+                <div
+                  key={u.handle}
+                  className="flex items-center gap-2.5 rounded-2xl border border-border bg-card-soft p-2.5"
+                >
+                  <div className="relative">
+                    <img
+                      src={u.img}
+                      alt={u.name}
+                      className={`h-10 w-10 rounded-full object-cover ring-2 ${
+                        u.tier === "gold"
+                          ? "ring-tier-gold"
+                          : u.tier === "silver"
+                          ? "ring-tier-silver"
+                          : "ring-tier-bronze"
+                      }`}
+                    />
+                    <span
+                      className={`absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px text-[8px] font-bold uppercase text-black ${
+                        u.tier === "gold"
+                          ? "bg-tier-gold"
+                          : u.tier === "silver"
+                          ? "bg-tier-silver"
+                          : "bg-tier-bronze"
+                      }`}
+                    >
+                      {u.tier}
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium leading-tight">{u.name}</p>
+                    <p className="truncate text-[10px] text-muted-foreground">{u.handle}</p>
+                  </div>
+                  <p className="text-right text-[10px] text-secondary">{u.note}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Featured review */}
           <div className="rounded-2xl border border-border bg-card-soft p-3">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Mesita verified review
             </p>
             <p className="mt-1 text-sm italic text-foreground/90">{venue.quote}</p>
-            <p className="mt-1 text-[10px] text-muted-foreground">— @valenrose · Gold guest</p>
+            <p className="mt-1 flex items-center gap-1.5 text-[10px] text-muted-foreground">
+              — {venue.visitors[0].handle}
+              <span className="rounded-full bg-tier-gold px-1.5 py-px text-[8px] font-bold text-black">
+                GOLD
+              </span>
+            </p>
           </div>
 
           <div className="rounded-2xl border border-border bg-card-soft p-3">
