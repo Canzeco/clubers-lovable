@@ -1044,9 +1044,9 @@ function Discover() {
 function WalletView() {
   const [seg, setSeg] = useState<"unused" | "used">("unused");
   const unused = [
-    { name: "Casa Luminar", cb: 18, exp: "Tonight · 11pm", color: "tier-gold", note: "Rooftop · 0.4 km" },
-    { name: "Loto Café", cb: 12, exp: "Expires tomorrow", color: "tier-silver", note: "Brunch · weekends" },
-    { name: "Neón Bar", cb: 25, exp: "+ Story bonus 10%", color: "tier-bronze", note: "Late night cocktails" },
+    { name: "Casa Luminar", cb: 18, exp: "Fri · 9:30pm", color: "tier-gold", note: "Rooftop · 0.4 km", res: "pending" as const },
+    { name: "Loto Café", cb: 12, exp: "Expires tomorrow", color: "tier-silver", note: "Brunch · weekends", res: "confirmed" as const },
+    { name: "Neón Bar", cb: 25, exp: "+ Story bonus 10%", color: "tier-bronze", note: "Late night cocktails", res: null },
   ];
   const used = [
     { name: "Mar Verde", cb: 15, when: "Sat · May 3", saved: "$ 320", color: "tier-gold" },
@@ -1092,9 +1092,21 @@ function WalletView() {
               <div className="flex-1">
                 <p className="font-medium">{c.name}</p>
                 <p className="text-[11px] text-muted-foreground">{c.note}</p>
-                <p className="mt-0.5 flex items-center gap-1 text-[11px] text-secondary">
-                  <Clock className="h-3 w-3" /> {c.exp}
-                </p>
+                <div className="mt-0.5 flex items-center gap-1.5">
+                  {c.res === "pending" && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                      <Phone className="h-2.5 w-2.5 animate-pulse" /> AI calling…
+                    </span>
+                  )}
+                  {c.res === "confirmed" && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-secondary/15 px-1.5 py-0.5 text-[10px] font-medium text-secondary">
+                      <Check className="h-2.5 w-2.5" /> Reserved
+                    </span>
+                  )}
+                  <p className="flex items-center gap-1 text-[11px] text-secondary">
+                    <Clock className="h-3 w-3" /> {c.exp}
+                  </p>
+                </div>
               </div>
               <button className="rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground">
                 QR
