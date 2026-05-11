@@ -592,10 +592,10 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
             key={v.name + idx}
             onClick={() => onSelect(v)}
             className="relative flex w-full overflow-hidden rounded-2xl border border-border bg-card-soft text-left shadow-sm transition active:scale-[0.99]"
-            style={{ aspectRatio: "5 / 2" }}
+            style={{ aspectRatio: "2 / 1" }}
           >
-            {/* image 3:2 */}
-            <div className="relative h-full flex-shrink-0" style={{ aspectRatio: "3 / 2" }}>
+            {/* image 1:1 */}
+            <div className="relative h-full flex-shrink-0" style={{ aspectRatio: "1 / 1" }}>
               <img src={v.img} alt={v.name} className="h-full w-full object-cover" />
               <div
                 className="absolute inset-0"
@@ -620,24 +620,29 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
             <span
               aria-hidden
               className="pointer-events-none absolute top-0 z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-border bg-background"
-              style={{ left: "60%" }}
+              style={{ left: "50%" }}
             />
             <span
               aria-hidden
               className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full border border-border bg-background"
-              style={{ left: "60%" }}
+              style={{ left: "50%" }}
             />
             <span
               aria-hidden
               className="pointer-events-none absolute top-2 bottom-2 border-l border-dashed border-border/70"
-              style={{ left: "60%" }}
+              style={{ left: "50%" }}
             />
 
             {/* essential info only */}
-            <div className="flex min-w-0 flex-1 flex-col justify-center gap-2 px-4 py-2">
-              <p className="truncate text-[9px] uppercase tracking-widest text-muted-foreground">
-                {v.type}
-              </p>
+            <div className="relative flex min-w-0 flex-1 flex-col justify-between gap-1 px-4 py-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="truncate text-[9px] uppercase tracking-widest text-muted-foreground">
+                  {v.type}
+                </p>
+                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-peacock text-[10px] font-bold text-primary-foreground shadow-sm">
+                  {v.name.charAt(0)}
+                </span>
+              </div>
               <div className="flex items-center gap-1.5">
                 <Star className="h-3 w-3 fill-secondary text-secondary" />
                 <span className="text-sm font-semibold">{v.mesita}</span>
