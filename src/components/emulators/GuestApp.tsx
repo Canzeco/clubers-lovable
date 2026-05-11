@@ -1866,7 +1866,8 @@ function ProfileView() {
 }
 
 function CreditsView() {
-  const balance = 1284;
+  const [balance, setBalance] = useState(1284);
+  const [topUp, setTopUp] = useState(false);
   const pending = 220;
   const txs = [
     { kind: "earn" as const, name: "Casa Luminar", note: "20% cashback · May 3", amt: 540 },
@@ -1894,10 +1895,13 @@ function CreditsView() {
           +${pending.toLocaleString()} pending validation
         </p>
         <div className="mt-4 flex gap-2">
-          <button className="flex-1 rounded-full bg-white/15 px-3 py-2 text-xs font-semibold backdrop-blur">
-            Use at venue
+          <button
+            onClick={() => setTopUp(true)}
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-semibold text-primary shadow-sm"
+          >
+            <CreditCard className="h-3.5 w-3.5" /> Add credits
           </button>
-          <button className="flex-1 rounded-full bg-white/15 px-3 py-2 text-xs font-semibold backdrop-blur">
+          <button className="flex-1 rounded-full bg-white/20 px-3 py-2 text-xs font-semibold backdrop-blur">
             Send to friend
           </button>
         </div>
@@ -1951,7 +1955,217 @@ function CreditsView() {
           </div>
         ))}
       </div>
+
+      {topUp && (
+        <AddCreditsSheet
+          onClose={() => setTopUp(false)}
+          onConfirm={(amt) => {
+            setBalance((b) => b + amt);
+            setTopUp(false);
+          }}
+        />
+      )}
     </>
+  );
+}
+
+function AddCreditsSheet({
+  onClose,
+  onConfirm,
+}: {
+  onClose: () => void;
+  onConfirm: (amount: number) => void;
+}) {
+  const presets = [200, 500, 1000, 2500];
+  const [amount, setAmount] = useState(500);
+  const [custom, setCustom] = useState("");
+  const [method, setMethod] = useState<"card" | "apple" | "link">("card");
+  const [step, setStep] = useState<"choose" | "processing" | "done">("choose");
+  const final = parseFloat(custom) || amount;
+  const bonus = final >= 1000 ? Math.round(final * 0.05) : 0;
+
+  const pay = () => {
+    setStep("processing");
+    setTimeout(() => setStep("done"), 1400);
+  };
+
+  return (
+    <div className="absolute inset-0 z-40 flex items-end bg-black/40" onClick={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="max-h-[90%] w-full overflow-y-auto rounded-t-3xl border-t border-border bg-background p-5 shadow-elev scrollbar-hide"
+      >
+        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-muted-foreground/30" />
+
+        {step === "choose" && (
+          <>
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-secondary">
+                  Top up
+                </p>
+                <p className="font-display text-2xl font-semibold leading-tight">
+                  Add Mesita Credits
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  Pay once, spend at any Mesita venue.
+                </p>
+              </div>
+              <button onClick={onClose} className="rounded-full p-1 text-muted-foreground">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Amount presets */}
+            <div className="mt-4 grid grid-cols-4 gap-2">
+              {presets.map((p) => {
+                const active = !custom && amount === p;
+                return (
+                  <button
+                    key={p}
+                    onClick={() => {
+                      setAmount(p);
+                      setCustom("");
+                    }}
+                    className={`rounded-xl border py-3 text-sm font-semibold transition ${
+                      active
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border bg-card-soft text-foreground"
+                    }`}
+                  >
+                    ${p.toLocaleString()}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Custom */}
+            <div className="mt-3">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Or custom amount
+              </p>
+              <div className="mt-1 flex items-center gap-2 rounded-2xl border border-border bg-card-soft px-4 py-3">
+                <span className="text-lg font-semibold text-muted-foreground">$</span>
+                <input
+                  inputMode="decimal"
+                  value={custom}
+                  onChange={(e) => setCustom(e.target.value.replace(/[^0-9.]/g, ""))}
+                  placeholder="0"
+                  className="flex-1 bg-transparent text-2xl font-semibold outline-none placeholder:text-muted-foreground/40"
+                />
+              </div>
+            </div>
+
+            {bonus > 0 && (
+              <div className="mt-3 flex items-center gap-2 rounded-2xl border border-secondary/30 bg-secondary/10 p-3 text-[11px] text-secondary">
+                <Sparkles className="h-3.5 w-3.5" />
+                <span>
+                  <span className="font-semibold">+${bonus.toLocaleString()} bonus</span>{" "}
+                  credits for topping up over $1,000
+                </span>
+              </div>
+            )}
+
+            {/* Payment method */}
+            <p className="mt-5 text-[10px] uppercase tracking-widest text-muted-foreground">
+              Pay with
+            </p>
+            <div className="mt-2 space-y-2">
+              {([
+                { id: "card", label: "Card ending · 4242", sub: "Visa · default", Icon: CreditCard },
+                { id: "apple", label: "Apple Pay", sub: "Face ID", Icon: Wallet },
+                { id: "link", label: "Stripe Link", sub: "ana@mesita.app", Icon: Banknote },
+              ] as const).map((m) => {
+                const active = method === m.id;
+                return (
+                  <button
+                    key={m.id}
+                    onClick={() => setMethod(m.id)}
+                    className={`flex w-full items-center gap-3 rounded-2xl border p-3 text-left transition ${
+                      active
+                        ? "border-primary bg-primary/5"
+                        : "border-border bg-card-soft"
+                    }`}
+                  >
+                    <div
+                      className={`flex h-10 w-10 items-center justify-center rounded-xl ${
+                        active ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
+                      }`}
+                    >
+                      <m.Icon className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{m.label}</p>
+                      <p className="text-[11px] text-muted-foreground">{m.sub}</p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Summary + CTA */}
+            <div className="mt-5 rounded-2xl bg-card-soft p-4 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Top-up</span>
+                <span>${final.toLocaleString()}</span>
+              </div>
+              {bonus > 0 && (
+                <div className="flex justify-between text-secondary">
+                  <span>Bonus</span>
+                  <span>+${bonus.toLocaleString()}</span>
+                </div>
+              )}
+              <div className="mt-2 flex justify-between border-t border-border pt-2 font-semibold">
+                <span>You receive</span>
+                <span>${(final + bonus).toLocaleString()} credits</span>
+              </div>
+            </div>
+
+            <button
+              disabled={final <= 0}
+              onClick={pay}
+              className="mt-4 w-full rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-primary-foreground shadow-glow disabled:opacity-40"
+            >
+              Pay ${final.toLocaleString()} · Add credits
+            </button>
+            <p className="mt-2 flex items-center justify-center gap-1 text-center text-[10px] text-muted-foreground">
+              <Check className="h-3 w-3" /> Secured by Stripe · 256-bit encryption
+            </p>
+          </>
+        )}
+
+        {step === "processing" && (
+          <div className="py-12 text-center">
+            <Loader2 className="mx-auto h-10 w-10 animate-spin text-primary" />
+            <p className="mt-4 text-sm font-medium">Confirming payment…</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              Charging your {method === "card" ? "Visa · 4242" : method === "apple" ? "Apple Pay" : "Stripe Link"}
+            </p>
+          </div>
+        )}
+
+        {step === "done" && (
+          <div className="py-8 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-peacock text-primary-foreground shadow-glow">
+              <Check className="h-7 w-7" strokeWidth={3} />
+            </div>
+            <p className="mt-4 font-display text-2xl font-semibold">
+              +${(final + bonus).toLocaleString()} added
+            </p>
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              Available instantly at any Mesita venue.
+            </p>
+            <button
+              onClick={() => onConfirm(final + bonus)}
+              className="mt-6 w-full rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-primary-foreground shadow-glow"
+            >
+              Done
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
