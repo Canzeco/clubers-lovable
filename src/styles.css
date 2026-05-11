@@ -199,9 +199,3 @@
   .scrollbar-hide { scrollbar-width: none; }
 }
 
-@font-face {
-  font-family: "Fraunces";
-  src: url("https://fonts.gstatic.com/s/fraunces/v32/6NUh8FyLNQOQZAnv9bYEvDiIdE9Ea92uemAk.woff2") format("woff2");
-  font-weight: 400 900;
-  font-display: swap;
-}
