@@ -1303,7 +1303,9 @@ function RedeemFlow({ coupon }: { coupon: any }) {
 
   const billNum = parseFloat(bill) || 0;
   const tipNum = parseFloat(tip) || 0;
-  const cashback = Math.round(billNum * (coupon.cb / 100));
+  const rawCashback = Math.round(billNum * (coupon.cb / 100));
+  const cashback = Math.min(rawCashback, 1000);
+  const capped = rawCashback > 1000;
   const total = billNum + tipNum;
 
   const canSend =
