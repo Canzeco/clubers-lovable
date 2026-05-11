@@ -1503,7 +1503,6 @@ function ProfileView() {
   const [showConnect, setShowConnect] = useState(false);
   const [showAppeal, setShowAppeal] = useState(false);
   const [subTab, setSubTab] = useState<"general" | "stats">("general");
-  const code = "MESITA-7K4Q";
   return (
     <>
       <TopBar title="Profile" />
