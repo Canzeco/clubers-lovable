@@ -243,10 +243,10 @@ function VenueDetailSheet({
       onClick={onClose}
     >
       <div
-        className="flex max-h-[88%] w-full flex-col rounded-t-3xl border-t border-border bg-card shadow-2xl"
+        className="relative flex max-h-[88%] w-full flex-col rounded-t-3xl border-t border-border bg-card shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex-1 overflow-y-auto scrollbar-hide pb-4">
+        <div className="relative flex-1 overflow-y-auto scrollbar-hide pb-24">
         <div className="relative px-5 pt-5">
           <button
             onClick={onClose}
@@ -421,13 +421,15 @@ function VenueDetailSheet({
 
         </div>
         </div>
-        <div className="flex gap-2 border-t border-border bg-card px-5 py-3">
-          <button className="flex-1 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground">
-            Save coupon
-          </button>
-          <button className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow">
-            <Calendar className="h-4 w-4" /> Reserve
-          </button>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center px-4 pb-4">
+          <div className="pointer-events-auto flex w-full items-center gap-2 rounded-full border border-border/60 bg-card/85 p-1.5 shadow-2xl backdrop-blur-xl">
+            <button className="flex-1 rounded-full px-4 py-2.5 text-sm font-medium text-foreground/80">
+              Save coupon
+            </button>
+            <button className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow">
+              <Calendar className="h-4 w-4" /> Reserve
+            </button>
+          </div>
         </div>
       </div>
     </div>
