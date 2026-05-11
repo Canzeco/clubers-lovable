@@ -253,7 +253,7 @@ function TinderMode() {
   };
 
   return (
-    <>
+    <div className="relative flex-1">
       <div className="relative mx-5 h-[480px]">
         <div
           key={idx}
@@ -367,7 +367,7 @@ function TinderMode() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
