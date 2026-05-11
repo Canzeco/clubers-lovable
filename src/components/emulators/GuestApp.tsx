@@ -1091,10 +1091,14 @@ function WalletView() {
 }
 
 function ProfileView() {
+  const [igConnected, setIgConnected] = useState(false);
+  const [showConnect, setShowConnect] = useState(false);
+  const [showAppeal, setShowAppeal] = useState(false);
+  const code = "MESITA-7K4Q";
   return (
     <>
       <TopBar title="Profile" />
-      <div className="px-5">
+      <div className="px-5 pb-24">
         <div className="rounded-3xl bg-card-soft p-5 text-center">
           <div className="mx-auto h-20 w-20 overflow-hidden rounded-full ring-2 ring-secondary">
             <img
@@ -1108,7 +1112,103 @@ function ProfileView() {
           <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-tier-gold px-4 py-1.5 text-xs font-bold text-black">
             <Sparkles className="h-3 w-3" /> GOLD TIER
           </div>
+          {igConnected ? (
+            <p className="mt-2 flex items-center justify-center gap-1 text-[11px] text-secondary">
+              <BadgeCheck className="h-3 w-3" /> Verified via Instagram · 126k followers
+            </p>
+          ) : (
+            <p className="mt-2 text-[11px] text-muted-foreground">Instagram not connected · Bronze cap</p>
+          )}
         </div>
+
+        {/* Tier ladder */}
+        <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+              <Crown className="h-3 w-3 text-tier-gold" /> Tier ladder
+            </p>
+            <span className="text-[10px] text-secondary">Instagram = main signal</span>
+          </div>
+          <div className="space-y-2">
+            {[
+              { t: "Bronze", min: "0 followers", color: "tier-bronze", done: true, perk: "Discovery only" },
+              { t: "Silver", min: "5k+ Instagram followers", color: "tier-silver", done: true, perk: "Cashback unlocked" },
+              { t: "Gold", min: "50k+ followers · or Aura list", color: "tier-gold", done: true, perk: "VIP perks · top venues", active: true },
+            ].map((r) => (
+              <div
+                key={r.t}
+                className={`flex items-center gap-3 rounded-xl p-2.5 ${
+                  r.active ? "bg-tier-gold/10 ring-1 ring-tier-gold/40" : "bg-card-soft"
+                }`}
+              >
+                <span
+                  className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold text-black ${
+                    r.color === "tier-gold" ? "bg-tier-gold" : r.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"
+                  }`}
+                >
+                  {r.done ? <Check className="h-3.5 w-3.5" /> : r.t[0]}
+                </span>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold leading-none">
+                    {r.t} {r.active && <span className="ml-1 text-[9px] uppercase tracking-widest text-tier-gold">· current</span>}
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-muted-foreground">{r.min}</p>
+                </div>
+                <p className="text-right text-[10px] text-muted-foreground">{r.perk}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">
+            Tier is set automatically from your Instagram following or Aura/Gold list verification.
+            Manual upgrades to Silver/Bronze are rare and require approval.
+          </p>
+        </div>
+
+        {/* Instagram connect / verified */}
+        <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-yellow-400 text-white">
+              <Instagram className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold leading-none">Instagram account</p>
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                {igConnected ? "@valenrose · 126k followers · verified" : "Connect to unlock Silver / Gold tier"}
+              </p>
+            </div>
+            {igConnected ? (
+              <span className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1 text-[10px] font-semibold text-secondary">
+                <BadgeCheck className="h-3 w-3" /> Verified
+              </span>
+            ) : (
+              <button
+                onClick={() => setShowConnect(true)}
+                className="rounded-full bg-peacock px-3 py-1.5 text-[11px] font-semibold text-white shadow-glow"
+              >
+                Connect
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Appeal upgrade */}
+        <button
+          onClick={() => setShowAppeal(true)}
+          className="mt-3 flex w-full items-center gap-3 rounded-2xl border border-dashed border-border bg-card-soft p-4 text-left"
+        >
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-tier-gold/15 text-tier-gold">
+            <Crown className="h-5 w-5" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold leading-none">Appeal for upgrade</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              Model, chef, press or VIP? Request manual review.
+            </p>
+          </div>
+          <span className="text-[11px] text-secondary">Apply →</span>
+        </button>
+
+        {/* Stats */}
         <div className="mt-4 grid grid-cols-3 gap-2 text-center">
           {[
             { k: "Visits", v: "47" },
@@ -1123,21 +1223,129 @@ function ProfileView() {
             </div>
           ))}
         </div>
-        <div className="mt-4 rounded-2xl border border-border bg-card p-4">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">
-            Streak
-          </p>
-          <p className="mt-1 font-display text-lg">5 weekends out · keep going 🔥</p>
-          <div className="mt-2 flex gap-1">
-            {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-              <div
-                key={i}
-                className={`h-2 flex-1 rounded-full ${i <= 5 ? "bg-secondary" : "bg-muted"}`}
-              />
-            ))}
+      </div>
+
+      {/* Connect Instagram sheet */}
+      {showConnect && (
+        <div
+          className="absolute inset-0 z-50 flex items-end bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowConnect(false)}
+        >
+          <div
+            className="w-full rounded-t-3xl border-t border-border bg-card p-5 pb-8 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-500 to-yellow-400 text-white">
+                <Instagram className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="font-display text-lg font-semibold leading-tight">Verify Instagram</p>
+                <p className="text-[11px] text-muted-foreground">via @chambi.bot · 1-minute setup</p>
+              </div>
+            </div>
+
+            <ol className="mt-4 space-y-3 text-sm">
+              <li className="flex gap-3">
+                <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">1</span>
+                <p className="flex-1 text-foreground/85">DM <span className="font-semibold text-secondary">@chambi.bot</span> on Instagram with the word <span className="font-mono text-secondary">VERIFY</span>.</p>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">2</span>
+                <p className="flex-1 text-foreground/85">Chambi will reply with a unique code. Paste it here.</p>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">3</span>
+                <p className="flex-1 text-foreground/85">Your tier is set instantly from your follower count.</p>
+              </li>
+            </ol>
+
+            <div className="mt-4 rounded-xl border border-border bg-card-soft p-3 text-center">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Your reference</p>
+              <p className="mt-1 font-mono text-lg font-semibold tracking-widest text-secondary">{code}</p>
+            </div>
+
+            <input
+              placeholder="Paste Chambi code here"
+              className="mt-3 w-full rounded-full border border-border bg-card-soft px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-secondary"
+            />
+
+            <div className="mt-3 flex gap-2">
+              <button
+                onClick={() => setShowConnect(false)}
+                className="flex-1 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setIgConnected(true);
+                  setShowConnect(false);
+                }}
+                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
+              >
+                <BadgeCheck className="h-4 w-4" /> Verify
+              </button>
+            </div>
+            <p className="mt-3 text-center text-[10px] text-muted-foreground">
+              We never ask for your Instagram password.
+            </p>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Appeal sheet */}
+      {showAppeal && (
+        <div
+          className="absolute inset-0 z-50 flex items-end bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowAppeal(false)}
+        >
+          <div
+            className="w-full rounded-t-3xl border-t border-border bg-card p-5 pb-8 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
+            <p className="font-display text-lg font-semibold leading-tight">Appeal for tier upgrade</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              Tier is mostly automatic from Instagram. We review manual cases: models, chefs, press, athletes, founders.
+            </p>
+
+            <div className="mt-4 space-y-2">
+              {[
+                "Model / talent agency",
+                "Chef · sommelier · F&B press",
+                "Founder / executive",
+                "Other public figure",
+              ].map((o) => (
+                <button
+                  key={o}
+                  className="flex w-full items-center justify-between rounded-xl border border-border bg-card-soft px-3 py-2.5 text-left text-sm"
+                >
+                  <span>{o}</span>
+                  <span className="text-[10px] text-muted-foreground">Select</span>
+                </button>
+              ))}
+            </div>
+
+            <textarea
+              placeholder="Add a link (portfolio, agency, press)…"
+              rows={3}
+              className="mt-3 w-full resize-none rounded-2xl border border-border bg-card-soft px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-secondary"
+            />
+
+            <button
+              onClick={() => setShowAppeal(false)}
+              className="mt-3 w-full rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
+            >
+              Submit for review
+            </button>
+            <p className="mt-2 text-center text-[10px] text-muted-foreground">
+              Reviews take 24–48h. We'll notify you in-app.
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 }
