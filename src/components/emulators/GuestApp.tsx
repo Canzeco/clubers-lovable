@@ -34,6 +34,7 @@ import {
   Send,
   Loader2,
   Coins,
+  Share2,
 } from "lucide-react";
 
 type Tab = "discover" | "coupons" | "wallet" | "profile";
@@ -272,8 +273,8 @@ function VenueDetailSheet({
           {/* Instagram-style 4:3 carousel with dots */}
           <PhotoCarousel />
 
-          {/* Four scores */}
-          <div className="grid grid-cols-4 gap-1.5">
+          {/* Scores + share */}
+          <div className="grid grid-cols-5 gap-1.5">
             <div className="rounded-xl border border-secondary/30 bg-secondary/10 p-2.5">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-secondary">
                 <Sparkles className="h-2.5 w-2.5" /> Mesita
@@ -304,6 +305,20 @@ function VenueDetailSheet({
               <p className="mt-1 font-display text-base font-semibold leading-none">{venue.igFollowers}</p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.igMentions} mentions</p>
             </div>
+            <button
+              onClick={() => {
+                if (typeof navigator !== "undefined" && (navigator as any).share) {
+                  (navigator as any)
+                    .share({ title: venue.name, text: `Check out ${venue.name} on Mesita` })
+                    .catch(() => {});
+                }
+              }}
+              className="flex flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-border bg-card-soft p-2.5 text-muted-foreground transition hover:border-secondary hover:text-secondary"
+              aria-label="Share venue"
+            >
+              <Share2 className="h-4 w-4" />
+              <span className="text-[9px] uppercase tracking-widest">Share</span>
+            </button>
           </div>
 
           {/* About the venue */}
