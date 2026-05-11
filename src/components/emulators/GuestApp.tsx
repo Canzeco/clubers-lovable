@@ -30,6 +30,10 @@ import {
   CreditCard,
   Banknote,
   ChevronRight,
+  Camera,
+  Send,
+  Loader2,
+  Coins,
 } from "lucide-react";
 
 type Tab = "discover" | "wallet" | "profile";
