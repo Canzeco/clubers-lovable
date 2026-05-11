@@ -330,11 +330,11 @@ function DiscoverVenues() {
                     Fit {t.fit}
                   </span>
                 </div>
-                <p className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
+                <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
                   <MapPin className="h-3 w-3" />{t.area}
                   <Instagram className="h-3 w-3" />{t.ig}
                   <Star className="h-3 w-3 fill-secondary text-secondary" />{t.rating}
-                </span>
+                </div>
                 <div className="mt-2 flex flex-wrap gap-1">
                   {t.signals.map((s) => (
                     <span key={s} className="rounded-full bg-card px-2 py-0.5 text-[10px] text-muted-foreground">
