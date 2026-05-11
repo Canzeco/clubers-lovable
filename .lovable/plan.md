@@ -1,54 +1,62 @@
 ## Goal
 
-Rebuild the Share tab in `GuestApp.tsx` so the entire screen fits within the phone frame (no scrolling above the bottom nav), and replace the list-heavy layout with richer graphics.
+Simplify the coupon cards in the **Coupon Wallet** (the list preview in `WalletView`) so each card only shows, in small, pretty type:
 
-Picking the **Premium Ticket Hero** direction — it puts the 8-character code on a real "gift card" graphic (with ticket perforations and a stacked-fan effect), reduces the 5 claim rows into a compact 5-slot avatar row, and ends with a single bold Share CTA. Best fit for the existing peacock + cream + gold palette.
+`Name · Category · Distance · Cost ($ signs) · Mesita reviews · Google reviews · Cashback`
 
-## Layout (top → bottom)
+Strip out: the "Rooftop · weekends · …" note line, the AI-calling / Reserved pills, expiry text, and the QR thumbnail box. Same theme colors (tier-gold/silver/bronze stub, secondary teal accents, muted-foreground for meta).
+
+## Data shape
+
+Extend the `unused` and `used` arrays in `WalletView` with the missing fields:
 
 ```
-┌────────────────────────────────────┐
-│ Gift Cards            [GOLD chip]  │
-│ Share the experience…              │
-├────────────────────────────────────┤
-│   ╭──────── HERO CARD ─────────╮   │
-│   │ GIFT CARD          $100MXN│   │  ← peacock card,
-│   │                            │   │    perforated edges,
-│   │ INVITE CODE                │   │    stacked behind
-│   │ 8F2K-9XQ7        [copy]   │   │
-│   ╰────────────────────────────╯   │
-├────────────────────────────────────┤
-│ AVAILABILITY          3 of 5 left  │
-│ [CV] [MF] [+] [+] [+]              │  ← 5 slots, claimed
-│ Camila Mateo Open Open Open        │     show initials,
-│ May 2  May 5                       │     open = dashed
-├────────────────────────────────────┤
-│ [        Share Gift Code  →      ] │
-└────────────────────────────────────┘
+{ name: "Casa Luminar", category: "Rooftop", distance: "0.4 km",
+  cost: 3,                 // 1–4 → renders as $, $$, $$$, $$$$
+  mesita: 4.8,             // Mesita rating
+  google: 4.6,             // Google rating
+  cb: 20, color: "tier-gold", ... }
 ```
 
-## Changes in `ShareView` (src/components/emulators/GuestApp.tsx)
+Pick sensible categories/costs/ratings per venue (Casa Luminar = Rooftop $$$, Loto Café = Café $$, Neón Bar = Cocktails $$$, Mar Verde = Seafood $$$$).
 
-1. **Remove the vertical list** of 5 full-width claim rows and the separate code button — replace with the hero ticket card + 5-slot avatar grid.
-2. **Hero gift card visual**:
-   - Peacock teal background (`bg-secondary` / existing peacock token) with two ghosted cards behind it (rotated -3°/-6°) for the "stack of 5" feel.
-   - Two circular cutouts (cream-colored) on the left/right edges for the ticket-perforation look.
-   - Top-right: `$100 MXN` in display font.
-   - Bottom: small "INVITE CODE" label + `8F2K-9XQ7` in mono, with a copy icon button.
-   - Subtle radial pattern overlay for texture.
-3. **Availability strip**: 5 equal columns. Claimed slots show initials chip (CV, MF) with a small green check + name + date underneath. Empty slots are dashed-border tiles with a `+` icon labeled "Open" (subtle opacity falloff for last two).
-4. **Primary CTA**: Single dark pill button "Share Gift Code" that opens the existing share sheet (WhatsApp / Instagram / copy code) — sheet content unchanged.
-5. **Fit-to-screen**: container becomes `h-full flex flex-col` with `overflow-hidden`, sections sized with `flex-1` / fixed paddings so everything lands above the bottom nav at standard mobile heights (375–414 wide, 667+ tall). Drop the long intro paragraph and the "A gift from you…" footer line; keep one short subtitle under the title.
+## Card layout (both unused and used)
 
-## Tokens / styling
+```
+┌────┬─────────────────────────────────────┐
+│20% │ Casa Luminar                        │
+│ CB │ Rooftop · 0.4 km · $$$              │
+│    │ ★ 4.8 Mesita   G 4.6 Google         │
+└────┴─────────────────────────────────────┘
+```
 
-- Hero card uses peacock/secondary token; gold chip stays as-is.
-- Background stays cream (`bg-background`).
-- All colors via existing semantic tokens — no new globals.
-- Copy/share behaviors and the share sheet remain identical (no business logic changes).
+- Left tier stub: unchanged (cashback % on gold/silver/bronze).
+- Right side, three lines, all small:
+  1. **Name** — `font-display text-sm font-semibold`.
+  2. **Meta row** — `text-[10px] text-muted-foreground`, dot-separated: category · distance · cost.
+  3. **Ratings row** — `text-[10px]`: `★ {mesita} Mesita` in `text-secondary` (peacock), then `text-muted-foreground` divider, then a small "G" mark + `{google} Google` in `text-muted-foreground`.
+- Cashback amount: keep the big % on the left stub; remove the duplicate text elsewhere.
+
+## What gets removed
+
+- Pending / Reserved / "AI calling…" pills.
+- Expiry / "Expires tomorrow" / "+Story bonus" text.
+- QR thumbnail square on the right.
+- For used cards: replace the "Redeemed · date / Saved $X" block with the same name + meta + ratings, dimmed (keep the grayscale stub + check overlay so used state is still readable). The detail sheet (`CouponDetailSheet`) is unchanged and still owns the redeem flow, savings, dates, etc.
+
+## Styling
+
+- Reuse existing tokens only: `text-muted-foreground`, `text-secondary`, `text-foreground`, `border-border`, `bg-card-soft`, `bg-tier-*`. No new colors.
+- Star icon: existing lucide `Star` (already imported) for Mesita rating.
+- Google: a small `G` glyph in a rounded `bg-muted` chip, or the existing `BadgeCheck` icon — go with a tiny `G` letterform in a circle to keep it neutral.
+- Tighten vertical padding to keep cards compact.
+
+## Files
+
+- `src/components/emulators/GuestApp.tsx` — only `WalletView` (lines ~1179–1300). No other components touched.
 
 ## Out of scope
 
-- No backend / data changes.
-- No new routes or icons beyond what's already imported (`Gift`, `Copy`, `Check`, `Share2`, `MessageCircle`, `Instagram`).
-- Other tabs untouched.
+- Discover/swipe card.
+- `CouponDetailSheet` and `RedeemFlow`.
+- Any backend / data layer.
