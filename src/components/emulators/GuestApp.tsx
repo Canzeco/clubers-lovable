@@ -1416,7 +1416,7 @@ function RedeemFlow({ coupon }: { coupon: any }) {
           <p className="mt-1 font-display text-2xl font-semibold">
             ${total.toLocaleString()} paid
           </p>
-          <p className="text-[11px] opacity-80">in Mesita Credits · no card charge</p>
+          <p className="text-[11px] opacity-80">in Balance · no card charge</p>
         </div>
 
         <div className="rounded-2xl border border-secondary/30 bg-secondary/10 p-4">
@@ -1429,7 +1429,7 @@ function RedeemFlow({ coupon }: { coupon: any }) {
                 Cashback earned
               </p>
               <p className="text-lg font-semibold text-secondary">
-                +${cashback.toLocaleString()} Mesita Credits
+                +${cashback.toLocaleString()} Balance
               </p>
             </div>
           </div>
@@ -1481,10 +1481,10 @@ function RedeemFlow({ coupon }: { coupon: any }) {
     <div className="mt-5 space-y-4">
       <div className="rounded-2xl border border-secondary/30 bg-secondary/5 p-3">
         <p className="flex items-center gap-1.5 text-[11px] font-medium text-secondary">
-          <Coins className="h-3.5 w-3.5" /> Pays from Mesita Credits — no card, no cash
+          <Coins className="h-3.5 w-3.5" /> Pays from Balance — no card, no cash
         </p>
         <p className="mt-1 text-[11px] text-muted-foreground">
-          Earn {coupon.cb}% back as Mesita Credits for your next visit.
+          Earn {coupon.cb}% back as Balance for your next visit.
         </p>
       </div>
 
@@ -1974,7 +1974,7 @@ function CreditsView() {
         <div className="flex items-center gap-2">
           <Coins className="h-4 w-4" />
           <p className="text-[10px] uppercase tracking-widest opacity-80">
-            Mesita Credits
+            Balance
           </p>
         </div>
         <p className="mt-2 font-display text-4xl font-semibold leading-none">
@@ -2099,7 +2099,7 @@ function AddCreditsSheet({
                   Top up
                 </p>
                 <p className="font-display text-2xl font-semibold leading-tight">
-                  Add Mesita Credits
+                  Add Balance
                 </p>
                 <p className="text-[11px] text-muted-foreground">
                   Pay once, spend at any Mesita venue.
