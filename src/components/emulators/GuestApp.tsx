@@ -44,10 +44,10 @@ const venues = [
     ig: "3.2k mentions",
     quote: "“Best sunset terrace in the city.”",
     visitors: [
-      { name: "Valentina R.", handle: "@valenrose", tier: "gold", note: "visited Sat", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80" },
-      { name: "Lucas M.", handle: "@lucasm", tier: "gold", note: "posted a story", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80" },
-      { name: "Sofía P.", handle: "@sofip", tier: "silver", note: "rated 5★", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80" },
-      { name: "Diego A.", handle: "@diegoa", tier: "bronze", note: "tagged 2 friends", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80" },
+      { name: "Valentina R.", handle: "@valenrose", tier: "gold", score: 5.0, when: "Sat", comment: "Best sunset terrace in the city.", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80" },
+      { name: "Lucas M.", handle: "@lucasm", tier: "gold", score: 4.8, when: "Fri", comment: "The DJ set elevated everything.", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80" },
+      { name: "Sofía P.", handle: "@sofip", tier: "silver", score: 5.0, when: "Last week", comment: "Service was flawless.", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80" },
+      { name: "Diego A.", handle: "@diegoa", tier: "bronze", score: 4.5, when: "2 weeks ago", comment: "Worth the price tag.", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80" },
     ],
   },
   {
@@ -73,9 +73,9 @@ const venues = [
     ig: "1.8k mentions",
     quote: "“The mezcal flight is unreal.”",
     visitors: [
-      { name: "Camila V.", handle: "@camivb", tier: "gold", note: "5 Gold guests tonight", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&q=80" },
-      { name: "Mateo F.", handle: "@matef", tier: "gold", note: "DJ set tagged", img: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=120&q=80" },
-      { name: "Renata K.", handle: "@renatak", tier: "silver", note: "ordered the flight", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" },
+      { name: "Camila V.", handle: "@camivb", tier: "gold", score: 5.0, when: "Wed", comment: "Mezcal flight is unreal.", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&q=80" },
+      { name: "Mateo F.", handle: "@matef", tier: "gold", score: 4.7, when: "Last Sat", comment: "Best vinyl set in town.", img: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=120&q=80" },
+      { name: "Renata K.", handle: "@renatak", tier: "silver", score: 4.5, when: "Last week", comment: "Hidden gem, intimate vibe.", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" },
     ],
   },
   {
@@ -101,8 +101,8 @@ const venues = [
     ig: "920 mentions",
     quote: "“Brunch with ocean breeze.”",
     visitors: [
-      { name: "Ana T.", handle: "@anat", tier: "gold", note: "brunch yesterday", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&q=80" },
-      { name: "Tomás L.", handle: "@tomasl", tier: "silver", note: "tagged ocean view", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&q=80" },
+      { name: "Ana T.", handle: "@anat", tier: "gold", score: 4.8, when: "Yesterday", comment: "Brunch with ocean breeze, dreamy.", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&q=80" },
+      { name: "Tomás L.", handle: "@tomasl", tier: "silver", score: 4.6, when: "Last Sun", comment: "Seafood was incredibly fresh.", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&q=80" },
     ],
   },
 ];
@@ -246,67 +246,68 @@ function VenueDetailSheet({
             <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
           </div>
 
-          {/* Mesita reviews — elitist social proof */}
+          {/* Mesita reviews — exclusively from Mesita users */}
           <div>
             <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
               <span>Mesita reviews</span>
               <span className="flex items-center gap-1 text-secondary">
                 <Star className="h-3 w-3 fill-secondary text-secondary" />
-                {venue.mesita} · {venue.mesitaCount}
+                {venue.mesita} · {venue.mesitaCount} reviews
               </span>
             </p>
             <div className="space-y-2">
               {venue.visitors.map((u) => (
                 <div
                   key={u.handle}
-                  className="flex items-center gap-2.5 rounded-2xl border border-border bg-card-soft p-2.5"
+                  className="rounded-2xl border border-border bg-card-soft p-3"
                 >
-                  <div className="relative">
-                    <img
-                      src={u.img}
-                      alt={u.name}
-                      className={`h-10 w-10 rounded-full object-cover ring-2 ${
-                        u.tier === "gold"
-                          ? "ring-tier-gold"
-                          : u.tier === "silver"
-                          ? "ring-tier-silver"
-                          : "ring-tier-bronze"
-                      }`}
-                    />
-                    <span
-                      className={`absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px text-[8px] font-bold uppercase text-black ${
-                        u.tier === "gold"
-                          ? "bg-tier-gold"
-                          : u.tier === "silver"
-                          ? "bg-tier-silver"
-                          : "bg-tier-bronze"
-                      }`}
-                    >
-                      {u.tier}
-                    </span>
+                  <div className="flex items-center gap-2.5">
+                    <div className="relative">
+                      <img
+                        src={u.img}
+                        alt={u.name}
+                        className={`h-10 w-10 rounded-full object-cover ring-2 ${
+                          u.tier === "gold"
+                            ? "ring-tier-gold"
+                            : u.tier === "silver"
+                            ? "ring-tier-silver"
+                            : "ring-tier-bronze"
+                        }`}
+                      />
+                      <span
+                        className={`absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px text-[8px] font-bold uppercase text-black ${
+                          u.tier === "gold"
+                            ? "bg-tier-gold"
+                            : u.tier === "silver"
+                            ? "bg-tier-silver"
+                            : "bg-tier-bronze"
+                        }`}
+                      >
+                        {u.tier}
+                      </span>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium leading-tight">{u.name}</p>
+                      <p className="truncate text-[10px] text-muted-foreground">
+                        {u.handle} · {u.when}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1">
+                      <Star className="h-3 w-3 fill-secondary text-secondary" />
+                      <span className="font-display text-sm font-semibold text-secondary">
+                        {u.score.toFixed(1)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium leading-tight">{u.name}</p>
-                    <p className="truncate text-[10px] text-muted-foreground">{u.handle}</p>
-                  </div>
-                  <p className="text-right text-[10px] text-secondary">{u.note}</p>
+                  <p className="mt-2 text-[12px] italic leading-snug text-foreground/85">
+                    “{u.comment}”
+                  </p>
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Featured review */}
-          <div className="rounded-2xl border border-border bg-card-soft p-3">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Mesita verified review
-            </p>
-            <p className="mt-1 text-sm italic text-foreground/90">{venue.quote}</p>
-            <p className="mt-1 flex items-center gap-1.5 text-[10px] text-muted-foreground">
-              — {venue.visitors[0].handle}
-              <span className="rounded-full bg-tier-gold px-1.5 py-px text-[8px] font-bold text-black">
-                GOLD
-              </span>
-            </p>
+            <button className="mt-2 w-full rounded-full border border-border bg-card py-2 text-[11px] font-medium text-muted-foreground">
+              See all {venue.mesitaCount} Mesita reviews
+            </button>
           </div>
 
           <div className="rounded-2xl border border-border bg-card-soft p-3">
