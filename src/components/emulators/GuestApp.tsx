@@ -2074,53 +2074,56 @@ function CreditsView() {
 
 function ShareView() {
   const totalCards = 5;
-  const [cards, setCards] = useState<
-    Array<{ id: number; status: "available" | "sent" | "redeemed"; to?: string; when?: string }>
-  >([
-    { id: 1, status: "redeemed", to: "Camila V.", when: "May 2" },
-    { id: 2, status: "sent", to: "Mateo F.", when: "May 5" },
-    { id: 3, status: "available" },
-    { id: 4, status: "available" },
-    { id: 5, status: "available" },
-  ]);
-  const [picking, setPicking] = useState<number | null>(null);
+  const claimed = [
+    { to: "Camila V.", when: "May 2" },
+    { to: "Mateo F.", when: "May 5" },
+  ];
+  const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const available = cards.filter((c) => c.status === "available").length;
-
-  const sendCard = (id: number, friend: string) => {
-    setCards((cs) => cs.map((c) => (c.id === id ? { ...c, status: "sent", to: friend, when: "Today" } : c)));
-    setPicking(null);
-  };
-
+  const remaining = totalCards - claimed.length;
   const code = "8F2K-9XQ7";
   const message = `Hey! I'm sending you a $100 MXN gift card to try Mesita 🦚 — discover the best venues in CDMX. Claim it here: mesita.app/g/${code}`;
 
   return (
     <>
-      <TopBar title="Gift Cards" subtitle={`${available} of ${totalCards} left · $100 MXN each`} />
+      <TopBar title="Gift Cards" subtitle={`${remaining} of ${totalCards} left · $100 MXN each`} />
 
       <div className="px-5">
         <p className="mb-3 text-[12px] leading-snug text-muted-foreground">
-          You have 5 gift cards to share. Each one is $100 MXN of Mesita balance for a friend. They expire 14 days after you send them.
+          You have one code to share. The first 5 friends who sign up with it each get $100 MXN of Mesita balance.
         </p>
 
+        {/* Big share CTA with the code */}
+        <button
+          onClick={() => setSharing(true)}
+          className="mb-4 flex w-full items-center gap-3 rounded-2xl border border-border bg-card-soft p-4 text-left"
+        >
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-secondary/15 text-secondary">
+            <Gift className="h-5 w-5" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-mono text-base tracking-[0.25em] leading-tight">{code}</p>
+            <p className="text-[11px] text-muted-foreground">Tap to share · {remaining} claims left</p>
+          </div>
+          <span className="rounded-full bg-foreground px-3 py-1.5 text-[11px] font-semibold text-background">
+            Share
+          </span>
+        </button>
+
+        {/* Claims list */}
+        <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">Claims</p>
         <div className="space-y-2 pb-4">
-          {cards.map((c) => {
-            const isAvail = c.status === "available";
-            const isRedeemed = c.status === "redeemed";
+          {Array.from({ length: totalCards }).map((_, i) => {
+            const c = claimed[i];
             return (
               <div
-                key={c.id}
+                key={i}
                 className="flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-3"
               >
                 <div
                   className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                    isAvail
-                      ? "bg-secondary/15 text-secondary"
-                      : isRedeemed
-                      ? "bg-card text-muted-foreground/60"
-                      : "bg-card text-muted-foreground/60"
+                    c ? "bg-card text-muted-foreground/60" : "bg-secondary/15 text-secondary"
                   }`}
                 >
                   <Gift className="h-4 w-4" />
@@ -2128,25 +2131,10 @@ function ShareView() {
                 <div className="flex-1 min-w-0">
                   <p className="text-[13px] font-medium leading-tight">$100 MXN</p>
                   <p className="text-[11px] text-muted-foreground">
-                    {isAvail
-                      ? "Available"
-                      : isRedeemed
-                      ? `${c.to} · redeemed ${c.when}`
-                      : `${c.to} · sent ${c.when}`}
+                    {c ? `${c.to} · claimed ${c.when}` : "Available"}
                   </p>
                 </div>
-                {isAvail ? (
-                  <button
-                    onClick={() => setPicking(c.id)}
-                    className="rounded-full bg-foreground px-3 py-1.5 text-[11px] font-semibold text-background"
-                  >
-                    Send
-                  </button>
-                ) : isRedeemed ? (
-                  <span className="text-[10px] font-medium text-muted-foreground">Used</span>
-                ) : (
-                  <span className="text-[10px] font-medium text-muted-foreground">Pending</span>
-                )}
+                {c && <span className="text-[10px] font-medium text-muted-foreground">Used</span>}
               </div>
             );
           })}
@@ -2157,20 +2145,20 @@ function ShareView() {
         </p>
       </div>
 
-      {/* Pick friend sheet */}
-      {picking !== null && (
+      {/* Share sheet */}
+      {sharing && (
         <div
           className="absolute inset-0 z-50 flex items-end bg-black/60 backdrop-blur-sm"
-          onClick={() => setPicking(null)}
+          onClick={() => setSharing(false)}
         >
           <div
             className="max-h-[88%] w-full overflow-y-auto rounded-t-3xl border-t border-border bg-card p-5 pb-8 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
-            <p className="font-display text-lg font-semibold leading-tight">Send a $100 gift card</p>
+            <p className="font-display text-lg font-semibold leading-tight">Share your gift code</p>
             <p className="mt-1 text-[11px] text-muted-foreground">
-              Share the message on WhatsApp or Instagram, or send the 8-character code directly.
+              First 5 friends to sign up each get $100 MXN.
             </p>
 
             {/* Message template preview */}
@@ -2182,13 +2170,13 @@ function ShareView() {
             {/* Share buttons */}
             <div className="mt-3 grid grid-cols-2 gap-2">
               <button
-                onClick={() => sendCard(picking!, "WhatsApp")}
+                onClick={() => setSharing(false)}
                 className="flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-3 py-3 text-sm font-semibold text-white"
               >
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </button>
               <button
-                onClick={() => sendCard(picking!, "Instagram")}
+                onClick={() => setSharing(false)}
                 className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-[#F58529] via-[#DD2A7B] to-[#8134AF] px-3 py-3 text-sm font-semibold text-white"
               >
                 <Instagram className="h-4 w-4" /> Instagram
@@ -2217,7 +2205,7 @@ function ShareView() {
             </div>
 
             <button
-              onClick={() => setPicking(null)}
+              onClick={() => setSharing(false)}
               className="mt-4 w-full rounded-full border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground"
             >
               Cancel
