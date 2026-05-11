@@ -34,7 +34,6 @@ import {
   Send,
   Loader2,
   Coins,
-  Share2,
 } from "lucide-react";
 
 type Tab = "discover" | "coupons" | "profile";
