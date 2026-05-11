@@ -2086,8 +2086,6 @@ function ShareView() {
   const [picking, setPicking] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const redeemed = cards.filter((c) => c.status === "redeemed").length;
-  const sent = cards.filter((c) => c.status === "sent").length;
   const available = cards.filter((c) => c.status === "available").length;
 
   const link = "mesita.app/g/valenrose-X9F2";
@@ -2107,123 +2105,63 @@ function ShareView() {
 
   return (
     <>
-      <TopBar title="Gift Cards" subtitle="Share Mesita with the people you love" />
+      <TopBar title="Gift Cards" subtitle={`${available} of ${totalCards} left · $100 MXN each`} />
 
-      {/* Hero */}
-      <div className="mx-5 mb-4 overflow-hidden rounded-3xl bg-peacock p-5 text-primary-foreground shadow-glow">
-        <div className="flex items-center gap-2">
-          <Gift className="h-4 w-4" />
-          <p className="text-[10px] uppercase tracking-widest opacity-80">Your gift cards</p>
-        </div>
-        <p className="mt-2 flex items-baseline gap-2 font-display text-4xl font-semibold leading-none">
-          {available}
-          <span className="text-base font-normal opacity-70">/ {totalCards} left</span>
-        </p>
-        <p className="mt-2 text-[11px] opacity-85">
-          Each card is <span className="font-semibold">$100 MXN</span> to spend on any Mesita venue. They expire in 14 days once sent.
-        </p>
-      </div>
-
-      {/* Stats */}
-      <div className="mx-5 mb-4 grid grid-cols-3 gap-2">
-        <div className="rounded-2xl bg-card-soft p-3">
-          <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Available</p>
-          <p className="mt-1 font-display text-xl font-semibold text-secondary">{available}</p>
-        </div>
-        <div className="rounded-2xl bg-card-soft p-3">
-          <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Sent</p>
-          <p className="mt-1 font-display text-xl font-semibold">{sent}</p>
-        </div>
-        <div className="rounded-2xl bg-card-soft p-3">
-          <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Redeemed</p>
-          <p className="mt-1 font-display text-xl font-semibold text-tier-gold">{redeemed}</p>
-        </div>
-      </div>
-
-      {/* Cards list */}
       <div className="px-5">
-        <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-          The 5 cards
+        <p className="mb-3 text-[12px] leading-snug text-muted-foreground">
+          You have 5 gift cards to share. Each one is $100 MXN of Mesita balance for a friend. They expire 14 days after you send them.
         </p>
-        <div className="space-y-2 pb-6">
+
+        <div className="space-y-2 pb-4">
           {cards.map((c) => {
             const isAvail = c.status === "available";
             const isRedeemed = c.status === "redeemed";
             return (
               <div
                 key={c.id}
-                className={`flex items-center gap-3 rounded-2xl border p-3 ${
-                  isAvail
-                    ? "border-secondary/40 bg-secondary/5"
-                    : isRedeemed
-                    ? "border-tier-gold/40 bg-tier-gold/5"
-                    : "border-border bg-card-soft"
-                }`}
+                className="flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-3"
               >
                 <div
-                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
                     isAvail
-                      ? "bg-secondary text-secondary-foreground"
+                      ? "bg-secondary/15 text-secondary"
                       : isRedeemed
-                      ? "bg-tier-gold text-black"
-                      : "bg-card text-muted-foreground"
+                      ? "bg-card text-muted-foreground/60"
+                      : "bg-card text-muted-foreground/60"
                   }`}
                 >
-                  <Gift className="h-5 w-5" />
+                  <Gift className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-display text-sm font-semibold leading-tight">
-                    $100 MXN gift card
-                  </p>
+                  <p className="text-[13px] font-medium leading-tight">$100 MXN</p>
                   <p className="text-[11px] text-muted-foreground">
                     {isAvail
-                      ? "Ready to share with a friend"
+                      ? "Available"
                       : isRedeemed
-                      ? `Redeemed by ${c.to} · ${c.when}`
-                      : `Sent to ${c.to} · ${c.when} · awaiting redemption`}
+                      ? `${c.to} · redeemed ${c.when}`
+                      : `${c.to} · sent ${c.when}`}
                   </p>
                 </div>
                 {isAvail ? (
                   <button
                     onClick={() => setPicking(c.id)}
-                    className="rounded-full bg-peacock px-3 py-1.5 text-[11px] font-semibold text-white shadow-glow"
+                    className="rounded-full bg-foreground px-3 py-1.5 text-[11px] font-semibold text-background"
                   >
                     Send
                   </button>
                 ) : isRedeemed ? (
-                  <span className="flex items-center gap-1 rounded-full bg-tier-gold/20 px-2 py-1 text-[10px] font-semibold text-tier-gold">
-                    <Check className="h-3 w-3" /> Used
-                  </span>
+                  <span className="text-[10px] font-medium text-muted-foreground">Used</span>
                 ) : (
-                  <span className="flex items-center gap-1 rounded-full bg-card px-2 py-1 text-[10px] font-medium text-muted-foreground">
-                    <Clock className="h-3 w-3" /> Pending
-                  </span>
+                  <span className="text-[10px] font-medium text-muted-foreground">Pending</span>
                 )}
               </div>
             );
           })}
         </div>
 
-        {/* How it works */}
-        <div className="mb-6 rounded-2xl border border-border bg-card-soft p-4">
-          <p className="mb-2 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-            <Sparkles className="h-3 w-3 text-secondary" /> How it works
-          </p>
-          <ol className="space-y-2 text-[12px] leading-snug">
-            <li className="flex gap-2">
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">1</span>
-              <p className="flex-1 text-foreground/85">You have 5 gift cards. Each is $100 MXN of real Mesita balance.</p>
-            </li>
-            <li className="flex gap-2">
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">2</span>
-              <p className="flex-1 text-foreground/85">Send one to a friend. They sign up and get $100 to try Mesita — on you.</p>
-            </li>
-            <li className="flex gap-2">
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">3</span>
-              <p className="flex-1 text-foreground/85">When they redeem at any venue, you both get <span className="font-semibold text-secondary">+10% cashback</span> for a month.</p>
-            </li>
-          </ol>
-        </div>
+        <p className="mb-8 text-center text-[11px] text-muted-foreground">
+          A gift from you, on Mesita. No strings attached.
+        </p>
       </div>
 
       {/* Pick friend sheet */}
