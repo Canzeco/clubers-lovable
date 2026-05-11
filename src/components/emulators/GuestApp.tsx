@@ -312,32 +312,86 @@ function TinderMode() {
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState<"l" | "r" | null>(null);
   const [saved, setSaved] = useState<typeof venues[number] | null>(null);
+  const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
+  const startRef = useRef<{ x: number; y: number; id: number } | null>(null);
   const v = venues[idx % venues.length];
+  const next = venues[(idx + 1) % venues.length];
 
-  const swipe = (d: "l" | "r") => {
+  const fly = (d: "l" | "r") => {
     const current = v;
     setDir(d);
+    setDrag(null);
+    startRef.current = null;
     setTimeout(() => {
       setIdx((i) => i + 1);
       setDir(null);
       if (d === "r") setSaved(current);
-    }, 220);
+    }, 260);
   };
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (dir) return;
+    (e.target as Element).setPointerCapture?.(e.pointerId);
+    startRef.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
+    setDrag({ x: 0, y: 0 });
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!startRef.current) return;
+    setDrag({
+      x: e.clientX - startRef.current.x,
+      y: e.clientY - startRef.current.y,
+    });
+  };
+  const onPointerUp = () => {
+    if (!startRef.current || !drag) {
+      startRef.current = null;
+      setDrag(null);
+      return;
+    }
+    const threshold = 90;
+    if (drag.x > threshold) fly("r");
+    else if (drag.x < -threshold) fly("l");
+    else {
+      setDrag(null);
+      startRef.current = null;
+    }
+  };
+
+  const dx = drag?.x ?? 0;
+  const dy = drag?.y ?? 0;
+  const rot = dx / 14;
+  const likeOp = Math.min(1, Math.max(0, dx / 100));
+  const nopeOp = Math.min(1, Math.max(0, -dx / 100));
+
+  const flying =
+    dir === "l"
+      ? "translate(-120%, 0) rotate(-18deg)"
+      : dir === "r"
+      ? "translate(120%, 0) rotate(18deg)"
+      : null;
 
   return (
     <div className="relative flex-1">
-      <div className="relative mx-5 h-[480px]">
+      <div className="relative mx-5 h-[480px] select-none">
+        {/* next card peek */}
+        <div className="absolute inset-0 scale-[0.96] overflow-hidden rounded-3xl opacity-70">
+          <img src={next.img} alt="" className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
         <div
           key={idx}
-          className="absolute inset-0 overflow-hidden rounded-3xl shadow-glow transition-all duration-200"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+          className={`absolute inset-0 overflow-hidden rounded-3xl shadow-glow touch-none ${
+            drag ? "" : "transition-transform duration-300"
+          }`}
           style={{
             transform:
-              dir === "l"
-                ? "translateX(-120%) rotate(-12deg)"
-                : dir === "r"
-                ? "translateX(120%) rotate(12deg)"
-                : "none",
+              flying ?? `translate(${dx}px, ${dy * 0.3}px) rotate(${rot}deg)`,
             opacity: dir ? 0 : 1,
+            cursor: drag ? "grabbing" : "grab",
           }}
         >
           <img src={v.img} alt={v.name} className="h-full w-full object-cover" />
@@ -348,6 +402,19 @@ function TinderMode() {
                 "linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.85))",
             }}
           />
+          {/* swipe indicators */}
+          <div
+            className="pointer-events-none absolute left-5 top-5 rotate-[-12deg] rounded-md border-2 border-secondary px-3 py-1 text-sm font-bold uppercase tracking-widest text-secondary"
+            style={{ opacity: likeOp }}
+          >
+            Save
+          </div>
+          <div
+            className="pointer-events-none absolute right-5 top-5 rotate-[12deg] rounded-md border-2 border-destructive px-3 py-1 text-sm font-bold uppercase tracking-widest text-destructive"
+            style={{ opacity: nopeOp }}
+          >
+            Nope
+          </div>
           <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
             {v.affiliated ? (
               <span className="rounded-full bg-tier-gold px-3 py-1 text-[11px] font-bold text-black">
@@ -379,13 +446,13 @@ function TinderMode() {
       </div>
       <div className="mt-5 flex items-center justify-center gap-4 px-5">
         <button
-          onClick={() => swipe("l")}
+          onClick={() => fly("l")}
           className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:scale-[1.02]"
         >
           <X className="h-4 w-4" /> Nope
         </button>
         <button
-          onClick={() => swipe("r")}
+          onClick={() => fly("r")}
           className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow transition hover:scale-[1.02]"
         >
           <Bookmark className="h-4 w-4 fill-current" /> Save coupon
