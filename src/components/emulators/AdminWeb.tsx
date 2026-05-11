@@ -380,6 +380,302 @@ function DiscoverVenues() {
 }
 
 function Metrics() {
+  return MetricsImpl();
+}
+
+type PromoFind = {
+  id: string;
+  venue: string;
+  area: string;
+  source: "instagram" | "facebook";
+  handle: string;
+  detected: string;
+  title: string;
+  excerpt: string;
+  when: string;
+  type: "Promo" | "Evento" | "Happy hour" | "DJ set";
+  confidence: number;
+  status: "new" | "approved" | "rejected";
+};
+
+const findsSeed: PromoFind[] = [
+  {
+    id: "p1",
+    venue: "Casa Luminar",
+    area: "Roma Nte.",
+    source: "instagram",
+    handle: "@casaluminar",
+    detected: "hace 4 min",
+    title: "2x1 en mezcalitas · jueves",
+    excerpt: "Esta semana arrancamos jueves con 2x1 en toda la carta de mezcal de 7 a 10 pm 🌵",
+    when: "Jue 14 · 19:00 – 22:00",
+    type: "Happy hour",
+    confidence: 96,
+    status: "new",
+  },
+  {
+    id: "p2",
+    venue: "Neón Bar",
+    area: "Condesa",
+    source: "instagram",
+    handle: "@neon.bar",
+    detected: "hace 22 min",
+    title: "DJ Set · Lola Vegga",
+    excerpt: "Sábado en la cabina: Lola Vegga b2b residentes. Cover gratis antes de las 11.",
+    when: "Sáb 16 · 22:30",
+    type: "DJ set",
+    confidence: 92,
+    status: "new",
+  },
+  {
+    id: "p3",
+    venue: "Patio Verde",
+    area: "Condesa",
+    source: "facebook",
+    handle: "Patio Verde Café",
+    detected: "hace 1 h",
+    title: "Brunch de mamás · 15% off",
+    excerpt: "Domingo celebramos a las mamás con 15% en todo el brunch y mimosa de cortesía.",
+    when: "Dom 17 · 10:00 – 14:00",
+    type: "Promo",
+    confidence: 88,
+    status: "new",
+  },
+  {
+    id: "p4",
+    venue: "Tropikalia",
+    area: "Cuauhtémoc",
+    source: "instagram",
+    handle: "@tropikalia.mx",
+    detected: "hace 2 h",
+    title: "Tropikalia x Boiler Room",
+    excerpt: "Anuncio oficial: Boiler Room CDMX se monta en Tropikalia el 28. Lineup pronto.",
+    when: "Vie 28 · 23:00",
+    type: "Evento",
+    confidence: 81,
+    status: "new",
+  },
+  {
+    id: "p5",
+    venue: "Galápago",
+    area: "Roma Sur",
+    source: "instagram",
+    handle: "@galapago.wine",
+    detected: "hace 5 h",
+    title: "Cata vinos naturales",
+    excerpt: "Cupos limitados · 6 vinos de productores mexicanos + tabla. $480 por persona.",
+    when: "Mié 13 · 20:00",
+    type: "Evento",
+    confidence: 74,
+    status: "new",
+  },
+  {
+    id: "p6",
+    venue: "El Hueco",
+    area: "Juárez",
+    source: "facebook",
+    handle: "El Hueco Mezcalería",
+    detected: "ayer",
+    title: "Martes de mezcal · flight $180",
+    excerpt: "Cada martes: flight de 3 mezcales artesanales por $180. Hasta agotar.",
+    when: "Martes",
+    type: "Happy hour",
+    confidence: 69,
+    status: "approved",
+  },
+];
+
+function PromoRadar() {
+  const [finds, setFinds] = useState<PromoFind[]>(findsSeed);
+  const [filter, setFilter] = useState<"all" | "new" | "approved" | "rejected">("new");
+
+  const visible = finds.filter((f) => (filter === "all" ? true : f.status === filter));
+  const counts = {
+    new: finds.filter((f) => f.status === "new").length,
+    approved: finds.filter((f) => f.status === "approved").length,
+    rejected: finds.filter((f) => f.status === "rejected").length,
+  };
+
+  const setStatus = (id: string, status: PromoFind["status"]) =>
+    setFinds((prev) => prev.map((f) => (f.id === id ? { ...f, status } : f)));
+
+  return (
+    <div className="space-y-4 p-6">
+      <div className="flex items-end justify-between">
+        <div>
+          <h1 className="font-display text-3xl font-semibold">Promo radar</h1>
+          <p className="text-sm text-muted-foreground">
+            Bot escanea Instagram y Facebook de venues 24/7 · {counts.new} promos nuevas por revisar
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs text-emerald-300">
+            <span className="mr-1 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400 align-middle" />
+            Bot online · 312 cuentas observadas
+          </div>
+          <button className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground">
+            <RefreshCw className="h-3.5 w-3.5" /> Re-escanear ahora
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-4 gap-3">
+        <Stat label="Cuentas observadas" value="312" delta="IG · FB" Icon={Radar} />
+        <Stat label="Promos detectadas (7d)" value="184" delta="+22% vs sem ant." Icon={Sparkles} />
+        <Stat label="Auto-publicadas" value="76%" delta="conf ≥ 85" Icon={CheckCircle2} />
+        <Stat label="Tiempo medio detección" value="6 min" delta="desde el post" Icon={Clock} />
+      </div>
+
+      <div className="flex gap-2 text-xs">
+        {([
+          ["new", `Nuevas · ${counts.new}`],
+          ["approved", `Aprobadas · ${counts.approved}`],
+          ["rejected", `Rechazadas · ${counts.rejected}`],
+          ["all", "Todas"],
+        ] as const).map(([id, label]) => (
+          <button
+            key={id}
+            onClick={() => setFilter(id)}
+            className={`rounded-full px-3 py-1 ${
+              filter === id ? "bg-foreground text-background" : "border border-border text-muted-foreground"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="space-y-2">
+        {visible.map((f) => (
+          <PromoCard key={f.id} f={f} setStatus={setStatus} />
+        ))}
+        {visible.length === 0 && (
+          <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+            Sin promos en esta vista.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PromoCard({
+  f,
+  setStatus,
+}: {
+  f: PromoFind;
+  setStatus: (id: string, status: PromoFind["status"]) => void;
+}) {
+  const SourceIcon = f.source === "instagram" ? Instagram : Facebook;
+  const typeColor =
+    f.type === "Evento"
+      ? "bg-secondary/20 text-secondary"
+      : f.type === "DJ set"
+      ? "bg-accent/20 text-accent"
+      : f.type === "Happy hour"
+      ? "bg-tier-gold/20 text-tier-gold"
+      : "bg-emerald-500/20 text-emerald-300";
+
+  return (
+    <div className="rounded-xl border border-border bg-card-soft p-4">
+      <div className="flex gap-3">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-peacock">
+          <SourceIcon className="h-5 w-5 text-primary-foreground" />
+        </div>
+        <div className="flex-1 space-y-2">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <p className="font-display text-base font-semibold leading-none">{f.venue}</p>
+                <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${typeColor}`}>
+                  {f.type}
+                </span>
+                {f.status === "approved" && (
+                  <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                    Publicado
+                  </span>
+                )}
+                {f.status === "rejected" && (
+                  <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                    Descartado
+                  </span>
+                )}
+              </div>
+              <p className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
+                <MapPin className="h-3 w-3" />
+                {f.area}
+                <span>·</span>
+                <SourceIcon className="h-3 w-3" />
+                {f.handle}
+                <span>·</span>
+                <Clock className="h-3 w-3" />
+                {f.detected}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Confianza</p>
+              <p
+                className={`font-display text-lg font-semibold ${
+                  f.confidence >= 85
+                    ? "text-emerald-400"
+                    : f.confidence >= 70
+                    ? "text-secondary"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {f.confidence}%
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-border/60 bg-card p-3">
+            <p className="text-sm font-semibold">{f.title}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">“{f.excerpt}”</p>
+            <p className="mt-2 flex items-center gap-1 text-[11px] text-secondary">
+              <Calendar className="h-3 w-3" /> {f.when}
+            </p>
+          </div>
+
+          {f.status === "new" && (
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setStatus(f.id, "approved")}
+                className="flex items-center gap-1 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-black"
+              >
+                <Check className="h-3 w-3" /> Publicar en catálogo
+              </button>
+              <button className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground">
+                <PencilLine className="h-3 w-3" /> Editar antes
+              </button>
+              <button
+                onClick={() => setStatus(f.id, "rejected")}
+                className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-destructive"
+              >
+                <XIcon className="h-3 w-3" /> Descartar
+              </button>
+              <button className="ml-auto flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">
+                <Link2 className="h-3 w-3" /> Ver post original
+              </button>
+            </div>
+          )}
+
+          {f.status !== "new" && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setStatus(f.id, "new")}
+                className="text-[11px] text-muted-foreground hover:text-foreground"
+              >
+                ↺ Volver a revisar
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MetricsImpl() {
   const line = [30, 42, 38, 55, 60, 72, 68, 85, 92, 88, 110, 130, 122, 145];
   const max = Math.max(...line);
   return (
