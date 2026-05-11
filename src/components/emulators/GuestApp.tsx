@@ -312,6 +312,43 @@ function VenueDetailSheet({
             <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
           </div>
 
+          {/* Location mini-map */}
+          <div>
+            <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+              <span>Location</span>
+              <span className="flex items-center gap-1 text-secondary">
+                <MapPin className="h-3 w-3" /> {venue.distance}
+              </span>
+            </p>
+            <div className="relative h-36 overflow-hidden rounded-2xl border border-border bg-card-soft">
+              <svg viewBox="0 0 320 144" className="absolute inset-0 h-full w-full" preserveAspectRatio="none">
+                <defs>
+                  <pattern id="mapgrid" width="24" height="24" patternUnits="userSpaceOnUse">
+                    <path d="M24 0H0V24" fill="none" stroke="oklch(0.55 0.18 280 / 0.18)" strokeWidth="0.5" />
+                  </pattern>
+                </defs>
+                <rect width="320" height="144" fill="url(#mapgrid)" />
+                <path d="M-10 40 Q90 30 180 70 T340 90" fill="none" stroke="oklch(0.78 0.16 85 / 0.45)" strokeWidth="6" strokeLinecap="round" />
+                <path d="M40 -10 Q60 60 120 90 T220 160" fill="none" stroke="oklch(0.55 0.18 280 / 0.35)" strokeWidth="3" strokeLinecap="round" />
+                <path d="M0 110 H320" stroke="oklch(0.55 0.18 280 / 0.25)" strokeWidth="2" />
+                <circle cx="80" cy="50" r="14" fill="oklch(0.78 0.16 85 / 0.18)" />
+                <circle cx="240" cy="100" r="20" fill="oklch(0.55 0.18 280 / 0.18)" />
+              </svg>
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full">
+                <div className="relative flex flex-col items-center">
+                  <div className="flex items-center gap-1 rounded-full bg-foreground px-2 py-1 text-[10px] font-semibold text-background shadow-lg">
+                    <MapPin className="h-3 w-3 text-tier-gold" /> {venue.name}
+                  </div>
+                  <div className="h-2 w-2 -mt-0.5 rotate-45 bg-foreground" />
+                  <div className="mt-1 h-3 w-3 rounded-full bg-tier-gold ring-4 ring-tier-gold/30" />
+                </div>
+              </div>
+              <button className="absolute bottom-2 right-2 rounded-full bg-card/95 px-3 py-1 text-[10px] font-medium text-foreground shadow backdrop-blur">
+                Open in Maps
+              </button>
+            </div>
+          </div>
+
           {/* Mesita Visitors — sorted by relevance (recency × tier × influence) */}
           <div>
             <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
