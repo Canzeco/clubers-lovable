@@ -37,7 +37,7 @@ import {
 } from "lucide-react";
 
 type Tab = "discover" | "coupons" | "wallet" | "profile";
-type DiscoverMode = "catalog" | "map" | "tinder";
+type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
 
 function GoogleLogo({ className = "" }: { className?: string }) {
   return (
@@ -208,6 +208,7 @@ function ModeSwitcher({
     { id: "tinder", label: "Swipe", Icon: Flame },
     { id: "map", label: "Map", Icon: MapIcon },
     { id: "catalog", label: "Catalog", Icon: LayoutGrid },
+    { id: "ai", label: "AI Search", Icon: Sparkles },
   ];
   return (
     <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
@@ -215,13 +216,13 @@ function ModeSwitcher({
         <button
           key={m.id}
           onClick={() => setMode(m.id)}
-          className={`flex flex-1 items-center justify-center gap-1.5 rounded-full py-1.5 text-xs font-medium transition ${
+          className={`flex flex-1 items-center justify-center gap-1 rounded-full py-1.5 text-[11px] font-medium transition ${
             mode === m.id
               ? "bg-foreground text-background"
               : "text-muted-foreground"
           }`}
         >
-          <m.Icon className="h-3.5 w-3.5" />
+          <m.Icon className="h-3.5 w-3.5 shrink-0" />
           {m.label}
         </button>
       ))}
