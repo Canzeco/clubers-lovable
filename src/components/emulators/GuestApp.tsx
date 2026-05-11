@@ -23,6 +23,9 @@ import {
   Phone,
   MessageCircle,
   QrCode,
+  Navigation,
+  Search,
+  Locate,
   Wallet,
   CreditCard,
   Banknote,
@@ -963,9 +966,55 @@ function TinderMode() {
 }
 
 function MapMode() {
+  const [pickup, setPickup] = useState("Current location");
+  const [destination, setDestination] = useState("");
+  const recents = ["Casa Luminar", "Centro histórico", "Zona Rosa"];
   return (
+    <div className="flex flex-1 flex-col gap-3 overflow-hidden">
+      {/* Uber-style location bar */}
+      <div className="mx-5 rounded-2xl border border-border bg-card/80 p-3 backdrop-blur">
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col items-center pt-1">
+            <span className="h-2 w-2 rounded-full bg-primary" />
+            <span className="my-1 h-6 w-px bg-border" />
+            <span className="h-2 w-2 rounded-sm bg-foreground" />
+          </div>
+          <div className="flex flex-1 flex-col gap-1">
+            <div className="flex items-center gap-2 rounded-lg bg-muted/40 px-3 py-2">
+              <Locate className="h-3.5 w-3.5 text-primary" />
+              <input
+                value={pickup}
+                onChange={(e) => setPickup(e.target.value)}
+                className="flex-1 bg-transparent text-sm outline-none"
+                placeholder="Your location"
+              />
+            </div>
+            <div className="flex items-center gap-2 rounded-lg bg-muted/40 px-3 py-2">
+              <Search className="h-3.5 w-3.5 text-muted-foreground" />
+              <input
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                placeholder="Where to?"
+              />
+              <Navigation className="h-3.5 w-3.5 text-muted-foreground" />
+            </div>
+          </div>
+        </div>
+        <div className="mt-3 flex gap-2 overflow-x-auto scrollbar-hide">
+          {recents.map((r) => (
+            <button
+              key={r}
+              onClick={() => setDestination(r)}
+              className="flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1 text-[11px] text-muted-foreground hover:text-foreground"
+            >
+              <MapPin className="h-3 w-3" /> {r}
+            </button>
+          ))}
+        </div>
+      </div>
     <div
-      className="relative mx-5 h-[560px] overflow-hidden rounded-3xl"
+      className="relative mx-5 mb-4 flex-1 overflow-hidden rounded-3xl"
         style={{
           background:
             "radial-gradient(circle at 30% 40%, oklch(0.30 0.05 200), oklch(0.16 0.02 220))",
@@ -1016,6 +1065,7 @@ function MapMode() {
           </p>
         </div>
       </div>
+    </div>
   );
 }
 
