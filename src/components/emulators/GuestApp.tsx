@@ -419,45 +419,6 @@ function VenueDetailSheet({
               </div>
             </div>
 
-            {/* Stories from here */}
-            <div>
-              <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
-                <span className="flex items-center gap-1.5">
-                  <Sparkles className="h-3 w-3 text-secondary" /> Stories tagged here
-                </span>
-                <span className="flex items-center gap-1 text-secondary">
-                  <Eye className="h-3 w-3" /> 1.2k views
-                </span>
-              </p>
-              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-                {[
-                  "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=300&q=80",
-                  "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=300&q=80",
-                  "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=300&q=80",
-                  "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=300&q=80",
-                ].map((src, i) => (
-                  <div
-                    key={src}
-                    className="relative h-28 w-20 flex-shrink-0 overflow-hidden rounded-xl"
-                  >
-                    <img src={src} alt="" className="h-full w-full object-cover" />
-                    <div
-                      className="absolute inset-0"
-                      style={{ background: "linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.85))" }}
-                    />
-                    <img
-                      src={venue.visitors[i % venue.visitors.length].img}
-                      alt=""
-                      className="absolute left-1.5 top-1.5 h-6 w-6 rounded-full object-cover ring-2 ring-tier-gold"
-                    />
-                    <p className="absolute bottom-1.5 left-1.5 right-1.5 truncate text-[9px] font-medium text-white">
-                      {venue.visitors[i % venue.visitors.length].handle}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Live activity feed */}
             <div className="rounded-2xl border border-border bg-card-soft">
               <p className="flex items-center gap-1.5 border-b border-border px-3 py-2 text-[10px] uppercase tracking-widest text-muted-foreground">
