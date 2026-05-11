@@ -1850,21 +1850,25 @@ function ProfileView() {
               </div>
               <div>
                 <p className="font-display text-lg font-semibold leading-tight">Verify Instagram</p>
-                <p className="text-[11px] text-muted-foreground">via @chambi.bot · 1-minute setup</p>
+                <p className="text-[11px] text-muted-foreground">via @mesita.bot · 1-minute setup</p>
               </div>
             </div>
 
             <ol className="mt-4 space-y-3 text-sm">
               <li className="flex gap-3">
                 <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">1</span>
-                <p className="flex-1 text-foreground/85">DM <span className="font-semibold text-secondary">@chambi.bot</span> on Instagram with the word <span className="font-mono text-secondary">VERIFY</span>.</p>
+                <p className="flex-1 text-foreground/85">Follow <span className="font-semibold text-secondary">@mesita.bot</span> on Instagram.</p>
               </li>
               <li className="flex gap-3">
                 <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">2</span>
-                <p className="flex-1 text-foreground/85">Chambi will reply with an 8-digit verification code. Paste it here.</p>
+                <p className="flex-1 text-foreground/85">DM <span className="font-semibold text-secondary">@mesita.bot</span> with the word <span className="font-mono text-secondary">VERIFY</span>.</p>
               </li>
               <li className="flex gap-3">
                 <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">3</span>
+                <p className="flex-1 text-foreground/85">Mesita will reply with an 8-digit verification code. Paste it here.</p>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-secondary/20 text-[10px] font-bold text-secondary">4</span>
                 <p className="flex-1 text-foreground/85">Your tier is set instantly from your follower count.</p>
               </li>
             </ol>
