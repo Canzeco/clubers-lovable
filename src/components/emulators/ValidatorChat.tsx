@@ -42,7 +42,7 @@ const initial: Msg[] = [
   {
     id: 4,
     from: "bot",
-    text: "¿Confirmas que el ticket es correcto? Se cobrará en Mesita Credits de la clienta.",
+    text: "¿Confirmas que el ticket es correcto? Se cobrará en Balance de la clienta.",
     type: "buttons",
     payload: ["✅ Confirmar", "❌ Rechazar"],
     time: "9:32 PM",
@@ -69,7 +69,7 @@ export function ValidatorChat() {
       });
       push({
         from: "bot",
-        text: "Listo. Pago acreditado al venue en Mesita Credits. Te aviso del próximo ticket.",
+        text: "Listo. Pago acreditado al venue en Balance. Te aviso del próximo ticket.",
         type: "buttons",
         payload: ["📊 Cierre del turno"],
       });
