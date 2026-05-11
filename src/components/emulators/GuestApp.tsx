@@ -37,7 +37,7 @@ import {
   Share2,
 } from "lucide-react";
 
-type Tab = "discover" | "coupons" | "profile";
+type Tab = "discover" | "coupons" | "share" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
 
 function GoogleLogo({ className = "" }: { className?: string }) {
@@ -2277,6 +2277,11 @@ export function GuestApp() {
             <WalletView />
           </div>
         )}
+        {tab === "share" && (
+          <div className="flex-1 overflow-y-auto scrollbar-hide">
+            <ShareView />
+          </div>
+        )}
         {tab === "profile" && (
           <div className="flex-1 overflow-y-auto scrollbar-hide">
             <ProfileView />
@@ -2293,17 +2298,7 @@ export function GuestApp() {
           ].map(({ id, Icon, label }) => (
             <button
               key={id}
-              onClick={() => {
-                if (id === "share") {
-                  if (typeof navigator !== "undefined" && (navigator as any).share) {
-                    (navigator as any)
-                      .share({ title: "Mesita", text: "Check out Mesita 🦚" })
-                      .catch(() => {});
-                  }
-                  return;
-                }
-                setTab(id as Tab);
-              }}
+              onClick={() => setTab(id as Tab)}
               className={`flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition ${
                 tab === id ? "text-primary" : "text-muted-foreground"
               }`}
