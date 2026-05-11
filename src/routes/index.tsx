@@ -25,25 +25,25 @@ type Product = "admin" | "manager" | "validator" | "guest";
 const products: { id: Product; label: string; tag: string; desc: string }[] = [
   {
     id: "admin",
-    label: "Admin Web",
+    label: "🛠️ Admin Web",
     tag: "Mesita HQ",
     desc: "Operate the network: venues, tier curation, revenue, trust & safety.",
   },
   {
     id: "manager",
-    label: "Manager Web",
+    label: "🧭 Manager Web",
     tag: "Venue portal",
     desc: "Launch cashback campaigns, segment guests, see revenue lift.",
   },
   {
     id: "validator",
-    label: "Validator WhatsApp",
+    label: "💬 Validator Whats",
     tag: "Staff · WhatsApp",
     desc: "Waiters validate QR coupons in a familiar chat — no new tools.",
   },
   {
     id: "guest",
-    label: "Guest Mobile",
+    label: "📱 Guest Mobile",
     tag: "iOS · Android",
     desc: "Swipe-to-discover venues, claim cashback, redeem with QR.",
   },
@@ -73,18 +73,17 @@ function Index() {
           </div>
 
           <nav className="flex flex-1 items-center justify-center">
-            <div className="flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
-              {products.map((p, i) => (
+            <div className="flex items-center gap-1 rounded-full border border-border bg-card/60 p-1.5 shadow-elev backdrop-blur">
+              {products.map((p) => (
                 <button
                   key={p.id}
                   onClick={() => setActive(p.id)}
-                  className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium transition ${
+                  className={`rounded-full px-5 py-2 text-sm font-medium transition ${
                     active === p.id
-                      ? "bg-peacock text-primary-foreground shadow-glow"
+                      ? "bg-foreground text-background shadow-glow"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <span className="text-[10px] opacity-60">{i + 1}</span>
                   {p.label}
                 </button>
               ))}
