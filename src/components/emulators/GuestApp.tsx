@@ -392,13 +392,17 @@ function Discover() {
       ? "3 affiliated · 12 nearby"
       : "Swipe to decide";
   return (
-    <>
+    <div className="flex h-full flex-col overflow-hidden">
       <TopBar title="Discover" subtitle={sub} />
       <ModeSwitcher mode={mode} setMode={setMode} />
-      {mode === "catalog" && <CatalogMode />}
+      {mode === "catalog" && (
+        <div className="flex-1 overflow-y-auto scrollbar-hide">
+          <CatalogMode />
+        </div>
+      )}
       {mode === "map" && <MapMode />}
       {mode === "tinder" && <TinderMode />}
-    </>
+    </div>
   );
 }
 
