@@ -567,13 +567,13 @@ function VenueDetailSheet({
               onClick={handleSaveReserve}
               className="flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-r from-peacock to-secondary px-4 py-3 text-sm font-semibold text-white shadow-glow transition active:scale-[0.98]"
             >
-              <Calendar className="h-4 w-4" /> Save + Reserve
+              <Calendar className="h-4 w-4" /> Save Coupon + Reserve Table
             </button>
             <button
               onClick={handleSave}
               className="flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border border-foreground/15 bg-background px-4 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:border-foreground/30 active:scale-[0.98]"
             >
-              <Ticket className="h-4 w-4 text-secondary" /> Just save the coupon
+              <Ticket className="h-4 w-4 text-secondary" /> Save Coupon
             </button>
           </div>
         </div>
