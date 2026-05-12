@@ -1315,12 +1315,16 @@ function Discover() {
 }
 
 function WalletView() {
-  const [seg, setSeg] = useState<"unused" | "used">("unused");
+  const [seg, setSeg] = useState<"active" | "expired" | "used">("active");
   const [openCoupon, setOpenCoupon] = useState<any | null>(null);
-  const unused = [
-    { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, exp: "Fri · 9:30pm", note: "Rooftop · 0.4 km", res: "pending" as const, firstVisit: true },
-    { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, exp: "Expires tomorrow", note: "Brunch · weekends", res: "confirmed" as const, firstVisit: false },
-    { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, exp: "+ Story bonus 10%", note: "Late night cocktails", res: null, firstVisit: false },
+  const active = [
+    { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, expiresIn: "18h 24m", isReservation: false, code: "CL-8821", firstVisit: true },
+    { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, expiresIn: "9h 02m", isReservation: false, code: "LC-4417", firstVisit: false },
+    { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, expiresIn: "May 14 · 8pm + 24h", isReservation: true, code: "MV-7702", firstVisit: false },
+  ];
+  const expired = [
+    { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, expiredOn: "Yesterday", code: "NB-3310" },
+    { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, expiredOn: "May 6", code: "LC-2284" },
   ];
   const used = [
     { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, when: "Sat · May 3", saved: "$ 320" },
@@ -1328,13 +1332,15 @@ function WalletView() {
     { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, when: "Apr 19", saved: "$ 540" },
     { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, when: "Apr 12", saved: "$ 260" },
   ];
+  const list = seg === "active" ? active : seg === "expired" ? expired : used;
   return (
     <>
-      <TopBar title="Coupon Wallet" subtitle={`${unused.length} unused · ${used.length} used`} />
+      <TopBar title="Coupon Wallet" subtitle={`${active.length} active · ${expired.length} expired · ${used.length} used`} />
       {/* segmented control */}
       <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
         {([
-          { id: "unused", label: "Unused", count: unused.length, Icon: Clock },
+          { id: "active", label: "Active", count: active.length, Icon: Clock },
+          { id: "expired", label: "Expired", count: expired.length, Icon: X },
           { id: "used", label: "Used", count: used.length, Icon: Check },
         ] as const).map((s) => (
           <button
@@ -1353,96 +1359,184 @@ function WalletView() {
         ))}
       </div>
 
-      {seg === "unused" ? (
-        <div className="space-y-3 px-5 pb-24">
-          {unused.map((c) => (
-            <button
-              key={c.name}
-              onClick={() => setOpenCoupon({ ...c, used: false })}
-              className="relative flex w-full items-stretch overflow-hidden rounded-2xl border border-border bg-card-soft text-left shadow-sm transition active:scale-[0.99]"
-            >
-              {/* left — cashback / welcome stub */}
-              <div
-                className={`relative flex w-20 flex-shrink-0 flex-col items-center justify-center ${
-                  c.firstVisit
-                    ? "bg-gradient-to-br from-fuchsia-400 to-amber-300 text-black"
-                    : "bg-secondary text-secondary-foreground"
-                }`}
-              >
-                <p className="font-display text-2xl font-bold leading-none">{c.cb}%</p>
-                <p className="mt-1 text-[8px] font-semibold uppercase tracking-widest opacity-80">cashback</p>
-              </div>
-
-              {/* perforation */}
-              <span aria-hidden className="pointer-events-none absolute top-0 z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-border bg-background" style={{ left: "5rem" }} />
-              <span aria-hidden className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full border border-border bg-background" style={{ left: "5rem" }} />
-              <span aria-hidden className="pointer-events-none absolute top-2 bottom-2 border-l border-dashed border-border" style={{ left: "5rem" }} />
-
-              {/* right — info */}
-              <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4 py-3">
-                <p className="truncate font-display text-sm font-semibold leading-tight">{c.name}</p>
-                <p className="truncate text-[10px] text-muted-foreground">
-                  {c.category} · {c.distance} · <span className="tracking-wider">{"$".repeat(c.cost)}</span>
-                </p>
-                <div className="flex items-center gap-2 text-[10px]">
-                  <span className="inline-flex items-center gap-0.5 text-secondary">
-                    <Star className="h-2.5 w-2.5 fill-secondary text-secondary" /> {c.mesita.toFixed(1)}
-                    <span className="ml-0.5 text-muted-foreground/70">Mesita</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-muted-foreground">
-                    <span className="flex h-3 w-3 items-center justify-center rounded-full bg-muted text-[7px] font-bold text-foreground/70">G</span>
-                    {c.google.toFixed(1)}
-                    <span className="text-muted-foreground/70">Google</span>
-                  </span>
-                </div>
-                <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground/80">
-                  <Clock className="h-2.5 w-2.5" /> Expires in 7 days
-                </p>
-              </div>
-            </button>
-          ))}
-        </div>
-      ) : (
-        <div className="space-y-3 px-5 pb-24">
-          {used.map((c) => (
-            <button
-              key={c.name + c.when}
-              onClick={() => setOpenCoupon({ ...c, used: true })}
-              className="relative flex w-full items-stretch overflow-hidden rounded-2xl border border-dashed border-border bg-card/60 text-left opacity-90"
-            >
-              <div className="relative flex w-20 flex-shrink-0 flex-col items-center justify-center bg-secondary text-secondary-foreground grayscale">
-                <p className="font-display text-2xl font-bold leading-none">{c.cb}%</p>
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                  <Check className="h-6 w-6 text-white" />
-                </div>
-              </div>
-              <span aria-hidden className="pointer-events-none absolute top-2 bottom-2 border-l border-dashed border-border" style={{ left: "5rem" }} />
-              <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4 py-3 opacity-70">
-                <p className="truncate font-display text-sm font-semibold leading-tight">{c.name}</p>
-                <p className="truncate text-[10px] text-muted-foreground">
-                  {c.category} · {c.distance} · <span className="tracking-wider">{"$".repeat(c.cost)}</span>
-                </p>
-                <div className="flex items-center gap-2 text-[10px]">
-                  <span className="inline-flex items-center gap-0.5 text-secondary">
-                    <Star className="h-2.5 w-2.5 fill-secondary text-secondary" /> {c.mesita.toFixed(1)}
-                    <span className="ml-0.5 text-muted-foreground/70">Mesita</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-muted-foreground">
-                    <span className="flex h-3 w-3 items-center justify-center rounded-full bg-muted text-[7px] font-bold text-foreground/70">G</span>
-                    {c.google.toFixed(1)}
-                    <span className="text-muted-foreground/70">Google</span>
-                  </span>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="space-y-4 px-5 pb-24">
+        {list.map((c: any, idx: number) => (
+          <CouponTicket
+            key={(c.name || "") + (c.code || c.when || idx)}
+            c={c}
+            state={seg}
+            onClick={() => setOpenCoupon({ ...c, used: seg === "used" })}
+          />
+        ))}
+        {list.length === 0 && (
+          <p className="py-10 text-center text-xs text-muted-foreground">No coupons here yet.</p>
+        )}
+      </div>
 
       {openCoupon && (
         <CouponDetailSheet coupon={openCoupon} onClose={() => setOpenCoupon(null)} />
       )}
     </>
+  );
+}
+
+function CouponTicket({
+  c,
+  state,
+  onClick,
+}: {
+  c: any;
+  state: "active" | "expired" | "used";
+  onClick: () => void;
+}) {
+  const isExpired = state === "expired";
+  const isUsed = state === "used";
+  const isInactive = isExpired || isUsed;
+  // Scalloped bottom edge via radial-gradient mask
+  const scallop = {
+    WebkitMaskImage:
+      "radial-gradient(circle 6px at 8px 100%, transparent 6px, black 6.5px)",
+    WebkitMaskSize: "16px 100%",
+    WebkitMaskRepeat: "repeat-x",
+    maskImage:
+      "radial-gradient(circle 6px at 8px 100%, transparent 6px, black 6.5px)",
+    maskSize: "16px 100%",
+    maskRepeat: "repeat-x",
+  } as React.CSSProperties;
+
+  return (
+    <button
+      onClick={onClick}
+      className={`relative block w-full text-left transition active:scale-[0.99] ${
+        isInactive ? "opacity-80" : ""
+      }`}
+    >
+      {/* outer ticket */}
+      <div
+        className={`relative flex items-stretch overflow-hidden rounded-2xl border bg-card-soft shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] ${
+          isExpired ? "border-dashed border-border grayscale" : "border-border"
+        } ${isUsed ? "border-dashed" : ""}`}
+      >
+        {/* left stub */}
+        <div
+          className={`relative flex w-24 flex-shrink-0 flex-col items-center justify-center px-1 py-4 ${
+            isInactive
+              ? "bg-muted text-muted-foreground"
+              : c.firstVisit
+              ? "bg-gradient-to-br from-fuchsia-400 via-rose-300 to-amber-300 text-black"
+              : "bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground"
+          }`}
+        >
+          {/* corner sparkles */}
+          <span className="absolute left-2 top-2 text-[8px] opacity-50">✦</span>
+          <span className="absolute right-2 bottom-2 text-[8px] opacity-50">✦</span>
+
+          <p className="font-display text-3xl font-extrabold leading-none tracking-tight">
+            {c.cb}%
+          </p>
+          <p className="mt-1 text-[8px] font-bold uppercase tracking-[0.2em] opacity-80">
+            cashback
+          </p>
+          {isUsed && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+              <Check className="h-7 w-7 text-white" />
+            </div>
+          )}
+          {isExpired && (
+            <span className="absolute -rotate-12 rounded border-2 border-foreground/60 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-widest text-foreground/70">
+              Expired
+            </span>
+          )}
+        </div>
+
+        {/* perforation notches + dashed line */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute top-0 z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-border bg-background"
+          style={{ left: "6rem" }}
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full border border-border bg-background"
+          style={{ left: "6rem" }}
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute top-3 bottom-3 border-l-2 border-dotted border-border"
+          style={{ left: "6rem" }}
+        />
+
+        {/* right info */}
+        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4 py-3">
+          <div className="flex items-center gap-1.5">
+            <p className="truncate font-display text-sm font-semibold leading-tight">
+              {c.name}
+            </p>
+            {c.isReservation && (
+              <span className="rounded-sm bg-secondary/15 px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider text-secondary">
+                Reservation
+              </span>
+            )}
+          </div>
+          <p className="truncate text-[10px] text-muted-foreground">
+            {c.category} · {c.distance} ·{" "}
+            <span className="tracking-wider">{"$".repeat(c.cost)}</span>
+          </p>
+          <div className="flex items-center gap-2 text-[10px]">
+            <span className="inline-flex items-center gap-0.5 text-secondary">
+              <Star className="h-2.5 w-2.5 fill-secondary text-secondary" />{" "}
+              {c.mesita.toFixed(1)}
+              <span className="ml-0.5 text-muted-foreground/70">Mesita</span>
+            </span>
+            <span className="inline-flex items-center gap-1 text-muted-foreground">
+              <span className="flex h-3 w-3 items-center justify-center rounded-full bg-muted text-[7px] font-bold text-foreground/70">
+                G
+              </span>
+              {c.google.toFixed(1)}
+              <span className="text-muted-foreground/70">Google</span>
+            </span>
+          </div>
+
+          {/* status footer line */}
+          <div className="mt-1 flex items-center justify-between border-t border-dashed border-border/60 pt-1.5">
+            {state === "active" && (
+              <p className="flex items-center gap-1 text-[9px] font-semibold uppercase tracking-widest text-foreground/70">
+                <Clock className="h-2.5 w-2.5" />
+                {c.isReservation ? `Expires ${c.expiresIn}` : `Expires in ${c.expiresIn}`}
+              </p>
+            )}
+            {state === "expired" && (
+              <p className="flex items-center gap-1 text-[9px] font-semibold uppercase tracking-widest text-muted-foreground">
+                <X className="h-2.5 w-2.5" />
+                Expired {c.expiredOn}
+              </p>
+            )}
+            {state === "used" && (
+              <p className="flex items-center gap-1 text-[9px] font-semibold uppercase tracking-widest text-muted-foreground">
+                <Check className="h-2.5 w-2.5" />
+                Redeemed · {c.when}
+              </p>
+            )}
+            <span className="font-mono text-[8px] tracking-widest text-muted-foreground/70">
+              {c.code || "MES-•••"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* scalloped tear-off edge under the ticket */}
+      <div
+        className={`-mt-px h-2 ${
+          isExpired
+            ? "bg-card/60"
+            : isUsed
+            ? "bg-card/70"
+            : "bg-card-soft"
+        }`}
+        style={scallop}
+        aria-hidden
+      />
+    </button>
   );
 }
 
