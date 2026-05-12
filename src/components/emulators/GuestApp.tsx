@@ -2658,22 +2658,18 @@ function ShareView() {
             You've got {totalCards} gift cards to hand out. Send your code and the first friends who use it each get $100 MXN — courtesy of you.
           </p>
 
-          {/* Hero gift card — wrapped with a centered ribbon + bow */}
-          <div className="relative mx-auto mt-6 aspect-[1.6/1] w-full max-w-[300px]">
+          {/* Hero gift card — ribbon on the left, big amount on the right */}
+          <div className="relative mx-auto mt-6 aspect-[1.6/1] w-full max-w-[320px]">
             <div className="absolute inset-0 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-              {/* Vertical ribbon (centered) */}
-              <div className="pointer-events-none absolute inset-y-0 left-1/2 w-6 -translate-x-1/2 bg-peacock/95" />
-              {/* Horizontal ribbon (centered) */}
-              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-6 -translate-y-1/2 bg-peacock/95" />
+              {/* Vertical ribbon on the left */}
+              <div className="pointer-events-none absolute inset-y-0 left-[22%] w-6 -translate-x-1/2 bg-peacock/95" />
               {/* Subtle ribbon edges */}
-              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-[12px] bg-white/15" />
-              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px translate-y-[11px] bg-black/10" />
-              <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-[12px] bg-white/15" />
-              <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px translate-x-[11px] bg-black/10" />
+              <div className="pointer-events-none absolute inset-y-0 left-[22%] w-px -translate-x-[12px] bg-white/15" />
+              <div className="pointer-events-none absolute inset-y-0 left-[22%] w-px translate-x-[11px] bg-black/10" />
 
-              {/* Bow at center */}
+              {/* Bow on the ribbon (upper-left) */}
               <svg
-                className="pointer-events-none absolute left-1/2 top-1/2 h-12 w-16 -translate-x-1/2 -translate-y-1/2"
+                className="pointer-events-none absolute left-[22%] top-[34%] h-12 w-16 -translate-x-1/2 -translate-y-1/2"
                 viewBox="0 0 64 48"
                 fill="none"
                 aria-hidden
@@ -2702,26 +2698,28 @@ function ShareView() {
                 <ellipse cx="32" cy="24" rx="5" ry="6" className="fill-black/15" />
               </svg>
 
-              {/* Top-left — brand */}
-              <div className="absolute left-3 top-3 max-w-[42%]">
+              {/* Top-right — brand */}
+              <div className="absolute right-4 top-3 text-right">
                 <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-foreground/60">Mesita 🦚</p>
                 <p className="mt-0.5 text-[7px] uppercase tracking-[0.25em] text-foreground/35">Gift Card</p>
               </div>
 
-              {/* Top-right — amount */}
-              <div className="absolute right-3 top-3 text-right">
-                <p className="font-display text-xl font-semibold leading-none text-foreground">$100</p>
-                <p className="mt-1 text-[7px] uppercase tracking-[0.25em] text-foreground/40">MXN</p>
+              {/* Center-right — BIG amount */}
+              <div className="absolute left-[40%] right-3 top-1/2 -translate-y-1/2 text-right">
+                <p className="font-display text-[68px] font-semibold leading-none tracking-tight text-foreground">
+                  $100
+                </p>
+                <p className="mt-1 text-[8px] font-semibold uppercase tracking-[0.35em] text-foreground/45">MXN</p>
               </div>
 
-              {/* Bottom-left — to/from */}
-              <div className="absolute bottom-3 left-3 text-[7px] uppercase tracking-[0.25em]">
+              {/* Bottom-left — to/from (under ribbon column) */}
+              <div className="absolute bottom-3 left-3 max-w-[18%] text-[7px] uppercase tracking-[0.25em]">
                 <p className="text-foreground/35">To <span className="text-foreground/70">a friend</span></p>
                 <p className="mt-0.5 text-foreground/35">From <span className="text-foreground/70">you</span></p>
               </div>
 
               {/* Bottom-right — code */}
-              <div className="absolute bottom-3 right-3 text-right">
+              <div className="absolute bottom-3 right-4 text-right">
                 <p className="text-[7px] uppercase tracking-[0.25em] text-foreground/35">Code</p>
                 <div className="mt-0.5 flex items-center justify-end gap-1.5">
                   <span className="font-mono text-[11px] font-medium tracking-[0.2em] text-foreground">{code}</span>
