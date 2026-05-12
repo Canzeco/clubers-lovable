@@ -1251,6 +1251,9 @@ function WalletView() {
                     <span className="text-muted-foreground/70">Google</span>
                   </span>
                 </div>
+                <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground/80">
+                  <Clock className="h-2.5 w-2.5" /> Expires in 7 days
+                </p>
               </div>
             </button>
           ))}
