@@ -237,8 +237,9 @@ function StatusBar() {
 }
 
 function TopBar({ title, subtitle }: { title: string; subtitle?: string }) {
+  void subtitle;
   return (
-    <div className="px-5 pb-3 pt-1">
+    <div className="border-b border-border/60 px-5 pb-3 pt-1">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-peacock text-base shadow-glow">
@@ -251,11 +252,6 @@ function TopBar({ title, subtitle }: { title: string; subtitle?: string }) {
             </p>
           </div>
         </div>
-        {subtitle && (
-          <p className="ml-3 hidden flex-1 truncate text-right text-[11px] text-muted-foreground sm:block">
-            {subtitle}
-          </p>
-        )}
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-tier-gold text-[10px] font-bold text-black">
           GOLD
         </div>
