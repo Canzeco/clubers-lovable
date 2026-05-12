@@ -57,11 +57,34 @@ import {
 type Tab = "pipeline" | "bots" | "stack" | "portfolio" | "editor" | "discover" | "promos" | "metrics" | "trust";
 
 const stages = [
-  { id: "lead", label: "Leads", color: "bg-muted-foreground/30", count: 84 },
-  { id: "contact", label: "Contacted", color: "bg-tier-bronze", count: 32 },
-  { id: "demo", label: "Demo booked", color: "bg-tier-silver", count: 14 },
-  { id: "negotiating", label: "Negotiating", color: "bg-secondary", count: 9 },
-  { id: "onboarded", label: "Onboarded", color: "bg-primary", count: 12 },
+  {
+    id: "sourced",
+    label: "1 · Sourced",
+    hint: "Google Business · manual",
+    color: "bg-muted-foreground/30",
+    count: 84,
+  },
+  {
+    id: "enriching",
+    label: "2 · Super-sourcing",
+    hint: "AI agent enriching",
+    color: "bg-accent",
+    count: 26,
+  },
+  {
+    id: "review",
+    label: "3 · Review & approve",
+    hint: "Manual QA",
+    color: "bg-secondary",
+    count: 14,
+  },
+  {
+    id: "sales",
+    label: "4 · Sales · partner",
+    hint: "Contact & sign",
+    color: "bg-primary",
+    count: 9,
+  },
 ] as const;
 
 type Lead = {
@@ -79,17 +102,15 @@ type Lead = {
 };
 
 const leads: Lead[] = [
-  { id: "1", name: "Bocanada", type: "Rooftop · Mediterranean", area: "Roma Nte.", ig: "82k", rating: 4.7, ticket: "$720", fit: "Hot", stage: "lead", owner: "DM", lastTouch: "today" },
-  { id: "2", name: "Patio Verde", type: "Brunch · Café", area: "Condesa", ig: "31k", rating: 4.5, ticket: "$380", fit: "Hot", stage: "lead", owner: "AL", lastTouch: "1d" },
-  { id: "3", name: "Sal de Mar", type: "Seafood", area: "Polanco", ig: "18k", rating: 4.4, ticket: "$640", fit: "Warm", stage: "lead", owner: "DM", lastTouch: "2d" },
-  { id: "4", name: "El Hueco", type: "Mezcal · Bar", area: "Juárez", ig: "9k", rating: 4.6, ticket: "$420", fit: "Warm", stage: "contact", owner: "AL", lastTouch: "today" },
-  { id: "5", name: "Galápago", type: "Wine bar", area: "Roma Sur", ig: "14k", rating: 4.8, ticket: "$580", fit: "Hot", stage: "contact", owner: "DM", lastTouch: "today" },
-  { id: "6", name: "Tropikalia", type: "Club · Nightlife", area: "Cuauhtémoc", ig: "120k", rating: 4.3, ticket: "$1.2k", fit: "Hot", stage: "demo", owner: "RC", lastTouch: "today" },
-  { id: "7", name: "Loto Café", type: "Specialty coffee", area: "Chapultepec", ig: "22k", rating: 4.6, ticket: "$220", fit: "Warm", stage: "demo", owner: "AL", lastTouch: "1d" },
-  { id: "8", name: "Costa Azul", type: "Beach club", area: "Tulum", ig: "54k", rating: 4.5, ticket: "$1.8k", fit: "Hot", stage: "negotiating", owner: "DM", lastTouch: "today" },
-  { id: "9", name: "Mar Verde", type: "Seafood", area: "Tulum", ig: "11k", rating: 4.4, ticket: "$900", fit: "Cold", stage: "negotiating", owner: "RC", lastTouch: "3d" },
-  { id: "10", name: "Casa Luminar", type: "Rooftop", area: "Roma Nte.", ig: "46k", rating: 4.8, ticket: "$640", fit: "Hot", stage: "onboarded", owner: "DM", lastTouch: "now" },
-  { id: "11", name: "Neón Bar", type: "Speakeasy", area: "Condesa", ig: "38k", rating: 4.6, ticket: "$520", fit: "Hot", stage: "onboarded", owner: "AL", lastTouch: "now" },
+  { id: "1", name: "Bocanada", type: "Rooftop · Mediterranean", area: "Roma Nte.", ig: "—", rating: 4.7, ticket: "$720", fit: "Hot", stage: "sourced", owner: "DM", lastTouch: "today" },
+  { id: "2", name: "Patio Verde", type: "Brunch · Café", area: "Condesa", ig: "—", rating: 4.5, ticket: "$380", fit: "Hot", stage: "sourced", owner: "AL", lastTouch: "1d" },
+  { id: "3", name: "Sal de Mar", type: "Seafood", area: "Polanco", ig: "—", rating: 4.4, ticket: "$640", fit: "Warm", stage: "sourced", owner: "DM", lastTouch: "2d" },
+  { id: "4", name: "El Hueco", type: "Mezcal · Bar", area: "Juárez", ig: "9k", rating: 4.6, ticket: "$420", fit: "Warm", stage: "enriching", owner: "AI", lastTouch: "now" },
+  { id: "5", name: "Galápago", type: "Wine bar", area: "Roma Sur", ig: "14k", rating: 4.8, ticket: "$580", fit: "Hot", stage: "enriching", owner: "AI", lastTouch: "now" },
+  { id: "6", name: "Tropikalia", type: "Club · Nightlife", area: "Cuauhtémoc", ig: "120k", rating: 4.3, ticket: "$1.2k", fit: "Hot", stage: "review", owner: "RC", lastTouch: "today" },
+  { id: "7", name: "Loto Café", type: "Specialty coffee", area: "Chapultepec", ig: "22k", rating: 4.6, ticket: "$220", fit: "Warm", stage: "review", owner: "AL", lastTouch: "1d" },
+  { id: "8", name: "Costa Azul", type: "Beach club", area: "Tulum", ig: "54k", rating: 4.5, ticket: "$1.8k", fit: "Hot", stage: "sales", owner: "DM", lastTouch: "today" },
+  { id: "9", name: "Mar Verde", type: "Seafood", area: "Tulum", ig: "11k", rating: 4.4, ticket: "$900", fit: "Cold", stage: "sales", owner: "RC", lastTouch: "3d" },
 ];
 
 function FitChip({ fit }: { fit: Lead["fit"] }) {
@@ -184,44 +205,43 @@ function Pipeline() {
         <div>
           <h1 className="font-display text-3xl font-semibold">Sourcing pipeline</h1>
           <p className="text-sm text-muted-foreground">
-            Arrastra venues por etapa · 151 prospectos abiertos · 12 cerrados este mes
+            Source → Super-sourcing AI → Approve → Sales · 133 prospectos abiertos
           </p>
         </div>
-        <div className="flex gap-3 text-xs">
-          <div className="rounded-lg border border-border bg-card-soft px-3 py-2 text-center">
-            <p className="font-display text-lg font-semibold">38%</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Lead → Demo</p>
-          </div>
-          <div className="rounded-lg border border-border bg-card-soft px-3 py-2 text-center">
-            <p className="font-display text-lg font-semibold">64%</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Demo → Close</p>
-          </div>
-          <div className="rounded-lg border border-border bg-card-soft px-3 py-2 text-center">
-            <p className="font-display text-lg font-semibold">9 días</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Ciclo medio</p>
-          </div>
-        </div>
+        <button className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-accent to-primary px-3 py-2 text-xs font-semibold text-primary-foreground shadow-glow">
+          <MapPin className="h-3.5 w-3.5" /> Importar de Google Business
+        </button>
       </div>
 
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-4 gap-3">
         {stages.map((s) => {
           const items = leads.filter((l) => l.stage === s.id);
           return (
             <div key={s.id} className="rounded-xl border border-border bg-card/40 p-2">
-              <div className="mb-2 flex items-center justify-between px-1">
-                <div className="flex items-center gap-2">
-                  <span className={`h-2 w-2 rounded-full ${s.color}`} />
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{s.label}</p>
+              <div className="mb-2 px-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className={`h-2 w-2 rounded-full ${s.color}`} />
+                    <p className="text-xs font-semibold uppercase tracking-wider text-foreground">{s.label}</p>
+                  </div>
+                  <span className="text-[10px] font-bold text-muted-foreground">{s.count}</span>
                 </div>
-                <span className="text-[10px] font-bold text-muted-foreground">{s.count}</span>
+                <p className="mt-0.5 text-[10px] text-muted-foreground">{s.hint}</p>
               </div>
               <div className="space-y-2">
                 {items.map((l) => (
-                  <LeadCard key={l.id} l={l} />
+                  <LeadCard key={l.id} l={l} stage={s.id} />
                 ))}
-                <button className="flex w-full items-center justify-center gap-1 rounded-lg border border-dashed border-border py-2 text-xs text-muted-foreground hover:text-foreground">
-                  <Plus className="h-3 w-3" /> Añadir
-                </button>
+                {s.id === "sourced" && (
+                  <button className="flex w-full items-center justify-center gap-1 rounded-lg border border-dashed border-border py-2 text-xs text-muted-foreground hover:text-foreground">
+                    <Plus className="h-3 w-3" /> Añadir manual
+                  </button>
+                )}
+                {s.id === "enriching" && (
+                  <button className="flex w-full items-center justify-center gap-1 rounded-lg border border-dashed border-accent/50 py-2 text-xs text-accent hover:bg-accent/5">
+                    <Sparkles className="h-3 w-3" /> Lanzar agente
+                  </button>
+                )}
               </div>
             </div>
           );
@@ -231,7 +251,59 @@ function Pipeline() {
   );
 }
 
-function LeadCard({ l }: { l: Lead }) {
+function LeadCard({ l, stage }: { l: Lead; stage: (typeof stages)[number]["id"] }) {
+  if (stage === "enriching") {
+    return (
+      <div className="space-y-2 rounded-lg border border-accent/40 bg-accent/5 p-2.5 text-xs shadow-elev">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="font-semibold leading-tight">{l.name}</p>
+            <p className="text-[10px] text-muted-foreground">{l.type}</p>
+          </div>
+          <span className="flex items-center gap-1 rounded-full bg-accent/20 px-1.5 py-0.5 text-[9px] font-semibold text-accent">
+            <Sparkles className="h-2.5 w-2.5" /> AI
+          </span>
+        </div>
+        <div>
+          <div className="flex justify-between text-[9px] text-muted-foreground">
+            <span>Super-sourcing…</span>
+            <span>{l.name === "Galápago" ? "82%" : "47%"}</span>
+          </div>
+          <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
+            <div className="h-full animate-pulse bg-gradient-to-r from-accent to-primary" style={{ width: l.name === "Galápago" ? "82%" : "47%" }} />
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-1 text-[9px] text-muted-foreground">
+          <span className="rounded-full bg-card px-1.5 py-0.5">IG ✓</span>
+          <span className="rounded-full bg-card px-1.5 py-0.5">FB ✓</span>
+          <span className="rounded-full bg-card px-1.5 py-0.5">Web ✓</span>
+          <span className="rounded-full bg-card px-1.5 py-0.5 opacity-50">Reseñas…</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (stage === "sourced") {
+    return (
+      <div className="cursor-grab space-y-1.5 rounded-lg border border-border bg-card p-2.5 text-xs shadow-elev transition hover:border-primary/50">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="font-semibold leading-tight">{l.name}</p>
+            <p className="text-[10px] text-muted-foreground">{l.type}</p>
+          </div>
+          <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] font-semibold text-muted-foreground">GBP</span>
+        </div>
+        <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+          <span className="flex items-center gap-0.5"><MapPin className="h-2.5 w-2.5" />{l.area}</span>
+          <span className="flex items-center gap-0.5"><Star className="h-2.5 w-2.5 fill-secondary text-secondary" />{l.rating}</span>
+        </div>
+        <button className="flex w-full items-center justify-center gap-1 rounded-md bg-accent/10 py-1 text-[10px] font-semibold text-accent hover:bg-accent/20">
+          <Sparkles className="h-2.5 w-2.5" /> Super-source
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="cursor-grab space-y-2 rounded-lg border border-border bg-card p-2.5 text-xs shadow-elev transition hover:border-primary/50">
       <div className="flex items-start justify-between gap-2">
@@ -246,6 +318,26 @@ function LeadCard({ l }: { l: Lead }) {
         <span className="flex items-center gap-0.5"><Instagram className="h-2.5 w-2.5" />{l.ig}</span>
         <span className="flex items-center gap-0.5"><Star className="h-2.5 w-2.5 fill-secondary text-secondary" />{l.rating}</span>
       </div>
+      {stage === "review" && (
+        <div className="flex gap-1">
+          <button className="flex flex-1 items-center justify-center gap-1 rounded-md bg-emerald-500/10 py-1 text-[10px] font-semibold text-emerald-600 hover:bg-emerald-500/20">
+            <Check className="h-2.5 w-2.5" /> Aprobar
+          </button>
+          <button className="flex flex-1 items-center justify-center gap-1 rounded-md bg-card py-1 text-[10px] font-semibold text-muted-foreground hover:bg-muted">
+            <PencilLine className="h-2.5 w-2.5" /> Editar
+          </button>
+        </div>
+      )}
+      {stage === "sales" && (
+        <div className="flex gap-1">
+          <button className="flex flex-1 items-center justify-center gap-1 rounded-md bg-primary/10 py-1 text-[10px] font-semibold text-primary hover:bg-primary/20">
+            <Phone className="h-2.5 w-2.5" /> Contactar
+          </button>
+          <button className="flex flex-1 items-center justify-center gap-1 rounded-md bg-secondary/10 py-1 text-[10px] font-semibold text-secondary hover:bg-secondary/20">
+            <Crown className="h-2.5 w-2.5" /> Firmar
+          </button>
+        </div>
+      )}
       <div className="flex items-center justify-between border-t border-border/50 pt-1.5">
         <div className="flex h-5 w-5 items-center justify-center rounded-full bg-peacock text-[9px] font-bold text-primary-foreground">
           {l.owner}
@@ -806,21 +898,34 @@ type VenueCard = {
   managed: "partner" | "admin";
   status: "live" | "draft" | "review";
   completeness: number;
+  active: boolean;
 };
 
 const VENUE_CARDS: VenueCard[] = [
-  { name: "La Cabaña de Pecos", city: "SLP · Lomas", category: "Steakhouse", img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600", managed: "admin", status: "draft", completeness: 72 },
-  { name: "Bocanada", city: "CDMX · Roma Nte.", category: "Rooftop · Mediterranean", img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600", managed: "partner", status: "live", completeness: 100 },
-  { name: "Patio Verde", city: "CDMX · Condesa", category: "Brunch · Café", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600", managed: "partner", status: "live", completeness: 96 },
-  { name: "Galápago", city: "CDMX · Juárez", category: "Wine bar · Tapas", img: "https://images.unsplash.com/photo-1592861956120-e524fc739696?w=600", managed: "admin", status: "review", completeness: 58 },
-  { name: "Casa Luminar", city: "CDMX · Polanco", category: "Cocktails · Late night", img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600", managed: "partner", status: "live", completeness: 100 },
-  { name: "Sal de Mar", city: "Cancún · Centro", category: "Seafood", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600", managed: "admin", status: "draft", completeness: 41 },
-  { name: "Mar Verde", city: "Tulum", category: "Seafood · Beach", img: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=600", managed: "partner", status: "live", completeness: 94 },
-  { name: "El Huerto", city: "GDL · Lafayette", category: "Plant-forward", img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600", managed: "admin", status: "review", completeness: 63 },
+  { name: "La Cabaña de Pecos", city: "SLP · Lomas", category: "Steakhouse", img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600", managed: "admin", status: "draft", completeness: 72, active: true },
+  { name: "Bocanada", city: "CDMX · Roma Nte.", category: "Rooftop · Mediterranean", img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600", managed: "partner", status: "live", completeness: 100, active: true },
+  { name: "Patio Verde", city: "CDMX · Condesa", category: "Brunch · Café", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600", managed: "partner", status: "live", completeness: 96, active: true },
+  { name: "Galápago", city: "CDMX · Juárez", category: "Wine bar · Tapas", img: "https://images.unsplash.com/photo-1592861956120-e524fc739696?w=600", managed: "admin", status: "review", completeness: 58, active: true },
+  { name: "Casa Luminar", city: "CDMX · Polanco", category: "Cocktails · Late night", img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600", managed: "partner", status: "live", completeness: 100, active: true },
+  { name: "Sal de Mar", city: "Cancún · Centro", category: "Seafood", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600", managed: "admin", status: "draft", completeness: 41, active: false },
+  { name: "Mar Verde", city: "Tulum", category: "Seafood · Beach", img: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=600", managed: "partner", status: "live", completeness: 94, active: true },
+  { name: "El Huerto", city: "GDL · Lafayette", category: "Plant-forward", img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600", managed: "admin", status: "review", completeness: 63, active: false },
 ];
 
 function Venues() {
   const [selected, setSelected] = useState<string | null>(null);
+  const [filter, setFilter] = useState<"all" | "partner" | "admin" | "inactive">("all");
+  const [cards, setCards] = useState(VENUE_CARDS);
+
+  const visible = cards.filter((v) =>
+    filter === "all" ? true : filter === "inactive" ? !v.active : v.managed === filter,
+  );
+
+  const toggleActive = (name: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCards((cs) => cs.map((c) => (c.name === name ? { ...c, active: !c.active } : c)));
+  };
+
   if (selected) {
     return (
       <div>
@@ -843,12 +948,33 @@ function Venues() {
       <div className="mb-4 flex items-end justify-between">
         <div>
           <h1 className="font-display text-2xl font-semibold">Catálogo de venues</h1>
-          <p className="text-xs text-muted-foreground">{VENUE_CARDS.length} venues · click para editar el perfil</p>
+          <p className="text-xs text-muted-foreground">
+            Super-admin · editar cualquier venue, partner o no · activar / desactivar en la plataforma
+          </p>
         </div>
         <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
           <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-secondary" /> Partner-managed</span>
           <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-accent" /> Admin-managed</span>
         </div>
+      </div>
+
+      <div className="mb-4 flex flex-wrap gap-1.5 text-xs">
+        {([
+          ["all", `Todos · ${cards.length}`],
+          ["partner", `Partner · ${cards.filter((c) => c.managed === "partner").length}`],
+          ["admin", `Admin · ${cards.filter((c) => c.managed === "admin").length}`],
+          ["inactive", `Inactivos · ${cards.filter((c) => !c.active).length}`],
+        ] as const).map(([k, label]) => (
+          <button
+            key={k}
+            onClick={() => setFilter(k)}
+            className={`rounded-full px-3 py-1 ${
+              filter === k ? "bg-foreground text-background" : "border border-border text-muted-foreground"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
@@ -861,14 +987,22 @@ function Venues() {
           <p className="text-[10px]">Manual o desde sourcing</p>
         </button>
 
-        {VENUE_CARDS.map((v) => (
+        {visible.map((v) => (
           <button
             key={v.name}
             onClick={() => setSelected(v.name)}
-            className="group relative flex aspect-[4/5] flex-col overflow-hidden rounded-2xl border border-border bg-card text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-elev"
+            className={`group relative flex aspect-[4/5] flex-col overflow-hidden rounded-2xl border bg-card text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-elev ${
+              v.active ? "border-border" : "border-destructive/30 opacity-70"
+            }`}
           >
             <div className="relative h-3/5 overflow-hidden">
-              <img src={v.img} alt={v.name} className="h-full w-full object-cover transition group-hover:scale-105" />
+              <img
+                src={v.img}
+                alt={v.name}
+                className={`h-full w-full object-cover transition group-hover:scale-105 ${
+                  v.active ? "" : "grayscale"
+                }`}
+              />
               <span
                 className={`absolute left-2 top-2 flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest backdrop-blur ${
                   v.managed === "partner"
@@ -878,17 +1012,24 @@ function Venues() {
               >
                 {v.managed === "partner" ? "Partner" : "Admin"}
               </span>
-              <span
-                className={`absolute right-2 top-2 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider backdrop-blur ${
-                  v.status === "live"
-                    ? "bg-emerald-500/90 text-white"
-                    : v.status === "review"
-                    ? "bg-amber-500/90 text-white"
-                    : "bg-muted/90 text-foreground/70"
-                }`}
-              >
-                {v.status}
-              </span>
+              {!v.active && (
+                <span className="absolute right-2 top-2 rounded-full bg-destructive/90 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white backdrop-blur">
+                  Inactivo
+                </span>
+              )}
+              {v.active && (
+                <span
+                  className={`absolute right-2 top-2 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider backdrop-blur ${
+                    v.status === "live"
+                      ? "bg-emerald-500/90 text-white"
+                      : v.status === "review"
+                      ? "bg-amber-500/90 text-white"
+                      : "bg-muted/90 text-foreground/70"
+                  }`}
+                >
+                  {v.status}
+                </span>
+              )}
             </div>
             <div className="flex flex-1 flex-col justify-between p-3">
               <div>
@@ -896,16 +1037,30 @@ function Venues() {
                 <p className="line-clamp-1 text-[11px] text-muted-foreground">{v.category}</p>
                 <p className="mt-0.5 text-[10px] text-muted-foreground">{v.city}</p>
               </div>
-              <div>
-                <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                  <span>Perfil</span>
-                  <span className="font-semibold text-foreground">{v.completeness}%</span>
+              <div className="space-y-2">
+                <div>
+                  <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                    <span>Perfil</span>
+                    <span className="font-semibold text-foreground">{v.completeness}%</span>
+                  </div>
+                  <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
+                    <div
+                      className={`h-full ${v.completeness >= 90 ? "bg-emerald-500" : v.completeness >= 60 ? "bg-secondary" : "bg-amber-500"}`}
+                      style={{ width: `${v.completeness}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
-                  <div
-                    className={`h-full ${v.completeness >= 90 ? "bg-emerald-500" : v.completeness >= 60 ? "bg-secondary" : "bg-amber-500"}`}
-                    style={{ width: `${v.completeness}%` }}
-                  />
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => toggleActive(v.name, e)}
+                  className={`flex items-center justify-center gap-1 rounded-md py-1 text-[10px] font-semibold transition ${
+                    v.active
+                      ? "bg-emerald-500/10 text-emerald-600 hover:bg-destructive/10 hover:text-destructive"
+                      : "bg-destructive/10 text-destructive hover:bg-emerald-500/10 hover:text-emerald-600"
+                  }`}
+                >
+                  {v.active ? <><PauseCircle className="h-3 w-3" /> Desactivar</> : <><PlayCircle className="h-3 w-3" /> Reactivar</>}
                 </div>
               </div>
             </div>
