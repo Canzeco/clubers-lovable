@@ -497,10 +497,11 @@ function Promos() {
     visits: string;
     audience: number;
     handles: string[];
+    reach: string;
   }[] = [
-    { name: "Bronze", color: "bg-tier-bronze", cb: 5, visits: "0 – 2 visits", audience: 18420, handles: [] },
-    { name: "Silver", color: "bg-tier-silver", cb: 10, visits: "3 – 6 visits", audience: 6240, handles: ["@sofip", "@renatak", "@tomasl"] },
-    { name: "Gold", color: "bg-tier-gold", cb: 20, visits: "7 – 19 visits", audience: 1860, handles: ["@valenrose", "@lucasm", "@camivb", "@matef", "@anat"] },
+    { name: "Bronze", color: "bg-tier-bronze", cb: 5, visits: "0 – 2 visits", audience: 18420, handles: [], reach: "Anonymous" },
+    { name: "Silver", color: "bg-tier-silver", cb: 10, visits: "3 – 6 visits", audience: 6240, handles: ["@sofip", "@renatak", "@tomasl"], reach: "+1K followers" },
+    { name: "Gold", color: "bg-tier-gold", cb: 20, visits: "7 – 19 visits", audience: 1860, handles: ["@valenrose", "@lucasm", "@camivb", "@matef", "@anat"], reach: "+5K followers" },
     {
       name: "Diamond",
       color: "bg-gradient-to-r from-cyan-300 to-sky-400",
@@ -508,6 +509,7 @@ function Promos() {
       visits: "20+ visits",
       audience: 184,
       handles: ["@valenrose", "@camivb", "@anat", "@matef"],
+      reach: "Hand-picked elite",
     },
   ];
   const [values, setValues] = useState({
@@ -642,6 +644,9 @@ function Promos() {
                   on Mesita
                 </span>
               </div>
+              <p className="mt-0.5 text-[9px] font-medium uppercase tracking-wider text-secondary">
+                {t.reach}
+              </p>
               {t.handles.length > 0 ? (
                 <div className="mt-1.5 flex flex-wrap gap-1">
                   {t.handles.slice(0, 3).map((h) => (
@@ -663,7 +668,7 @@ function Promos() {
                   )}
                 </div>
               ) : (
-                <p className="mt-1 text-[9px] text-muted-foreground">Anonymous discovery</p>
+                <p className="mt-1 text-[9px] text-muted-foreground">No social profile shared</p>
               )}
             </div>
           </div>
