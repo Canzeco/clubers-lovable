@@ -2721,7 +2721,7 @@ function ShareView() {
   return (
     <>
       <div className="flex h-full flex-col overflow-hidden">
-        <TopBar title="Share" />
+        <TopBar title="Share with friends" />
 
         <div className="flex flex-1 flex-col overflow-hidden px-5 pb-3 pt-4">
           <p className="text-[11px] leading-snug text-muted-foreground">
