@@ -111,14 +111,8 @@ export function AdminWeb() {
 
   const nav: { id: Tab; label: string; Icon: any }[] = [
     { id: "pipeline", label: "Sourcing pipeline", Icon: LayoutGrid },
-    { id: "bots", label: "Bot fleet", Icon: Bot },
-    { id: "stack", label: "SaaS stack", Icon: KeyRound },
-    { id: "portfolio", label: "Venue portfolio", Icon: Building2 },
     { id: "editor", label: "Venue editor", Icon: PencilLine },
-    { id: "discover", label: "Discover venues", Icon: MapIcon },
-    { id: "promos", label: "Promo radar", Icon: Radar },
-    { id: "metrics", label: "Network metrics", Icon: BarChart3 },
-    { id: "trust", label: "Trust & tier", Icon: ShieldCheck },
+    { id: "bots", label: "Bot fleet", Icon: Bot },
   ];
 
   return (
@@ -147,13 +141,9 @@ export function AdminWeb() {
             </button>
           ))}
         </nav>
-        <div className="rounded-xl border border-secondary/30 bg-secondary/5 p-3">
-          <p className="text-[10px] uppercase tracking-widest text-secondary">This month</p>
-          <p className="mt-1 font-display text-lg">+12 venues</p>
-          <p className="text-[10px] text-muted-foreground">target 15 · 80%</p>
-          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
-            <div className="h-full w-4/5 bg-secondary" />
-          </div>
+        <div className="rounded-xl border border-dashed border-border/60 bg-card/50 p-3">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">MVP build</p>
+          <p className="mt-1 text-xs text-foreground/80">Provisional console — more tools land as we scale.</p>
         </div>
       </aside>
 
