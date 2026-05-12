@@ -2728,9 +2728,9 @@ function ShareView() {
   return (
     <>
       <div className="flex h-full flex-col overflow-hidden">
-        <TopBar title="Treat your friends" subtitle={`Gift $100 MXN to up to ${totalCards} people · on you`} />
+        <TopBar title="Share" />
 
-        <div className="flex flex-1 flex-col overflow-hidden px-5 pb-3">
+        <div className="flex flex-1 flex-col overflow-hidden px-5 pb-3 pt-4">
           <p className="text-[11px] leading-snug text-muted-foreground">
             You've got {totalCards} gift cards to hand out. Send your code and the first friends who use it each get $100 MXN — courtesy of you.
           </p>
