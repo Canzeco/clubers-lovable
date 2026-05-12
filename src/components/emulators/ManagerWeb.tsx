@@ -495,15 +495,19 @@ function Promos() {
     color: string;
     cb: number;
     visits: string;
+    audience: number;
+    handles: string[];
   }[] = [
-    { name: "Bronze", color: "bg-tier-bronze", cb: 5, visits: "0 – 2 visits" },
-    { name: "Silver", color: "bg-tier-silver", cb: 10, visits: "3 – 6 visits" },
-    { name: "Gold", color: "bg-tier-gold", cb: 20, visits: "7 – 19 visits" },
+    { name: "Bronze", color: "bg-tier-bronze", cb: 5, visits: "0 – 2 visits", audience: 18420, handles: [] },
+    { name: "Silver", color: "bg-tier-silver", cb: 10, visits: "3 – 6 visits", audience: 6240, handles: ["@sofip", "@renatak", "@tomasl"] },
+    { name: "Gold", color: "bg-tier-gold", cb: 20, visits: "7 – 19 visits", audience: 1860, handles: ["@valenrose", "@lucasm", "@camivb", "@matef", "@anat"] },
     {
       name: "Diamond",
       color: "bg-gradient-to-r from-cyan-300 to-sky-400",
       cb: 30,
       visits: "20+ visits",
+      audience: 184,
+      handles: ["@valenrose", "@camivb", "@anat", "@matef"],
     },
   ];
   const [values, setValues] = useState({
@@ -567,6 +571,19 @@ function Promos() {
               </button>
             ))}
           </div>
+          <div className="mt-3 max-w-xs rounded-lg border border-border bg-card p-2">
+            <div className="flex items-baseline justify-between">
+              <span className="font-display text-sm font-semibold text-foreground">
+                12,480
+              </span>
+              <span className="text-[9px] uppercase tracking-widest text-muted-foreground">
+                guests nearby · never visited
+              </span>
+            </div>
+            <p className="mt-1 text-[9px] text-muted-foreground">
+              Identity revealed after first visit.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -615,6 +632,39 @@ function Promos() {
             </div>
             <div className="mt-3 rounded-lg bg-peacock/10 p-2 text-[10px] text-muted-foreground">
               Est. <span className="text-secondary">+{values[t.name] * 1.2 | 0} visits/wk</span>
+            </div>
+            <div className="mt-2 rounded-lg border border-border bg-card p-2">
+              <div className="flex items-baseline justify-between">
+                <span className="font-display text-sm font-semibold text-foreground">
+                  {t.audience.toLocaleString()}
+                </span>
+                <span className="text-[9px] uppercase tracking-widest text-muted-foreground">
+                  on Mesita
+                </span>
+              </div>
+              {t.handles.length > 0 ? (
+                <div className="mt-1.5 flex flex-wrap gap-1">
+                  {t.handles.slice(0, 3).map((h) => (
+                    <a
+                      key={h}
+                      href={`https://instagram.com/${h.replace("@", "")}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-0.5 rounded-full bg-card-soft px-1.5 py-0.5 text-[9px] font-medium text-foreground transition hover:text-secondary"
+                    >
+                      <Instagram className="h-2.5 w-2.5" />
+                      {h}
+                    </a>
+                  ))}
+                  {t.handles.length > 3 && (
+                    <span className="rounded-full bg-card-soft px-1.5 py-0.5 text-[9px] text-muted-foreground">
+                      +{t.handles.length - 3}
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <p className="mt-1 text-[9px] text-muted-foreground">Anonymous discovery</p>
+              )}
             </div>
           </div>
         ))}
