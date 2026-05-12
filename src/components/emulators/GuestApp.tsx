@@ -1881,7 +1881,7 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
         </div>
 
         {!coupon.used ? (
-          <RedeemFlow coupon={coupon} />
+          <CouponDetails coupon={coupon} onClose={onClose} />
         ) : (
           <>
             <div className="mt-5 rounded-3xl bg-card-soft p-5">
@@ -1902,6 +1902,62 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
         <button onClick={onClose} className="mt-4 w-full rounded-full border border-border py-2.5 text-sm text-muted-foreground">
           Close
         </button>
+      </div>
+    </div>
+  );
+}
+
+function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+  const isReservation = !!coupon.isReservation || coupon.res === "pending" || coupon.res === "confirmed";
+  const isPending = coupon.res === "pending";
+
+  return (
+    <div className="mt-5 space-y-4">
+      {/* What this coupon gets you */}
+      <div className="rounded-3xl bg-card-soft p-5">
+        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Coupon details</p>
+        <div className="mt-2 space-y-1.5 text-sm">
+          <div className="flex justify-between"><span className="text-muted-foreground">Venue</span><span className="font-medium">{coupon.name}</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">Cashback</span><span className="font-semibold text-secondary">{coupon.cb}%</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">Cap per visit</span><span>$1,000 MXN</span></div>
+          {coupon.code && (
+            <div className="flex justify-between"><span className="text-muted-foreground">Code</span><span className="font-mono text-xs tracking-widest">{coupon.code}</span></div>
+          )}
+          {isReservation ? (
+            <>
+              <div className="flex justify-between"><span className="text-muted-foreground">When</span><span>{coupon.resWhen || coupon.resRequested || "—"}</span></div>
+              {coupon.resParty && (
+                <div className="flex justify-between"><span className="text-muted-foreground">Party</span><span>{coupon.resParty} guests</span></div>
+              )}
+            </>
+          ) : (
+            coupon.expiresIn && (
+              <div className="flex justify-between"><span className="text-muted-foreground">Expires in</span><span>{coupon.expiresIn}</span></div>
+            )
+          )}
+        </div>
+        <p className="mt-3 text-[11px] leading-snug text-muted-foreground">
+          Your cashback activates automatically when you sit down. Cashback always covers up to $1,000 MXN per visit — anything over is paid in full.
+        </p>
+      </div>
+
+      {/* Actions */}
+      <div className="space-y-2">
+        {isReservation ? (
+          <>
+            <button className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow">
+              <Calendar className="h-4 w-4" />
+              {isPending ? "Edit request" : "Change reservation"}
+            </button>
+            <button className="flex w-full items-center justify-center gap-2 rounded-full border border-destructive/30 bg-background px-4 py-3 text-sm font-semibold text-destructive">
+              <X className="h-4 w-4" /> Cancel reservation
+            </button>
+          </>
+        ) : (
+          <button className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow">
+            <Calendar className="h-4 w-4" /> Make a reservation
+          </button>
+        )}
       </div>
     </div>
   );
