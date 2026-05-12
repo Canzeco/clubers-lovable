@@ -763,7 +763,7 @@ function TinderMode() {
                   Your cashback activates automatically when you sit down.
                 </p>
                 <p className="mt-1 text-[10px] text-muted-foreground">
-                  Covers up to <span className="font-semibold text-foreground">$1,000 MXN</span> per visit — anything over is paid in full.
+                  Always covers up to <span className="font-semibold text-foreground">$1,000 MXN</span> per visit — anything over is paid in full.
                 </p>
                 <div className="mt-4 flex gap-2">
                   <button
@@ -1639,8 +1639,8 @@ function RedeemFlow({ coupon }: { coupon: any }) {
         <div className="flex justify-between text-secondary"><span>Cashback ({coupon.cb}%)</span><span>+${cashback.toLocaleString()}</span></div>
         <p className={`mt-2 text-[10px] leading-snug ${capped ? "text-tier-gold" : "text-muted-foreground"}`}>
           {capped
-            ? `Cashback capped at $1,000 MXN. You cover the remaining $${(total - cashback).toLocaleString()} of the bill.`
-            : "Cashback covers up to $1,000 MXN per visit. Anything above is paid in full."}
+            ? `Cashback always capped at $1,000 MXN. You cover the remaining $${(total - cashback).toLocaleString()} of the bill.`
+            : "Cashback always covers up to $1,000 MXN per visit. Anything above is paid in full."}
         </p>
       </div>
 
