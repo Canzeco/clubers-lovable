@@ -240,12 +240,22 @@ function TopBar({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
     <div className="px-5 pb-3 pt-1">
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="font-display text-2xl font-semibold leading-none">{title}</h2>
-          {subtitle && (
-            <p className="mt-1 text-xs text-muted-foreground">{subtitle}</p>
-          )}
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-peacock text-base shadow-glow">
+            🦚
+          </div>
+          <div className="min-w-0">
+            <p className="font-display text-base font-semibold leading-none">Mesita</p>
+            <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground truncate">
+              {title}
+            </p>
+          </div>
         </div>
+        {subtitle && (
+          <p className="ml-3 hidden flex-1 truncate text-right text-[11px] text-muted-foreground sm:block">
+            {subtitle}
+          </p>
+        )}
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-tier-gold text-[10px] font-bold text-black">
           GOLD
         </div>
