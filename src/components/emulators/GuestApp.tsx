@@ -37,6 +37,12 @@ import {
   Share2,
   Gift,
   Copy,
+  Settings,
+  HelpCircle,
+  LogOut,
+  Bell,
+  Shield,
+  ChevronDown,
 } from "lucide-react";
 
 type Tab = "discover" | "coupons" | "share" | "profile";
@@ -2228,26 +2234,31 @@ function ProfileView() {
     <>
       <TopBar title="Profile" />
       <div className="px-5 pb-24">
-        {/* GENERAL — identity card */}
-        <div className="rounded-3xl bg-card-soft p-5 text-center">
-          <div className="mx-auto h-20 w-20 overflow-hidden rounded-full ring-2 ring-secondary">
+        {/* Identity — single clean row, no boxed card */}
+        <div className="flex items-center gap-4 pt-1">
+          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full ring-2 ring-tier-gold">
             <img
               src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80"
               alt=""
               className="h-full w-full object-cover"
             />
           </div>
-          <p className="mt-3 font-display text-xl font-semibold">Valentina R.</p>
-          <p className="text-xs text-muted-foreground">@valenrose · CDMX</p>
-          <div className="mt-2 flex items-center justify-center gap-2 text-[11px] text-muted-foreground">
-            <span>Female</span>
-            <span className="h-1 w-1 rounded-full bg-muted-foreground/50" />
-            <span>27 yrs</span>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <p className="font-display text-xl font-semibold leading-tight truncate">Valentina R.</p>
+              <span className="flex shrink-0 items-center gap-1 rounded-full bg-tier-gold/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-tier-gold">
+                <Crown className="h-3 w-3" /> Gold
+              </span>
+            </div>
+            <p className="mt-0.5 text-xs text-muted-foreground truncate">@valenrose · CDMX · 27</p>
           </div>
+          <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground">
+            <Settings className="h-4 w-4" />
+          </button>
         </div>
 
         {/* Sub-tabs */}
-        <div className="mt-4 grid grid-cols-3 gap-1 rounded-full border border-border bg-card-soft p-1">
+        <div className="mt-5 grid grid-cols-3 gap-1 rounded-full border border-border bg-card-soft p-1">
           {([
             { id: "general", label: "Class" },
             { id: "wallet", label: "Wallet" },
@@ -2269,16 +2280,35 @@ function ProfileView() {
 
         {subTab === "general" && (
           <>
-        {/* Tier banner */}
-        <div className="mt-4 rounded-2xl bg-tier-gold/10 border border-tier-gold/40 p-4 text-center">
-          <p className="flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-widest text-tier-gold">
-            <Sparkles className="h-3 w-3" /> Your class
-          </p>
-          <p className="mt-1 font-display text-3xl font-semibold text-tier-gold">Gold</p>
-          <p className="mt-1 text-[11px] text-muted-foreground">
-            {igConnected ? "Verified · 126k IG followers" : "Instagram not connected · Bronze cap"}
-          </p>
-        </div>
+        {/* Instagram connect — primary CTA when not connected */}
+        {!igConnected ? (
+          <button
+            onClick={() => setShowConnect(true)}
+            className="mt-4 flex w-full items-center gap-3 rounded-2xl bg-gradient-to-r from-pink-500/10 to-yellow-400/10 border border-pink-500/30 p-4 text-left transition hover:border-pink-500/60"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-yellow-400 text-white">
+              <Instagram className="h-5 w-5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold leading-none">Connect Instagram</p>
+              <p className="mt-1 text-[11px] text-muted-foreground">Unlock Silver / Gold tier instantly</p>
+            </div>
+            <span className="rounded-full bg-peacock px-3 py-1.5 text-[11px] font-semibold text-white shadow-glow">Connect</span>
+          </button>
+        ) : (
+          <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-yellow-400 text-white">
+              <Instagram className="h-4 w-4" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold leading-none">@valenrose</p>
+              <p className="mt-0.5 text-[11px] text-muted-foreground">126k followers · verified</p>
+            </div>
+            <span className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1 text-[10px] font-semibold text-secondary">
+              <BadgeCheck className="h-3 w-3" /> Verified
+            </span>
+          </div>
+        )}
 
         {/* Class ladder */}
         <div className="mt-4 rounded-2xl border border-border bg-card p-4">
@@ -2286,14 +2316,14 @@ function ProfileView() {
             <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
               <Crown className="h-3 w-3 text-tier-gold" /> Class ladder
             </p>
-            <span className="text-[10px] text-secondary">Instagram = main signal</span>
+            <span className="text-[10px] text-muted-foreground">Auto from Instagram</span>
           </div>
           <div className="space-y-2">
             {[
-              { t: "Bronze", min: "Everyone — sign up & go", color: "tier-bronze", done: true, perk: "Discovery + base cashback" },
-              { t: "Silver", min: "1k+ Instagram followers", color: "tier-silver", done: true, perk: "Boosted cashback · priority list" },
-              { t: "Gold", min: "10k+ Instagram followers", color: "tier-gold", done: true, perk: "VIP perks · top venues", active: true },
-              { t: "Diamond", min: "By invitation — celebrities & insiders", color: "tier-diamond", done: false, perk: "Comped tables · private rooms" },
+              { t: "Bronze", min: "Everyone", color: "tier-bronze", done: true, perk: "Base cashback" },
+              { t: "Silver", min: "1k+ followers", color: "tier-silver", done: true, perk: "Boosted cashback" },
+              { t: "Gold", min: "10k+ followers", color: "tier-gold", done: true, perk: "VIP perks · top venues", active: true },
+              { t: "Diamond", min: "Invite only", color: "tier-diamond", done: false, perk: "Comped tables" },
             ].map((r) => (
               <div
                 key={r.t}
@@ -2312,7 +2342,8 @@ function ProfileView() {
                 </span>
                 <div className="flex-1">
                   <p className="text-sm font-semibold leading-none">
-                    {r.t} {r.active && <span className="ml-1 text-[9px] uppercase tracking-widest text-tier-gold">· current</span>}
+                    {r.t}
+                    {r.active && <span className="ml-1.5 text-[9px] uppercase tracking-widest text-tier-gold">Current</span>}
                   </p>
                   <p className="mt-0.5 text-[10px] text-muted-foreground">{r.min}</p>
                 </div>
@@ -2320,55 +2351,49 @@ function ProfileView() {
               </div>
             ))}
           </div>
-          <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">
-            Silver and Gold are auto-assigned from your Instagram follower count.
-            Diamond is a curated, invite-only list.
-          </p>
         </div>
 
-        {/* Instagram connect / verified */}
-        <div className="mt-4 rounded-2xl border border-border bg-card p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-yellow-400 text-white">
-              <Instagram className="h-5 w-5" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold leading-none">Instagram account</p>
-              <p className="mt-1 text-[11px] text-muted-foreground">
-                {igConnected ? "@valenrose · 126k followers · verified" : "Connect to unlock Silver / Gold tier"}
-              </p>
-            </div>
-            {igConnected ? (
-              <span className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1 text-[10px] font-semibold text-secondary">
-                <BadgeCheck className="h-3 w-3" /> Verified
-              </span>
-            ) : (
-              <button
-                onClick={() => setShowConnect(true)}
-                className="rounded-full bg-peacock px-3 py-1.5 text-[11px] font-semibold text-white shadow-glow"
-              >
-                Connect
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Appeal upgrade */}
+        {/* Appeal upgrade — slim inline link */}
         <button
           onClick={() => setShowAppeal(true)}
-          className="mt-3 flex w-full items-center gap-3 rounded-2xl border border-dashed border-border bg-card-soft p-4 text-left"
+          className="mt-3 flex w-full items-center justify-between rounded-xl px-1 py-2 text-left text-[12px] text-muted-foreground transition hover:text-foreground"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-tier-gold/15 text-tier-gold">
-            <Crown className="h-5 w-5" />
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-semibold leading-none">Appeal for upgrade</p>
-            <p className="mt-1 text-[11px] text-muted-foreground">
-              Model, chef, press or VIP? Request manual review.
-            </p>
-          </div>
-          <span className="text-[11px] text-secondary">Apply →</span>
+          <span>Model, chef, press? <span className="text-secondary font-medium">Appeal for upgrade</span></span>
+          <ChevronRight className="h-3.5 w-3.5" />
         </button>
+
+        {/* Settings & support */}
+        <p className="mt-6 mb-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Account</p>
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
+          {[
+            { Icon: User, label: "Personal details", sub: "Name, email, phone" },
+            { Icon: CreditCard, label: "Payment methods", sub: "Apple Pay · Visa ·· 4242" },
+            { Icon: Bell, label: "Notifications", sub: "Push, email" },
+            { Icon: Shield, label: "Privacy & data", sub: "Permissions, export" },
+            { Icon: HelpCircle, label: "Help & support", sub: "FAQ · contact us" },
+          ].map((row, i, arr) => (
+            <button
+              key={row.label}
+              className={`flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-card-soft ${
+                i < arr.length - 1 ? "border-b border-border" : ""
+              }`}
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-card-soft text-muted-foreground">
+                <row.Icon className="h-4 w-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium leading-none">{row.label}</p>
+                <p className="mt-0.5 text-[11px] text-muted-foreground truncate">{row.sub}</p>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </button>
+          ))}
+        </div>
+
+        <button className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card-soft px-4 py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground">
+          <LogOut className="h-4 w-4" /> Sign out
+        </button>
+        <p className="mt-3 text-center text-[10px] text-muted-foreground">Mesita · v2.4.1</p>
           </>
         )}
 
