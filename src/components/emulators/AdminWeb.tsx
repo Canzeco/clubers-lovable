@@ -111,7 +111,7 @@ export function AdminWeb() {
 
   const nav: { id: Tab; label: string; Icon: any }[] = [
     { id: "pipeline", label: "Sourcing pipeline", Icon: LayoutGrid },
-    { id: "editor", label: "Venue editor", Icon: PencilLine },
+    { id: "editor", label: "Venues", Icon: Building2 },
     { id: "bots", label: "Bot fleet", Icon: Bot },
   ];
 
@@ -167,7 +167,7 @@ export function AdminWeb() {
         {tab === "bots" && <BotFleet />}
         {tab === "stack" && <SaasStack />}
         {tab === "portfolio" && <Portfolio />}
-        {tab === "editor" && <VenueEditor />}
+        {tab === "editor" && <Venues />}
         {tab === "discover" && <DiscoverVenues />}
         {tab === "promos" && <PromoRadar />}
         {tab === "metrics" && <Metrics />}
@@ -795,6 +795,128 @@ function TrustTier() {
   );
 }
 function VenueEditor() {
+  return null as any;
+}
+
+type VenueCard = {
+  name: string;
+  city: string;
+  category: string;
+  img: string;
+  managed: "partner" | "admin";
+  status: "live" | "draft" | "review";
+  completeness: number;
+};
+
+const VENUE_CARDS: VenueCard[] = [
+  { name: "La Cabaña de Pecos", city: "SLP · Lomas", category: "Steakhouse", img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600", managed: "admin", status: "draft", completeness: 72 },
+  { name: "Bocanada", city: "CDMX · Roma Nte.", category: "Rooftop · Mediterranean", img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600", managed: "partner", status: "live", completeness: 100 },
+  { name: "Patio Verde", city: "CDMX · Condesa", category: "Brunch · Café", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600", managed: "partner", status: "live", completeness: 96 },
+  { name: "Galápago", city: "CDMX · Juárez", category: "Wine bar · Tapas", img: "https://images.unsplash.com/photo-1592861956120-e524fc739696?w=600", managed: "admin", status: "review", completeness: 58 },
+  { name: "Casa Luminar", city: "CDMX · Polanco", category: "Cocktails · Late night", img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600", managed: "partner", status: "live", completeness: 100 },
+  { name: "Sal de Mar", city: "Cancún · Centro", category: "Seafood", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600", managed: "admin", status: "draft", completeness: 41 },
+  { name: "Mar Verde", city: "Tulum", category: "Seafood · Beach", img: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=600", managed: "partner", status: "live", completeness: 94 },
+  { name: "El Huerto", city: "GDL · Lafayette", category: "Plant-forward", img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600", managed: "admin", status: "review", completeness: 63 },
+];
+
+function Venues() {
+  const [selected, setSelected] = useState<string | null>(null);
+  if (selected) {
+    return (
+      <div>
+        <div className="flex items-center gap-3 px-6 pt-4">
+          <button
+            onClick={() => setSelected(null)}
+            className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground"
+          >
+            ← Volver al catálogo
+          </button>
+          <p className="text-xs text-muted-foreground">Editando · <span className="font-semibold text-foreground">{selected}</span></p>
+        </div>
+        <VenueEditorImpl />
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6">
+      <div className="mb-4 flex items-end justify-between">
+        <div>
+          <h1 className="font-display text-2xl font-semibold">Catálogo de venues</h1>
+          <p className="text-xs text-muted-foreground">{VENUE_CARDS.length} venues · click para editar el perfil</p>
+        </div>
+        <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-secondary" /> Partner-managed</span>
+          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-accent" /> Admin-managed</span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
+        {/* Add new venue tile */}
+        <button className="group flex aspect-[4/5] flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border bg-card-soft/50 text-muted-foreground hover:border-secondary hover:text-secondary">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-current">
+            <Plus className="h-6 w-6" />
+          </div>
+          <p className="text-sm font-semibold">Añadir venue</p>
+          <p className="text-[10px]">Manual o desde sourcing</p>
+        </button>
+
+        {VENUE_CARDS.map((v) => (
+          <button
+            key={v.name}
+            onClick={() => setSelected(v.name)}
+            className="group relative flex aspect-[4/5] flex-col overflow-hidden rounded-2xl border border-border bg-card text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-elev"
+          >
+            <div className="relative h-3/5 overflow-hidden">
+              <img src={v.img} alt={v.name} className="h-full w-full object-cover transition group-hover:scale-105" />
+              <span
+                className={`absolute left-2 top-2 flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest backdrop-blur ${
+                  v.managed === "partner"
+                    ? "bg-secondary/90 text-secondary-foreground"
+                    : "bg-accent/90 text-accent-foreground"
+                }`}
+              >
+                {v.managed === "partner" ? "Partner" : "Admin"}
+              </span>
+              <span
+                className={`absolute right-2 top-2 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider backdrop-blur ${
+                  v.status === "live"
+                    ? "bg-emerald-500/90 text-white"
+                    : v.status === "review"
+                    ? "bg-amber-500/90 text-white"
+                    : "bg-muted/90 text-foreground/70"
+                }`}
+              >
+                {v.status}
+              </span>
+            </div>
+            <div className="flex flex-1 flex-col justify-between p-3">
+              <div>
+                <p className="line-clamp-1 font-display text-base font-semibold leading-tight">{v.name}</p>
+                <p className="line-clamp-1 text-[11px] text-muted-foreground">{v.category}</p>
+                <p className="mt-0.5 text-[10px] text-muted-foreground">{v.city}</p>
+              </div>
+              <div>
+                <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                  <span>Perfil</span>
+                  <span className="font-semibold text-foreground">{v.completeness}%</span>
+                </div>
+                <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className={`h-full ${v.completeness >= 90 ? "bg-emerald-500" : v.completeness >= 60 ? "bg-secondary" : "bg-amber-500"}`}
+                    style={{ width: `${v.completeness}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VenueEditorImpl() {
   const [igUrl, setIgUrl] = useState("https://instagram.com/lacabanadepecos");
   const [tab, setTab] = useState<"profile" | "media" | "social" | "ai">("profile");
 
