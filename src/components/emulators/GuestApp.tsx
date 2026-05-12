@@ -1428,9 +1428,10 @@ function WalletView() {
   const [seg, setSeg] = useState<"active" | "expired" | "used">("active");
   const [openCoupon, setOpenCoupon] = useState<any | null>(null);
   const active = [
+    { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Wed May 14 · 8:00 PM", resParty: 2, expiresIn: "May 14 · 8pm + 24h", code: "MV-7702", firstVisit: false },
+    { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, isReservation: true, resStatus: "pending" as const, resRequested: "Fri May 16 · 9:30 PM", resParty: 4, expiresIn: "—", code: "NB-9914", firstVisit: false },
     { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, expiresIn: "18h 24m", isReservation: false, code: "CL-8821", firstVisit: true },
     { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, expiresIn: "9h 02m", isReservation: false, code: "LC-4417", firstVisit: false },
-    { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, expiresIn: "May 14 · 8pm + 24h", isReservation: true, code: "MV-7702", firstVisit: false },
   ];
   const expired = [
     { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, expiredOn: "Yesterday", code: "NB-3310" },
@@ -1502,6 +1503,8 @@ function CouponTicket({
   const isExpired = state === "expired";
   const isUsed = state === "used";
   const isInactive = isExpired || isUsed;
+  const isReservation = !!c.isReservation && state === "active";
+  const isPending = isReservation && c.resStatus === "pending";
   // Scalloped bottom edge via radial-gradient mask
   const scallop = {
     WebkitMaskImage:
@@ -1525,7 +1528,7 @@ function CouponTicket({
       <div
         className={`relative flex items-stretch overflow-hidden rounded-2xl border bg-card-soft shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] ${
           isExpired ? "border-dashed border-border grayscale" : "border-border"
-        } ${isUsed ? "border-dashed" : ""}`}
+        } ${isUsed ? "border-dashed" : ""} ${isReservation ? "ring-1 ring-secondary/40" : ""}`}
       >
         {/* left stub */}
         <div
@@ -1557,6 +1560,11 @@ function CouponTicket({
               Expired
             </span>
           )}
+          {isReservation && !isUsed && !isExpired && (
+            <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white/85 text-secondary shadow">
+              <Calendar className="h-2.5 w-2.5" />
+            </span>
+          )}
         </div>
 
         {/* perforation notches + dashed line */}
@@ -1582,37 +1590,75 @@ function CouponTicket({
             <p className="truncate font-display text-sm font-semibold leading-tight">
               {c.name}
             </p>
-            {c.isReservation && (
-              <span className="rounded-sm bg-secondary/15 px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider text-secondary">
-                Reservation
+            {isReservation && (
+              <span
+                className={`rounded-sm px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider ${
+                  isPending
+                    ? "bg-amber-500/15 text-amber-600"
+                    : "bg-secondary/15 text-secondary"
+                }`}
+              >
+                {isPending ? "Pending" : "Reservation"}
               </span>
             )}
           </div>
-          <p className="truncate text-[10px] text-muted-foreground">
-            {c.category} · {c.distance} ·{" "}
-            <span className="tracking-wider">{"$".repeat(c.cost)}</span>
-          </p>
-          <div className="flex items-center gap-2 text-[10px]">
-            <span className="inline-flex items-center gap-0.5 text-secondary">
-              <Star className="h-2.5 w-2.5 fill-secondary text-secondary" />{" "}
-              {c.mesita.toFixed(1)}
-              <span className="ml-0.5 text-muted-foreground/70">Mesita</span>
-            </span>
-            <span className="inline-flex items-center gap-1 text-muted-foreground">
-              <span className="flex h-3 w-3 items-center justify-center rounded-full bg-muted text-[7px] font-bold text-foreground/70">
-                G
-              </span>
-              {c.google.toFixed(1)}
-              <span className="text-muted-foreground/70">Google</span>
-            </span>
-          </div>
+
+          {isReservation ? (
+            isPending ? (
+              <div className="my-0.5 rounded-md border border-dashed border-amber-500/40 bg-amber-500/5 px-2 py-1.5">
+                <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-600">
+                  <Loader2 className="h-2.5 w-2.5 animate-spin" /> AI agent calling venue…
+                </p>
+                <p className="mt-0.5 text-[10px] text-muted-foreground">
+                  Requested {c.resRequested} · {c.resParty} guests
+                </p>
+              </div>
+            ) : (
+              <div className="my-0.5 rounded-md bg-secondary/8 px-2 py-1.5">
+                <p className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-secondary">
+                  <BadgeCheck className="h-2.5 w-2.5" /> Reservation confirmed
+                </p>
+                <p className="mt-0.5 font-display text-[13px] font-semibold leading-tight text-foreground">
+                  {c.resWhen}
+                </p>
+                <p className="text-[10px] text-muted-foreground">
+                  {c.resParty} guests · {c.category}
+                </p>
+              </div>
+            )
+          ) : (
+            <>
+              <p className="truncate text-[10px] text-muted-foreground">
+                {c.category} · {c.distance} ·{" "}
+                <span className="tracking-wider">{"$".repeat(c.cost)}</span>
+              </p>
+              <div className="flex items-center gap-2 text-[10px]">
+                <span className="inline-flex items-center gap-0.5 text-secondary">
+                  <Star className="h-2.5 w-2.5 fill-secondary text-secondary" />{" "}
+                  {c.mesita.toFixed(1)}
+                  <span className="ml-0.5 text-muted-foreground/70">Mesita</span>
+                </span>
+                <span className="inline-flex items-center gap-1 text-muted-foreground">
+                  <span className="flex h-3 w-3 items-center justify-center rounded-full bg-muted text-[7px] font-bold text-foreground/70">
+                    G
+                  </span>
+                  {c.google.toFixed(1)}
+                  <span className="text-muted-foreground/70">Google</span>
+                </span>
+              </div>
+            </>
+          )}
 
           {/* status footer line */}
           <div className="mt-1 flex items-center justify-between border-t border-dashed border-border/60 pt-1.5">
             {state === "active" && (
               <p className="flex items-center gap-1 text-[9px] font-semibold uppercase tracking-widest text-foreground/70">
                 <Clock className="h-2.5 w-2.5" />
-                {c.isReservation ? `Expires ${c.expiresIn}` : `Expires in ${c.expiresIn}`}
+                {isPending
+                  ? "Holding coupon while we call"
+                  : isReservation
+                  ? `Valid 24h after ${c.resWhen?.split(" · ")[0] ?? "booking"}`
+                  : `Expires in ${c.expiresIn}`}
               </p>
             )}
             {state === "expired" && (
