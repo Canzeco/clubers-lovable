@@ -2258,30 +2258,46 @@ function ShareView() {
             You've got {totalCards} gift cards to hand out. Send your code and the first friends who use it each get $100 MXN — courtesy of you.
           </p>
 
-          {/* Hero gift card — minimal credit-card aesthetic */}
-          <div className="relative mx-auto mt-4 aspect-[1.6/1] w-full max-w-[300px]">
-            <div className="absolute inset-0 overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-card to-muted/40 shadow-sm">
-              {/* Subtle peacock corner accent */}
-              <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-peacock/10" />
-              <div className="pointer-events-none absolute -left-16 -bottom-16 h-32 w-32 rounded-full bg-peacock/[0.06]" />
+          {/* Hero gift card — wrapped-gift aesthetic, subtle & minimal */}
+          <div className="relative mx-auto mt-6 aspect-[1.6/1] w-full max-w-[300px]">
+            <div className="absolute inset-0 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+              {/* Horizontal ribbon */}
+              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-7 -translate-y-1/2 bg-peacock/95" />
+              {/* Vertical ribbon */}
+              <div className="pointer-events-none absolute inset-y-0 left-[68%] w-7 bg-peacock/95" />
+              {/* Ribbon highlight lines */}
+              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-[14px] bg-white/15" />
+              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px translate-y-[13px] bg-black/10" />
 
-              {/* Top row — brand + amount */}
-              <div className="absolute inset-x-4 top-3 flex items-start justify-between">
-                <div>
-                  <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-foreground/70">Mesita 🦚</p>
-                  <p className="mt-0.5 text-[8px] uppercase tracking-[0.25em] text-foreground/40">Gift Card</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-display text-2xl font-semibold leading-none text-foreground">$100</p>
-                  <p className="mt-1 text-[8px] uppercase tracking-[0.25em] text-foreground/50">MXN</p>
+              {/* Bow knot */}
+              <div className="pointer-events-none absolute left-[68%] top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-peacock shadow-[0_0_0_2px_var(--color-card)]">
+                  <Gift className="h-4 w-4 text-white" />
                 </div>
               </div>
 
-              {/* Center — code (the "card number") */}
-              <div className="absolute inset-x-4 top-1/2 -translate-y-1/2">
-                <p className="text-[8px] uppercase tracking-[0.25em] text-foreground/40">Code</p>
-                <div className="mt-0.5 flex items-center gap-2">
-                  <span className="font-mono text-base font-medium tracking-[0.25em] text-foreground">{code}</span>
+              {/* Top-left quadrant — brand */}
+              <div className="absolute left-3 top-3 max-w-[60%]">
+                <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-foreground/60">Mesita 🦚</p>
+                <p className="mt-0.5 text-[7px] uppercase tracking-[0.25em] text-foreground/35">Gift Card</p>
+              </div>
+
+              {/* Top-right quadrant — amount (above horizontal ribbon, right of vertical) */}
+              <div className="absolute right-3 top-2.5 text-right">
+                <p className="font-display text-[11px] font-medium leading-none text-foreground/50">$</p>
+              </div>
+
+              {/* Bottom-left quadrant — amount big */}
+              <div className="absolute bottom-2.5 left-3">
+                <p className="font-display text-3xl font-semibold leading-none text-foreground">$100</p>
+                <p className="mt-1 text-[7px] uppercase tracking-[0.25em] text-foreground/40">MXN · for a friend</p>
+              </div>
+
+              {/* Bottom-right quadrant — code */}
+              <div className="absolute bottom-2.5 right-3 text-right">
+                <p className="text-[7px] uppercase tracking-[0.25em] text-foreground/35">Code</p>
+                <div className="mt-0.5 flex items-center justify-end gap-1.5">
+                  <span className="font-mono text-[11px] font-medium tracking-[0.2em] text-foreground">{code}</span>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -2291,22 +2307,10 @@ function ShareView() {
                       setCopied(true);
                       setTimeout(() => setCopied(false), 1500);
                     }}
-                    className="flex h-5 w-5 items-center justify-center rounded-md text-foreground/40 transition hover:text-foreground"
+                    className="flex h-4 w-4 items-center justify-center rounded text-foreground/40 transition hover:text-foreground"
                   >
-                    {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                    {copied ? <Check className="h-2.5 w-2.5" /> : <Copy className="h-2.5 w-2.5" />}
                   </button>
-                </div>
-              </div>
-
-              {/* Bottom row — to / from */}
-              <div className="absolute inset-x-4 bottom-3 flex items-end justify-between text-[8px] uppercase tracking-[0.25em] text-foreground/50">
-                <div>
-                  <p className="text-foreground/35">To</p>
-                  <p className="mt-0.5 font-medium text-foreground/70">A friend</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-foreground/35">From</p>
-                  <p className="mt-0.5 font-medium text-foreground/70">You</p>
                 </div>
               </div>
             </div>
