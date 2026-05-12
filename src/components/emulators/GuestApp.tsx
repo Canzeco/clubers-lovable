@@ -1318,9 +1318,9 @@ function WalletView() {
   const [seg, setSeg] = useState<"unused" | "used">("unused");
   const [openCoupon, setOpenCoupon] = useState<any | null>(null);
   const unused = [
-    { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, exp: "Fri · 9:30pm", note: "Rooftop · 0.4 km", res: "pending" as const },
-    { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, exp: "Expires tomorrow", note: "Brunch · weekends", res: "confirmed" as const },
-    { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, exp: "+ Story bonus 10%", note: "Late night cocktails", res: null },
+    { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, exp: "Fri · 9:30pm", note: "Rooftop · 0.4 km", res: "pending" as const, firstVisit: true },
+    { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, exp: "Expires tomorrow", note: "Brunch · weekends", res: "confirmed" as const, firstVisit: false },
+    { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, exp: "+ Story bonus 10%", note: "Late night cocktails", res: null, firstVisit: false },
   ];
   const used = [
     { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, when: "Sat · May 3", saved: "$ 320" },
@@ -1361,10 +1361,18 @@ function WalletView() {
               onClick={() => setOpenCoupon({ ...c, used: false })}
               className="relative flex w-full items-stretch overflow-hidden rounded-2xl border border-border bg-card-soft text-left shadow-sm transition active:scale-[0.99]"
             >
-              {/* left — cashback stub */}
-              <div className="relative flex w-20 flex-shrink-0 flex-col items-center justify-center bg-secondary text-secondary-foreground">
+              {/* left — cashback / welcome stub */}
+              <div
+                className={`relative flex w-20 flex-shrink-0 flex-col items-center justify-center ${
+                  c.firstVisit
+                    ? "bg-gradient-to-br from-fuchsia-400 to-amber-300 text-black"
+                    : "bg-secondary text-secondary-foreground"
+                }`}
+              >
                 <p className="font-display text-2xl font-bold leading-none">{c.cb}%</p>
-                <p className="mt-1 text-[8px] font-semibold uppercase tracking-widest opacity-80">cashback</p>
+                <p className="mt-1 text-[8px] font-semibold uppercase tracking-widest opacity-80">
+                  {c.firstVisit ? "welcome" : "cashback"}
+                </p>
               </div>
 
               {/* perforation */}
