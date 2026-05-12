@@ -2477,8 +2477,8 @@ function ProfileView() {
           </div>
         )}
 
-        {/* Account & support — always visible below tabs */}
-        {subTab !== "wallet" && (
+        {/* Settings tab */}
+        {subTab === "settings" && (
           <>
             <p className="mt-6 mb-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Account</p>
             <div className="overflow-hidden rounded-2xl border border-border bg-card">
