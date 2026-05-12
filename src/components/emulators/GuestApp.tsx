@@ -2252,6 +2252,13 @@ function ProfileView() {
             </div>
             <p className="mt-0.5 text-xs text-muted-foreground truncate">@valenrose · CDMX · 27</p>
           </div>
+          <button
+            onClick={() => setSubTab("settings")}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+            aria-label="Settings"
+          >
+            <Settings className="h-4 w-4" />
+          </button>
         </div>
 
         {/* Sub-tabs */}
@@ -2635,109 +2642,58 @@ function ProfileView() {
 }
 
 function CreditsView() {
-  const [balance, setBalance] = useState(1284);
-  const [topUp, setTopUp] = useState(false);
-  const pending = 220;
+  const balance = 1284;
   const txs = [
-    { kind: "earn" as const, name: "Casa Luminar", note: "20% cashback · May 3", amt: 540 },
-    { kind: "spend" as const, name: "Neón Bar", note: "Paid with credits · Apr 28", amt: -380 },
-    { kind: "earn" as const, name: "Loto Café", note: "10% cashback · Apr 27", amt: 180 },
-    { kind: "earn" as const, name: "Story bonus", note: "Neón Bar · +10% boost", amt: 120 },
-    { kind: "spend" as const, name: "Mar Verde", note: "Paid with credits · Apr 19", amt: -260 },
+    { name: "Casa Luminar", emoji: "🦚", amt: 140, ago: "hace 2 días" },
+    { name: "Neón Bar", emoji: "🌃", amt: -380, ago: "hace 5 días" },
+    { name: "Loto Café", emoji: "☕", amt: 180, ago: "hace 1 semana" },
+    { name: "Mar Verde", emoji: "🌊", amt: -260, ago: "hace 2 semanas" },
+    { name: "Casa Luminar", emoji: "🦚", amt: 90, ago: "hace 3 semanas" },
   ];
   return (
-    <>
-      <TopBar title="Mesita Wallet" subtitle="Credits earned from cashback" />
+    <div className="px-5 pb-24 pt-2">
+      {/* Saldo */}
+      <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+        Saldo
+      </p>
+      <p
+        className="mt-2 font-display font-semibold leading-none tracking-tight text-foreground"
+        style={{ fontSize: "68px" }}
+      >
+        ${balance.toLocaleString()}
+      </p>
+      <p className="mt-3 text-[13px] text-muted-foreground">
+        Expira 12 ago · Se aplica automáticamente en tu próxima visita
+      </p>
 
-      {/* Balance hero */}
-      <div className="mx-5 mb-4 rounded-3xl bg-peacock p-5 text-primary-foreground shadow-glow">
-        <div className="flex items-center gap-2">
-          <Coins className="h-4 w-4" />
-          <p className="text-[10px] uppercase tracking-widest opacity-80">
-            Balance
-          </p>
-        </div>
-        <p className="mt-2 font-display text-4xl font-semibold leading-none">
-          ${balance.toLocaleString()}
+      {/* Actividad */}
+      <div className="mt-10 flex items-end justify-between">
+        <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+          Actividad
         </p>
-        <p className="mt-2 text-[11px] opacity-80">
-          +${pending.toLocaleString()} pending validation
-        </p>
-        <p className="mt-1 text-[10px] opacity-75">
-          Credits auto-apply to your next purchase
-        </p>
-        <div className="mt-4 flex gap-2">
-          <button
-            onClick={() => setTopUp(true)}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-semibold text-primary shadow-sm"
-          >
-            <CreditCard className="h-3.5 w-3.5" /> Add credits
-          </button>
-          <button className="flex-1 rounded-full bg-white/20 px-3 py-2 text-xs font-semibold backdrop-blur">
-            Send to friend
-          </button>
-        </div>
+        <button className="text-[12px] text-secondary hover:underline">Ver todo</button>
       </div>
-
-      {/* Quick stats */}
-      <div className="mx-5 mb-4 grid grid-cols-3 gap-2">
-        <div className="rounded-2xl border border-border bg-card-soft p-3">
-          <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Earned · 90d</p>
-          <p className="mt-1 font-display text-lg font-semibold text-secondary">$2.4k</p>
-        </div>
-        <div className="rounded-2xl border border-border bg-card-soft p-3">
-          <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Spent · 90d</p>
-          <p className="mt-1 font-display text-lg font-semibold">$1.1k</p>
-        </div>
-        <div className="rounded-2xl border border-border bg-card-soft p-3">
-          <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Expires</p>
-          <p className="mt-1 font-display text-lg font-semibold">Aug 12</p>
-        </div>
-      </div>
-
-      {/* Activity */}
-      <div className="mx-5 mb-2 flex items-center justify-between">
-        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Activity</p>
-        <span className="text-[10px] text-secondary">See all</span>
-      </div>
-      <div className="space-y-2 px-5 pb-24">
+      <div className="mt-2 divide-y divide-border/60">
         {txs.map((t, i) => (
-          <div
-            key={i}
-            className="flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-3"
-          >
-            <div
-              className={`flex h-10 w-10 items-center justify-center rounded-xl ${
-                t.kind === "earn" ? "bg-secondary/15 text-secondary" : "bg-primary/15 text-primary"
-              }`}
-            >
-              {t.kind === "earn" ? <Coins className="h-5 w-5" /> : <CreditCard className="h-5 w-5" />}
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium">{t.name}</p>
-              <p className="text-[11px] text-muted-foreground">{t.note}</p>
+          <div key={i} className="flex items-center justify-between py-3.5">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="text-base leading-none">{t.emoji}</span>
+              <div className="min-w-0">
+                <p className="text-sm font-medium truncate">{t.name}</p>
+                <p className="text-[11px] text-muted-foreground">{t.ago}</p>
+              </div>
             </div>
             <p
-              className={`font-display text-sm font-semibold ${
+              className={`font-display text-base font-semibold tabular-nums ${
                 t.amt > 0 ? "text-secondary" : "text-foreground"
               }`}
             >
-              {t.amt > 0 ? "+" : ""}${Math.abs(t.amt).toLocaleString()}
+              {t.amt > 0 ? "+" : "−"}${Math.abs(t.amt).toLocaleString()}
             </p>
           </div>
         ))}
       </div>
-
-      {topUp && (
-        <AddCreditsSheet
-          onClose={() => setTopUp(false)}
-          onConfirm={(amt) => {
-            setBalance((b) => b + amt);
-            setTopUp(false);
-          }}
-        />
-      )}
-    </>
+    </div>
   );
 }
 
