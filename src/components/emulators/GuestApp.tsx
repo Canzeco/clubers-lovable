@@ -1520,19 +1520,19 @@ function CouponTicket({
   return (
     <button
       onClick={onClick}
-      className={`relative block w-full text-left transition active:scale-[0.99] ${
+      className={`relative mx-auto block w-full max-w-[360px] text-left transition active:scale-[0.99] ${
         isInactive ? "opacity-80" : ""
       }`}
     >
       {/* outer ticket */}
       <div
-        className={`relative flex items-stretch overflow-hidden rounded-2xl border bg-card-soft shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] ${
+        className={`relative flex items-stretch overflow-hidden rounded-2xl border bg-card-soft shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] aspect-[1.586/1] ${
           isExpired ? "border-dashed border-border grayscale" : "border-border"
         } ${isUsed ? "border-dashed" : ""} ${isReservation ? "ring-1 ring-secondary/40" : ""}`}
       >
         {/* left stub */}
         <div
-          className={`relative flex w-24 flex-shrink-0 flex-col items-center justify-center px-1 py-4 ${
+          className={`relative flex w-[30%] flex-shrink-0 flex-col items-center justify-center px-2 py-4 ${
             isInactive
               ? "bg-muted text-muted-foreground"
               : c.firstVisit
@@ -1541,28 +1541,33 @@ function CouponTicket({
           }`}
         >
           {/* corner sparkles */}
-          <span className="absolute left-2 top-2 text-[8px] opacity-50">✦</span>
-          <span className="absolute right-2 bottom-2 text-[8px] opacity-50">✦</span>
+          <span className="absolute left-2 top-2 text-[10px] opacity-50">✦</span>
+          <span className="absolute right-2 bottom-2 text-[10px] opacity-50">✦</span>
 
-          <p className="font-display text-3xl font-extrabold leading-none tracking-tight">
+          <p className="font-display text-5xl font-extrabold leading-none tracking-tight">
             {c.cb}%
           </p>
-          <p className="mt-1 text-[8px] font-bold uppercase tracking-[0.2em] opacity-80">
+          <p className="mt-1.5 text-[9px] font-bold uppercase tracking-[0.25em] opacity-80">
             cashback
           </p>
+          {c.firstVisit && !isInactive && (
+            <p className="mt-1 text-[8px] font-black uppercase tracking-[0.2em] opacity-70">
+              welcome
+            </p>
+          )}
           {isUsed && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-              <Check className="h-7 w-7 text-white" />
+              <Check className="h-10 w-10 text-white" />
             </div>
           )}
           {isExpired && (
-            <span className="absolute -rotate-12 rounded border-2 border-foreground/60 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-widest text-foreground/70">
+            <span className="absolute -rotate-12 rounded border-2 border-foreground/60 px-2 py-0.5 font-display text-[11px] font-black uppercase tracking-widest text-foreground/70">
               Expired
             </span>
           )}
           {isReservation && !isUsed && !isExpired && (
-            <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white/85 text-secondary shadow">
-              <Calendar className="h-2.5 w-2.5" />
+            <span className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-white/90 text-secondary shadow">
+              <Calendar className="h-3 w-3" />
             </span>
           )}
         </div>
@@ -1571,111 +1576,128 @@ function CouponTicket({
         <span
           aria-hidden
           className="pointer-events-none absolute top-0 z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-border bg-background"
-          style={{ left: "6rem" }}
+          style={{ left: "30%" }}
         />
         <span
           aria-hidden
           className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full border border-border bg-background"
-          style={{ left: "6rem" }}
+          style={{ left: "30%" }}
         />
         <span
           aria-hidden
           className="pointer-events-none absolute top-3 bottom-3 border-l-2 border-dotted border-border"
-          style={{ left: "6rem" }}
+          style={{ left: "30%" }}
         />
 
         {/* right info */}
-        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4 py-3">
-          <div className="flex items-center gap-1.5">
-            <p className="truncate font-display text-sm font-semibold leading-tight">
-              {c.name}
-            </p>
-            {isReservation && (
-              <span
-                className={`rounded-sm px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider ${
-                  isPending
-                    ? "bg-amber-500/15 text-amber-600"
-                    : "bg-secondary/15 text-secondary"
-                }`}
-              >
-                {isPending ? "Pending" : "Reservation"}
-              </span>
-            )}
-          </div>
-
-          {isReservation ? (
-            isPending ? (
-              <div className="my-0.5 rounded-md border border-dashed border-amber-500/40 bg-amber-500/5 px-2 py-1.5">
-                <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-600">
-                  <Loader2 className="h-2.5 w-2.5 animate-spin" /> AI agent calling venue…
-                </p>
-                <p className="mt-0.5 text-[10px] text-muted-foreground">
-                  Requested {c.resRequested} · {c.resParty} guests
-                </p>
-              </div>
-            ) : (
-              <div className="my-0.5 rounded-md bg-secondary/8 px-2 py-1.5">
-                <p className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-secondary">
-                  <BadgeCheck className="h-2.5 w-2.5" /> Reservation confirmed
-                </p>
-                <p className="mt-0.5 font-display text-[13px] font-semibold leading-tight text-foreground">
-                  {c.resWhen}
-                </p>
-                <p className="text-[10px] text-muted-foreground">
-                  {c.resParty} guests · {c.category}
-                </p>
-              </div>
-            )
-          ) : (
-            <>
-              <p className="truncate text-[10px] text-muted-foreground">
-                {c.category} · {c.distance} ·{" "}
-                <span className="tracking-wider">{"$".repeat(c.cost)}</span>
-              </p>
-              <div className="flex items-center gap-2 text-[10px]">
-                <span className="inline-flex items-center gap-0.5 text-secondary">
-                  <Star className="h-2.5 w-2.5 fill-secondary text-secondary" />{" "}
-                  {c.mesita.toFixed(1)}
-                  <span className="ml-0.5 text-muted-foreground/70">Mesita</span>
-                </span>
-                <span className="inline-flex items-center gap-1 text-muted-foreground">
-                  <span className="flex h-3 w-3 items-center justify-center rounded-full bg-muted text-[7px] font-bold text-foreground/70">
-                    G
-                  </span>
-                  {c.google.toFixed(1)}
-                  <span className="text-muted-foreground/70">Google</span>
-                </span>
-              </div>
-            </>
-          )}
-
-          {/* status footer line */}
-          <div className="mt-1 flex items-center justify-between border-t border-dashed border-border/60 pt-1.5">
-            {state === "active" && (
-              <p className="flex items-center gap-1 text-[9px] font-semibold uppercase tracking-widest text-foreground/70">
-                <Clock className="h-2.5 w-2.5" />
-                {isPending
-                  ? "Holding coupon while we call"
+        <div className="flex min-w-0 flex-1 flex-col justify-between px-4 py-3">
+          {/* TOP: chip + serial */}
+          <div className="flex items-center justify-between gap-2">
+            <span
+              className={`rounded-sm px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.18em] ${
+                isPending
+                  ? "bg-amber-500/15 text-amber-600"
                   : isReservation
-                  ? `Valid 24h after ${c.resWhen?.split(" · ")[0] ?? "booking"}`
-                  : `Expires in ${c.expiresIn}`}
-              </p>
-            )}
-            {state === "expired" && (
-              <p className="flex items-center gap-1 text-[9px] font-semibold uppercase tracking-widest text-muted-foreground">
-                <X className="h-2.5 w-2.5" />
-                Expired {c.expiredOn}
-              </p>
-            )}
-            {state === "used" && (
-              <p className="flex items-center gap-1 text-[9px] font-semibold uppercase tracking-widest text-muted-foreground">
-                <Check className="h-2.5 w-2.5" />
-                Redeemed · {c.when}
-              </p>
-            )}
+                  ? "bg-secondary/15 text-secondary"
+                  : isExpired
+                  ? "bg-muted text-muted-foreground"
+                  : isUsed
+                  ? "bg-muted text-muted-foreground"
+                  : "bg-foreground/10 text-foreground/70"
+              }`}
+            >
+              {isPending
+                ? "Pending"
+                : isReservation
+                ? "Reservation"
+                : isExpired
+                ? "Expired"
+                : isUsed
+                ? "Redeemed"
+                : "Coupon"}
+            </span>
             <span className="font-mono text-[8px] tracking-widest text-muted-foreground/70">
               {c.code || "MES-•••"}
             </span>
+          </div>
+
+          {/* HERO: the most important thing */}
+          <div className="min-w-0">
+            {isReservation ? (
+              isPending ? (
+                <>
+                  <p className="truncate font-display text-base font-bold leading-tight">
+                    {c.name}
+                  </p>
+                  <p className="mt-1 flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-amber-600">
+                    <Loader2 className="h-3 w-3 animate-spin" /> AI agent calling venue
+                  </p>
+                  <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+                    Requested {c.resRequested} · {c.resParty} guests
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="truncate font-display text-sm font-semibold leading-none text-muted-foreground">
+                    {c.name}
+                  </p>
+                  <p className="mt-1 font-display text-[17px] font-bold leading-tight text-foreground">
+                    {c.resWhen}
+                  </p>
+                  <p className="mt-0.5 flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <BadgeCheck className="h-3 w-3 text-secondary" />
+                    Confirmed · {c.resParty} guests
+                  </p>
+                </>
+              )
+            ) : (
+              <>
+                <p className="truncate font-display text-base font-bold leading-tight">
+                  {c.name}
+                </p>
+                {state === "active" && (
+                  <p className="mt-1 flex items-baseline gap-1.5">
+                    <Clock className="h-3 w-3 text-foreground/70" />
+                    <span className="font-display text-[15px] font-bold leading-none text-foreground">
+                      {c.expiresIn}
+                    </span>
+                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground">
+                      left
+                    </span>
+                  </p>
+                )}
+                {state === "expired" && (
+                  <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Expired {c.expiredOn}
+                  </p>
+                )}
+                {state === "used" && (
+                  <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Redeemed · {c.when}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* FOOTER: meta */}
+          <div className="flex items-center justify-between gap-2 border-t border-dashed border-border/60 pt-1.5 text-[10px]">
+            <p className="truncate text-muted-foreground">
+              {c.category} · {c.distance} ·{" "}
+              <span className="tracking-wider">{"$".repeat(c.cost)}</span>
+            </p>
+            <div className="flex flex-shrink-0 items-center gap-1.5">
+              <span className="inline-flex items-center gap-0.5 text-secondary">
+                <Star className="h-2.5 w-2.5 fill-secondary text-secondary" />
+                <span className="font-semibold">{c.mesita.toFixed(1)}</span>
+              </span>
+              <span className="inline-flex items-center gap-0.5 text-muted-foreground">
+                <span className="flex h-3 w-3 items-center justify-center rounded-full bg-muted text-[7px] font-bold text-foreground/70">
+                  G
+                </span>
+                <span className="font-semibold">{c.google.toFixed(1)}</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
