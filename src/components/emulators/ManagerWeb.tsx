@@ -38,7 +38,7 @@ type TabId =
   | "analytics"
   | "wallet"
   | "team"
-  | "settings";
+  | "account";
 
 const UNITS = [
   { id: "luminar", name: "Casa Luminar", city: "CDMX · Roma Nte.", emoji: "🦚" },
@@ -59,7 +59,6 @@ export function ManagerWeb() {
     { id: "analytics", label: "Analytics", Icon: BarChart3 },
     { id: "wallet", label: "Wallet", Icon: WalletIcon },
     { id: "team", label: "Team", Icon: Users },
-    { id: "settings", label: "Settings", Icon: Settings },
   ];
 
   return (
