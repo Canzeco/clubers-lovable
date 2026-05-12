@@ -111,6 +111,8 @@ export function AdminWeb() {
 
   const nav: { id: Tab; label: string; Icon: any }[] = [
     { id: "pipeline", label: "Sourcing pipeline", Icon: LayoutGrid },
+    { id: "bots", label: "Bot fleet", Icon: Bot },
+    { id: "stack", label: "SaaS stack", Icon: KeyRound },
     { id: "portfolio", label: "Venue portfolio", Icon: Building2 },
     { id: "editor", label: "Venue editor", Icon: PencilLine },
     { id: "discover", label: "Discover venues", Icon: MapIcon },
@@ -172,6 +174,8 @@ export function AdminWeb() {
         </div>
 
         {tab === "pipeline" && <Pipeline />}
+        {tab === "bots" && <BotFleet />}
+        {tab === "stack" && <SaasStack />}
         {tab === "portfolio" && <Portfolio />}
         {tab === "editor" && <VenueEditor />}
         {tab === "discover" && <DiscoverVenues />}
