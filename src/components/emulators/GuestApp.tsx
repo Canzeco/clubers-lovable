@@ -1328,26 +1328,12 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
         picks?: { venue: typeof venues[number]; reason: string }[];
       };
   const suggestions = [
-    "Rooftop with sunset views",
-    "Late night mezcal & vinyl",
-    "Brunch by the ocean",
-    "Quiet date spot under $$",
-    "Antro más fresa de San Pedro",
-    "Restaurante para proponer matrimonio en Cancún",
-    "Domingo familiar con amenidades para niños",
-    "Restaurante pet friendly",
-    "Cena romántica con vista en CDMX",
-    "Cocina de autor en Polanco",
-    "Terraza con DJ en Tulum",
-    "Desayunos saludables cerca",
+    "Rooftop con vista al atardecer",
+    "Cena romántica en Polanco",
+    "Brunch dominical familiar",
+    "Mezcal y vinilo después de medianoche",
   ];
-  const [msgs, setMsgs] = useState<Msg[]>([
-    {
-      from: "ai",
-      text:
-        "Hey 👋 I'm Mesita AI. Tell me the vibe — neighborhood, mood, budget, who you're with — and I'll find the best spots curated by Gold tastemakers.",
-    },
-  ]);
+  const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
 
@@ -1384,101 +1370,104 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <div className="flex-1 space-y-3 overflow-y-auto scrollbar-hide px-5 pb-3">
-        {msgs.map((m, i) =>
-          m.from === "user" ? (
-            <div key={i} className="flex justify-end">
-              <div className="max-w-[80%] rounded-2xl rounded-tr-sm bg-foreground px-3.5 py-2 text-[13px] text-background">
-                {m.text}
-              </div>
-            </div>
-          ) : (
-            <div key={i} className="flex gap-2">
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-peacock text-sm">
-                🦚
-              </div>
-              <div className="flex-1 space-y-2">
-                <div className="rounded-2xl rounded-tl-sm border border-border bg-card-soft px-3.5 py-2 text-[13px] text-foreground">
-                  {m.text}
-                </div>
-                {m.sources && (
-                  <div className="flex flex-wrap gap-1">
-                    {m.sources.map((s) => (
-                      <span
-                        key={s}
-                        className="rounded-full border border-border bg-card/60 px-2 py-0.5 text-[10px] text-muted-foreground"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                {m.picks && (
-                  <div className="rounded-2xl rounded-tl-sm border border-border bg-card-soft px-3.5 py-2.5 text-[13px] leading-relaxed text-foreground">
-                    <ol className="space-y-2">
-                      {m.picks.map((p, idx) => (
-                        <li key={p.venue.name} className="flex gap-2">
-                          <span className="text-[11px] font-semibold text-tier-gold">
-                            {idx + 1}.
-                          </span>
-                          <span className="flex-1">
-                            <button
-                              onClick={() => onSelect(p.venue)}
-                              className="font-bold text-foreground underline decoration-tier-gold decoration-2 underline-offset-2 transition hover:text-tier-gold"
-                            >
-                              {p.venue.name}
-                            </button>
-                            <span className="text-muted-foreground"> — {p.reason}</span>
-                          </span>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                )}
-              </div>
-            </div>
-          ),
-        )}
-        {thinking && (
-          <div className="flex gap-2">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-peacock text-sm">
+      <div className="flex-1 overflow-y-auto scrollbar-hide px-5 pb-4 pt-3">
+        {msgs.length === 0 ? (
+          <div className="flex h-full flex-col items-center justify-center pb-6 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-peacock text-2xl shadow-glow">
               🦚
             </div>
-            <div className="flex items-center gap-1 rounded-2xl rounded-tl-sm border border-border bg-card-soft px-3.5 py-2.5">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground" />
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground [animation-delay:150ms]" />
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground [animation-delay:300ms]" />
+            <h3 className="mt-4 font-display text-2xl font-semibold leading-tight">
+              ¿Qué se te antoja?
+            </h3>
+            <p className="mt-1.5 max-w-[260px] text-[13px] text-muted-foreground">
+              Cuéntame el plan — vibra, zona, presupuesto — y te encuentro el lugar.
+            </p>
+            <div className="mt-6 flex w-full flex-col gap-2">
+              {suggestions.map((s) => (
+                <button
+                  key={s}
+                  onClick={() => ask(s)}
+                  className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-left text-[13px] text-foreground transition hover:border-tier-gold/60 hover:bg-card-soft"
+                >
+                  {s}
+                </button>
+              ))}
             </div>
           </div>
-        )}
-        {msgs.length === 1 && (
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            {suggestions.map((s) => (
-              <button
-                key={s}
-                onClick={() => ask(s)}
-                className="rounded-full border border-border bg-card/60 px-3 py-1.5 text-[11px] text-foreground transition hover:border-tier-gold/60"
-              >
-                {s}
-              </button>
-            ))}
+        ) : (
+          <div className="space-y-5">
+            {msgs.map((m, i) =>
+              m.from === "user" ? (
+                <div key={i} className="flex justify-end">
+                  <div className="max-w-[85%] rounded-2xl bg-muted px-3.5 py-2 text-[13px] leading-relaxed text-foreground">
+                    {m.text}
+                  </div>
+                </div>
+              ) : (
+                <div key={i} className="space-y-3">
+                  <p className="text-[13px] leading-relaxed text-foreground">{m.text}</p>
+                  {m.sources && (
+                    <div>
+                      <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                        Fuentes
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {m.sources.map((s) => (
+                          <span
+                            key={s}
+                            className="rounded-md border border-border bg-card px-2 py-0.5 text-[10px] text-muted-foreground"
+                          >
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {m.picks && (
+                    <div className="space-y-1.5">
+                      {m.picks.map((p, idx) => (
+                        <button
+                          key={p.venue.name}
+                          onClick={() => onSelect(p.venue)}
+                          className="flex w-full items-start gap-2.5 rounded-xl border border-border bg-card p-3 text-left transition hover:border-tier-gold/60 hover:bg-card-soft"
+                        >
+                          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-tier-gold text-[10px] font-bold text-black">
+                            {idx + 1}
+                          </span>
+                          <span className="flex-1">
+                            <span className="block text-[13px] font-semibold text-foreground">
+                              {p.venue.name}
+                            </span>
+                            <span className="mt-0.5 block text-[11px] leading-snug text-muted-foreground">
+                              {p.reason}
+                            </span>
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ),
+            )}
+            {thinking && (
+              <p className="text-[13px] italic text-muted-foreground">Pensando…</p>
+            )}
           </div>
         )}
       </div>
       <div className="border-t border-border bg-background px-3 py-2.5">
-        <div className="flex items-center gap-2 rounded-full border border-border bg-card-soft px-3 py-2">
-          <Sparkles className="h-4 w-4 text-tier-gold" />
+        <div className="flex items-end gap-2 rounded-2xl border border-border bg-card px-3 py-2 shadow-sm focus-within:border-tier-gold/60">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && ask(input)}
-            placeholder="Ask anything: 'rooftop date under $$'"
-            className="flex-1 bg-transparent text-[13px] text-foreground outline-none placeholder:text-muted-foreground"
+            placeholder="Pregunta lo que sea…"
+            className="flex-1 bg-transparent py-1 text-[13px] text-foreground outline-none placeholder:text-muted-foreground"
           />
           <button
             onClick={() => ask(input)}
             disabled={!input.trim()}
-            className="flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-background disabled:opacity-40"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition disabled:opacity-30"
           >
             <Send className="h-3.5 w-3.5" />
           </button>
