@@ -2258,43 +2258,70 @@ function ShareView() {
             You've got {totalCards} gift cards to hand out. Send your code and the first friends who use it each get $100 MXN — courtesy of you.
           </p>
 
-          {/* Hero gift card — wrapped-gift aesthetic, subtle & minimal */}
+          {/* Hero gift card — wrapped with a centered ribbon + bow */}
           <div className="relative mx-auto mt-6 aspect-[1.6/1] w-full max-w-[300px]">
             <div className="absolute inset-0 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-              {/* Horizontal ribbon */}
-              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-7 -translate-y-1/2 bg-peacock/95" />
-              {/* Vertical ribbon */}
-              <div className="pointer-events-none absolute inset-y-0 left-[68%] w-7 bg-peacock/95" />
-              {/* Ribbon highlight lines */}
-              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-[14px] bg-white/15" />
-              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px translate-y-[13px] bg-black/10" />
+              {/* Vertical ribbon (centered) */}
+              <div className="pointer-events-none absolute inset-y-0 left-1/2 w-6 -translate-x-1/2 bg-peacock/95" />
+              {/* Horizontal ribbon (centered) */}
+              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-6 -translate-y-1/2 bg-peacock/95" />
+              {/* Subtle ribbon edges */}
+              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-[12px] bg-white/15" />
+              <div className="pointer-events-none absolute inset-x-0 top-1/2 h-px translate-y-[11px] bg-black/10" />
+              <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-[12px] bg-white/15" />
+              <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px translate-x-[11px] bg-black/10" />
 
-              {/* Bow knot */}
-              <div className="pointer-events-none absolute left-[68%] top-1/2 -translate-x-1/2 -translate-y-1/2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-peacock shadow-[0_0_0_2px_var(--color-card)]">
-                  <Gift className="h-4 w-4 text-white" />
-                </div>
-              </div>
+              {/* Bow at center */}
+              <svg
+                className="pointer-events-none absolute left-1/2 top-1/2 h-12 w-16 -translate-x-1/2 -translate-y-1/2"
+                viewBox="0 0 64 48"
+                fill="none"
+                aria-hidden
+              >
+                {/* Left loop */}
+                <path
+                  d="M32 24 C 14 8, 4 14, 6 24 C 4 34, 18 38, 32 24 Z"
+                  className="fill-[color:var(--color-secondary)]"
+                />
+                {/* Right loop */}
+                <path
+                  d="M32 24 C 50 8, 60 14, 58 24 C 60 34, 46 38, 32 24 Z"
+                  className="fill-[color:var(--color-secondary)]"
+                />
+                {/* Tails */}
+                <path
+                  d="M28 26 L 22 44 L 30 40 L 32 26 Z"
+                  className="fill-[color:var(--color-secondary)] opacity-90"
+                />
+                <path
+                  d="M36 26 L 42 44 L 34 40 L 32 26 Z"
+                  className="fill-[color:var(--color-secondary)] opacity-90"
+                />
+                {/* Center knot */}
+                <ellipse cx="32" cy="24" rx="5" ry="6" className="fill-[color:var(--color-secondary)]" />
+                <ellipse cx="32" cy="24" rx="5" ry="6" className="fill-black/15" />
+              </svg>
 
-              {/* Top-left quadrant — brand */}
-              <div className="absolute left-3 top-3 max-w-[60%]">
+              {/* Top-left — brand */}
+              <div className="absolute left-3 top-3 max-w-[42%]">
                 <p className="text-[8px] font-semibold uppercase tracking-[0.3em] text-foreground/60">Mesita 🦚</p>
                 <p className="mt-0.5 text-[7px] uppercase tracking-[0.25em] text-foreground/35">Gift Card</p>
               </div>
 
-              {/* Top-right quadrant — amount (above horizontal ribbon, right of vertical) */}
-              <div className="absolute right-3 top-2.5 text-right">
-                <p className="font-display text-[11px] font-medium leading-none text-foreground/50">$</p>
+              {/* Top-right — amount */}
+              <div className="absolute right-3 top-3 text-right">
+                <p className="font-display text-xl font-semibold leading-none text-foreground">$100</p>
+                <p className="mt-1 text-[7px] uppercase tracking-[0.25em] text-foreground/40">MXN</p>
               </div>
 
-              {/* Bottom-left quadrant — amount big */}
-              <div className="absolute bottom-2.5 left-3">
-                <p className="font-display text-3xl font-semibold leading-none text-foreground">$100</p>
-                <p className="mt-1 text-[7px] uppercase tracking-[0.25em] text-foreground/40">MXN · for a friend</p>
+              {/* Bottom-left — to/from */}
+              <div className="absolute bottom-3 left-3 text-[7px] uppercase tracking-[0.25em]">
+                <p className="text-foreground/35">To <span className="text-foreground/70">a friend</span></p>
+                <p className="mt-0.5 text-foreground/35">From <span className="text-foreground/70">you</span></p>
               </div>
 
-              {/* Bottom-right quadrant — code */}
-              <div className="absolute bottom-2.5 right-3 text-right">
+              {/* Bottom-right — code */}
+              <div className="absolute bottom-3 right-3 text-right">
                 <p className="text-[7px] uppercase tracking-[0.25em] text-foreground/35">Code</p>
                 <div className="mt-0.5 flex items-center justify-end gap-1.5">
                   <span className="font-mono text-[11px] font-medium tracking-[0.2em] text-foreground">{code}</span>
