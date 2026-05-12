@@ -1761,25 +1761,6 @@ function CouponTicket({
             )}
           </div>
 
-          {/* FOOTER: meta */}
-          <div className="flex items-center justify-between gap-2 border-t border-dashed border-border/60 pt-1.5 text-[10px]">
-            <p className="truncate text-muted-foreground">
-              {c.category} · {c.distance} ·{" "}
-              <span className="tracking-wider">{"$".repeat(c.cost)}</span>
-            </p>
-            <div className="flex flex-shrink-0 items-center gap-1.5">
-              <span className="inline-flex items-center gap-0.5 text-secondary">
-                <Star className="h-2.5 w-2.5 fill-secondary text-secondary" />
-                <span className="font-semibold">{c.mesita.toFixed(1)}</span>
-              </span>
-              <span className="inline-flex items-center gap-0.5 text-muted-foreground">
-                <span className="flex h-3 w-3 items-center justify-center rounded-full bg-muted text-[7px] font-bold text-foreground/70">
-                  G
-                </span>
-                <span className="font-semibold">{c.google.toFixed(1)}</span>
-              </span>
-            </div>
-          </div>
         </div>
       </div>
 
