@@ -27,6 +27,7 @@ import {
   Search,
   Locate,
   Wallet,
+  Plus,
   CreditCard,
   Banknote,
   ChevronRight,
@@ -2630,19 +2631,20 @@ function ProfileView() {
 }
 
 function CreditsView() {
-  const balance = 1284;
+  const [balance, setBalance] = useState(1284);
+  const [topUp, setTopUp] = useState(false);
   const txs = [
-    { name: "Casa Luminar", emoji: "🦚", amt: 140, ago: "hace 2 días" },
-    { name: "Neón Bar", emoji: "🌃", amt: -380, ago: "hace 5 días" },
-    { name: "Loto Café", emoji: "☕", amt: 180, ago: "hace 1 semana" },
-    { name: "Mar Verde", emoji: "🌊", amt: -260, ago: "hace 2 semanas" },
-    { name: "Casa Luminar", emoji: "🦚", amt: 90, ago: "hace 3 semanas" },
+    { name: "Casa Luminar", emoji: "🦚", amt: 140, ago: "2 days ago" },
+    { name: "Neón Bar", emoji: "🌃", amt: -380, ago: "5 days ago" },
+    { name: "Loto Café", emoji: "☕", amt: 180, ago: "1 week ago" },
+    { name: "Mar Verde", emoji: "🌊", amt: -260, ago: "2 weeks ago" },
+    { name: "Casa Luminar", emoji: "🦚", amt: 90, ago: "3 weeks ago" },
   ];
   return (
     <div className="px-5 pb-24 pt-2">
-      {/* Saldo */}
+      {/* Balance */}
       <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-        Saldo
+        Balance
       </p>
       <p
         className="mt-2 font-display font-semibold leading-none tracking-tight text-foreground"
@@ -2651,15 +2653,22 @@ function CreditsView() {
         ${balance.toLocaleString()}
       </p>
       <p className="mt-3 text-[13px] text-muted-foreground">
-        Expira 12 ago · Se aplica automáticamente en tu próxima visita
+        Expires Aug 12 · Auto-applies on your next visit
       </p>
 
-      {/* Actividad */}
+      <button
+        onClick={() => setTopUp(true)}
+        className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-2 text-[12px] font-semibold text-foreground transition hover:border-tier-gold/60 hover:bg-card-soft"
+      >
+        <Plus className="h-3.5 w-3.5" /> Add credits
+      </button>
+
+      {/* Activity */}
       <div className="mt-10 flex items-end justify-between">
         <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          Actividad
+          Activity
         </p>
-        <button className="text-[12px] text-secondary hover:underline">Ver todo</button>
+        <button className="text-[12px] text-secondary hover:underline">See all</button>
       </div>
       <div className="mt-2 divide-y divide-border/60">
         {txs.map((t, i) => (
@@ -2681,6 +2690,16 @@ function CreditsView() {
           </div>
         ))}
       </div>
+
+      {topUp && (
+        <AddCreditsSheet
+          onClose={() => setTopUp(false)}
+          onConfirm={(amt) => {
+            setBalance((b) => b + amt);
+            setTopUp(false);
+          }}
+        />
+      )}
     </div>
   );
 }
