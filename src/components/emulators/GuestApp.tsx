@@ -1300,10 +1300,6 @@ function WalletView() {
 }
 
 function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => void }) {
-  const tierBg =
-    coupon.color === "tier-gold" ? "bg-tier-gold" :
-    coupon.color === "tier-silver" ? "bg-tier-silver" :
-    coupon.color === "tier-diamond" ? "bg-tier-diamond" : "bg-tier-bronze";
   return (
     <div className="absolute inset-0 z-30 flex items-end bg-black/50" onClick={onClose}>
       <div
@@ -1314,7 +1310,7 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
 
         {/* Header */}
         <div className="flex items-center gap-3">
-          <div className={`flex h-16 w-16 items-center justify-center rounded-2xl ${tierBg} text-base font-bold text-black`}>
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary text-base font-bold text-secondary-foreground">
             {coupon.cb}%
           </div>
           <div className="flex-1">
