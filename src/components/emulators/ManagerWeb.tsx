@@ -571,6 +571,19 @@ function Promos() {
               </button>
             ))}
           </div>
+          <div className="mt-3 max-w-xs rounded-lg border border-border bg-card p-2">
+            <div className="flex items-baseline justify-between">
+              <span className="font-display text-sm font-semibold text-foreground">
+                12,480
+              </span>
+              <span className="text-[9px] uppercase tracking-widest text-muted-foreground">
+                guests nearby · never visited
+              </span>
+            </div>
+            <p className="mt-1 text-[9px] text-muted-foreground">
+              Identity revealed after first visit.
+            </p>
+          </div>
         </div>
       </div>
 
