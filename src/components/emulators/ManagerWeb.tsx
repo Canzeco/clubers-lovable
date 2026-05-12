@@ -21,6 +21,14 @@ import {
   UserPlus,
   Users,
   Wallet as WalletIcon,
+  Bell,
+  Globe,
+  LifeBuoy,
+  Lock,
+  LogOut,
+  CreditCard,
+  FileText,
+  ChevronRight,
 } from "lucide-react";
 
 type TabId =
@@ -158,7 +166,7 @@ export function ManagerWeb() {
         {tab === "analytics" && <Analytics />}
         {tab === "wallet" && <Wallet />}
         {tab === "team" && <Team />}
-        {tab === "settings" && <Dashboard unit={unit} />}
+        {tab === "settings" && <SettingsView />}
       </main>
     </div>
   );
