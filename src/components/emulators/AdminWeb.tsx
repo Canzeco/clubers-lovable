@@ -205,44 +205,43 @@ function Pipeline() {
         <div>
           <h1 className="font-display text-3xl font-semibold">Sourcing pipeline</h1>
           <p className="text-sm text-muted-foreground">
-            Arrastra venues por etapa · 151 prospectos abiertos · 12 cerrados este mes
+            Source → Super-sourcing AI → Approve → Sales · 133 prospectos abiertos
           </p>
         </div>
-        <div className="flex gap-3 text-xs">
-          <div className="rounded-lg border border-border bg-card-soft px-3 py-2 text-center">
-            <p className="font-display text-lg font-semibold">38%</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Lead → Demo</p>
-          </div>
-          <div className="rounded-lg border border-border bg-card-soft px-3 py-2 text-center">
-            <p className="font-display text-lg font-semibold">64%</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Demo → Close</p>
-          </div>
-          <div className="rounded-lg border border-border bg-card-soft px-3 py-2 text-center">
-            <p className="font-display text-lg font-semibold">9 días</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Ciclo medio</p>
-          </div>
-        </div>
+        <button className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-accent to-primary px-3 py-2 text-xs font-semibold text-primary-foreground shadow-glow">
+          <MapPin className="h-3.5 w-3.5" /> Importar de Google Business
+        </button>
       </div>
 
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-4 gap-3">
         {stages.map((s) => {
           const items = leads.filter((l) => l.stage === s.id);
           return (
             <div key={s.id} className="rounded-xl border border-border bg-card/40 p-2">
-              <div className="mb-2 flex items-center justify-between px-1">
-                <div className="flex items-center gap-2">
-                  <span className={`h-2 w-2 rounded-full ${s.color}`} />
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{s.label}</p>
+              <div className="mb-2 px-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className={`h-2 w-2 rounded-full ${s.color}`} />
+                    <p className="text-xs font-semibold uppercase tracking-wider text-foreground">{s.label}</p>
+                  </div>
+                  <span className="text-[10px] font-bold text-muted-foreground">{s.count}</span>
                 </div>
-                <span className="text-[10px] font-bold text-muted-foreground">{s.count}</span>
+                <p className="mt-0.5 text-[10px] text-muted-foreground">{s.hint}</p>
               </div>
               <div className="space-y-2">
                 {items.map((l) => (
-                  <LeadCard key={l.id} l={l} />
+                  <LeadCard key={l.id} l={l} stage={s.id} />
                 ))}
-                <button className="flex w-full items-center justify-center gap-1 rounded-lg border border-dashed border-border py-2 text-xs text-muted-foreground hover:text-foreground">
-                  <Plus className="h-3 w-3" /> Añadir
-                </button>
+                {s.id === "sourced" && (
+                  <button className="flex w-full items-center justify-center gap-1 rounded-lg border border-dashed border-border py-2 text-xs text-muted-foreground hover:text-foreground">
+                    <Plus className="h-3 w-3" /> Añadir manual
+                  </button>
+                )}
+                {s.id === "enriching" && (
+                  <button className="flex w-full items-center justify-center gap-1 rounded-lg border border-dashed border-accent/50 py-2 text-xs text-accent hover:bg-accent/5">
+                    <Sparkles className="h-3 w-3" /> Lanzar agente
+                  </button>
+                )}
               </div>
             </div>
           );
@@ -252,7 +251,59 @@ function Pipeline() {
   );
 }
 
-function LeadCard({ l }: { l: Lead }) {
+function LeadCard({ l, stage }: { l: Lead; stage: (typeof stages)[number]["id"] }) {
+  if (stage === "enriching") {
+    return (
+      <div className="space-y-2 rounded-lg border border-accent/40 bg-accent/5 p-2.5 text-xs shadow-elev">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="font-semibold leading-tight">{l.name}</p>
+            <p className="text-[10px] text-muted-foreground">{l.type}</p>
+          </div>
+          <span className="flex items-center gap-1 rounded-full bg-accent/20 px-1.5 py-0.5 text-[9px] font-semibold text-accent">
+            <Sparkles className="h-2.5 w-2.5" /> AI
+          </span>
+        </div>
+        <div>
+          <div className="flex justify-between text-[9px] text-muted-foreground">
+            <span>Super-sourcing…</span>
+            <span>{l.name === "Galápago" ? "82%" : "47%"}</span>
+          </div>
+          <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
+            <div className="h-full animate-pulse bg-gradient-to-r from-accent to-primary" style={{ width: l.name === "Galápago" ? "82%" : "47%" }} />
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-1 text-[9px] text-muted-foreground">
+          <span className="rounded-full bg-card px-1.5 py-0.5">IG ✓</span>
+          <span className="rounded-full bg-card px-1.5 py-0.5">FB ✓</span>
+          <span className="rounded-full bg-card px-1.5 py-0.5">Web ✓</span>
+          <span className="rounded-full bg-card px-1.5 py-0.5 opacity-50">Reseñas…</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (stage === "sourced") {
+    return (
+      <div className="cursor-grab space-y-1.5 rounded-lg border border-border bg-card p-2.5 text-xs shadow-elev transition hover:border-primary/50">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="font-semibold leading-tight">{l.name}</p>
+            <p className="text-[10px] text-muted-foreground">{l.type}</p>
+          </div>
+          <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] font-semibold text-muted-foreground">GBP</span>
+        </div>
+        <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+          <span className="flex items-center gap-0.5"><MapPin className="h-2.5 w-2.5" />{l.area}</span>
+          <span className="flex items-center gap-0.5"><Star className="h-2.5 w-2.5 fill-secondary text-secondary" />{l.rating}</span>
+        </div>
+        <button className="flex w-full items-center justify-center gap-1 rounded-md bg-accent/10 py-1 text-[10px] font-semibold text-accent hover:bg-accent/20">
+          <Sparkles className="h-2.5 w-2.5" /> Super-source
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="cursor-grab space-y-2 rounded-lg border border-border bg-card p-2.5 text-xs shadow-elev transition hover:border-primary/50">
       <div className="flex items-start justify-between gap-2">
@@ -267,6 +318,26 @@ function LeadCard({ l }: { l: Lead }) {
         <span className="flex items-center gap-0.5"><Instagram className="h-2.5 w-2.5" />{l.ig}</span>
         <span className="flex items-center gap-0.5"><Star className="h-2.5 w-2.5 fill-secondary text-secondary" />{l.rating}</span>
       </div>
+      {stage === "review" && (
+        <div className="flex gap-1">
+          <button className="flex flex-1 items-center justify-center gap-1 rounded-md bg-emerald-500/10 py-1 text-[10px] font-semibold text-emerald-600 hover:bg-emerald-500/20">
+            <Check className="h-2.5 w-2.5" /> Aprobar
+          </button>
+          <button className="flex flex-1 items-center justify-center gap-1 rounded-md bg-card py-1 text-[10px] font-semibold text-muted-foreground hover:bg-muted">
+            <PencilLine className="h-2.5 w-2.5" /> Editar
+          </button>
+        </div>
+      )}
+      {stage === "sales" && (
+        <div className="flex gap-1">
+          <button className="flex flex-1 items-center justify-center gap-1 rounded-md bg-primary/10 py-1 text-[10px] font-semibold text-primary hover:bg-primary/20">
+            <Phone className="h-2.5 w-2.5" /> Contactar
+          </button>
+          <button className="flex flex-1 items-center justify-center gap-1 rounded-md bg-secondary/10 py-1 text-[10px] font-semibold text-secondary hover:bg-secondary/20">
+            <Crown className="h-2.5 w-2.5" /> Firmar
+          </button>
+        </div>
+      )}
       <div className="flex items-center justify-between border-t border-border/50 pt-1.5">
         <div className="flex h-5 w-5 items-center justify-center rounded-full bg-peacock text-[9px] font-bold text-primary-foreground">
           {l.owner}
