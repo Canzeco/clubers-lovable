@@ -810,6 +810,8 @@ function Analytics() {
           <p className="text-[10px] text-emerald-400">+0.8×</p>
         </div>
       </div>
+
+      <ValidatorActivity />
     </div>
   );
 }
