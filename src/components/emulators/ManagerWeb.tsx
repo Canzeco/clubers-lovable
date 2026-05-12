@@ -141,7 +141,7 @@ export function ManagerWeb() {
         </div>
         {/* Account chip */}
         <button
-          onClick={() => setTab("settings")}
+          onClick={() => setTab("account")}
           className="mt-3 flex w-full items-center gap-2 rounded-xl border border-border bg-card p-2 text-left hover:bg-card-soft"
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-peacock to-secondary text-xs font-bold text-primary-foreground">
@@ -183,7 +183,7 @@ export function ManagerWeb() {
         {tab === "analytics" && <Analytics />}
         {tab === "wallet" && <Wallet />}
         {tab === "team" && <Team />}
-        {tab === "settings" && <SettingsView />}
+        {tab === "account" && <AccountView />}
       </main>
     </div>
   );
