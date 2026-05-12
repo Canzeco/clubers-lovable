@@ -772,6 +772,19 @@ function Wallet() {
           </div>
         ))}
       </div>
+
+      {/* Billing & legal */}
+      <div className="rounded-xl border border-border bg-card-soft p-4">
+        <p className="mb-3 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <CreditCard className="h-3 w-3" /> Billing & legal
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <SettingRow label="Tax ID (RFC)" value="LUM240711AB3" />
+          <SettingRow label="Bank account" value="BBVA ···· 4421" />
+          <SettingRow label="Invoices" value="View all" action />
+          <SettingRow label="Terms of service" value="Read" action />
+        </div>
+      </div>
     </div>
   );
 }
@@ -1055,19 +1068,6 @@ function AccountView() {
               </button>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Billing */}
-      <div className="rounded-xl border border-border bg-card-soft p-4">
-        <p className="mb-3 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-          <CreditCard className="h-3 w-3" /> Billing & legal
-        </p>
-        <div className="grid grid-cols-2 gap-3">
-          <SettingRow label="Tax ID (RFC)" value="LUM240711AB3" />
-          <SettingRow label="Bank account" value="BBVA ···· 4421" />
-          <SettingRow label="Invoices" value="View all" action />
-          <SettingRow label="Terms of service" value="Read" action />
         </div>
       </div>
 
