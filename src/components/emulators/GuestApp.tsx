@@ -1224,7 +1224,7 @@ function WalletView() {
               className="relative flex w-full items-stretch overflow-hidden rounded-2xl border border-border bg-card-soft text-left shadow-sm transition active:scale-[0.99]"
             >
               {/* left — cashback stub */}
-              <div className={`relative flex w-20 flex-shrink-0 flex-col items-center justify-center ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-black`}>
+              <div className="relative flex w-20 flex-shrink-0 flex-col items-center justify-center bg-secondary text-secondary-foreground">
                 <p className="font-display text-2xl font-bold leading-none">{c.cb}%</p>
                 <p className="mt-1 text-[8px] font-semibold uppercase tracking-widest opacity-80">cashback</p>
               </div>
@@ -1263,7 +1263,7 @@ function WalletView() {
               onClick={() => setOpenCoupon({ ...c, used: true })}
               className="relative flex w-full items-stretch overflow-hidden rounded-2xl border border-dashed border-border bg-card/60 text-left opacity-90"
             >
-              <div className={`relative flex w-20 flex-shrink-0 flex-col items-center justify-center ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-black grayscale`}>
+              <div className="relative flex w-20 flex-shrink-0 flex-col items-center justify-center bg-secondary text-secondary-foreground grayscale">
                 <p className="font-display text-2xl font-bold leading-none">{c.cb}%</p>
                 <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                   <Check className="h-6 w-6 text-white" />
