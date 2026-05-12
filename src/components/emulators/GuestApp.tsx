@@ -2258,44 +2258,52 @@ function ShareView() {
             You've got {totalCards} gift cards to hand out. Send your code and the first friends who use it each get $100 MXN — courtesy of you.
           </p>
 
-          {/* Hero gift card — subtle, minimal */}
-          <div className="relative mx-auto mt-4 h-40 w-full max-w-[300px]">
-            <div className="absolute inset-0 overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm">
-              {/* Thin accent ribbon */}
-              <div className="absolute left-0 right-0 top-0 h-[3px] bg-peacock" />
+          {/* Hero gift card — wrapped-gift aesthetic, still subtle */}
+          <div className="relative mx-auto mt-4 aspect-[1.6/1] w-full max-w-[300px]">
+            <div className="absolute inset-0 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+              {/* Vertical ribbon */}
+              <div className="absolute inset-y-0 left-1/2 w-7 -translate-x-1/2 bg-peacock/90" />
+              {/* Horizontal ribbon */}
+              <div className="absolute inset-x-0 top-1/2 h-7 -translate-y-1/2 bg-peacock/90" />
+              {/* Bow knot */}
+              <div className="absolute left-1/2 top-1/2 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-peacock text-white shadow-md ring-2 ring-card">
+                <Gift className="h-4 w-4" strokeWidth={2.5} />
+              </div>
 
-              {/* Ticket perforations */}
-              <div className="absolute -left-2 top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-background" />
-              <div className="absolute -right-2 top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-background" />
+              {/* Top-left quadrant — brand */}
+              <div className="absolute left-4 top-3">
+                <p className="text-[9px] uppercase tracking-[0.3em] text-foreground/60">Mesita 🦚</p>
+                <p className="mt-0.5 text-[9px] uppercase tracking-[0.25em] text-foreground/40">Gift Card</p>
+              </div>
 
-              <div className="relative flex h-full flex-col">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground">Mesita</p>
-                    <p className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-foreground/70">Gift Card</p>
-                  </div>
-                  <p className="font-display text-xl font-semibold leading-none text-foreground">$100 MXN</p>
-                </div>
+              {/* Top-right quadrant — amount */}
+              <div className="absolute right-4 top-3 text-right">
+                <p className="font-display text-lg font-semibold leading-none text-foreground">$100</p>
+                <p className="text-[9px] uppercase tracking-[0.25em] text-foreground/50">MXN</p>
+              </div>
 
-                <div className="mt-auto">
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground">Invite Code</p>
-                  <div className="mt-1 flex items-center justify-between gap-2">
-                    <span className="font-mono text-lg font-semibold tracking-[0.2em] text-foreground">{code}</span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (typeof navigator !== "undefined" && navigator.clipboard) {
-                          navigator.clipboard.writeText(code).catch(() => {});
-                        }
-                        setCopied(true);
-                        setTimeout(() => setCopied(false), 1500);
-                      }}
-                      className="flex h-7 w-7 items-center justify-center rounded-lg bg-muted text-foreground/70 transition hover:bg-muted/70"
-                    >
-                      {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                    </button>
-                  </div>
-                </div>
+              {/* Bottom-left quadrant — to/from tag */}
+              <div className="absolute bottom-3 left-4 text-[9px] leading-tight">
+                <p className="uppercase tracking-[0.25em] text-foreground/50">To · a friend</p>
+                <p className="uppercase tracking-[0.25em] text-foreground/50">From · You</p>
+              </div>
+
+              {/* Bottom-right quadrant — code + copy */}
+              <div className="absolute bottom-3 right-4 flex items-center gap-1.5">
+                <span className="font-mono text-[11px] font-semibold tracking-[0.15em] text-foreground">{code}</span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (typeof navigator !== "undefined" && navigator.clipboard) {
+                      navigator.clipboard.writeText(code).catch(() => {});
+                    }
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 1500);
+                  }}
+                  className="flex h-6 w-6 items-center justify-center rounded-md bg-muted text-foreground/70 transition hover:bg-muted/70"
+                >
+                  {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                </button>
               </div>
             </div>
           </div>
