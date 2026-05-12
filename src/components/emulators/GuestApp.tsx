@@ -315,7 +315,7 @@ function VenueDetailSheet({
                     : "bg-secondary text-secondary-foreground"
                 }`}
               >
-                {venue.cashback}% {venue.firstVisit ? "WELCOME" : "CASHBACK"}
+                {venue.cashback}% CASHBACK
               </span>
             )}
           </div>
@@ -624,7 +624,7 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
                       : "bg-secondary text-secondary-foreground"
                   }`}
                 >
-                  {v.cashback}% {v.firstVisit ? "welcome" : "cashback"}
+                  {v.cashback}% cashback
                 </span>
               )}
             </div>
@@ -761,7 +761,7 @@ function TinderMode() {
                     : "bg-secondary text-secondary-foreground"
                 }`}
               >
-                {v.cashback}% {v.firstVisit ? "WELCOME" : "CASHBACK"}
+                {v.cashback}% CASHBACK
               </span>
             ) : (
               <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-medium text-white backdrop-blur">
@@ -1370,9 +1370,7 @@ function WalletView() {
                 }`}
               >
                 <p className="font-display text-2xl font-bold leading-none">{c.cb}%</p>
-                <p className="mt-1 text-[8px] font-semibold uppercase tracking-widest opacity-80">
-                  {c.firstVisit ? "welcome" : "cashback"}
-                </p>
+                <p className="mt-1 text-[8px] font-semibold uppercase tracking-widest opacity-80">cashback</p>
               </div>
 
               {/* perforation */}
