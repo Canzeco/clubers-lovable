@@ -288,6 +288,17 @@ function VenueDetailSheet({
   venue: typeof venues[number];
   onClose: () => void;
 }) {
+  const [confirm, setConfirm] = useState<null | "save" | "reserve">(null);
+
+  const handleSave = () => {
+    setConfirm("save");
+    setTimeout(() => onClose(), 1400);
+  };
+  const handleSaveReserve = () => {
+    setConfirm("reserve");
+    setTimeout(() => onClose(), 1800);
+  };
+
   return (
     <div
       className="absolute inset-0 z-50 flex items-end bg-black/60 backdrop-blur-sm"
@@ -552,14 +563,37 @@ function VenueDetailSheet({
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center px-4 pb-4">
           <div className="pointer-events-auto flex w-full flex-col gap-2 rounded-3xl border border-border/60 bg-card/85 p-2 shadow-2xl backdrop-blur-xl">
-            <button className="flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-r from-peacock to-secondary px-4 py-3 text-sm font-semibold text-white shadow-glow transition active:scale-[0.98]">
+            <button
+              onClick={handleSaveReserve}
+              className="flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-r from-peacock to-secondary px-4 py-3 text-sm font-semibold text-white shadow-glow transition active:scale-[0.98]"
+            >
               <Calendar className="h-4 w-4" /> Save + Reserve
             </button>
-            <button className="flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border border-foreground/15 bg-background px-4 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:border-foreground/30 active:scale-[0.98]">
+            <button
+              onClick={handleSave}
+              className="flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full border border-foreground/15 bg-background px-4 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:border-foreground/30 active:scale-[0.98]"
+            >
               <Ticket className="h-4 w-4 text-secondary" /> Just save the coupon
             </button>
           </div>
         </div>
+        {confirm && (
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in">
+            <div className="pointer-events-auto mx-6 w-full max-w-xs rounded-3xl border border-border bg-card p-5 text-center shadow-2xl">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-peacock to-secondary text-white shadow-glow">
+                <Check className="h-6 w-6" />
+              </div>
+              <p className="mt-3 font-display text-lg font-semibold leading-tight">
+                {confirm === "save" ? "Coupon saved" : "Saved · booking a table"}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {confirm === "save"
+                  ? `${venue.cashback}% cashback at ${venue.name} · 7 days to redeem`
+                  : `Our AI agent is calling ${venue.name} to confirm your table.`}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
