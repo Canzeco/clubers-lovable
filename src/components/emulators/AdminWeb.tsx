@@ -54,7 +54,20 @@ import {
   PauseCircle,
 } from "lucide-react";
 
-type Tab = "pipeline" | "bots" | "stack" | "portfolio" | "editor" | "discover" | "promos" | "metrics" | "trust";
+type Tab =
+  | "pipeline"
+  | "stage-sourced"
+  | "stage-enriching"
+  | "stage-review"
+  | "stage-sales"
+  | "bots"
+  | "stack"
+  | "portfolio"
+  | "editor"
+  | "discover"
+  | "promos"
+  | "metrics"
+  | "trust";
 
 const stages = [
   {
@@ -130,15 +143,22 @@ function FitChip({ fit }: { fit: Lead["fit"] }) {
 export function AdminWeb() {
   const [tab, setTab] = useState<Tab>("pipeline");
 
-  const nav: { id: Tab; label: string; Icon: any }[] = [
-    { id: "pipeline", label: "Sourcing pipeline", Icon: LayoutGrid },
-    { id: "editor", label: "Venues", Icon: Building2 },
+  const pipelineNav: { id: Tab; label: string; Icon: any; count?: number; tone?: string }[] = [
+    { id: "pipeline", label: "Kanban · todo", Icon: LayoutGrid },
+    { id: "stage-sourced", label: "1 · Sourced", Icon: MapPin, count: 84, tone: "text-muted-foreground" },
+    { id: "stage-enriching", label: "2 · Super-sourcing", Icon: Sparkles, count: 26, tone: "text-accent" },
+    { id: "stage-review", label: "3 · Review & approve", Icon: CheckCircle2, count: 14, tone: "text-secondary" },
+    { id: "stage-sales", label: "4 · Sales · partner", Icon: Crown, count: 9, tone: "text-primary" },
+  ];
+
+  const adminNav: { id: Tab; label: string; Icon: any }[] = [
+    { id: "editor", label: "Venues (super-admin)", Icon: Building2 },
     { id: "bots", label: "Bot fleet", Icon: Bot },
   ];
 
   return (
     <div className="flex h-full bg-background text-foreground">
-      <aside className="flex w-60 flex-col border-r border-border bg-sidebar p-4">
+      <aside className="flex w-64 flex-col border-r border-border bg-sidebar p-4">
         <div className="mb-6 flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-primary text-lg">
             🦚
@@ -148,19 +168,66 @@ export function AdminWeb() {
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Operations</p>
           </div>
         </div>
-        <nav className="flex-1 space-y-1">
-          {nav.map((n) => (
-            <button
-              key={n.id}
-              onClick={() => setTab(n.id)}
-              className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${
-                tab === n.id ? "bg-sidebar-accent text-sidebar-primary" : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50"
-              }`}
-            >
-              <n.Icon className="h-4 w-4" />
-              {n.label}
-            </button>
-          ))}
+        <nav className="flex-1 space-y-4 overflow-y-auto">
+          <div>
+            <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              Sourcing pipeline
+            </p>
+            <div className="space-y-0.5">
+              {pipelineNav.map((n, i) => {
+                const isStage = n.id !== "pipeline";
+                const active = tab === n.id;
+                return (
+                  <button
+                    key={n.id}
+                    onClick={() => setTab(n.id)}
+                    className={`relative flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition ${
+                      active
+                        ? "bg-sidebar-accent text-sidebar-primary"
+                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50"
+                    } ${isStage ? "pl-7" : ""}`}
+                  >
+                    {isStage && (
+                      <span
+                        className={`absolute left-3 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full ${
+                          i === 1 ? "bg-muted-foreground/40" : i === 2 ? "bg-accent" : i === 3 ? "bg-secondary" : "bg-primary"
+                        }`}
+                      />
+                    )}
+                    {!isStage && <n.Icon className="h-4 w-4" />}
+                    <span className={`flex-1 text-left text-[13px] ${isStage ? n.tone : ""}`}>{n.label}</span>
+                    {n.count !== undefined && (
+                      <span className="rounded-full bg-card px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                        {n.count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              Catálogo activo
+            </p>
+            <div className="space-y-0.5">
+              {adminNav.map((n) => (
+                <button
+                  key={n.id}
+                  onClick={() => setTab(n.id)}
+                  className={`flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-[13px] transition ${
+                    tab === n.id
+                      ? "bg-sidebar-accent text-sidebar-primary"
+                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50"
+                  }`}
+                >
+                  <n.Icon className="h-4 w-4" />
+                  {n.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </nav>
         <div className="rounded-xl border border-dashed border-border/60 bg-card/50 p-3">
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">MVP build</p>
@@ -185,6 +252,10 @@ export function AdminWeb() {
         </div>
 
         {tab === "pipeline" && <Pipeline />}
+        {tab === "stage-sourced" && <StageView stageId="sourced" />}
+        {tab === "stage-enriching" && <StageView stageId="enriching" />}
+        {tab === "stage-review" && <StageView stageId="review" />}
+        {tab === "stage-sales" && <StageView stageId="sales" />}
         {tab === "bots" && <BotFleet />}
         {tab === "stack" && <SaasStack />}
         {tab === "portfolio" && <Portfolio />}
@@ -199,6 +270,47 @@ export function AdminWeb() {
 }
 
 function Pipeline() {
+  return <PipelineBoard />;
+}
+
+function StageView({ stageId }: { stageId: (typeof stages)[number]["id"] }) {
+  const s = stages.find((x) => x.id === stageId)!;
+  const items = leads.filter((l) => l.stage === stageId);
+  const descriptions: Record<string, string> = {
+    sourced: "Lista manual desde Google Business Profile. Selecciona un venue y lanza Super-sourcing.",
+    enriching: "Agente AI buscando IG, FB, web, reseñas y posts. Consulta la base para evitar duplicados.",
+    review: "Revisión humana del perfil enriquecido. Edita y aprueba antes de pasar a ventas.",
+    sales: "Contacto comercial · convertir en partner de Mesita.",
+  };
+  return (
+    <div className="space-y-4 p-6">
+      <div className="flex items-end justify-between">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Etapa {s.label}</p>
+          <h1 className="font-display text-3xl font-semibold">{s.hint}</h1>
+          <p className="mt-1 max-w-xl text-sm text-muted-foreground">{descriptions[stageId]}</p>
+        </div>
+        {stageId === "sourced" && (
+          <button className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-accent to-primary px-3 py-2 text-xs font-semibold text-primary-foreground shadow-glow">
+            <MapPin className="h-3.5 w-3.5" /> Importar de Google Business
+          </button>
+        )}
+        {stageId === "enriching" && (
+          <button className="flex items-center gap-2 rounded-lg bg-accent px-3 py-2 text-xs font-semibold text-accent-foreground">
+            <Sparkles className="h-3.5 w-3.5" /> Lanzar agente en lote
+          </button>
+        )}
+      </div>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+        {items.map((l) => (
+          <LeadCard key={l.id} l={l} stage={stageId} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PipelineBoard() {
   return (
     <div className="space-y-4 p-6">
       <div className="flex items-end justify-between">
