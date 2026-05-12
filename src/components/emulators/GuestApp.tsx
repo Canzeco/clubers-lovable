@@ -2229,7 +2229,7 @@ function ProfileView() {
   const [igConnected, setIgConnected] = useState(false);
   const [showConnect, setShowConnect] = useState(false);
   const [showAppeal, setShowAppeal] = useState(false);
-  const [subTab, setSubTab] = useState<"general" | "stats" | "wallet">("general");
+  const [subTab, setSubTab] = useState<"general" | "stats" | "wallet" | "settings">("general");
   return (
     <>
       <TopBar title="Profile" />
@@ -2252,22 +2252,26 @@ function ProfileView() {
             </div>
             <p className="mt-0.5 text-xs text-muted-foreground truncate">@valenrose · CDMX · 27</p>
           </div>
-          <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground">
+          <button
+            onClick={() => setSubTab("settings")}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground"
+          >
             <Settings className="h-4 w-4" />
           </button>
         </div>
 
         {/* Sub-tabs */}
-        <div className="mt-5 grid grid-cols-3 gap-1 rounded-full border border-border bg-card-soft p-1">
+        <div className="mt-5 grid grid-cols-4 gap-1 rounded-full border border-border bg-card-soft p-1">
           {([
             { id: "general", label: "Class" },
-            { id: "wallet", label: "Wallet" },
+            { id: "wallet", label: "Balance" },
             { id: "stats", label: "Game" },
+            { id: "settings", label: "Settings" },
           ] as const).map((s) => (
             <button
               key={s.id}
               onClick={() => setSubTab(s.id)}
-              className={`rounded-full px-3 py-1.5 text-[11px] font-semibold transition-colors ${
+              className={`rounded-full px-2 py-1.5 text-[11px] font-semibold transition-colors ${
                 subTab === s.id
                   ? "bg-peacock text-white shadow-glow"
                   : "text-muted-foreground"
@@ -2473,8 +2477,8 @@ function ProfileView() {
           </div>
         )}
 
-        {/* Account & support — always visible below tabs */}
-        {subTab !== "wallet" && (
+        {/* Settings tab */}
+        {subTab === "settings" && (
           <>
             <p className="mt-6 mb-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Account</p>
             <div className="overflow-hidden rounded-2xl border border-border bg-card">
