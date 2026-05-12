@@ -645,6 +645,7 @@ function TinderMode() {
   const [dir, setDir] = useState<"l" | "r" | null>(null);
   const [saved, setSaved] = useState<typeof venues[number] | null>(null);
   const [celebrate, setCelebrate] = useState<{ v: typeof venues[number]; reserve: boolean } | null>(null);
+  const [askReserve, setAskReserve] = useState<typeof venues[number] | null>(null);
   const [streak, setStreak] = useState(0);
   const [savedTotal, setSavedTotal] = useState(0);
   const [step, setStep] = useState<"ask" | "pick" | "done">("ask");
@@ -657,7 +658,7 @@ function TinderMode() {
   const v = venues[idx % venues.length];
   const next = venues[(idx + 1) % venues.length];
 
-  const fly = (d: "l" | "r", withReservation = true) => {
+  const fly = (d: "l" | "r") => {
     const current = v;
     setDir(d);
     setDrag(null);
@@ -668,10 +669,10 @@ function TinderMode() {
       if (d === "r") {
         setStreak((s) => s + 1);
         setSavedTotal((s) => s + 1);
-        setCelebrate({ v: current, reserve: withReservation });
+        setCelebrate({ v: current, reserve: false });
         setTimeout(() => {
           setCelebrate(null);
-          if (withReservation) setSaved(current);
+          setAskReserve(current);
         }, 1100);
       }
     }, 260);
