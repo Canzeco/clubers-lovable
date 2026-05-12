@@ -1691,7 +1691,7 @@ function ProfileView() {
           {([
             { id: "general", label: "Class" },
             { id: "wallet", label: "Wallet" },
-            { id: "stats", label: "Level" },
+            { id: "stats", label: "Game" },
           ] as const).map((s) => (
             <button
               key={s.id}
