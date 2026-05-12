@@ -1590,7 +1590,11 @@ function CouponTicket({
         />
 
         {/* right info */}
-        <div className="flex min-w-0 flex-1 flex-col justify-between px-4 py-3">
+        <div className="relative flex min-w-0 flex-1 flex-col justify-between px-4 py-3 pr-9">
+          {state === "active" && (
+            <PipelineStepper step={c.step ?? 0} />
+          )}
+
           {/* TOP: chip + serial */}
           <div className="flex items-center justify-between gap-2">
             <span
