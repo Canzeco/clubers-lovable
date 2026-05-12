@@ -1428,9 +1428,10 @@ function WalletView() {
   const [seg, setSeg] = useState<"active" | "expired" | "used">("active");
   const [openCoupon, setOpenCoupon] = useState<any | null>(null);
   const active = [
+    { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Wed May 14 · 8:00 PM", resParty: 2, expiresIn: "May 14 · 8pm + 24h", code: "MV-7702", firstVisit: false },
+    { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, isReservation: true, resStatus: "pending" as const, resRequested: "Fri May 16 · 9:30 PM", resParty: 4, expiresIn: "—", code: "NB-9914", firstVisit: false },
     { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, expiresIn: "18h 24m", isReservation: false, code: "CL-8821", firstVisit: true },
     { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, expiresIn: "9h 02m", isReservation: false, code: "LC-4417", firstVisit: false },
-    { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, expiresIn: "May 14 · 8pm + 24h", isReservation: true, code: "MV-7702", firstVisit: false },
   ];
   const expired = [
     { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, expiredOn: "Yesterday", code: "NB-3310" },
