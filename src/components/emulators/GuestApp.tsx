@@ -1532,42 +1532,81 @@ function CouponTicket({
       >
         {/* left stub */}
         <div
-          className={`relative flex w-[30%] flex-shrink-0 flex-col items-center justify-center px-2 py-4 ${
+          className={`relative flex w-[32%] flex-shrink-0 flex-col items-stretch justify-between overflow-hidden px-2.5 py-3 ${
             isInactive
-              ? "bg-muted text-muted-foreground"
+              ? "bg-gradient-to-br from-muted to-card text-muted-foreground"
               : c.firstVisit
-              ? "bg-gradient-to-br from-fuchsia-400 via-rose-300 to-amber-300 text-black"
-              : "bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground"
+              ? "bg-gradient-to-br from-fuchsia-500 via-rose-400 to-amber-300 text-black"
+              : "bg-gradient-to-br from-secondary via-secondary/90 to-secondary/70 text-secondary-foreground"
           }`}
         >
-          {/* corner sparkles */}
-          <span className="absolute left-2 top-2 text-[10px] opacity-50">✦</span>
-          <span className="absolute right-2 bottom-2 text-[10px] opacity-50">✦</span>
+          {/* foil sheen */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-40 mix-blend-overlay"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0) 65%, rgba(255,255,255,0.35) 100%)",
+            }}
+          />
+          {/* fine grid pattern */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.18]"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 1px 1px, currentColor 0.6px, transparent 0)",
+              backgroundSize: "8px 8px",
+            }}
+          />
+          {/* glow blob */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -left-6 -top-6 h-20 w-20 rounded-full bg-white/30 blur-2xl"
+          />
 
-          <p className="font-display text-5xl font-extrabold leading-none tracking-tight">
-            {c.cb}%
-          </p>
-          <p className="mt-1.5 text-[9px] font-bold uppercase tracking-[0.25em] opacity-80">
-            cashback
-          </p>
-          {c.firstVisit && !isInactive && (
-            <p className="mt-1 text-[8px] font-black uppercase tracking-[0.2em] opacity-70">
-              welcome
+          {/* TOP — tiny brand row */}
+          <div className="relative z-[1] flex items-center justify-between text-[8px] font-bold uppercase tracking-[0.25em] opacity-80">
+            <span className="flex items-center gap-0.5">
+              <span className="text-[10px] leading-none">🦚</span>
+              <span>Mesita</span>
+            </span>
+            {isReservation && !isInactive && (
+              <Calendar className="h-2.5 w-2.5" />
+            )}
+          </div>
+
+          {/* CENTER — the % */}
+          <div className="relative z-[1] flex flex-col items-center justify-center">
+            <p className="font-display text-[44px] font-extrabold leading-none tracking-tight drop-shadow-sm">
+              {c.cb}
+              <span className="text-2xl">%</span>
             </p>
-          )}
+            <p className="mt-1 text-[8px] font-black uppercase tracking-[0.3em] opacity-80">
+              {c.firstVisit && !isInactive ? "welcome · cashback" : "cashback"}
+            </p>
+          </div>
+
+          {/* BOTTOM — chip / signature */}
+          <div className="relative z-[1] flex items-end justify-between">
+            <span
+              aria-hidden
+              className="block h-3 w-5 rounded-[2px] bg-gradient-to-br from-white/70 to-white/30 shadow-inner"
+            />
+            <span className="font-display text-[9px] font-bold italic tracking-tight opacity-70">
+              gift
+            </span>
+          </div>
+
+          {/* state stamps */}
           {isUsed && (
-            <span className="absolute -rotate-12 rounded border-2 border-secondary/70 px-2 py-0.5 font-display text-[11px] font-black uppercase tracking-widest text-secondary/80">
+            <span className="absolute left-1/2 top-1/2 z-[2] -translate-x-1/2 -translate-y-1/2 -rotate-12 rounded border-2 border-secondary/80 bg-background/60 px-2 py-0.5 font-display text-[11px] font-black uppercase tracking-widest text-secondary/90 backdrop-blur-sm">
               Redeemed
             </span>
           )}
           {isExpired && (
-            <span className="absolute -rotate-12 rounded border-2 border-foreground/60 px-2 py-0.5 font-display text-[11px] font-black uppercase tracking-widest text-foreground/70">
+            <span className="absolute left-1/2 top-1/2 z-[2] -translate-x-1/2 -translate-y-1/2 -rotate-12 rounded border-2 border-foreground/60 bg-background/60 px-2 py-0.5 font-display text-[11px] font-black uppercase tracking-widest text-foreground/70 backdrop-blur-sm">
               Expired
-            </span>
-          )}
-          {isReservation && !isUsed && !isExpired && (
-            <span className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-white/90 text-secondary shadow">
-              <Calendar className="h-3 w-3" />
             </span>
           )}
         </div>
