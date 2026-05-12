@@ -37,6 +37,12 @@ import {
   Share2,
   Gift,
   Copy,
+  Settings,
+  HelpCircle,
+  LogOut,
+  Bell,
+  Shield,
+  ChevronDown,
 } from "lucide-react";
 
 type Tab = "discover" | "coupons" | "share" | "profile";
