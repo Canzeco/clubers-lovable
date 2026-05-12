@@ -55,7 +55,7 @@ export function ManagerWeb() {
   const nav: { id: TabId; label: string; Icon: typeof LayoutDashboard }[] = [
     { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
     { id: "place", label: "Place", Icon: Store },
-    { id: "promos", label: "Promotions", Icon: Megaphone },
+    { id: "promos", label: "Promos", Icon: Megaphone },
     { id: "analytics", label: "Analytics", Icon: BarChart3 },
     { id: "wallet", label: "Wallet", Icon: WalletIcon },
     { id: "team", label: "Team", Icon: Users },
@@ -511,7 +511,7 @@ function Promos() {
   return (
     <div className="space-y-5 p-6">
       <div>
-        <h1 className="font-display text-2xl font-semibold">Promotions</h1>
+        <h1 className="font-display text-2xl font-semibold">Promos</h1>
         <p className="text-xs text-muted-foreground">
           Set Mesita cashback for each tier. Everything else is automatic.
         </p>
