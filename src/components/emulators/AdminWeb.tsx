@@ -932,43 +932,9 @@ function VenueEditorImpl() {
   ];
 
   return (
-    <div className="grid grid-cols-[320px_1fr_360px] gap-4 p-6">
-      {/* Left: venue list */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Editando</p>
-          <button className="text-[10px] text-secondary">+ Nuevo perfil</button>
-        </div>
-        <div className="rounded-xl border border-secondary/40 bg-secondary/5 p-3">
-          <div className="flex items-center gap-2">
-            <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-tier-gold to-secondary" />
-            <div>
-              <p className="text-sm font-semibold">La Cabaña de Pecos</p>
-              <p className="text-[10px] text-muted-foreground">SLP · Steakhouse · desde 1982</p>
-            </div>
-          </div>
-          <div className="mt-2 flex items-center gap-1 text-[10px] text-muted-foreground">
-            <span className="rounded-full bg-card px-1.5 py-0.5">Draft</span>
-            <span>completitud 72%</span>
-          </div>
-          <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
-            <div className="h-full w-[72%] bg-secondary" />
-          </div>
-        </div>
-        {["Bocanada (Roma)", "Patio Verde", "Galápago", "Casa Luminar"].map((n) => (
-          <div key={n} className="flex items-center gap-2 rounded-lg border border-border bg-card p-2 text-xs hover:border-primary/40">
-            <div className="h-8 w-8 rounded bg-peacock" />
-            <div className="flex-1">
-              <p className="font-medium">{n}</p>
-              <p className="text-[10px] text-muted-foreground">draft · 34%</p>
-            </div>
-            <PencilLine className="h-3 w-3 text-muted-foreground" />
-          </div>
-        ))}
-      </div>
-
-      {/* Center: editor */}
-      <div className="space-y-3">
+    <div className="grid grid-cols-1 gap-4 p-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+      {/* Editor */}
+      <div className="min-w-0 space-y-3">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="font-display text-2xl font-semibold">Perfil de venue</h1>
