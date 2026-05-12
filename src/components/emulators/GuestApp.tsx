@@ -565,15 +565,17 @@ function VenueDetailSheet({
           <div className="pointer-events-auto flex w-full items-stretch gap-2 rounded-3xl border border-border/60 bg-card/85 p-2 shadow-2xl backdrop-blur-xl">
             <button
               onClick={handleSaveReserve}
-              className="flex flex-[2] items-center justify-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-r from-peacock to-secondary px-3 py-3 text-sm font-semibold text-white shadow-glow transition active:scale-[0.98]"
+              className="flex flex-[1.6] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-peacock to-secondary px-3 py-2.5 text-[12px] font-semibold leading-tight text-white shadow-glow transition active:scale-[0.98]"
             >
-              <Calendar className="h-4 w-4 shrink-0" /> Save + Reserve
+              <Calendar className="h-4 w-4 shrink-0" />
+              <span className="text-left">Save Coupon<br />+ Reserve Table</span>
             </button>
             <button
               onClick={handleSave}
-              className="flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-foreground/15 bg-background px-3 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:border-foreground/30 active:scale-[0.98]"
+              className="flex flex-1 items-center justify-center gap-2 rounded-full border border-foreground/15 bg-background px-3 py-2.5 text-[12px] font-semibold leading-tight text-foreground shadow-sm transition hover:border-foreground/30 active:scale-[0.98]"
             >
-              <Ticket className="h-4 w-4 shrink-0 text-secondary" /> Save
+              <Ticket className="h-4 w-4 shrink-0 text-secondary" />
+              <span className="text-left">Save<br />Coupon</span>
             </button>
           </div>
         </div>
