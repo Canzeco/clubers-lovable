@@ -2,46 +2,112 @@ import { useState } from "react";
 import {
   BarChart3,
   Calendar,
+  ChevronDown,
+  Coins,
+  Image as ImageIcon,
+  Instagram,
   LayoutDashboard,
+  MapPin,
   Megaphone,
+  MessageCircle,
+  Phone,
   Plus,
+  Search,
   Settings,
   Sparkles,
-  Users,
+  Star,
+  Store,
   TrendingUp,
-  Instagram,
-  Search,
+  UserPlus,
+  Users,
+  Wallet as WalletIcon,
 } from "lucide-react";
 
-export function ManagerWeb() {
-  const [tab, setTab] = useState("dashboard");
-  const [cashback, setCashback] = useState(20);
+type TabId =
+  | "dashboard"
+  | "place"
+  | "promos"
+  | "analytics"
+  | "wallet"
+  | "team"
+  | "settings";
 
-  const nav = [
+const UNITS = [
+  { id: "luminar", name: "Casa Luminar", city: "CDMX · Roma Nte.", emoji: "🦚" },
+  { id: "loto", name: "Loto Café", city: "CDMX · Condesa", emoji: "🌿" },
+  { id: "mar", name: "Mar Verde", city: "Tulum · Centro", emoji: "🌊" },
+];
+
+export function ManagerWeb() {
+  const [tab, setTab] = useState<TabId>("dashboard");
+  const [unitId, setUnitId] = useState(UNITS[0].id);
+  const [unitOpen, setUnitOpen] = useState(false);
+  const unit = UNITS.find((u) => u.id === unitId)!;
+
+  const nav: { id: TabId; label: string; Icon: typeof LayoutDashboard }[] = [
     { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
-    { id: "promos", label: "Promociones", Icon: Megaphone },
-    { id: "guests", label: "Huéspedes", Icon: Users },
-    { id: "analytics", label: "Analítica", Icon: BarChart3 },
-    { id: "settings", label: "Ajustes", Icon: Settings },
+    { id: "place", label: "Place", Icon: Store },
+    { id: "promos", label: "Promotions", Icon: Megaphone },
+    { id: "analytics", label: "Analytics", Icon: BarChart3 },
+    { id: "wallet", label: "Wallet", Icon: WalletIcon },
+    { id: "team", label: "Team", Icon: Users },
+    { id: "settings", label: "Settings", Icon: Settings },
   ];
 
   return (
     <div className="flex h-full bg-background text-foreground">
       {/* Sidebar */}
       <aside className="flex w-56 flex-col border-r border-border bg-sidebar p-4">
-        <div className="mb-6 flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-peacock text-lg">
-            🦚
-          </div>
-          <div>
-            <p className="font-display text-base font-semibold leading-none">
-              Casa Luminar
-            </p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Manager
-            </p>
-          </div>
+        {/* Unit switcher */}
+        <div className="relative mb-5">
+          <button
+            onClick={() => setUnitOpen((o) => !o)}
+            className="flex w-full items-center gap-2 rounded-xl border border-border bg-card p-2 text-left hover:bg-card-soft"
+          >
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-peacock text-lg">
+              {unit.emoji}
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <p className="truncate font-display text-sm font-semibold leading-none">
+                {unit.name}
+              </p>
+              <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+                {unit.city}
+              </p>
+            </div>
+            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+          </button>
+          {unitOpen && (
+            <div className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-xl border border-border bg-card shadow-elev">
+              {UNITS.map((u) => (
+                <button
+                  key={u.id}
+                  onClick={() => {
+                    setUnitId(u.id);
+                    setUnitOpen(false);
+                  }}
+                  className={`flex w-full items-center gap-2 px-2 py-2 text-left text-xs hover:bg-card-soft ${
+                    u.id === unitId ? "bg-card-soft" : ""
+                  }`}
+                >
+                  <div className="flex h-7 w-7 items-center justify-center rounded-md bg-peacock/30">
+                    {u.emoji}
+                  </div>
+                  <div className="flex-1 overflow-hidden">
+                    <p className="truncate font-medium">{u.name}</p>
+                    <p className="truncate text-[9px] text-muted-foreground">
+                      {u.city}
+                    </p>
+                  </div>
+                </button>
+              ))}
+              <button className="flex w-full items-center gap-2 border-t border-border px-2 py-2 text-left text-xs text-secondary hover:bg-card-soft">
+                <Plus className="h-3.5 w-3.5" /> Add new unit
+              </button>
+            </div>
+          )}
         </div>
+
         <nav className="flex-1 space-y-1">
           {nav.map((n) => (
             <button
@@ -63,7 +129,7 @@ export function ManagerWeb() {
             <Sparkles className="h-3 w-3" /> AI Copilot
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Genera tu próxima campaña en 1 click.
+            Generate your next campaign in 1 click.
           </p>
         </div>
       </aside>
@@ -74,31 +140,41 @@ export function ManagerWeb() {
         <div className="flex items-center justify-between border-b border-border px-6 py-3">
           <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground">
             <Search className="h-3.5 w-3.5" />
-            Buscar huéspedes, promos…
+            Search guests, promos…
           </div>
           <div className="flex items-center gap-2">
             <button className="rounded-lg border border-border px-3 py-1.5 text-xs">
-              <Calendar className="mr-1 inline h-3.5 w-3.5" /> Últimos 30 días
+              <Calendar className="mr-1 inline h-3.5 w-3.5" /> Last 30 days
             </button>
             <button className="rounded-lg bg-peacock px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-glow">
-              <Plus className="mr-1 inline h-3.5 w-3.5" /> Nueva promo
+              <Plus className="mr-1 inline h-3.5 w-3.5" /> New promo
             </button>
           </div>
         </div>
 
-        {tab === "dashboard" && <Dashboard />}
-        {tab === "promos" && (
-          <Promos cashback={cashback} setCashback={setCashback} />
-        )}
-        {tab === "guests" && <Guests />}
-        {tab === "analytics" && <Dashboard />}
-        {tab === "settings" && <Dashboard />}
+        {tab === "dashboard" && <Dashboard unit={unit} />}
+        {tab === "place" && <Place unit={unit} />}
+        {tab === "promos" && <Promos />}
+        {tab === "analytics" && <Analytics />}
+        {tab === "wallet" && <Wallet />}
+        {tab === "team" && <Team />}
+        {tab === "settings" && <Dashboard unit={unit} />}
       </main>
     </div>
   );
 }
 
-function Stat({ label, value, delta }: { label: string; value: string; delta: string }) {
+/* ============== DASHBOARD ============== */
+
+function Stat({
+  label,
+  value,
+  delta,
+}: {
+  label: string;
+  value: string;
+  delta: string;
+}) {
   return (
     <div className="rounded-xl border border-border bg-card-soft p-4">
       <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -112,40 +188,53 @@ function Stat({ label, value, delta }: { label: string; value: string; delta: st
   );
 }
 
-function Dashboard() {
+function Dashboard({ unit }: { unit: { name: string } }) {
   const bars = [40, 55, 38, 70, 62, 88, 95, 72, 80, 110, 96, 130];
   return (
     <div className="space-y-5 p-6">
       <div>
-        <h1 className="font-display text-3xl font-semibold">Buenas tardes, Diego</h1>
+        <h1 className="font-display text-3xl font-semibold">
+          Good afternoon, Diego
+        </h1>
         <p className="text-sm text-muted-foreground">
-          Tu rooftop está corriendo 3 promos activas · 47 cupones canjeados esta semana.
+          {unit.name} is running 3 active promos · 47 coupons redeemed this week.
         </p>
       </div>
       <div className="grid grid-cols-4 gap-3">
-        <Stat label="Spend influido" value="$84.2k" delta="+22% vs sem ant." />
-        <Stat label="Cupones canjeados" value="312" delta="+18%" />
-        <Stat label="Ticket promedio" value="$642" delta="+9%" />
-        <Stat label="Stories verificadas" value="46" delta="+31%" />
+        <Stat label="Influenced spend" value="$84.2k" delta="+22% vs last wk" />
+        <Stat label="Coupons redeemed" value="312" delta="+18%" />
+        <Stat label="Average ticket" value="$642" delta="+9%" />
+        <Stat label="Verified stories" value="46" delta="+31%" />
       </div>
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2 rounded-xl border border-border bg-card-soft p-4">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-sm font-medium">Redenciones · últimas 12 semanas</p>
-            <span className="text-xs text-muted-foreground">Bronze · Silver · Gold</span>
+            <p className="text-sm font-medium">Redemptions · last 12 weeks</p>
+            <span className="text-xs text-muted-foreground">
+              Bronze · Silver · Gold
+            </span>
           </div>
           <div className="flex h-40 items-end gap-2">
             {bars.map((h, i) => (
               <div key={i} className="flex flex-1 flex-col gap-0.5">
-                <div className="rounded-t bg-tier-gold" style={{ height: `${h * 0.3}%` }} />
-                <div className="bg-tier-silver" style={{ height: `${h * 0.35}%` }} />
-                <div className="rounded-b bg-tier-bronze" style={{ height: `${h * 0.35}%` }} />
+                <div
+                  className="rounded-t bg-tier-gold"
+                  style={{ height: `${h * 0.3}%` }}
+                />
+                <div
+                  className="bg-tier-silver"
+                  style={{ height: `${h * 0.35}%` }}
+                />
+                <div
+                  className="rounded-b bg-tier-bronze"
+                  style={{ height: `${h * 0.35}%` }}
+                />
               </div>
             ))}
           </div>
         </div>
         <div className="rounded-xl border border-border bg-card-soft p-4">
-          <p className="mb-3 text-sm font-medium">Huéspedes por tier</p>
+          <p className="mb-3 text-sm font-medium">Guests by tier</p>
           <div className="space-y-3">
             {[
               { t: "Gold", v: 18, c: "bg-tier-gold" },
@@ -158,13 +247,16 @@ function Dashboard() {
                   <span className="font-semibold">{r.v}</span>
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-muted">
-                  <div className={`h-full ${r.c}`} style={{ width: `${(r.v / 130) * 100}%` }} />
+                  <div
+                    className={`h-full ${r.c}`}
+                    style={{ width: `${(r.v / 130) * 100}%` }}
+                  />
                 </div>
               </div>
             ))}
           </div>
           <button className="mt-4 flex w-full items-center justify-center gap-1 rounded-lg bg-secondary py-2 text-xs font-semibold text-secondary-foreground">
-            <Instagram className="h-3 w-3" /> Lanzar campaña de stories
+            <Instagram className="h-3 w-3" /> Launch stories campaign
           </button>
         </div>
       </div>
@@ -172,91 +264,264 @@ function Dashboard() {
   );
 }
 
-function Promos({ cashback, setCashback }: { cashback: number; setCashback: (n: number) => void }) {
-  const promos = [
-    { name: "Jueves Gold", tier: "Gold", cb: 20, status: "Activa", redeems: 38 },
-    { name: "Brunch sábado", tier: "Silver+", cb: 10, status: "Activa", redeems: 91 },
-    { name: "Story bonus", tier: "Todos", cb: 10, status: "Activa", redeems: 46 },
-    { name: "Cumpleaños", tier: "Gold", cb: 50, status: "Pausada", redeems: 6 },
+/* ============== PLACE ============== */
+
+function Place({ unit }: { unit: { name: string; city: string } }) {
+  const photos = [
+    "from-amber-400/50 to-rose-500/50",
+    "from-emerald-400/50 to-teal-500/50",
+    "from-violet-400/50 to-fuchsia-500/50",
+    "from-sky-400/50 to-indigo-500/50",
+    "from-orange-400/50 to-pink-500/50",
+    "from-lime-400/50 to-emerald-500/50",
+  ];
+  const menu = [
+    { n: "Burrata & heirloom tomato", p: 280 },
+    { n: "Octopus, smoked paprika", p: 420 },
+    { n: "Wagyu tagliata, truffle", p: 680 },
+    { n: "Saffron risotto", p: 340 },
+    { n: "Mezcal sour", p: 190 },
   ];
   return (
-    <div className="grid grid-cols-5 gap-5 p-6">
-      <div className="col-span-3 space-y-3">
-        <h1 className="font-display text-2xl font-semibold">Promociones</h1>
-        <div className="overflow-hidden rounded-xl border border-border bg-card-soft">
-          <div className="grid grid-cols-6 border-b border-border bg-card px-4 py-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-            <span className="col-span-2">Nombre</span>
-            <span>Tier</span>
-            <span>Cashback</span>
-            <span>Canjeos</span>
-            <span>Estado</span>
-          </div>
-          {promos.map((p) => (
-            <div
-              key={p.name}
-              className="grid grid-cols-6 items-center border-b border-border/50 px-4 py-3 text-sm last:border-0 hover:bg-card"
-            >
-              <span className="col-span-2 font-medium">{p.name}</span>
-              <span className="text-xs text-muted-foreground">{p.tier}</span>
-              <span className="font-semibold text-secondary">{p.cb}%</span>
-              <span>{p.redeems}</span>
-              <span>
-                <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] ${
-                    p.status === "Activa"
-                      ? "bg-emerald-500/20 text-emerald-300"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {p.status}
-                </span>
-              </span>
-            </div>
-          ))}
+    <div className="space-y-5 p-6">
+      <div className="flex items-end justify-between">
+        <div>
+          <h1 className="font-display text-2xl font-semibold">Place</h1>
+          <p className="text-xs text-muted-foreground">
+            Everything guests see about {unit.name}.
+          </p>
         </div>
+        <button className="rounded-lg bg-peacock px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-glow">
+          Save changes
+        </button>
       </div>
-      <div className="col-span-2 space-y-3">
-        <h2 className="font-display text-xl font-semibold">Nueva promoción</h2>
-        <div className="space-y-3 rounded-xl border border-border bg-card-soft p-4">
-          <div>
-            <label className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Nombre
-            </label>
-            <div className="mt-1 rounded-lg border border-border bg-input px-3 py-2 text-sm">
-              Viernes neón
+
+      <div className="grid grid-cols-3 gap-4">
+        {/* Identity */}
+        <div className="col-span-2 space-y-4">
+          <div className="rounded-xl border border-border bg-card-soft p-4">
+            <p className="mb-3 text-[10px] uppercase tracking-widest text-muted-foreground">
+              Identity
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Name" value={unit.name} />
+              <Field label="Category" value="Rooftop · Cocktails" />
+              <Field label="Price range" value="$$$" />
+              <Field label="Hours" value="Tue–Sun · 5pm – 1am" />
+            </div>
+            <div className="mt-3">
+              <label className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Bio
+              </label>
+              <div className="mt-1 rounded-lg border border-border bg-input px-3 py-2 text-xs leading-relaxed">
+                Rooftop garden in Roma Nte. with peacock-blue tiles, a wood-fired
+                kitchen and golden-hour cocktails. Reservations recommended on
+                weekends.
+              </div>
             </div>
           </div>
-          <div>
-            <label className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Tier objetivo
-            </label>
-            <div className="mt-1 flex gap-2">
-              {["Bronze", "Silver", "Gold"].map((t) => (
-                <button
-                  key={t}
-                  className={`flex-1 rounded-lg border px-2 py-1.5 text-xs ${
-                    t === "Gold"
-                      ? "border-secondary bg-secondary/10 text-secondary"
-                      : "border-border text-muted-foreground"
-                  }`}
+
+          {/* Photos */}
+          <div className="rounded-xl border border-border bg-card-soft p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Photos
+              </p>
+              <button className="text-[10px] text-secondary">
+                + Upload
+              </button>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {photos.map((p, i) => (
+                <div
+                  key={i}
+                  className={`relative aspect-square rounded-lg bg-gradient-to-br ${p}`}
                 >
-                  {t}
-                </button>
+                  {i === 0 && (
+                    <span className="absolute left-1.5 top-1.5 rounded-full bg-black/60 px-1.5 py-0.5 text-[9px] text-white">
+                      Cover
+                    </span>
+                  )}
+                </div>
+              ))}
+              <button className="flex aspect-square items-center justify-center rounded-lg border border-dashed border-border text-muted-foreground hover:bg-card">
+                <ImageIcon className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Menu */}
+          <div className="rounded-xl border border-border bg-card-soft p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                Menu
+              </p>
+              <button className="text-[10px] text-secondary">+ Add item</button>
+            </div>
+            <div className="space-y-2">
+              {menu.map((m) => (
+                <div
+                  key={m.n}
+                  className="flex items-center justify-between rounded-lg border border-border bg-card px-3 py-2 text-xs"
+                >
+                  <span>{m.n}</span>
+                  <span className="font-semibold text-secondary">${m.p}</span>
+                </div>
               ))}
             </div>
           </div>
-          <div>
-            <label className="flex justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
-              <span>Cashback</span>
-              <span className="font-bold text-secondary">{cashback}%</span>
-            </label>
-            <div className="mt-2 grid grid-cols-4 gap-1.5">
-              {[5, 10, 20, 50].map((v) => (
+        </div>
+
+        {/* Right column */}
+        <div className="space-y-4">
+          <div className="rounded-xl border border-border bg-card-soft p-4">
+            <p className="mb-3 text-[10px] uppercase tracking-widest text-muted-foreground">
+              Location
+            </p>
+            <div className="relative aspect-video overflow-hidden rounded-lg bg-gradient-to-br from-peacock/40 to-secondary/30">
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <MapPin className="h-6 w-6 text-secondary" />
+              </div>
+            </div>
+            <p className="mt-2 text-xs">Av. Álvaro Obregón 185</p>
+            <p className="text-[11px] text-muted-foreground">
+              Roma Nte., 06700 CDMX
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-border bg-card-soft p-4">
+            <p className="mb-3 text-[10px] uppercase tracking-widest text-muted-foreground">
+              Social & links
+            </p>
+            <SocialRow icon="IG" handle="@casaluminar" />
+            <SocialRow icon="TT" handle="@casaluminar" />
+            <SocialRow icon="G" handle="Casa Luminar · 4.6 ★" />
+            <SocialRow icon="UE" handle="Uber Eats · 4.8 ★" />
+            <SocialRow icon="W" handle="casaluminar.mx" />
+          </div>
+
+          <div className="rounded-xl border border-border bg-card-soft p-4">
+            <p className="mb-3 text-[10px] uppercase tracking-widest text-muted-foreground">
+              Ratings
+            </p>
+            <div className="space-y-1.5 text-xs">
+              <Rating label="Mesita" value="4.8" count="1.2k" />
+              <Rating label="Google" value="4.6" count="3.4k" />
+              <Rating label="Instagram" value="4.9" count="980" />
+              <Rating label="Uber Eats" value="4.8" count="2.1k" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <label className="text-[10px] uppercase tracking-widest text-muted-foreground">
+        {label}
+      </label>
+      <div className="mt-1 rounded-lg border border-border bg-input px-3 py-2 text-xs">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function SocialRow({ icon, handle }: { icon: string; handle: string }) {
+  return (
+    <div className="flex items-center gap-2 border-b border-border/40 py-1.5 last:border-0">
+      <div className="flex h-6 w-6 items-center justify-center rounded-md bg-peacock/30 text-[9px] font-bold">
+        {icon}
+      </div>
+      <span className="text-xs">{handle}</span>
+    </div>
+  );
+}
+
+function Rating({
+  label,
+  value,
+  count,
+}: {
+  label: string;
+  value: string;
+  count: string;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-muted-foreground">{label}</span>
+      <span>
+        <Star className="mr-1 inline h-3 w-3 fill-tier-gold text-tier-gold" />
+        <span className="font-semibold">{value}</span>
+        <span className="ml-1 text-[10px] text-muted-foreground">({count})</span>
+      </span>
+    </div>
+  );
+}
+
+/* ============== PROMOTIONS ============== */
+
+function Promos() {
+  const tiers: {
+    name: "Bronze" | "Silver" | "Gold";
+    color: string;
+    cb: number;
+    visits: string;
+  }[] = [
+    { name: "Bronze", color: "bg-tier-bronze", cb: 5, visits: "0 – 2 visits" },
+    { name: "Silver", color: "bg-tier-silver", cb: 10, visits: "3 – 6 visits" },
+    { name: "Gold", color: "bg-tier-gold", cb: 20, visits: "7+ visits" },
+  ];
+  const [values, setValues] = useState({ Bronze: 5, Silver: 10, Gold: 20 });
+  const extras = [
+    { name: "Story bonus", desc: "+10% when guest posts a verified story", on: true },
+    { name: "Birthday boost", desc: "+30% during birthday week", on: true },
+    { name: "Weekday lift", desc: "+5% Mon – Wed", on: false },
+  ];
+  return (
+    <div className="space-y-5 p-6">
+      <div>
+        <h1 className="font-display text-2xl font-semibold">Promotions</h1>
+        <p className="text-xs text-muted-foreground">
+          Set Mesita cashback for each tier. Everything else is automatic.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-3 gap-3">
+        {tiers.map((t) => (
+          <div
+            key={t.name}
+            className="rounded-xl border border-border bg-card-soft p-4"
+          >
+            <div className="flex items-center justify-between">
+              <span
+                className={`rounded-full px-2 py-0.5 text-[10px] font-bold text-black ${t.color}`}
+              >
+                {t.name.toUpperCase()}
+              </span>
+              <span className="text-[10px] text-muted-foreground">
+                {t.visits}
+              </span>
+            </div>
+            <div className="mt-4 flex items-end gap-1">
+              <span className="font-display text-5xl font-semibold text-secondary">
+                {values[t.name]}
+              </span>
+              <span className="mb-1 text-xl text-secondary">%</span>
+              <span className="mb-2 ml-1 text-[10px] uppercase tracking-widest text-muted-foreground">
+                cashback
+              </span>
+            </div>
+            <div className="mt-3 grid grid-cols-5 gap-1">
+              {[5, 10, 15, 20, 30].map((v) => (
                 <button
                   key={v}
-                  onClick={() => setCashback(v)}
-                  className={`rounded-lg border px-2 py-1.5 text-xs font-semibold transition ${
-                    cashback === v
+                  onClick={() => setValues((s) => ({ ...s, [t.name]: v }))}
+                  className={`rounded-md border px-1 py-1 text-[10px] font-semibold transition ${
+                    values[t.name] === v
                       ? "border-secondary bg-secondary text-secondary-foreground"
                       : "border-border text-muted-foreground"
                   }`}
@@ -265,74 +530,322 @@ function Promos({ cashback, setCashback }: { cashback: number; setCashback: (n: 
                 </button>
               ))}
             </div>
+            <div className="mt-3 rounded-lg bg-peacock/10 p-2 text-[10px] text-muted-foreground">
+              Est. <span className="text-secondary">+{values[t.name] * 1.2 | 0} visits/wk</span>
+            </div>
           </div>
-          <div className="rounded-lg bg-peacock/10 p-3 text-xs text-muted-foreground">
-            <p className="text-foreground">Estimado de Mesita AI</p>
-            <p className="mt-0.5">
-              ~ <span className="text-secondary">+24 visitas</span> · spend influido{" "}
-              <span className="text-secondary">$18.4k</span>
-            </p>
-          </div>
-          <button className="w-full rounded-lg bg-peacock py-2 text-sm font-semibold text-primary-foreground shadow-glow">
-            Lanzar promo
-          </button>
+        ))}
+      </div>
+
+      <div className="rounded-xl border border-border bg-card-soft p-4">
+        <p className="mb-3 text-sm font-medium">Bonus rules</p>
+        <div className="space-y-2">
+          {extras.map((e) => (
+            <div
+              key={e.name}
+              className="flex items-center justify-between rounded-lg border border-border bg-card px-3 py-2"
+            >
+              <div>
+                <p className="text-xs font-medium">{e.name}</p>
+                <p className="text-[10px] text-muted-foreground">{e.desc}</p>
+              </div>
+              <div
+                className={`flex h-5 w-9 items-center rounded-full px-0.5 ${
+                  e.on ? "bg-secondary" : "bg-muted"
+                }`}
+              >
+                <div
+                  className={`h-4 w-4 rounded-full bg-white transition ${
+                    e.on ? "ml-auto" : ""
+                  }`}
+                />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-function Guests() {
-  const guests = [
-    { n: "Valentina R.", h: "@valenrose", tier: "Gold", v: 12, s: "MXN 8.4k" },
-    { n: "Mateo G.", h: "@matgg", tier: "Gold", v: 9, s: "MXN 6.1k" },
-    { n: "Sofía A.", h: "@sof.ah", tier: "Silver", v: 6, s: "MXN 2.9k" },
-    { n: "Luis P.", h: "@luispb", tier: "Silver", v: 4, s: "MXN 1.8k" },
-    { n: "Ana M.", h: "@anita", tier: "Bronze", v: 2, s: "MXN 0.6k" },
+/* ============== ANALYTICS ============== */
+
+function Analytics() {
+  const funnel = [
+    { label: "Profile views", v: 12480, pct: 100 },
+    { label: "Swipes right", v: 4320, pct: 35 },
+    { label: "Coupons claimed", v: 1860, pct: 15 },
+    { label: "Visits", v: 612, pct: 5 },
+    { label: "Stories shared", v: 146, pct: 1.2 },
+  ];
+  const stories = [
+    { h: "@valenrose", t: "Gold", ago: "2h" },
+    { h: "@matgg", t: "Gold", ago: "5h" },
+    { h: "@sof.ah", t: "Silver", ago: "1d" },
+    { h: "@luispb", t: "Silver", ago: "1d" },
+    { h: "@anita", t: "Bronze", ago: "2d" },
+    { h: "@noctura", t: "Gold", ago: "3d" },
   ];
   return (
-    <div className="space-y-4 p-6">
-      <h1 className="font-display text-2xl font-semibold">Huéspedes</h1>
-      <div className="overflow-hidden rounded-xl border border-border bg-card-soft">
-        <div className="grid grid-cols-6 border-b border-border bg-card px-4 py-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-          <span className="col-span-2">Huésped</span>
-          <span>Tier</span>
-          <span>Visitas</span>
-          <span>Spend</span>
-          <span>Acción</span>
+    <div className="space-y-5 p-6">
+      <div>
+        <h1 className="font-display text-2xl font-semibold">Analytics</h1>
+        <p className="text-xs text-muted-foreground">
+          Marketing & financial performance powered by Mesita.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-4 gap-3">
+        <Stat label="Profile views" value="12.4k" delta="+18%" />
+        <Stat label="Influenced spend" value="$84.2k" delta="+22%" />
+        <Stat label="Cashback paid" value="$11.8k" delta="+14%" />
+        <Stat label="Gifts shared" value="146" delta="+31%" />
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        <div className="col-span-2 rounded-xl border border-border bg-card-soft p-4">
+          <p className="mb-3 text-sm font-medium">Conversion funnel</p>
+          <div className="space-y-2">
+            {funnel.map((f) => (
+              <div key={f.label}>
+                <div className="mb-1 flex justify-between text-xs">
+                  <span className="text-muted-foreground">{f.label}</span>
+                  <span className="font-semibold">
+                    {f.v.toLocaleString()}{" "}
+                    <span className="text-[10px] text-muted-foreground">
+                      · {f.pct}%
+                    </span>
+                  </span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className="h-full bg-gradient-to-r from-peacock to-secondary"
+                    style={{ width: `${f.pct}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        {guests.map((g) => (
+
+        <div className="rounded-xl border border-border bg-card-soft p-4">
+          <p className="mb-3 text-sm font-medium">Verified stories</p>
+          <div className="grid grid-cols-3 gap-2">
+            {stories.map((s, i) => (
+              <div
+                key={i}
+                className="relative aspect-[9/14] overflow-hidden rounded-lg bg-gradient-to-br from-violet-500/40 via-rose-500/40 to-amber-400/40"
+              >
+                <span
+                  className={`absolute right-1 top-1 rounded-full px-1.5 py-0.5 text-[8px] font-bold text-black ${
+                    s.t === "Gold"
+                      ? "bg-tier-gold"
+                      : s.t === "Silver"
+                      ? "bg-tier-silver"
+                      : "bg-tier-bronze"
+                  }`}
+                >
+                  {s.t[0]}
+                </span>
+                <div className="absolute inset-x-1 bottom-1 rounded bg-black/50 px-1 py-0.5 backdrop-blur">
+                  <p className="truncate text-[9px] text-white">{s.h}</p>
+                  <p className="text-[8px] text-white/70">{s.ago}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        <div className="rounded-xl border border-border bg-card-soft p-4">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Average ticket
+          </p>
+          <p className="mt-1 font-display text-xl font-semibold">$642</p>
+          <p className="text-[10px] text-emerald-400">+9% vs last 30d</p>
+        </div>
+        <div className="rounded-xl border border-border bg-card-soft p-4">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Repeat rate
+          </p>
+          <p className="mt-1 font-display text-xl font-semibold">38%</p>
+          <p className="text-[10px] text-emerald-400">+6 pts</p>
+        </div>
+        <div className="rounded-xl border border-border bg-card-soft p-4">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            ROAS
+          </p>
+          <p className="mt-1 font-display text-xl font-semibold">7.1×</p>
+          <p className="text-[10px] text-emerald-400">+0.8×</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============== WALLET ============== */
+
+function Wallet() {
+  const tx = [
+    { d: "May 11", k: "Payout", a: "+$12,400", c: "text-emerald-400" },
+    { d: "May 10", k: "Cashback paid · 18 redeems", a: "-$1,820", c: "text-rose-400" },
+    { d: "May 9", k: "Mesita fee · 3%", a: "-$420", c: "text-muted-foreground" },
+    { d: "May 8", k: "Spend influenced", a: "+$14,200", c: "text-emerald-400" },
+    { d: "May 7", k: "Story bonus paid · 6", a: "-$340", c: "text-rose-400" },
+  ];
+  return (
+    <div className="space-y-5 p-6">
+      <div>
+        <h1 className="font-display text-2xl font-semibold">Wallet</h1>
+        <p className="text-xs text-muted-foreground">
+          Cash earned, cashback owed, payouts.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-3 gap-3">
+        <div className="col-span-1 rounded-2xl border border-border bg-gradient-to-br from-peacock/30 to-secondary/20 p-5">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            Available balance
+          </p>
+          <p className="mt-2 font-display text-4xl font-semibold">$24,180</p>
+          <p className="text-[11px] text-muted-foreground">MXN · ready to withdraw</p>
+          <button className="mt-4 w-full rounded-lg bg-peacock py-2 text-xs font-semibold text-primary-foreground shadow-glow">
+            <Coins className="mr-1 inline h-3.5 w-3.5" /> Withdraw
+          </button>
+        </div>
+        <Stat label="Earned this month" value="$84.2k" delta="+22%" />
+        <Stat label="Cashback owed" value="$3.4k" delta="42 open coupons" />
+      </div>
+
+      <div className="rounded-xl border border-border bg-card-soft">
+        <div className="flex items-center justify-between border-b border-border px-4 py-3">
+          <p className="text-sm font-medium">Recent activity</p>
+          <button className="text-[10px] text-secondary">Export CSV</button>
+        </div>
+        {tx.map((t, i) => (
           <div
-            key={g.h}
-            className="grid grid-cols-6 items-center border-b border-border/50 px-4 py-3 text-sm last:border-0 hover:bg-card"
+            key={i}
+            className="flex items-center justify-between border-b border-border/40 px-4 py-3 text-sm last:border-0"
           >
-            <div className="col-span-2 flex items-center gap-3">
+            <div>
+              <p className="font-medium">{t.k}</p>
+              <p className="text-[10px] text-muted-foreground">{t.d}</p>
+            </div>
+            <span className={`font-semibold ${t.c}`}>{t.a}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ============== TEAM ============== */
+
+function Team() {
+  const managers = [
+    { n: "Diego Salas", r: "Owner", e: "diego@luminar.mx", on: true },
+    { n: "María Ortiz", r: "Manager", e: "maria@luminar.mx", on: true },
+    { n: "Pablo Reyes", r: "Marketing", e: "pablo@luminar.mx", on: false },
+  ];
+  const validators = [
+    { n: "Carlos", role: "Bar lead", w: "+52 55 1840 2210", on: true },
+    { n: "Lucía", role: "Hostess", w: "+52 55 9112 4488", on: true },
+    { n: "Toño", role: "Waiter", w: "+52 55 4490 7733", on: true },
+    { n: "Rebeca", role: "Waiter", w: "+52 55 2230 9988", on: false },
+  ];
+  return (
+    <div className="space-y-5 p-6">
+      <div className="flex items-end justify-between">
+        <div>
+          <h1 className="font-display text-2xl font-semibold">Team</h1>
+          <p className="text-xs text-muted-foreground">
+            Who can manage this unit and who validates cashbacks on WhatsApp.
+          </p>
+        </div>
+        <button className="rounded-lg bg-peacock px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-glow">
+          <UserPlus className="mr-1 inline h-3.5 w-3.5" /> Invite
+        </button>
+      </div>
+
+      {/* Managers */}
+      <div className="rounded-xl border border-border bg-card-soft">
+        <div className="border-b border-border px-4 py-3">
+          <p className="text-sm font-medium">Managers</p>
+          <p className="text-[10px] text-muted-foreground">
+            Full access to dashboard, promos, wallet.
+          </p>
+        </div>
+        {managers.map((m) => (
+          <div
+            key={m.e}
+            className="flex items-center justify-between border-b border-border/40 px-4 py-3 last:border-0"
+          >
+            <div className="flex items-center gap-3">
               <div className="h-8 w-8 rounded-full bg-peacock" />
               <div>
-                <p className="font-medium leading-none">{g.n}</p>
-                <p className="text-xs text-muted-foreground">{g.h}</p>
+                <p className="text-sm font-medium leading-none">{m.n}</p>
+                <p className="mt-0.5 text-[10px] text-muted-foreground">
+                  {m.e}
+                </p>
               </div>
             </div>
-            <span>
+            <div className="flex items-center gap-3">
+              <span className="rounded-full bg-secondary/20 px-2 py-0.5 text-[10px] text-secondary">
+                {m.r}
+              </span>
               <span
-                className={`rounded-full px-2 py-0.5 text-[10px] font-bold text-black ${
-                  g.tier === "Gold"
-                    ? "bg-tier-gold"
-                    : g.tier === "Silver"
-                    ? "bg-tier-silver"
-                    : "bg-tier-bronze"
+                className={`h-2 w-2 rounded-full ${
+                  m.on ? "bg-emerald-400" : "bg-muted-foreground"
+                }`}
+              />
+              <button className="text-[10px] text-muted-foreground">···</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Validators */}
+      <div className="rounded-xl border border-border bg-card-soft">
+        <div className="flex items-center justify-between border-b border-border px-4 py-3">
+          <div>
+            <p className="text-sm font-medium">WhatsApp validators</p>
+            <p className="text-[10px] text-muted-foreground">
+              Waiters & hosts who scan QR coupons from their own WhatsApp.
+            </p>
+          </div>
+          <button className="rounded-md border border-border px-2 py-1 text-[10px]">
+            <MessageCircle className="mr-1 inline h-3 w-3" /> Test ping
+          </button>
+        </div>
+        {validators.map((v) => (
+          <div
+            key={v.w}
+            className="flex items-center justify-between border-b border-border/40 px-4 py-3 last:border-0"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-300">
+                <Phone className="h-3.5 w-3.5" />
+              </div>
+              <div>
+                <p className="text-sm font-medium leading-none">{v.n}</p>
+                <p className="mt-0.5 text-[10px] text-muted-foreground">
+                  {v.role} · {v.w}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span
+                className={`rounded-full px-2 py-0.5 text-[10px] ${
+                  v.on
+                    ? "bg-emerald-500/20 text-emerald-300"
+                    : "bg-muted text-muted-foreground"
                 }`}
               >
-                {g.tier.toUpperCase()}
+                {v.on ? "Active" : "Paused"}
               </span>
-            </span>
-            <span>{g.v}</span>
-            <span className="text-secondary">{g.s}</span>
-            <span>
-              <button className="rounded-md border border-border px-2 py-1 text-xs">
-                Invitar
-              </button>
-            </span>
+              <button className="text-[10px] text-muted-foreground">···</button>
+            </div>
           </div>
         ))}
       </div>
