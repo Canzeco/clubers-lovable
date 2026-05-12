@@ -552,8 +552,8 @@ function Promos() {
                 cashback
               </span>
             </div>
-            <div className="mt-3 grid grid-cols-5 gap-1">
-              {[5, 10, 15, 20, 30].map((v) => (
+            <div className="mt-3 grid grid-cols-4 gap-1">
+              {[5, 10, 20, 50].map((v) => (
                 <button
                   key={v}
                   onClick={() => setValues((s) => ({ ...s, [t.name]: v }))}
