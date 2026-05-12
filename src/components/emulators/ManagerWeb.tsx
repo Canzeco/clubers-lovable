@@ -466,16 +466,27 @@ function Rating({
 
 function Promos() {
   const tiers: {
-    name: "Bronze" | "Silver" | "Gold";
+    name: "Bronze" | "Silver" | "Gold" | "Diamond";
     color: string;
     cb: number;
     visits: string;
   }[] = [
     { name: "Bronze", color: "bg-tier-bronze", cb: 5, visits: "0 – 2 visits" },
     { name: "Silver", color: "bg-tier-silver", cb: 10, visits: "3 – 6 visits" },
-    { name: "Gold", color: "bg-tier-gold", cb: 20, visits: "7+ visits" },
+    { name: "Gold", color: "bg-tier-gold", cb: 20, visits: "7 – 19 visits" },
+    {
+      name: "Diamond",
+      color: "bg-gradient-to-r from-cyan-300 to-sky-400",
+      cb: 30,
+      visits: "20+ visits",
+    },
   ];
-  const [values, setValues] = useState({ Bronze: 5, Silver: 10, Gold: 20 });
+  const [values, setValues] = useState({
+    Bronze: 5,
+    Silver: 10,
+    Gold: 20,
+    Diamond: 30,
+  });
   const extras = [
     { name: "Story bonus", desc: "+10% when guest posts a verified story", on: true },
     { name: "Birthday boost", desc: "+30% during birthday week", on: true },
@@ -490,7 +501,7 @@ function Promos() {
         </p>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-4 gap-3">
         {tiers.map((t) => (
           <div
             key={t.name}
