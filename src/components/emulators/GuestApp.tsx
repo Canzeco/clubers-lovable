@@ -552,10 +552,10 @@ function VenueDetailSheet({
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center px-4 pb-4">
           <div className="pointer-events-auto flex w-full items-center gap-2 rounded-full border border-border/60 bg-card/85 p-1.5 shadow-2xl backdrop-blur-xl">
-            <button className="flex flex-1 items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-medium text-foreground/80">
+            <button className="flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-secondary to-secondary/80 px-4 py-2.5 text-sm font-semibold text-white shadow-glow">
               <Ticket className="h-4 w-4" /> Save coupon
             </button>
-            <button className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow">
+            <button className="flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow">
               <Calendar className="h-4 w-4" /> Save + Reserve
             </button>
           </div>
