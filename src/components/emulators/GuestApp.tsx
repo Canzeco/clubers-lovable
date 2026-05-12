@@ -82,6 +82,15 @@ function InstagramLogo({ className = "" }: { className?: string }) {
   );
 }
 
+function UberEatsLogo({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" width="12" height="12" className={className} aria-hidden="true">
+      <rect width="24" height="24" rx="5" fill="#06C167"/>
+      <text x="12" y="16" textAnchor="middle" fontFamily="Helvetica, Arial, sans-serif" fontSize="11" fontWeight="700" fill="#fff">U</text>
+    </svg>
+  );
+}
+
 
 const venues = [
   {
@@ -101,6 +110,8 @@ const venues = [
     igMentions: "3.2k",
     google: 4.7,
     googleCount: 1284,
+    uber: 4.8,
+    uberCount: 2100,
     info: "Rooftop restaurant on 14th floor. Mediterranean tasting menu by chef Iván Solís. Open 7pm–1am · live DJ Thu–Sat · reservations recommended.",
     mesita: 4.9,
     mesitaCount: 84,
@@ -140,6 +151,8 @@ const venues = [
     igMentions: "1.8k",
     google: 4.4,
     googleCount: 642,
+    uber: 4.6,
+    uberCount: 540,
     info: "Speakeasy-style cocktail bar hidden behind a record store. Mezcal flights, vinyl DJ sets, 25 seats. Open 9pm–3am Wed–Sun.",
     mesita: 4.8,
     mesitaCount: 62,
@@ -178,6 +191,8 @@ const venues = [
     igMentions: "920",
     google: 4.5,
     googleCount: 980,
+    uber: 4.5,
+    uberCount: 760,
     info: "Oceanfront seafood & brunch. Sustainable sourcing, weekend brunch with live acoustic sets. Open 9am–5pm.",
     mesita: 4.6,
     mesitaCount: 41,
@@ -309,9 +324,9 @@ function VenueDetailSheet({
           {/* Instagram-style 4:3 carousel with dots */}
           <PhotoCarousel />
 
-          {/* Four scores */}
-          <div className="grid grid-cols-4 gap-1.5">
-            <div className="rounded-xl border border-secondary/30 bg-secondary/10 p-2.5">
+          {/* Scores across platforms */}
+          <div className="grid grid-cols-5 gap-1">
+            <div className="rounded-xl border border-secondary/30 bg-secondary/10 p-2">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-secondary">
                 <Sparkles className="h-2.5 w-2.5" /> Mesita
               </p>
@@ -320,21 +335,28 @@ function VenueDetailSheet({
               </p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.mesitaCount} reviews</p>
             </div>
-            <div className="rounded-xl bg-card-soft p-2.5">
+            <div className="rounded-xl bg-card-soft p-2">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
                 <GoogleLogo className="h-3 w-3" /> Google
               </p>
               <p className="mt-1 font-display text-base font-semibold leading-none">{venue.google}</p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.googleCount.toLocaleString()} reviews</p>
             </div>
-            <div className="rounded-xl bg-card-soft p-2.5">
+            <div className="rounded-xl bg-card-soft p-2">
+              <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
+                <UberEatsLogo className="h-3 w-3" /> Uber
+              </p>
+              <p className="mt-1 font-display text-base font-semibold leading-none">{venue.uber}</p>
+              <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.uberCount.toLocaleString()} reviews</p>
+            </div>
+            <div className="rounded-xl bg-card-soft p-2">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
                 <FacebookLogo className="h-3 w-3" /> Facebook
               </p>
               <p className="mt-1 font-display text-base font-semibold leading-none">{venue.fb}</p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.fbCount} reviews</p>
             </div>
-            <div className="rounded-xl bg-card-soft p-2.5">
+            <div className="rounded-xl bg-card-soft p-2">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
                 <InstagramLogo className="h-3 w-3" /> Instagram
               </p>
@@ -349,6 +371,35 @@ function VenueDetailSheet({
               About
             </p>
             <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
+          </div>
+
+          {/* Menu */}
+          <div>
+            <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+              <span>Menu</span>
+              <span className="text-secondary">Tasting · à la carte</span>
+            </p>
+            <div className="overflow-hidden rounded-2xl border border-border bg-card-soft">
+              {[
+                { name: "Burrata & heirloom tomato", price: "$280" },
+                { name: "Octopus, smoked paprika", price: "$420" },
+                { name: "Wagyu tagliata, truffle", price: "$680" },
+                { name: "Saffron risotto", price: "$340" },
+              ].map((d, i, arr) => (
+                <div
+                  key={d.name}
+                  className={`flex items-center justify-between px-4 py-2.5 text-[12px] ${
+                    i !== arr.length - 1 ? "border-b border-border/60" : ""
+                  }`}
+                >
+                  <span className="text-foreground/85">{d.name}</span>
+                  <span className="font-semibold text-foreground">{d.price}</span>
+                </div>
+              ))}
+            </div>
+            <button className="mt-2 w-full rounded-full border border-border bg-card px-4 py-2 text-[11px] font-medium text-foreground/80">
+              View full menu
+            </button>
           </div>
 
           {/* Schedule */}
