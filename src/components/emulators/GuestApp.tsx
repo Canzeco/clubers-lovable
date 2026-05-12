@@ -938,6 +938,7 @@ function TinderMode() {
                 onClick={() => {
                   const v = askReserve;
                   setAskReserve(null);
+                  setStep("pick");
                   setSaved(v);
                 }}
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
