@@ -2062,6 +2062,9 @@ function CreditsView() {
         <p className="mt-2 text-[11px] opacity-80">
           +${pending.toLocaleString()} pending validation
         </p>
+        <p className="mt-1 text-[10px] opacity-75">
+          Credits auto-apply to your next purchase
+        </p>
         <div className="mt-4 flex gap-2">
           <button
             onClick={() => setTopUp(true)}
