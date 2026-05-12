@@ -507,6 +507,7 @@ function Promos() {
     },
   ];
   const [values, setValues] = useState({
+    Welcome: 20,
     Bronze: 5,
     Silver: 10,
     Gold: 20,
@@ -526,6 +527,52 @@ function Promos() {
         </p>
       </div>
 
+      <div>
+        <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+          First-time visitors
+        </p>
+        <div className="rounded-xl border border-border bg-card-soft p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="rounded-full bg-gradient-to-r from-fuchsia-400 to-amber-300 px-2 py-0.5 text-[10px] font-bold text-black">
+                WELCOME
+              </span>
+              <p className="mt-2 text-xs text-muted-foreground">
+                One-time discount to convert a new guest into a regular.
+              </p>
+            </div>
+            <span className="text-[10px] text-muted-foreground">First visit only</span>
+          </div>
+          <div className="mt-3 flex items-end gap-1">
+            <span className="font-display text-5xl font-semibold text-secondary">
+              {values.Welcome}
+            </span>
+            <span className="mb-1 text-xl text-secondary">%</span>
+            <span className="mb-2 ml-1 text-[10px] uppercase tracking-widest text-muted-foreground">
+              cashback
+            </span>
+          </div>
+          <div className="mt-3 grid max-w-xs grid-cols-4 gap-1">
+            {[5, 10, 20, 50].map((v) => (
+              <button
+                key={v}
+                onClick={() => setValues((s) => ({ ...s, Welcome: v }))}
+                className={`rounded-md border px-1 py-1 text-[10px] font-semibold transition ${
+                  values.Welcome === v
+                    ? "border-secondary bg-secondary text-secondary-foreground"
+                    : "border-border text-muted-foreground"
+                }`}
+              >
+                {v}%
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+        Returning visitors · by tier
+      </p>
       <div className="grid grid-cols-4 gap-3">
         {tiers.map((t) => (
           <div
