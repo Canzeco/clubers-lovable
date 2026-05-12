@@ -57,11 +57,34 @@ import {
 type Tab = "pipeline" | "bots" | "stack" | "portfolio" | "editor" | "discover" | "promos" | "metrics" | "trust";
 
 const stages = [
-  { id: "lead", label: "Leads", color: "bg-muted-foreground/30", count: 84 },
-  { id: "contact", label: "Contacted", color: "bg-tier-bronze", count: 32 },
-  { id: "demo", label: "Demo booked", color: "bg-tier-silver", count: 14 },
-  { id: "negotiating", label: "Negotiating", color: "bg-secondary", count: 9 },
-  { id: "onboarded", label: "Onboarded", color: "bg-primary", count: 12 },
+  {
+    id: "sourced",
+    label: "1 · Sourced",
+    hint: "Google Business · manual",
+    color: "bg-muted-foreground/30",
+    count: 84,
+  },
+  {
+    id: "enriching",
+    label: "2 · Super-sourcing",
+    hint: "AI agent enriching",
+    color: "bg-accent",
+    count: 26,
+  },
+  {
+    id: "review",
+    label: "3 · Review & approve",
+    hint: "Manual QA",
+    color: "bg-secondary",
+    count: 14,
+  },
+  {
+    id: "sales",
+    label: "4 · Sales · partner",
+    hint: "Contact & sign",
+    color: "bg-primary",
+    count: 9,
+  },
 ] as const;
 
 type Lead = {
@@ -79,17 +102,15 @@ type Lead = {
 };
 
 const leads: Lead[] = [
-  { id: "1", name: "Bocanada", type: "Rooftop · Mediterranean", area: "Roma Nte.", ig: "82k", rating: 4.7, ticket: "$720", fit: "Hot", stage: "lead", owner: "DM", lastTouch: "today" },
-  { id: "2", name: "Patio Verde", type: "Brunch · Café", area: "Condesa", ig: "31k", rating: 4.5, ticket: "$380", fit: "Hot", stage: "lead", owner: "AL", lastTouch: "1d" },
-  { id: "3", name: "Sal de Mar", type: "Seafood", area: "Polanco", ig: "18k", rating: 4.4, ticket: "$640", fit: "Warm", stage: "lead", owner: "DM", lastTouch: "2d" },
-  { id: "4", name: "El Hueco", type: "Mezcal · Bar", area: "Juárez", ig: "9k", rating: 4.6, ticket: "$420", fit: "Warm", stage: "contact", owner: "AL", lastTouch: "today" },
-  { id: "5", name: "Galápago", type: "Wine bar", area: "Roma Sur", ig: "14k", rating: 4.8, ticket: "$580", fit: "Hot", stage: "contact", owner: "DM", lastTouch: "today" },
-  { id: "6", name: "Tropikalia", type: "Club · Nightlife", area: "Cuauhtémoc", ig: "120k", rating: 4.3, ticket: "$1.2k", fit: "Hot", stage: "demo", owner: "RC", lastTouch: "today" },
-  { id: "7", name: "Loto Café", type: "Specialty coffee", area: "Chapultepec", ig: "22k", rating: 4.6, ticket: "$220", fit: "Warm", stage: "demo", owner: "AL", lastTouch: "1d" },
-  { id: "8", name: "Costa Azul", type: "Beach club", area: "Tulum", ig: "54k", rating: 4.5, ticket: "$1.8k", fit: "Hot", stage: "negotiating", owner: "DM", lastTouch: "today" },
-  { id: "9", name: "Mar Verde", type: "Seafood", area: "Tulum", ig: "11k", rating: 4.4, ticket: "$900", fit: "Cold", stage: "negotiating", owner: "RC", lastTouch: "3d" },
-  { id: "10", name: "Casa Luminar", type: "Rooftop", area: "Roma Nte.", ig: "46k", rating: 4.8, ticket: "$640", fit: "Hot", stage: "onboarded", owner: "DM", lastTouch: "now" },
-  { id: "11", name: "Neón Bar", type: "Speakeasy", area: "Condesa", ig: "38k", rating: 4.6, ticket: "$520", fit: "Hot", stage: "onboarded", owner: "AL", lastTouch: "now" },
+  { id: "1", name: "Bocanada", type: "Rooftop · Mediterranean", area: "Roma Nte.", ig: "—", rating: 4.7, ticket: "$720", fit: "Hot", stage: "sourced", owner: "DM", lastTouch: "today" },
+  { id: "2", name: "Patio Verde", type: "Brunch · Café", area: "Condesa", ig: "—", rating: 4.5, ticket: "$380", fit: "Hot", stage: "sourced", owner: "AL", lastTouch: "1d" },
+  { id: "3", name: "Sal de Mar", type: "Seafood", area: "Polanco", ig: "—", rating: 4.4, ticket: "$640", fit: "Warm", stage: "sourced", owner: "DM", lastTouch: "2d" },
+  { id: "4", name: "El Hueco", type: "Mezcal · Bar", area: "Juárez", ig: "9k", rating: 4.6, ticket: "$420", fit: "Warm", stage: "enriching", owner: "AI", lastTouch: "now" },
+  { id: "5", name: "Galápago", type: "Wine bar", area: "Roma Sur", ig: "14k", rating: 4.8, ticket: "$580", fit: "Hot", stage: "enriching", owner: "AI", lastTouch: "now" },
+  { id: "6", name: "Tropikalia", type: "Club · Nightlife", area: "Cuauhtémoc", ig: "120k", rating: 4.3, ticket: "$1.2k", fit: "Hot", stage: "review", owner: "RC", lastTouch: "today" },
+  { id: "7", name: "Loto Café", type: "Specialty coffee", area: "Chapultepec", ig: "22k", rating: 4.6, ticket: "$220", fit: "Warm", stage: "review", owner: "AL", lastTouch: "1d" },
+  { id: "8", name: "Costa Azul", type: "Beach club", area: "Tulum", ig: "54k", rating: 4.5, ticket: "$1.8k", fit: "Hot", stage: "sales", owner: "DM", lastTouch: "today" },
+  { id: "9", name: "Mar Verde", type: "Seafood", area: "Tulum", ig: "11k", rating: 4.4, ticket: "$900", fit: "Cold", stage: "sales", owner: "RC", lastTouch: "3d" },
 ];
 
 function FitChip({ fit }: { fit: Lead["fit"] }) {
