@@ -39,9 +39,22 @@ import {
   Check,
   X as XIcon,
   RefreshCw,
+  Bot,
+  KeyRound,
+  Cpu,
+  Workflow,
+  Zap,
+  Activity,
+  Database,
+  Mic,
+  Send,
+  AlertTriangle,
+  ExternalLink,
+  PlayCircle,
+  PauseCircle,
 } from "lucide-react";
 
-type Tab = "pipeline" | "portfolio" | "editor" | "discover" | "promos" | "metrics" | "trust";
+type Tab = "pipeline" | "bots" | "stack" | "portfolio" | "editor" | "discover" | "promos" | "metrics" | "trust";
 
 const stages = [
   { id: "lead", label: "Leads", color: "bg-muted-foreground/30", count: 84 },
