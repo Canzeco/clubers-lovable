@@ -161,22 +161,6 @@ export function ManagerWeb() {
 
       {/* Main */}
       <main className="flex-1 overflow-y-auto">
-        {/* Topbar */}
-        <div className="flex items-center justify-between border-b border-border px-6 py-3">
-          <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground">
-            <Search className="h-3.5 w-3.5" />
-            Search guests, promos…
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="rounded-lg border border-border px-3 py-1.5 text-xs">
-              <Calendar className="mr-1 inline h-3.5 w-3.5" /> Last 30 days
-            </button>
-            <button className="rounded-lg bg-peacock px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-glow">
-              <Plus className="mr-1 inline h-3.5 w-3.5" /> New promo
-            </button>
-          </div>
-        </div>
-
         {tab === "dashboard" && <Dashboard unit={unit} />}
         {tab === "place" && <Place unit={unit} />}
         {tab === "promos" && <Promos />}
