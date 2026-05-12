@@ -2361,39 +2361,6 @@ function ProfileView() {
           <span>Model, chef, press? <span className="text-secondary font-medium">Appeal for upgrade</span></span>
           <ChevronRight className="h-3.5 w-3.5" />
         </button>
-
-        {/* Settings & support */}
-        <p className="mt-6 mb-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Account</p>
-        <div className="overflow-hidden rounded-2xl border border-border bg-card">
-          {[
-            { Icon: User, label: "Personal details", sub: "Name, email, phone" },
-            { Icon: CreditCard, label: "Payment methods", sub: "Apple Pay · Visa ·· 4242" },
-            { Icon: Bell, label: "Notifications", sub: "Push, email" },
-            { Icon: Shield, label: "Privacy & data", sub: "Permissions, export" },
-            { Icon: HelpCircle, label: "Help & support", sub: "FAQ · contact us" },
-          ].map((row, i, arr) => (
-            <button
-              key={row.label}
-              className={`flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-card-soft ${
-                i < arr.length - 1 ? "border-b border-border" : ""
-              }`}
-            >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-card-soft text-muted-foreground">
-                <row.Icon className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium leading-none">{row.label}</p>
-                <p className="mt-0.5 text-[11px] text-muted-foreground truncate">{row.sub}</p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            </button>
-          ))}
-        </div>
-
-        <button className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card-soft px-4 py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground">
-          <LogOut className="h-4 w-4" /> Sign out
-        </button>
-        <p className="mt-3 text-center text-[10px] text-muted-foreground">Mesita · v2.4.1</p>
           </>
         )}
 
@@ -2498,6 +2465,43 @@ function ProfileView() {
           <div className="-mx-5 mt-4">
             <CreditsView />
           </div>
+        )}
+
+        {/* Account & support — always visible below tabs */}
+        {subTab !== "wallet" && (
+          <>
+            <p className="mt-6 mb-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Account</p>
+            <div className="overflow-hidden rounded-2xl border border-border bg-card">
+              {[
+                { Icon: User, label: "Personal details", sub: "Name, email, phone" },
+                { Icon: CreditCard, label: "Payment methods", sub: "Apple Pay · Visa ·· 4242" },
+                { Icon: Bell, label: "Notifications", sub: "Push, email" },
+                { Icon: Shield, label: "Privacy & data", sub: "Permissions, export" },
+                { Icon: HelpCircle, label: "Help & support", sub: "FAQ · contact us" },
+              ].map((row, i, arr) => (
+                <button
+                  key={row.label}
+                  className={`flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-card-soft ${
+                    i < arr.length - 1 ? "border-b border-border" : ""
+                  }`}
+                >
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-card-soft text-muted-foreground">
+                    <row.Icon className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium leading-none">{row.label}</p>
+                    <p className="mt-0.5 text-[11px] text-muted-foreground truncate">{row.sub}</p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                </button>
+              ))}
+            </div>
+
+            <button className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card-soft px-4 py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground">
+              <LogOut className="h-4 w-4" /> Sign out
+            </button>
+            <p className="mt-3 text-center text-[10px] text-muted-foreground">Mesita · v2.4.1</p>
+          </>
         )}
       </div>
 
