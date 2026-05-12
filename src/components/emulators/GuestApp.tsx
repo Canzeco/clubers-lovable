@@ -324,9 +324,9 @@ function VenueDetailSheet({
           {/* Instagram-style 4:3 carousel with dots */}
           <PhotoCarousel />
 
-          {/* Four scores */}
-          <div className="grid grid-cols-4 gap-1.5">
-            <div className="rounded-xl border border-secondary/30 bg-secondary/10 p-2.5">
+          {/* Scores across platforms */}
+          <div className="grid grid-cols-5 gap-1">
+            <div className="rounded-xl border border-secondary/30 bg-secondary/10 p-2">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-secondary">
                 <Sparkles className="h-2.5 w-2.5" /> Mesita
               </p>
@@ -335,21 +335,28 @@ function VenueDetailSheet({
               </p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.mesitaCount} reviews</p>
             </div>
-            <div className="rounded-xl bg-card-soft p-2.5">
+            <div className="rounded-xl bg-card-soft p-2">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
                 <GoogleLogo className="h-3 w-3" /> Google
               </p>
               <p className="mt-1 font-display text-base font-semibold leading-none">{venue.google}</p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.googleCount.toLocaleString()} reviews</p>
             </div>
-            <div className="rounded-xl bg-card-soft p-2.5">
+            <div className="rounded-xl bg-card-soft p-2">
+              <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
+                <UberEatsLogo className="h-3 w-3" /> Uber
+              </p>
+              <p className="mt-1 font-display text-base font-semibold leading-none">{venue.uber}</p>
+              <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.uberCount.toLocaleString()} reviews</p>
+            </div>
+            <div className="rounded-xl bg-card-soft p-2">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
                 <FacebookLogo className="h-3 w-3" /> Facebook
               </p>
               <p className="mt-1 font-display text-base font-semibold leading-none">{venue.fb}</p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.fbCount} reviews</p>
             </div>
-            <div className="rounded-xl bg-card-soft p-2.5">
+            <div className="rounded-xl bg-card-soft p-2">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
                 <InstagramLogo className="h-3 w-3" /> Instagram
               </p>
@@ -364,6 +371,35 @@ function VenueDetailSheet({
               About
             </p>
             <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
+          </div>
+
+          {/* Menu */}
+          <div>
+            <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+              <span>Menu</span>
+              <span className="text-secondary">Tasting · à la carte</span>
+            </p>
+            <div className="overflow-hidden rounded-2xl border border-border bg-card-soft">
+              {[
+                { name: "Burrata & heirloom tomato", price: "$280" },
+                { name: "Octopus, smoked paprika", price: "$420" },
+                { name: "Wagyu tagliata, truffle", price: "$680" },
+                { name: "Saffron risotto", price: "$340" },
+              ].map((d, i, arr) => (
+                <div
+                  key={d.name}
+                  className={`flex items-center justify-between px-4 py-2.5 text-[12px] ${
+                    i !== arr.length - 1 ? "border-b border-border/60" : ""
+                  }`}
+                >
+                  <span className="text-foreground/85">{d.name}</span>
+                  <span className="font-semibold text-foreground">{d.price}</span>
+                </div>
+              ))}
+            </div>
+            <button className="mt-2 w-full rounded-full border border-border bg-card px-4 py-2 text-[11px] font-medium text-foreground/80">
+              View full menu
+            </button>
           </div>
 
           {/* Schedule */}
