@@ -898,21 +898,34 @@ type VenueCard = {
   managed: "partner" | "admin";
   status: "live" | "draft" | "review";
   completeness: number;
+  active: boolean;
 };
 
 const VENUE_CARDS: VenueCard[] = [
-  { name: "La Cabaña de Pecos", city: "SLP · Lomas", category: "Steakhouse", img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600", managed: "admin", status: "draft", completeness: 72 },
-  { name: "Bocanada", city: "CDMX · Roma Nte.", category: "Rooftop · Mediterranean", img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600", managed: "partner", status: "live", completeness: 100 },
-  { name: "Patio Verde", city: "CDMX · Condesa", category: "Brunch · Café", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600", managed: "partner", status: "live", completeness: 96 },
-  { name: "Galápago", city: "CDMX · Juárez", category: "Wine bar · Tapas", img: "https://images.unsplash.com/photo-1592861956120-e524fc739696?w=600", managed: "admin", status: "review", completeness: 58 },
-  { name: "Casa Luminar", city: "CDMX · Polanco", category: "Cocktails · Late night", img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600", managed: "partner", status: "live", completeness: 100 },
-  { name: "Sal de Mar", city: "Cancún · Centro", category: "Seafood", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600", managed: "admin", status: "draft", completeness: 41 },
-  { name: "Mar Verde", city: "Tulum", category: "Seafood · Beach", img: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=600", managed: "partner", status: "live", completeness: 94 },
-  { name: "El Huerto", city: "GDL · Lafayette", category: "Plant-forward", img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600", managed: "admin", status: "review", completeness: 63 },
+  { name: "La Cabaña de Pecos", city: "SLP · Lomas", category: "Steakhouse", img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600", managed: "admin", status: "draft", completeness: 72, active: true },
+  { name: "Bocanada", city: "CDMX · Roma Nte.", category: "Rooftop · Mediterranean", img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600", managed: "partner", status: "live", completeness: 100, active: true },
+  { name: "Patio Verde", city: "CDMX · Condesa", category: "Brunch · Café", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600", managed: "partner", status: "live", completeness: 96, active: true },
+  { name: "Galápago", city: "CDMX · Juárez", category: "Wine bar · Tapas", img: "https://images.unsplash.com/photo-1592861956120-e524fc739696?w=600", managed: "admin", status: "review", completeness: 58, active: true },
+  { name: "Casa Luminar", city: "CDMX · Polanco", category: "Cocktails · Late night", img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600", managed: "partner", status: "live", completeness: 100, active: true },
+  { name: "Sal de Mar", city: "Cancún · Centro", category: "Seafood", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600", managed: "admin", status: "draft", completeness: 41, active: false },
+  { name: "Mar Verde", city: "Tulum", category: "Seafood · Beach", img: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=600", managed: "partner", status: "live", completeness: 94, active: true },
+  { name: "El Huerto", city: "GDL · Lafayette", category: "Plant-forward", img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600", managed: "admin", status: "review", completeness: 63, active: false },
 ];
 
 function Venues() {
   const [selected, setSelected] = useState<string | null>(null);
+  const [filter, setFilter] = useState<"all" | "partner" | "admin" | "inactive">("all");
+  const [cards, setCards] = useState(VENUE_CARDS);
+
+  const visible = cards.filter((v) =>
+    filter === "all" ? true : filter === "inactive" ? !v.active : v.managed === filter,
+  );
+
+  const toggleActive = (name: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCards((cs) => cs.map((c) => (c.name === name ? { ...c, active: !c.active } : c)));
+  };
+
   if (selected) {
     return (
       <div>
@@ -935,12 +948,33 @@ function Venues() {
       <div className="mb-4 flex items-end justify-between">
         <div>
           <h1 className="font-display text-2xl font-semibold">Catálogo de venues</h1>
-          <p className="text-xs text-muted-foreground">{VENUE_CARDS.length} venues · click para editar el perfil</p>
+          <p className="text-xs text-muted-foreground">
+            Super-admin · editar cualquier venue, partner o no · activar / desactivar en la plataforma
+          </p>
         </div>
         <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
           <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-secondary" /> Partner-managed</span>
           <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-accent" /> Admin-managed</span>
         </div>
+      </div>
+
+      <div className="mb-4 flex flex-wrap gap-1.5 text-xs">
+        {([
+          ["all", `Todos · ${cards.length}`],
+          ["partner", `Partner · ${cards.filter((c) => c.managed === "partner").length}`],
+          ["admin", `Admin · ${cards.filter((c) => c.managed === "admin").length}`],
+          ["inactive", `Inactivos · ${cards.filter((c) => !c.active).length}`],
+        ] as const).map(([k, label]) => (
+          <button
+            key={k}
+            onClick={() => setFilter(k)}
+            className={`rounded-full px-3 py-1 ${
+              filter === k ? "bg-foreground text-background" : "border border-border text-muted-foreground"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
@@ -953,14 +987,22 @@ function Venues() {
           <p className="text-[10px]">Manual o desde sourcing</p>
         </button>
 
-        {VENUE_CARDS.map((v) => (
+        {visible.map((v) => (
           <button
             key={v.name}
             onClick={() => setSelected(v.name)}
-            className="group relative flex aspect-[4/5] flex-col overflow-hidden rounded-2xl border border-border bg-card text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-elev"
+            className={`group relative flex aspect-[4/5] flex-col overflow-hidden rounded-2xl border bg-card text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-elev ${
+              v.active ? "border-border" : "border-destructive/30 opacity-70"
+            }`}
           >
             <div className="relative h-3/5 overflow-hidden">
-              <img src={v.img} alt={v.name} className="h-full w-full object-cover transition group-hover:scale-105" />
+              <img
+                src={v.img}
+                alt={v.name}
+                className={`h-full w-full object-cover transition group-hover:scale-105 ${
+                  v.active ? "" : "grayscale"
+                }`}
+              />
               <span
                 className={`absolute left-2 top-2 flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest backdrop-blur ${
                   v.managed === "partner"
@@ -970,17 +1012,24 @@ function Venues() {
               >
                 {v.managed === "partner" ? "Partner" : "Admin"}
               </span>
-              <span
-                className={`absolute right-2 top-2 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider backdrop-blur ${
-                  v.status === "live"
-                    ? "bg-emerald-500/90 text-white"
-                    : v.status === "review"
-                    ? "bg-amber-500/90 text-white"
-                    : "bg-muted/90 text-foreground/70"
-                }`}
-              >
-                {v.status}
-              </span>
+              {!v.active && (
+                <span className="absolute right-2 top-2 rounded-full bg-destructive/90 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white backdrop-blur">
+                  Inactivo
+                </span>
+              )}
+              {v.active && (
+                <span
+                  className={`absolute right-2 top-2 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider backdrop-blur ${
+                    v.status === "live"
+                      ? "bg-emerald-500/90 text-white"
+                      : v.status === "review"
+                      ? "bg-amber-500/90 text-white"
+                      : "bg-muted/90 text-foreground/70"
+                  }`}
+                >
+                  {v.status}
+                </span>
+              )}
             </div>
             <div className="flex flex-1 flex-col justify-between p-3">
               <div>
@@ -988,16 +1037,30 @@ function Venues() {
                 <p className="line-clamp-1 text-[11px] text-muted-foreground">{v.category}</p>
                 <p className="mt-0.5 text-[10px] text-muted-foreground">{v.city}</p>
               </div>
-              <div>
-                <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                  <span>Perfil</span>
-                  <span className="font-semibold text-foreground">{v.completeness}%</span>
+              <div className="space-y-2">
+                <div>
+                  <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                    <span>Perfil</span>
+                    <span className="font-semibold text-foreground">{v.completeness}%</span>
+                  </div>
+                  <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
+                    <div
+                      className={`h-full ${v.completeness >= 90 ? "bg-emerald-500" : v.completeness >= 60 ? "bg-secondary" : "bg-amber-500"}`}
+                      style={{ width: `${v.completeness}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
-                  <div
-                    className={`h-full ${v.completeness >= 90 ? "bg-emerald-500" : v.completeness >= 60 ? "bg-secondary" : "bg-amber-500"}`}
-                    style={{ width: `${v.completeness}%` }}
-                  />
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => toggleActive(v.name, e)}
+                  className={`flex items-center justify-center gap-1 rounded-md py-1 text-[10px] font-semibold transition ${
+                    v.active
+                      ? "bg-emerald-500/10 text-emerald-600 hover:bg-destructive/10 hover:text-destructive"
+                      : "bg-destructive/10 text-destructive hover:bg-emerald-500/10 hover:text-emerald-600"
+                  }`}
+                >
+                  {v.active ? <><PauseCircle className="h-3 w-3" /> Desactivar</> : <><PlayCircle className="h-3 w-3" /> Reactivar</>}
                 </div>
               </div>
             </div>
