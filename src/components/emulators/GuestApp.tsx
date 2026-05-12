@@ -299,6 +299,10 @@ function VenueDetailSheet({
           <p className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
             <MapPin className="h-3 w-3" /> {venue.distance} · {venue.price}
           </p>
+          <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-secondary/10 px-2 py-1 text-[10px] font-medium text-secondary">
+            <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
+            <Clock className="h-3 w-3" /> {venue.status}
+          </p>
         </div>
 
         <div className="space-y-4 px-5 pt-5">
