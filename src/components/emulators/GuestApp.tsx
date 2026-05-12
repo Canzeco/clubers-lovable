@@ -1814,8 +1814,10 @@ function ProfileView() {
 
         {subTab === "stats" && (
           <>
+        {/* Level section */}
+        <p className="mt-4 mb-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Level</p>
         {/* Gamified rank + XP */}
-        <div className="mt-4 relative overflow-hidden rounded-2xl bg-peacock p-4 text-primary-foreground shadow-glow">
+        <div className="relative overflow-hidden rounded-2xl bg-peacock p-4 text-primary-foreground shadow-glow">
           <div className="flex items-start justify-between">
             <div>
               <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest opacity-80">
@@ -1840,8 +1842,10 @@ function ProfileView() {
           </div>
         </div>
 
+        {/* Stats section */}
+        <p className="mt-4 mb-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Stats</p>
         {/* Stat tiles */}
-        <div className="mt-3 grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           <div className="rounded-2xl border border-border bg-card-soft p-2.5">
             <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
               <TrendingUp className="h-2.5 w-2.5" /> Visits
@@ -1865,34 +1869,38 @@ function ProfileView() {
           </div>
         </div>
 
-        {/* Badges */}
-        <div className="mt-3 rounded-2xl border border-border bg-card-soft p-3">
-          <div className="mb-2 flex items-center justify-between">
-            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-              <BadgeCheck className="h-3 w-3 text-tier-gold" /> Badges
-            </p>
-            <span className="text-[10px] text-secondary">6 / 12 unlocked</span>
-          </div>
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+        {/* Achievements section */}
+        <div className="mt-4 mb-2 flex items-center justify-between">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Achievements</p>
+          <span className="text-[10px] text-secondary">5 / 12 unlocked</span>
+        </div>
+        <div className="rounded-2xl border border-border bg-card-soft p-3">
+          <div className="grid grid-cols-3 gap-2">
             {[
-              { e: "🌃", n: "Night Owl", on: true },
-              { e: "🍷", n: "Sommelier", on: true },
-              { e: "🥂", n: "Brunch Club", on: true },
-              { e: "📸", n: "Storyteller", on: true },
-              { e: "🗺️", n: "Explorer 10", on: false, prog: "7/10" },
-              { e: "👑", n: "VIP 1k", on: false, prog: "$840 left" },
-              { e: "🔥", n: "10-wk streak", on: false, prog: "5/10" },
+              { e: "🇪🇺", n: "European Explorer", d: "5 Mesitas in 5 EU countries", on: true },
+              { e: "🌍", n: "African Explorer", d: "3 Mesitas in 3 African countries", on: false, prog: "1/3" },
+              { e: "🌏", n: "Asian Explorer", d: "5 Mesitas in 5 Asian countries", on: false, prog: "2/5" },
+              { e: "🌎", n: "LATAM Legend", d: "10 Mesitas across LATAM", on: true },
+              { e: "🗽", n: "NYC Local", d: "8 Mesitas in New York", on: false, prog: "5/8" },
+              { e: "🍷", n: "Sommelier", d: "Try 20 wine bars", on: true },
+              { e: "🌃", n: "Night Owl", d: "10 dinners after 11pm", on: true },
+              { e: "🥂", n: "Brunch Club", d: "12 brunches on weekends", on: true },
+              { e: "📸", n: "Storyteller", d: "Share 15 venues", on: false, prog: "11/15" },
+              { e: "🔥", n: "Streak Master", d: "10 weeks in a row", on: false, prog: "5/10" },
+              { e: "👑", n: "Big Spender", d: "Spend $1k in cashback", on: false, prog: "$840 left" },
+              { e: "🏝️", n: "Beach Tour", d: "5 coastal Mesitas", on: false, prog: "2/5" },
             ].map((b) => (
               <div
                 key={b.n}
-                className={`flex w-20 flex-shrink-0 flex-col items-center gap-1 rounded-xl p-2 text-center ${
-                  b.on ? "bg-tier-gold/15 ring-1 ring-tier-gold/40" : "bg-card opacity-60"
+                className={`flex flex-col items-center gap-1 rounded-xl p-2 text-center ${
+                  b.on ? "bg-tier-gold/15 ring-1 ring-tier-gold/40" : "bg-card opacity-70"
                 }`}
               >
                 <span className={`text-2xl ${b.on ? "" : "grayscale"}`}>{b.e}</span>
                 <p className="text-[9px] font-semibold leading-tight">{b.n}</p>
+                <p className="text-[8px] leading-tight text-muted-foreground">{b.d}</p>
                 {!b.on && b.prog && (
-                  <p className="text-[8px] text-muted-foreground">{b.prog}</p>
+                  <p className="text-[8px] font-semibold text-secondary">{b.prog}</p>
                 )}
               </div>
             ))}
