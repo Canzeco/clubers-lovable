@@ -1563,7 +1563,7 @@ function CouponTicket({
     >
       {/* outer ticket */}
       <div
-        className={`relative flex items-stretch overflow-hidden rounded-2xl border bg-card-soft shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] aspect-[1.586/1] ${
+        className={`relative flex items-stretch overflow-hidden rounded-2xl border bg-card-soft shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] aspect-[2.2/1] ${
           isExpired ? "border-dashed border-border grayscale" : "border-border"
         } ${isUsed ? "border-dashed" : ""} ${isReservation ? "ring-1 ring-secondary/40" : ""}`}
       >
