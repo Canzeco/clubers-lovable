@@ -552,11 +552,11 @@ function VenueDetailSheet({
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center px-4 pb-4">
           <div className="pointer-events-auto flex w-full items-center gap-2 rounded-full border border-border/60 bg-card/85 p-1.5 shadow-2xl backdrop-blur-xl">
-            <button className="flex-1 rounded-full px-4 py-2.5 text-sm font-medium text-foreground/80">
-              Save coupon
+            <button className="flex flex-1 items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-medium text-foreground/80">
+              <Ticket className="h-4 w-4" /> Save coupon
             </button>
             <button className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow">
-              <Calendar className="h-4 w-4" /> Reserve
+              <Calendar className="h-4 w-4" /> Save + Reserve
             </button>
           </div>
         </div>
@@ -645,6 +645,7 @@ function TinderMode() {
   const [dir, setDir] = useState<"l" | "r" | null>(null);
   const [saved, setSaved] = useState<typeof venues[number] | null>(null);
   const [celebrate, setCelebrate] = useState<{ v: typeof venues[number]; reserve: boolean } | null>(null);
+  const [askReserve, setAskReserve] = useState<typeof venues[number] | null>(null);
   const [streak, setStreak] = useState(0);
   const [savedTotal, setSavedTotal] = useState(0);
   const [step, setStep] = useState<"ask" | "pick" | "done">("ask");
@@ -657,7 +658,7 @@ function TinderMode() {
   const v = venues[idx % venues.length];
   const next = venues[(idx + 1) % venues.length];
 
-  const fly = (d: "l" | "r", withReservation = true) => {
+  const fly = (d: "l" | "r") => {
     const current = v;
     setDir(d);
     setDrag(null);
@@ -668,10 +669,10 @@ function TinderMode() {
       if (d === "r") {
         setStreak((s) => s + 1);
         setSavedTotal((s) => s + 1);
-        setCelebrate({ v: current, reserve: withReservation });
+        setCelebrate({ v: current, reserve: false });
         setTimeout(() => {
           setCelebrate(null);
-          if (withReservation) setSaved(current);
+          setAskReserve(current);
         }, 1100);
       }
     }, 260);
@@ -798,25 +799,18 @@ function TinderMode() {
           </div>
         </div>
       </div>
-      <div className="mt-5 flex items-center justify-center gap-2 px-4">
+      <div className="mt-5 flex items-center justify-center gap-4 px-5">
         <button
           onClick={() => fly("l")}
-          aria-label="Skip"
-          className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition hover:scale-[1.04]"
+          className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full border border-border bg-card text-sm font-semibold text-muted-foreground transition hover:scale-[1.02]"
         >
-          <X className="h-4 w-4" />
+          <X className="h-4 w-4" /> Skip
         </button>
         <button
-          onClick={() => fly("r", false)}
-          className="flex h-11 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-secondary/40 bg-secondary/10 px-3 text-[12px] font-semibold text-secondary transition hover:scale-[1.02]"
+          onClick={() => fly("r")}
+          className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-peacock text-sm font-semibold text-white shadow-glow transition hover:scale-[1.02]"
         >
-          <Ticket className="h-3.5 w-3.5" /> Save coupon
-        </button>
-        <button
-          onClick={() => fly("r", true)}
-          className="flex h-11 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-peacock px-3 text-[12px] font-semibold text-white shadow-glow transition hover:scale-[1.02]"
-        >
-          <Calendar className="h-3.5 w-3.5" /> Save + Reserve
+          <Ticket className="h-4 w-4" /> Save coupon
         </button>
       </div>
 
@@ -908,6 +902,49 @@ function TinderMode() {
                 🔥 {streak} in a row
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {askReserve && !saved && !celebrate && (
+        <div
+          className="absolute inset-0 z-40 flex items-center justify-center bg-black/55 backdrop-blur-sm animate-fade-in"
+          onClick={() => setAskReserve(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="mx-6 w-full max-w-sm rounded-2xl border border-border bg-card p-5 shadow-2xl"
+          >
+            <div className="flex items-center gap-2 text-secondary">
+              <Check className="h-4 w-4" />
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em]">
+                Coupon saved
+              </p>
+            </div>
+            <p className="mt-2 font-display text-lg font-semibold leading-tight">
+              Want to reserve a table at {askReserve.name}?
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Our AI agent will call the venue for you. The coupon expires 24h after your booking.
+            </p>
+            <div className="mt-4 flex items-center gap-2">
+              <button
+                onClick={() => setAskReserve(null)}
+                className="flex-1 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-semibold text-muted-foreground"
+              >
+                No, just save
+              </button>
+              <button
+                onClick={() => {
+                  const v = askReserve;
+                  setAskReserve(null);
+                  setSaved(v);
+                }}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
+              >
+                <Calendar className="h-4 w-4" /> Reserve
+              </button>
+            </div>
           </div>
         </div>
       )}
