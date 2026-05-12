@@ -1556,9 +1556,9 @@ function CouponTicket({
             </p>
           )}
           {isUsed && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-              <Check className="h-10 w-10 text-white" />
-            </div>
+            <span className="absolute -rotate-12 rounded border-2 border-secondary/70 px-2 py-0.5 font-display text-[11px] font-black uppercase tracking-widest text-secondary/80">
+              Redeemed
+            </span>
           )}
           {isExpired && (
             <span className="absolute -rotate-12 rounded border-2 border-foreground/60 px-2 py-0.5 font-display text-[11px] font-black uppercase tracking-widest text-foreground/70">
