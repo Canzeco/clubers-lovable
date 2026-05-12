@@ -260,7 +260,7 @@ function VenueDetailSheet({
           <div className="flex items-center gap-2">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{venue.type}</p>
             {venue.affiliated && (
-              <span className="rounded-full bg-tier-gold px-2 py-0.5 text-[9px] font-bold text-black">
+              <span className="rounded-full bg-secondary px-2 py-0.5 text-[9px] font-bold text-secondary-foreground">
                 {venue.cashback}% CASHBACK
               </span>
             )}
@@ -491,7 +491,7 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
                 </span>
               </div>
               {v.affiliated && (
-                <span className="mt-1 w-fit rounded-full bg-tier-gold px-1.5 py-0.5 text-[9px] font-bold text-black">
+                <span className="mt-1 w-fit rounded-full bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-secondary-foreground">
                   {v.cashback}% cashback
                 </span>
               )}
@@ -622,7 +622,7 @@ function TinderMode() {
           </div>
           <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
             {v.affiliated ? (
-              <span className="rounded-full bg-tier-gold px-3 py-1 text-[11px] font-bold text-black">
+              <span className="rounded-full bg-secondary px-3 py-1 text-[11px] font-bold text-secondary-foreground">
                 {v.cashback}% CASHBACK
               </span>
             ) : (
@@ -675,7 +675,7 @@ function TinderMode() {
           >
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tier-gold text-sm font-bold text-black">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-sm font-bold text-secondary-foreground">
                 {saved.cashback}%
               </div>
               <div className="flex-1">
@@ -1224,7 +1224,7 @@ function WalletView() {
               className="relative flex w-full items-stretch overflow-hidden rounded-2xl border border-border bg-card-soft text-left shadow-sm transition active:scale-[0.99]"
             >
               {/* left — cashback stub */}
-              <div className={`relative flex w-20 flex-shrink-0 flex-col items-center justify-center ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-black`}>
+              <div className="relative flex w-20 flex-shrink-0 flex-col items-center justify-center bg-secondary text-secondary-foreground">
                 <p className="font-display text-2xl font-bold leading-none">{c.cb}%</p>
                 <p className="mt-1 text-[8px] font-semibold uppercase tracking-widest opacity-80">cashback</p>
               </div>
@@ -1263,7 +1263,7 @@ function WalletView() {
               onClick={() => setOpenCoupon({ ...c, used: true })}
               className="relative flex w-full items-stretch overflow-hidden rounded-2xl border border-dashed border-border bg-card/60 text-left opacity-90"
             >
-              <div className={`relative flex w-20 flex-shrink-0 flex-col items-center justify-center ${c.color === "tier-gold" ? "bg-tier-gold" : c.color === "tier-silver" ? "bg-tier-silver" : "bg-tier-bronze"} text-black grayscale`}>
+              <div className="relative flex w-20 flex-shrink-0 flex-col items-center justify-center bg-secondary text-secondary-foreground grayscale">
                 <p className="font-display text-2xl font-bold leading-none">{c.cb}%</p>
                 <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                   <Check className="h-6 w-6 text-white" />
@@ -1300,10 +1300,6 @@ function WalletView() {
 }
 
 function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => void }) {
-  const tierBg =
-    coupon.color === "tier-gold" ? "bg-tier-gold" :
-    coupon.color === "tier-silver" ? "bg-tier-silver" :
-    coupon.color === "tier-diamond" ? "bg-tier-diamond" : "bg-tier-bronze";
   return (
     <div className="absolute inset-0 z-30 flex items-end bg-black/50" onClick={onClose}>
       <div
@@ -1314,7 +1310,7 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
 
         {/* Header */}
         <div className="flex items-center gap-3">
-          <div className={`flex h-16 w-16 items-center justify-center rounded-2xl ${tierBg} text-base font-bold text-black`}>
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary text-base font-bold text-secondary-foreground">
             {coupon.cb}%
           </div>
           <div className="flex-1">
