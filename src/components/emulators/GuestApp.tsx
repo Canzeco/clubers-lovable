@@ -644,7 +644,9 @@ function TinderMode() {
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState<"l" | "r" | null>(null);
   const [saved, setSaved] = useState<typeof venues[number] | null>(null);
-  const [toast, setToast] = useState<string | null>(null);
+  const [celebrate, setCelebrate] = useState<{ v: typeof venues[number]; reserve: boolean } | null>(null);
+  const [streak, setStreak] = useState(0);
+  const [savedTotal, setSavedTotal] = useState(0);
   const [step, setStep] = useState<"ask" | "pick" | "done">("ask");
   const [pickedDay, setPickedDay] = useState<number>(0);
   const [pickedTime, setPickedTime] = useState<string | null>(null);
@@ -664,12 +666,13 @@ function TinderMode() {
       setIdx((i) => i + 1);
       setDir(null);
       if (d === "r") {
-        if (withReservation) {
-          setSaved(current);
-        } else {
-          setToast(`Coupon saved · ${current.name}`);
-          setTimeout(() => setToast(null), 1800);
-        }
+        setStreak((s) => s + 1);
+        setSavedTotal((s) => s + 1);
+        setCelebrate({ v: current, reserve: withReservation });
+        setTimeout(() => {
+          setCelebrate(null);
+          if (withReservation) setSaved(current);
+        }, 1100);
       }
     }, 260);
   };
