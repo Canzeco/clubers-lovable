@@ -1534,9 +1534,9 @@ function WalletView() {
       {/* segmented control */}
       <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
         {([
-          { id: "active", label: "Active", count: active.length, Icon: Clock },
-          { id: "used", label: "Redeemed", count: used.length, Icon: Check },
-          { id: "expired", label: "Expired", count: expired.length, Icon: X },
+          { id: "active", label: "Active", count: active.length },
+          { id: "used", label: "Redeemed", count: used.length },
+          { id: "expired", label: "Expired", count: expired.length },
         ] as const).map((s) => (
           <button
             key={s.id}
@@ -1545,7 +1545,6 @@ function WalletView() {
               seg === s.id ? "bg-foreground text-background" : "text-muted-foreground"
             }`}
           >
-            <s.Icon className="h-3.5 w-3.5" />
             {s.label}
             <span className={`rounded-full px-1.5 text-[10px] ${seg === s.id ? "bg-background/20" : "bg-muted"}`}>
               {s.count}
