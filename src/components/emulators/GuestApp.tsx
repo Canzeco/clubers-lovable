@@ -1305,15 +1305,6 @@ function MapMode() {
             </div>
           </div>
         ))}
-        <div className="absolute bottom-4 left-4 right-4 rounded-2xl bg-card/90 p-3 backdrop-blur">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-            Hottest right now
-          </p>
-          <p className="font-display text-lg font-semibold">Neón Bar</p>
-          <p className="text-xs text-muted-foreground">
-            5 Gold guests · 3 stories tagged in last hour
-          </p>
-        </div>
       </div>
     </div>
   );
