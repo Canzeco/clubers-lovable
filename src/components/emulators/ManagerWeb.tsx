@@ -684,6 +684,14 @@ function Promos() {
               </div>
             </div>
           ))}
+          {/* Locked / non-configurable parameter */}
+          <div className="flex items-center justify-between rounded-lg border border-dashed border-border bg-muted/30 px-3 py-2">
+            <div>
+              <p className="text-xs font-medium text-muted-foreground">Discount limit per visit</p>
+              <p className="text-[10px] text-muted-foreground">Cashback capped at $1,000 MXN · set by Mesita</p>
+            </div>
+            <p className="text-xs font-semibold text-muted-foreground">$1,000</p>
+          </div>
         </div>
       </div>
     </div>
