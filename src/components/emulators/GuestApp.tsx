@@ -1503,6 +1503,8 @@ function CouponTicket({
   const isExpired = state === "expired";
   const isUsed = state === "used";
   const isInactive = isExpired || isUsed;
+  const isReservation = !!c.isReservation && state === "active";
+  const isPending = isReservation && c.resStatus === "pending";
   // Scalloped bottom edge via radial-gradient mask
   const scallop = {
     WebkitMaskImage:
@@ -1526,7 +1528,7 @@ function CouponTicket({
       <div
         className={`relative flex items-stretch overflow-hidden rounded-2xl border bg-card-soft shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] ${
           isExpired ? "border-dashed border-border grayscale" : "border-border"
-        } ${isUsed ? "border-dashed" : ""}`}
+        } ${isUsed ? "border-dashed" : ""} ${isReservation ? "ring-1 ring-secondary/40" : ""}`}
       >
         {/* left stub */}
         <div
@@ -1558,6 +1560,11 @@ function CouponTicket({
               Expired
             </span>
           )}
+          {isReservation && !isUsed && !isExpired && (
+            <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white/85 text-secondary shadow">
+              <Calendar className="h-2.5 w-2.5" />
+            </span>
+          )}
         </div>
 
         {/* perforation notches + dashed line */}
@@ -1583,37 +1590,75 @@ function CouponTicket({
             <p className="truncate font-display text-sm font-semibold leading-tight">
               {c.name}
             </p>
-            {c.isReservation && (
-              <span className="rounded-sm bg-secondary/15 px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider text-secondary">
-                Reservation
+            {isReservation && (
+              <span
+                className={`rounded-sm px-1 py-0.5 text-[8px] font-bold uppercase tracking-wider ${
+                  isPending
+                    ? "bg-amber-500/15 text-amber-600"
+                    : "bg-secondary/15 text-secondary"
+                }`}
+              >
+                {isPending ? "Pending" : "Reservation"}
               </span>
             )}
           </div>
-          <p className="truncate text-[10px] text-muted-foreground">
-            {c.category} · {c.distance} ·{" "}
-            <span className="tracking-wider">{"$".repeat(c.cost)}</span>
-          </p>
-          <div className="flex items-center gap-2 text-[10px]">
-            <span className="inline-flex items-center gap-0.5 text-secondary">
-              <Star className="h-2.5 w-2.5 fill-secondary text-secondary" />{" "}
-              {c.mesita.toFixed(1)}
-              <span className="ml-0.5 text-muted-foreground/70">Mesita</span>
-            </span>
-            <span className="inline-flex items-center gap-1 text-muted-foreground">
-              <span className="flex h-3 w-3 items-center justify-center rounded-full bg-muted text-[7px] font-bold text-foreground/70">
-                G
-              </span>
-              {c.google.toFixed(1)}
-              <span className="text-muted-foreground/70">Google</span>
-            </span>
-          </div>
+
+          {isReservation ? (
+            isPending ? (
+              <div className="my-0.5 rounded-md border border-dashed border-amber-500/40 bg-amber-500/5 px-2 py-1.5">
+                <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-600">
+                  <Loader2 className="h-2.5 w-2.5 animate-spin" /> AI agent calling venue…
+                </p>
+                <p className="mt-0.5 text-[10px] text-muted-foreground">
+                  Requested {c.resRequested} · {c.resParty} guests
+                </p>
+              </div>
+            ) : (
+              <div className="my-0.5 rounded-md bg-secondary/8 px-2 py-1.5">
+                <p className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-secondary">
+                  <BadgeCheck className="h-2.5 w-2.5" /> Reservation confirmed
+                </p>
+                <p className="mt-0.5 font-display text-[13px] font-semibold leading-tight text-foreground">
+                  {c.resWhen}
+                </p>
+                <p className="text-[10px] text-muted-foreground">
+                  {c.resParty} guests · {c.category}
+                </p>
+              </div>
+            )
+          ) : (
+            <>
+              <p className="truncate text-[10px] text-muted-foreground">
+                {c.category} · {c.distance} ·{" "}
+                <span className="tracking-wider">{"$".repeat(c.cost)}</span>
+              </p>
+              <div className="flex items-center gap-2 text-[10px]">
+                <span className="inline-flex items-center gap-0.5 text-secondary">
+                  <Star className="h-2.5 w-2.5 fill-secondary text-secondary" />{" "}
+                  {c.mesita.toFixed(1)}
+                  <span className="ml-0.5 text-muted-foreground/70">Mesita</span>
+                </span>
+                <span className="inline-flex items-center gap-1 text-muted-foreground">
+                  <span className="flex h-3 w-3 items-center justify-center rounded-full bg-muted text-[7px] font-bold text-foreground/70">
+                    G
+                  </span>
+                  {c.google.toFixed(1)}
+                  <span className="text-muted-foreground/70">Google</span>
+                </span>
+              </div>
+            </>
+          )}
 
           {/* status footer line */}
           <div className="mt-1 flex items-center justify-between border-t border-dashed border-border/60 pt-1.5">
             {state === "active" && (
               <p className="flex items-center gap-1 text-[9px] font-semibold uppercase tracking-widest text-foreground/70">
                 <Clock className="h-2.5 w-2.5" />
-                {c.isReservation ? `Expires ${c.expiresIn}` : `Expires in ${c.expiresIn}`}
+                {isPending
+                  ? "Holding coupon while we call"
+                  : isReservation
+                  ? `Valid 24h after ${c.resWhen?.split(" · ")[0] ?? "booking"}`
+                  : `Expires in ${c.expiresIn}`}
               </p>
             )}
             {state === "expired" && (
