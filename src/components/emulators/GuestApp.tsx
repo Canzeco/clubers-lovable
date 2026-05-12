@@ -103,6 +103,7 @@ const venues = [
     distance: "0.4 km",
     vibe: "Golden hour terrace · live DJ",
     affiliated: true,
+    firstVisit: true,
     fb: 4.7,
     fbCount: 312,
     fbFollowers: "48k",
@@ -144,6 +145,7 @@ const venues = [
     distance: "0.9 km",
     vibe: "Speakeasy · 5 Gold guests tonight",
     affiliated: true,
+    firstVisit: false,
     fb: 4.5,
     fbCount: 198,
     fbFollowers: "22k",
@@ -184,6 +186,7 @@ const venues = [
     distance: "1.2 km",
     vibe: "Reserve via Mesita · no cashback",
     affiliated: false,
+    firstVisit: false,
     fb: 4.3,
     fbCount: 540,
     fbFollowers: "61k",
@@ -305,8 +308,14 @@ function VenueDetailSheet({
           <div className="flex items-center gap-2">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{venue.type}</p>
             {venue.affiliated && (
-              <span className="rounded-full bg-secondary px-2 py-0.5 text-[9px] font-bold text-secondary-foreground">
-                {venue.cashback}% CASHBACK
+              <span
+                className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                  venue.firstVisit
+                    ? "bg-gradient-to-r from-fuchsia-400 to-amber-300 text-black"
+                    : "bg-secondary text-secondary-foreground"
+                }`}
+              >
+                {venue.cashback}% {venue.firstVisit ? "WELCOME" : "CASHBACK"}
               </span>
             )}
           </div>
@@ -608,8 +617,14 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
                 </span>
               </div>
               {v.affiliated && (
-                <span className="mt-1 w-fit rounded-full bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-secondary-foreground">
-                  {v.cashback}% cashback
+                <span
+                  className={`mt-1 w-fit rounded-full px-1.5 py-0.5 text-[9px] font-bold ${
+                    v.firstVisit
+                      ? "bg-gradient-to-r from-fuchsia-400 to-amber-300 text-black"
+                      : "bg-secondary text-secondary-foreground"
+                  }`}
+                >
+                  {v.cashback}% {v.firstVisit ? "welcome" : "cashback"}
                 </span>
               )}
             </div>
@@ -739,8 +754,14 @@ function TinderMode() {
           </div>
           <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
             {v.affiliated ? (
-              <span className="rounded-full bg-secondary px-3 py-1 text-[11px] font-bold text-secondary-foreground">
-                {v.cashback}% CASHBACK
+              <span
+                className={`rounded-full px-3 py-1 text-[11px] font-bold ${
+                  v.firstVisit
+                    ? "bg-gradient-to-r from-fuchsia-400 to-amber-300 text-black"
+                    : "bg-secondary text-secondary-foreground"
+                }`}
+              >
+                {v.cashback}% {v.firstVisit ? "WELCOME" : "CASHBACK"}
               </span>
             ) : (
               <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-medium text-white backdrop-blur">
