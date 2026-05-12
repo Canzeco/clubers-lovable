@@ -2258,35 +2258,29 @@ function ShareView() {
             You've got {totalCards} gift cards to hand out. Send your code and the first friends who use it each get $100 MXN — courtesy of you.
           </p>
 
-          {/* Hero gift card with stacked fan behind */}
-          <div className="relative mx-auto mt-4 h-44 w-full max-w-[300px]">
-            {/* Stacked ghost cards */}
-            <div className="absolute inset-0 -rotate-6 translate-y-1 rounded-3xl bg-peacock/25" />
-            <div className="absolute inset-0 -rotate-3 rounded-3xl bg-peacock/50" />
-
-            {/* Main card */}
-            <div className="absolute inset-0 overflow-hidden rounded-3xl bg-peacock p-5 text-white shadow-2xl">
-              {/* Pattern overlay */}
-              <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/5" />
-              <div className="pointer-events-none absolute -bottom-10 -left-10 h-28 w-28 rounded-full border border-white/10" />
+          {/* Hero gift card — subtle, minimal */}
+          <div className="relative mx-auto mt-4 h-40 w-full max-w-[300px]">
+            <div className="absolute inset-0 overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm">
+              {/* Thin accent ribbon */}
+              <div className="absolute left-0 right-0 top-0 h-[3px] bg-peacock" />
 
               {/* Ticket perforations */}
-              <div className="absolute -left-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-background" />
-              <div className="absolute -right-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-background" />
+              <div className="absolute -left-2 top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-background" />
+              <div className="absolute -right-2 top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-background" />
 
               <div className="relative flex h-full flex-col">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-[9px] uppercase tracking-[0.25em] text-white/50">Mesita</p>
-                    <p className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-white/70">Gift Card</p>
+                    <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground">Mesita</p>
+                    <p className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-foreground/70">Gift Card</p>
                   </div>
-                  <p className="font-display text-xl font-semibold leading-none">$100 MXN</p>
+                  <p className="font-display text-xl font-semibold leading-none text-foreground">$100 MXN</p>
                 </div>
 
                 <div className="mt-auto">
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-white/50">Invite Code</p>
+                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground">Invite Code</p>
                   <div className="mt-1 flex items-center justify-between gap-2">
-                    <span className="font-mono text-lg font-semibold tracking-[0.2em]">{code}</span>
+                    <span className="font-mono text-lg font-semibold tracking-[0.2em] text-foreground">{code}</span>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -2296,7 +2290,7 @@ function ShareView() {
                         setCopied(true);
                         setTimeout(() => setCopied(false), 1500);
                       }}
-                      className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/15 transition hover:bg-white/25"
+                      className="flex h-7 w-7 items-center justify-center rounded-lg bg-muted text-foreground/70 transition hover:bg-muted/70"
                     >
                       {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                     </button>
