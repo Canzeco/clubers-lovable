@@ -2258,13 +2258,6 @@ function ProfileView() {
             </div>
             <p className="mt-0.5 text-xs text-muted-foreground truncate">@valenrose · CDMX · 27</p>
           </div>
-          <button
-            onClick={() => setSubTab("settings")}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
-            aria-label="Settings"
-          >
-            <Settings className="h-4 w-4" />
-          </button>
         </div>
 
         {/* Sub-tabs */}
