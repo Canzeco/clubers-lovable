@@ -1318,6 +1318,14 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
     "Late night mezcal & vinyl",
     "Brunch by the ocean",
     "Quiet date spot under $$",
+    "Antro más fresa de San Pedro",
+    "Restaurante para proponer matrimonio en Cancún",
+    "Domingo familiar con amenidades para niños",
+    "Restaurante pet friendly",
+    "Cena romántica con vista en CDMX",
+    "Cocina de autor en Polanco",
+    "Terraza con DJ en Tulum",
+    "Desayunos saludables cerca",
   ];
   const [msgs, setMsgs] = useState<Msg[]>([
     {
