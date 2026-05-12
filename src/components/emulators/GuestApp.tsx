@@ -1428,10 +1428,10 @@ function WalletView() {
   const [seg, setSeg] = useState<"active" | "expired" | "used">("active");
   const [openCoupon, setOpenCoupon] = useState<any | null>(null);
   const active = [
-    { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Wed May 14 · 8:00 PM", resParty: 2, expiresIn: "May 14 · 8pm + 24h", code: "MV-7702", firstVisit: false },
-    { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, isReservation: true, resStatus: "pending" as const, resRequested: "Fri May 16 · 9:30 PM", resParty: 4, expiresIn: "—", code: "NB-9914", firstVisit: false },
-    { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, expiresIn: "18h 24m", isReservation: false, code: "CL-8821", firstVisit: true },
-    { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, expiresIn: "9h 02m", isReservation: false, code: "LC-4417", firstVisit: false },
+    { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Wed May 14 · 8:00 PM", resParty: 2, expiresIn: "May 14 · 8pm + 24h", code: "MV-7702", firstVisit: false, step: 1 },
+    { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, isReservation: true, resStatus: "pending" as const, resRequested: "Fri May 16 · 9:30 PM", resParty: 4, expiresIn: "—", code: "NB-9914", firstVisit: false, step: 0 },
+    { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, expiresIn: "18h 24m", isReservation: false, code: "CL-8821", firstVisit: true, step: 3 },
+    { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, expiresIn: "9h 02m", isReservation: false, code: "LC-4417", firstVisit: false, step: 2 },
   ];
   const expired = [
     { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, expiredOn: "Yesterday", code: "NB-3310" },
@@ -1590,7 +1590,11 @@ function CouponTicket({
         />
 
         {/* right info */}
-        <div className="flex min-w-0 flex-1 flex-col justify-between px-4 py-3">
+        <div className="relative flex min-w-0 flex-1 flex-col justify-between px-4 py-3 pr-9">
+          {state === "active" && (
+            <PipelineStepper step={c.step ?? 0} />
+          )}
+
           {/* TOP: chip + serial */}
           <div className="flex items-center justify-between gap-2">
             <span
@@ -1715,6 +1719,54 @@ function CouponTicket({
         aria-hidden
       />
     </button>
+  );
+}
+
+const PIPELINE_STEPS: { label: string; Icon: any }[] = [
+  { label: "Saved", Icon: Ticket },
+  { label: "Visited", Icon: MapPin },
+  { label: "Bill", Icon: Banknote },
+  { label: "Paid", Icon: CreditCard },
+  { label: "Story", Icon: Camera },
+];
+
+function PipelineStepper({ step }: { step: number }) {
+  // step = number of completed stages (0..5). Current = step (next to complete).
+  return (
+    <div className="pointer-events-none absolute right-1.5 top-1/2 z-10 flex -translate-y-1/2 flex-col items-center gap-0.5">
+      {PIPELINE_STEPS.map((s, i) => {
+        const done = i < step;
+        const current = i === step;
+        const Icon = s.Icon;
+        return (
+          <div key={s.label} className="flex flex-col items-center">
+            <div
+              title={s.label}
+              className={`flex h-3.5 w-3.5 items-center justify-center rounded-full border transition ${
+                done
+                  ? "border-secondary bg-secondary text-secondary-foreground"
+                  : current
+                  ? "border-foreground bg-background text-foreground animate-pulse"
+                  : "border-border bg-background text-muted-foreground/50"
+              }`}
+            >
+              {done ? (
+                <Check className="h-2 w-2" strokeWidth={3} />
+              ) : (
+                <Icon className="h-1.5 w-1.5" />
+              )}
+            </div>
+            {i < PIPELINE_STEPS.length - 1 && (
+              <span
+                className={`h-1.5 w-px ${
+                  done ? "bg-secondary" : "bg-border"
+                }`}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
