@@ -1615,17 +1615,17 @@ function CouponTicket({
         <span
           aria-hidden
           className="pointer-events-none absolute top-0 z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-border bg-background"
-          style={{ left: "30%" }}
+          style={{ left: "32%" }}
         />
         <span
           aria-hidden
           className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full border border-border bg-background"
-          style={{ left: "30%" }}
+          style={{ left: "32%" }}
         />
         <span
           aria-hidden
           className="pointer-events-none absolute top-3 bottom-3 border-l-2 border-dotted border-border"
-          style={{ left: "30%" }}
+          style={{ left: "32%" }}
         />
 
         {/* right info */}
