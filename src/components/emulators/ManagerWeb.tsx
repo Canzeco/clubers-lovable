@@ -889,9 +889,9 @@ function Team() {
   );
 }
 
-/* ============== SETTINGS ============== */
+/* ============== ACCOUNT ============== */
 
-function SettingsView() {
+function AccountView() {
   const [notifs, setNotifs] = useState({
     redeems: true,
     payouts: true,
@@ -929,10 +929,38 @@ function SettingsView() {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <div className="space-y-5 p-6">
+      {/* Profile header */}
+      <div className="flex items-center gap-4 rounded-2xl border border-border bg-gradient-to-br from-peacock/15 to-secondary/10 p-5">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-peacock to-secondary text-lg font-bold text-primary-foreground shadow-glow">
+          DS
+        </div>
+        <div className="flex-1">
+          <h1 className="font-display text-2xl font-semibold leading-tight">
+            Diego Salas
+          </h1>
+          <p className="text-xs text-muted-foreground">
+            Owner · diego@luminar.mx · Member since Jul 2024
+          </p>
+          <div className="mt-2 flex items-center gap-2">
+            <span className="rounded-full bg-secondary/20 px-2 py-0.5 text-[10px] text-secondary">
+              3 units
+            </span>
+            <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-300">
+              Verified
+            </span>
+          </div>
+        </div>
+        <button className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs">
+          Edit profile
+        </button>
+      </div>
+
       <div>
-        <h1 className="font-display text-2xl font-semibold">Settings</h1>
+        <h2 className="font-display text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+          Settings
+        </h2>
         <p className="text-xs text-muted-foreground">
-          Account, billing, notifications, and help.
+          Preferences, billing, notifications, and help.
         </p>
       </div>
 
