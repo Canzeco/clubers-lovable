@@ -82,6 +82,15 @@ function InstagramLogo({ className = "" }: { className?: string }) {
   );
 }
 
+function UberEatsLogo({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" width="12" height="12" className={className} aria-hidden="true">
+      <rect width="24" height="24" rx="5" fill="#06C167"/>
+      <text x="12" y="16" textAnchor="middle" fontFamily="Helvetica, Arial, sans-serif" fontSize="11" fontWeight="700" fill="#fff">U</text>
+    </svg>
+  );
+}
+
 
 const venues = [
   {
