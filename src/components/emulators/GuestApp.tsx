@@ -644,7 +644,9 @@ function TinderMode() {
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState<"l" | "r" | null>(null);
   const [saved, setSaved] = useState<typeof venues[number] | null>(null);
-  const [toast, setToast] = useState<string | null>(null);
+  const [celebrate, setCelebrate] = useState<{ v: typeof venues[number]; reserve: boolean } | null>(null);
+  const [streak, setStreak] = useState(0);
+  const [savedTotal, setSavedTotal] = useState(0);
   const [step, setStep] = useState<"ask" | "pick" | "done">("ask");
   const [pickedDay, setPickedDay] = useState<number>(0);
   const [pickedTime, setPickedTime] = useState<string | null>(null);
@@ -664,12 +666,13 @@ function TinderMode() {
       setIdx((i) => i + 1);
       setDir(null);
       if (d === "r") {
-        if (withReservation) {
-          setSaved(current);
-        } else {
-          setToast(`Coupon saved · ${current.name}`);
-          setTimeout(() => setToast(null), 1800);
-        }
+        setStreak((s) => s + 1);
+        setSavedTotal((s) => s + 1);
+        setCelebrate({ v: current, reserve: withReservation });
+        setTimeout(() => {
+          setCelebrate(null);
+          if (withReservation) setSaved(current);
+        }, 1100);
       }
     }, 260);
   };
@@ -817,11 +820,94 @@ function TinderMode() {
         </button>
       </div>
 
-      {toast && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-24 z-40 flex justify-center px-6">
-          <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-border bg-card/95 px-4 py-2 text-xs font-medium text-foreground shadow-elev backdrop-blur">
-            <Check className="h-3.5 w-3.5 text-secondary" />
-            {toast}
+      {/* streak chip — always visible once you've saved at least one */}
+      {savedTotal > 0 && !celebrate && (
+        <div className="pointer-events-none absolute right-5 top-3 z-30 animate-fade-in">
+          <div className="flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-foreground shadow-elev backdrop-blur">
+            <Ticket className="h-3 w-3 text-secondary" />
+            {savedTotal} saved
+            {streak >= 2 && (
+              <span className="ml-1 rounded-full bg-gradient-to-r from-fuchsia-400 to-amber-300 px-1.5 py-0.5 text-[9px] text-black">
+                🔥 {streak}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* celebration overlay — addictive feedback */}
+      {celebrate && (
+        <div className="pointer-events-none absolute inset-0 z-50 flex items-center justify-center overflow-hidden">
+          {/* radial flash */}
+          <div
+            className="absolute inset-0 animate-fade-in"
+            style={{
+              background:
+                "radial-gradient(circle at 50% 45%, oklch(0.75 0.18 200 / 0.35), transparent 55%)",
+            }}
+          />
+
+          {/* confetti dots */}
+          {Array.from({ length: 14 }).map((_, i) => {
+            const angle = (i / 14) * Math.PI * 2;
+            const dist = 90 + (i % 3) * 30;
+            const x = Math.cos(angle) * dist;
+            const y = Math.sin(angle) * dist;
+            const colors = [
+              "bg-secondary",
+              "bg-tier-gold",
+              "bg-fuchsia-400",
+              "bg-amber-300",
+              "bg-peacock",
+            ];
+            return (
+              <span
+                key={i}
+                className={`absolute h-2 w-2 rounded-sm ${colors[i % colors.length]}`}
+                style={{
+                  left: "50%",
+                  top: "45%",
+                  animation: `confetti-${i % 3} 900ms cubic-bezier(.2,.7,.3,1) forwards`,
+                  // @ts-expect-error custom vars
+                  "--tx": `${x}px`,
+                  "--ty": `${y}px`,
+                }}
+              />
+            );
+          })}
+
+          {/* gift-card burst */}
+          <div
+            className="relative animate-scale-in"
+            style={{ animationDuration: "260ms" }}
+          >
+            <div className="absolute -inset-6 rounded-3xl bg-gradient-to-br from-fuchsia-400/40 via-rose-300/30 to-amber-300/40 blur-2xl" />
+            <div className="relative flex w-56 items-center gap-3 rounded-2xl border border-white/40 bg-gradient-to-br from-fuchsia-400 via-rose-300 to-amber-300 p-3 text-black shadow-2xl">
+              <div className="flex h-14 w-14 flex-shrink-0 flex-col items-center justify-center rounded-xl bg-black/15 backdrop-blur-sm">
+                <p className="font-display text-xl font-extrabold leading-none">
+                  {celebrate.v.cashback}%
+                </p>
+                <p className="text-[7px] font-bold uppercase tracking-widest opacity-80">
+                  cashback
+                </p>
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="flex items-center gap-1 text-[9px] font-black uppercase tracking-widest">
+                  <Sparkles className="h-2.5 w-2.5" /> Coupon saved
+                </p>
+                <p className="truncate font-display text-sm font-bold leading-tight">
+                  {celebrate.v.name}
+                </p>
+                <p className="text-[9px] font-semibold opacity-75">
+                  Added to your wallet · 24h
+                </p>
+              </div>
+            </div>
+            {streak >= 2 && (
+              <div className="mx-auto mt-3 w-fit animate-fade-in rounded-full bg-foreground px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-background">
+                🔥 {streak} in a row
+              </div>
+            )}
           </div>
         </div>
       )}
