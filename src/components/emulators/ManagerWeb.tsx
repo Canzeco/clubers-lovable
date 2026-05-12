@@ -726,7 +726,7 @@ function Wallet() {
   const tx = [
     { d: "May 11", k: "Payout", a: "+$12,400", c: "text-emerald-400" },
     { d: "May 10", k: "Cashback paid · 18 redeems", a: "-$1,820", c: "text-rose-400" },
-    { d: "May 9", k: "Mesita fee · 3%", a: "-$420", c: "text-muted-foreground" },
+    { d: "May 9", k: "Mesita fee · 21 coupons redeemed", a: "-$420", c: "text-muted-foreground" },
     { d: "May 8", k: "Spend influenced", a: "+$14,200", c: "text-emerald-400" },
     { d: "May 7", k: "Story bonus paid · 6", a: "-$340", c: "text-rose-400" },
   ];
@@ -924,7 +924,7 @@ function AccountView() {
     },
     {
       q: "What is the Mesita fee?",
-      a: "Mesita keeps a flat 3% on influenced spend. No setup fees, no monthly fees, no minimums.",
+      a: "Mesita charges $20 MXN per coupon redeemed — you only pay for guests who actually show up. No setup fees, no monthly fees, no minimums.",
     },
     {
       q: "Can a guest abuse cashback?",
