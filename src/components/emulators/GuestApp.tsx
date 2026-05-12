@@ -2280,7 +2280,7 @@ function ShareView() {
             onClick={() => setSharing(true)}
             className="mt-auto flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 py-3.5 text-sm font-semibold text-background shadow-lg active:scale-[0.98]"
           >
-            Share Gift Code <ChevronRight className="h-4 w-4" />
+            Share Gift Card <ChevronRight className="h-4 w-4" />
           </button>
         </div>
       </div>
