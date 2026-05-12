@@ -644,6 +644,7 @@ function TinderMode() {
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState<"l" | "r" | null>(null);
   const [saved, setSaved] = useState<typeof venues[number] | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
   const [step, setStep] = useState<"ask" | "pick" | "done">("ask");
   const [pickedDay, setPickedDay] = useState<number>(0);
   const [pickedTime, setPickedTime] = useState<string | null>(null);
@@ -654,7 +655,7 @@ function TinderMode() {
   const v = venues[idx % venues.length];
   const next = venues[(idx + 1) % venues.length];
 
-  const fly = (d: "l" | "r") => {
+  const fly = (d: "l" | "r", withReservation = true) => {
     const current = v;
     setDir(d);
     setDrag(null);
@@ -662,7 +663,14 @@ function TinderMode() {
     setTimeout(() => {
       setIdx((i) => i + 1);
       setDir(null);
-      if (d === "r") setSaved(current);
+      if (d === "r") {
+        if (withReservation) {
+          setSaved(current);
+        } else {
+          setToast(`Coupon saved · ${current.name}`);
+          setTimeout(() => setToast(null), 1800);
+        }
+      }
     }, 260);
   };
 
@@ -787,20 +795,36 @@ function TinderMode() {
           </div>
         </div>
       </div>
-      <div className="mt-5 flex items-center justify-center gap-4 px-5">
+      <div className="mt-5 flex items-stretch justify-center gap-2 px-5">
         <button
           onClick={() => fly("l")}
-          className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:scale-[1.02]"
+          aria-label="Skip"
+          className="flex aspect-square h-12 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition hover:scale-[1.04]"
         >
-          <X className="h-4 w-4" /> No
+          <X className="h-5 w-5" />
         </button>
         <button
-          onClick={() => fly("r")}
-          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow transition hover:scale-[1.02]"
+          onClick={() => fly("r", false)}
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-secondary/40 bg-secondary/10 px-3 py-3 text-[12px] font-semibold text-secondary transition hover:scale-[1.02]"
         >
-          <Check className="h-4 w-4" /> Yes
+          <Ticket className="h-4 w-4" /> Save coupon
+        </button>
+        <button
+          onClick={() => fly("r", true)}
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-peacock px-3 py-3 text-[12px] font-semibold text-white shadow-glow transition hover:scale-[1.02]"
+        >
+          <Calendar className="h-4 w-4" /> Save + Reserve
         </button>
       </div>
+
+      {toast && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-24 z-40 flex justify-center px-6">
+          <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-border bg-card/95 px-4 py-2 text-xs font-medium text-foreground shadow-elev backdrop-blur">
+            <Check className="h-3.5 w-3.5 text-secondary" />
+            {toast}
+          </div>
+        </div>
+      )}
 
       {saved && (
         <div
