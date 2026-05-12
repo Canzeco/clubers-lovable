@@ -911,6 +911,49 @@ function TinderMode() {
           className="absolute inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm"
           onClick={() => { setSaved(null); setStep("ask"); setPickedTime(null); setPickedDay(0); setPartySize(2); setPrefs([]); }}
         >
+
+      {askReserve && !saved && !celebrate && (
+        <div
+          className="absolute inset-0 z-40 flex items-center justify-center bg-black/55 backdrop-blur-sm animate-fade-in"
+          onClick={() => setAskReserve(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="mx-6 w-full max-w-sm rounded-2xl border border-border bg-card p-5 shadow-2xl"
+          >
+            <div className="flex items-center gap-2 text-secondary">
+              <Check className="h-4 w-4" />
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em]">
+                Coupon saved
+              </p>
+            </div>
+            <p className="mt-2 font-display text-lg font-semibold leading-tight">
+              Want to reserve a table at {askReserve.name}?
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Our AI agent will call the venue for you. The coupon expires 24h after your booking.
+            </p>
+            <div className="mt-4 flex items-center gap-2">
+              <button
+                onClick={() => setAskReserve(null)}
+                className="flex-1 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-semibold text-muted-foreground"
+              >
+                No, just save
+              </button>
+              <button
+                onClick={() => {
+                  const v = askReserve;
+                  setAskReserve(null);
+                  setSaved(v);
+                }}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
+              >
+                <Calendar className="h-4 w-4" /> Reserve
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
           <div
             className="w-full rounded-t-3xl border-t border-border bg-card p-5 pb-8 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
