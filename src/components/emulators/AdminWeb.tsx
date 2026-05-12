@@ -270,6 +270,47 @@ export function AdminWeb() {
 }
 
 function Pipeline() {
+  return <PipelineBoard />;
+}
+
+function StageView({ stageId }: { stageId: (typeof stages)[number]["id"] }) {
+  const s = stages.find((x) => x.id === stageId)!;
+  const items = leads.filter((l) => l.stage === stageId);
+  const descriptions: Record<string, string> = {
+    sourced: "Lista manual desde Google Business Profile. Selecciona un venue y lanza Super-sourcing.",
+    enriching: "Agente AI buscando IG, FB, web, reseñas y posts. Consulta la base para evitar duplicados.",
+    review: "Revisión humana del perfil enriquecido. Edita y aprueba antes de pasar a ventas.",
+    sales: "Contacto comercial · convertir en partner de Mesita.",
+  };
+  return (
+    <div className="space-y-4 p-6">
+      <div className="flex items-end justify-between">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Etapa {s.label}</p>
+          <h1 className="font-display text-3xl font-semibold">{s.hint}</h1>
+          <p className="mt-1 max-w-xl text-sm text-muted-foreground">{descriptions[stageId]}</p>
+        </div>
+        {stageId === "sourced" && (
+          <button className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-accent to-primary px-3 py-2 text-xs font-semibold text-primary-foreground shadow-glow">
+            <MapPin className="h-3.5 w-3.5" /> Importar de Google Business
+          </button>
+        )}
+        {stageId === "enriching" && (
+          <button className="flex items-center gap-2 rounded-lg bg-accent px-3 py-2 text-xs font-semibold text-accent-foreground">
+            <Sparkles className="h-3.5 w-3.5" /> Lanzar agente en lote
+          </button>
+        )}
+      </div>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+        {items.map((l) => (
+          <LeadCard key={l.id} l={l} stage={stageId} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PipelineBoard() {
   return (
     <div className="space-y-4 p-6">
       <div className="flex items-end justify-between">
