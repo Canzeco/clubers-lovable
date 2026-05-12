@@ -2236,8 +2236,9 @@ function ShareView() {
   const [copied, setCopied] = useState(false);
 
   const remaining = totalCards - claimed.length;
+  const gifted = claimed.length;
   const code = "8F2K-9XQ7";
-  const message = `Hey! I'm sending you a $100 MXN gift card to try Mesita 🦚 — discover the best venues in CDMX. Claim it here: mesita.app/g/${code}`;
+  const message = `Te regalo $100 MXN para Mesita 🦚 — la app con la que descubro los mejores lugares de CDMX. Es mío para vos, reclámalo acá: mesita.app/g/${code}`;
 
   const initials = (name: string) =>
     name
@@ -2250,11 +2251,11 @@ function ShareView() {
   return (
     <>
       <div className="flex h-full flex-col overflow-hidden">
-        <TopBar title="Gift Cards" subtitle={`${remaining} of ${totalCards} left · $100 MXN each`} />
+        <TopBar title="Treat your friends" subtitle={`Gift $100 MXN to up to ${totalCards} people · on you`} />
 
         <div className="flex flex-1 flex-col overflow-hidden px-5 pb-3">
           <p className="text-[11px] leading-snug text-muted-foreground">
-            Share one code with friends. First {totalCards} sign-ups each get $100 MXN.
+            You've got {totalCards} gift cards to hand out. Send your code and the first friends who use it each get $100 MXN — courtesy of you.
           </p>
 
           {/* Hero gift card with stacked fan behind */}
@@ -2305,14 +2306,14 @@ function ShareView() {
             </div>
           </div>
 
-          {/* Availability strip */}
+          {/* Friends you've treated */}
           <div className="mt-5">
             <div className="mb-2 flex items-end justify-between">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                Availability
+                Friends you've treated
               </p>
               <p className="text-[10px] font-medium text-secondary">
-                {remaining} of {totalCards} left
+                {gifted > 0 ? `${gifted} gifted · ${remaining} to go` : `${totalCards} gifts ready`}
               </p>
             </div>
 
@@ -2344,7 +2345,7 @@ function ShareView() {
                           <span className="block opacity-60">{c.when}</span>
                         </>
                       ) : (
-                        <span className="block uppercase tracking-wider opacity-50">Open</span>
+                        <span className="block uppercase tracking-wider opacity-50">Waiting</span>
                       )}
                     </p>
                   </div>
@@ -2358,7 +2359,7 @@ function ShareView() {
             onClick={() => setSharing(true)}
             className="mt-auto flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 py-3.5 text-sm font-semibold text-background shadow-lg active:scale-[0.98]"
           >
-            Share Gift Card <ChevronRight className="h-4 w-4" />
+            Send a gift to a friend <ChevronRight className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -2374,9 +2375,9 @@ function ShareView() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
-            <p className="font-display text-lg font-semibold leading-tight">Share your gift code</p>
+            <p className="font-display text-lg font-semibold leading-tight">Make their week</p>
             <p className="mt-1 text-[11px] text-muted-foreground">
-              First 5 friends to sign up each get $100 MXN.
+              Every friend who joins with your code gets $100 MXN — from you. They'll know it was you.
             </p>
 
             {/* Message template preview */}
