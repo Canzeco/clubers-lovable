@@ -288,6 +288,17 @@ function VenueDetailSheet({
   venue: typeof venues[number];
   onClose: () => void;
 }) {
+  const [confirm, setConfirm] = useState<null | "save" | "reserve">(null);
+
+  const handleSave = () => {
+    setConfirm("save");
+    setTimeout(() => onClose(), 1400);
+  };
+  const handleSaveReserve = () => {
+    setConfirm("reserve");
+    setTimeout(() => onClose(), 1800);
+  };
+
   return (
     <div
       className="absolute inset-0 z-50 flex items-end bg-black/60 backdrop-blur-sm"
