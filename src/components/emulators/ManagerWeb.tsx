@@ -871,3 +871,227 @@ function Team() {
     </div>
   );
 }
+
+/* ============== SETTINGS ============== */
+
+function SettingsView() {
+  const [notifs, setNotifs] = useState({
+    redeems: true,
+    payouts: true,
+    weekly: true,
+    marketing: false,
+  });
+  const [lang, setLang] = useState("EN");
+  const [currency, setCurrency] = useState("MXN");
+  const faqs = [
+    {
+      q: "How does Mesita cashback work?",
+      a: "Guests earn a % of their bill back as Mesita credit. Credits always apply automatically on their next visit at any Mesita venue.",
+    },
+    {
+      q: "When do I receive payouts?",
+      a: "Payouts run weekly, every Monday. Funds settle 1–2 business days later in your registered bank account.",
+    },
+    {
+      q: "What is the Mesita fee?",
+      a: "Mesita keeps a flat 3% on influenced spend. No setup fees, no monthly fees, no minimums.",
+    },
+    {
+      q: "Can a guest abuse cashback?",
+      a: "No — cashback is always capped at $1,000 MXN per visit, and validators approve each redemption from WhatsApp.",
+    },
+    {
+      q: "How do I add another unit?",
+      a: "Open the unit switcher in the sidebar and tap “Add new unit”. Each unit has its own promos, team, and wallet.",
+    },
+    {
+      q: "Who can change cashback %?",
+      a: "Only members with the Owner or Manager role. Marketing role is read-only on Wallet.",
+    },
+  ];
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <div className="space-y-5 p-6">
+      <div>
+        <h1 className="font-display text-2xl font-semibold">Settings</h1>
+        <p className="text-xs text-muted-foreground">
+          Account, billing, notifications, and help.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        {/* Account */}
+        <div className="rounded-xl border border-border bg-card-soft p-4">
+          <p className="mb-3 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <Lock className="h-3 w-3" /> Account
+          </p>
+          <SettingRow label="Email" value="diego@luminar.mx" />
+          <SettingRow label="Phone" value="+52 55 1840 2210" />
+          <SettingRow label="Password" value="Change" action />
+          <SettingRow label="Two-factor auth" value="On" />
+        </div>
+
+        {/* Preferences */}
+        <div className="rounded-xl border border-border bg-card-soft p-4">
+          <p className="mb-3 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <Globe className="h-3 w-3" /> Preferences
+          </p>
+          <div className="mb-3">
+            <p className="mb-1 text-[10px] text-muted-foreground">Language</p>
+            <div className="flex gap-1">
+              {["EN", "ES", "PT"].map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setLang(l)}
+                  className={`flex-1 rounded-md border px-2 py-1 text-[10px] font-semibold ${
+                    lang === l
+                      ? "border-secondary bg-secondary text-secondary-foreground"
+                      : "border-border text-muted-foreground"
+                  }`}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="mb-3">
+            <p className="mb-1 text-[10px] text-muted-foreground">Currency</p>
+            <div className="flex gap-1">
+              {["MXN", "USD", "EUR"].map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setCurrency(c)}
+                  className={`flex-1 rounded-md border px-2 py-1 text-[10px] font-semibold ${
+                    currency === c
+                      ? "border-secondary bg-secondary text-secondary-foreground"
+                      : "border-border text-muted-foreground"
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
+          <SettingRow label="Time zone" value="GMT-6 · CDMX" />
+          <SettingRow label="Theme" value="System" />
+        </div>
+
+        {/* Notifications */}
+        <div className="rounded-xl border border-border bg-card-soft p-4">
+          <p className="mb-3 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <Bell className="h-3 w-3" /> Notifications
+          </p>
+          {[
+            { k: "redeems", l: "New redemptions" },
+            { k: "payouts", l: "Payouts & invoices" },
+            { k: "weekly", l: "Weekly performance digest" },
+            { k: "marketing", l: "Mesita product updates" },
+          ].map((n) => (
+            <div
+              key={n.k}
+              className="flex items-center justify-between border-b border-border/40 py-2 text-xs last:border-0"
+            >
+              <span>{n.l}</span>
+              <button
+                onClick={() =>
+                  setNotifs((s) => ({ ...s, [n.k]: !s[n.k as keyof typeof s] }))
+                }
+                className={`flex h-5 w-9 items-center rounded-full px-0.5 ${
+                  notifs[n.k as keyof typeof notifs]
+                    ? "bg-secondary"
+                    : "bg-muted"
+                }`}
+              >
+                <div
+                  className={`h-4 w-4 rounded-full bg-white transition ${
+                    notifs[n.k as keyof typeof notifs] ? "ml-auto" : ""
+                  }`}
+                />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Billing */}
+      <div className="rounded-xl border border-border bg-card-soft p-4">
+        <p className="mb-3 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <CreditCard className="h-3 w-3" /> Billing & legal
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <SettingRow label="Tax ID (RFC)" value="LUM240711AB3" />
+          <SettingRow label="Bank account" value="BBVA ···· 4421" />
+          <SettingRow label="Invoices" value="View all" action />
+          <SettingRow label="Terms of service" value="Read" action />
+        </div>
+      </div>
+
+      {/* Help & FAQ */}
+      <div className="rounded-xl border border-border bg-card-soft p-4">
+        <div className="mb-3 flex items-center justify-between">
+          <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <LifeBuoy className="h-3 w-3" /> Help & FAQ
+          </p>
+          <div className="flex gap-2">
+            <button className="rounded-md border border-border px-2 py-1 text-[10px]">
+              <MessageCircle className="mr-1 inline h-3 w-3" /> Chat with us
+            </button>
+            <button className="rounded-md border border-border px-2 py-1 text-[10px]">
+              <FileText className="mr-1 inline h-3 w-3" /> Docs
+            </button>
+          </div>
+        </div>
+        <div className="space-y-2">
+          {faqs.map((f, i) => (
+            <div
+              key={i}
+              className="overflow-hidden rounded-lg border border-border bg-card"
+            >
+              <button
+                onClick={() => setOpen(open === i ? null : i)}
+                className="flex w-full items-center justify-between px-3 py-2 text-left text-xs font-medium"
+              >
+                {f.q}
+                <ChevronRight
+                  className={`h-3.5 w-3.5 text-muted-foreground transition ${
+                    open === i ? "rotate-90" : ""
+                  }`}
+                />
+              </button>
+              {open === i && (
+                <p className="border-t border-border/40 px-3 py-2 text-[11px] text-muted-foreground">
+                  {f.a}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <button className="flex items-center gap-2 rounded-lg border border-border bg-card-soft px-3 py-2 text-xs text-rose-400">
+        <LogOut className="h-3.5 w-3.5" /> Sign out
+      </button>
+    </div>
+  );
+}
+
+function SettingRow({
+  label,
+  value,
+  action,
+}: {
+  label: string;
+  value: string;
+  action?: boolean;
+}) {
+  return (
+    <div className="flex items-center justify-between border-b border-border/40 py-2 text-xs last:border-0">
+      <span className="text-muted-foreground">{label}</span>
+      <span
+        className={action ? "text-secondary" : "font-medium"}
+      >
+        {value}
+      </span>
+    </div>
+  );
+}
