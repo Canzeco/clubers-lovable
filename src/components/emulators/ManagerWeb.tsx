@@ -644,6 +644,9 @@ function Promos() {
                   on Mesita
                 </span>
               </div>
+              <p className="mt-0.5 text-[9px] font-medium uppercase tracking-wider text-secondary">
+                {t.reach}
+              </p>
               {t.handles.length > 0 ? (
                 <div className="mt-1.5 flex flex-wrap gap-1">
                   {t.handles.slice(0, 3).map((h) => (
@@ -665,7 +668,7 @@ function Promos() {
                   )}
                 </div>
               ) : (
-                <p className="mt-1 text-[9px] text-muted-foreground">Anonymous discovery</p>
+                <p className="mt-1 text-[9px] text-muted-foreground">No social profile shared</p>
               )}
             </div>
           </div>
