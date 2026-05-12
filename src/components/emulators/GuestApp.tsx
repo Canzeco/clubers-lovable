@@ -798,25 +798,25 @@ function TinderMode() {
           </div>
         </div>
       </div>
-      <div className="mt-5 flex items-stretch justify-center gap-2 px-5">
+      <div className="mt-5 flex items-center justify-center gap-2 px-4">
         <button
           onClick={() => fly("l")}
           aria-label="Skip"
-          className="flex aspect-square h-12 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition hover:scale-[1.04]"
+          className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition hover:scale-[1.04]"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </button>
         <button
           onClick={() => fly("r", false)}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-secondary/40 bg-secondary/10 px-3 py-3 text-[12px] font-semibold text-secondary transition hover:scale-[1.02]"
+          className="flex h-11 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-secondary/40 bg-secondary/10 px-3 text-[12px] font-semibold text-secondary transition hover:scale-[1.02]"
         >
-          <Ticket className="h-4 w-4" /> Save coupon
+          <Ticket className="h-3.5 w-3.5" /> Save coupon
         </button>
         <button
           onClick={() => fly("r", true)}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-peacock px-3 py-3 text-[12px] font-semibold text-white shadow-glow transition hover:scale-[1.02]"
+          className="flex h-11 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-peacock px-3 text-[12px] font-semibold text-white shadow-glow transition hover:scale-[1.02]"
         >
-          <Calendar className="h-4 w-4" /> Save + Reserve
+          <Calendar className="h-3.5 w-3.5" /> Save + Reserve
         </button>
       </div>
 
