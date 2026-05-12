@@ -1265,11 +1265,6 @@ function MapMode() {
             <span className="relative block h-4 w-4 rounded-full border-2 border-background bg-primary shadow-glow" />
           </div>
         )}
-        {!located && (
-          <div className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 rounded-full border border-border bg-background/80 px-3 py-1 text-[10px] text-muted-foreground backdrop-blur">
-            Drag to explore · tap <Locate className="inline h-2.5 w-2.5" /> to center
-          </div>
-        )}
         {/* grid lines */}
         <svg className="absolute inset-0 h-full w-full opacity-20">
           {Array.from({ length: 10 }).map((_, i) => (
