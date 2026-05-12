@@ -140,6 +140,24 @@ export function ManagerWeb() {
             Generate your next campaign in 1 click.
           </p>
         </div>
+        {/* Account chip */}
+        <button
+          onClick={() => setTab("settings")}
+          className="mt-3 flex w-full items-center gap-2 rounded-xl border border-border bg-card p-2 text-left hover:bg-card-soft"
+        >
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-peacock to-secondary text-xs font-bold text-primary-foreground">
+            DS
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <p className="truncate text-xs font-semibold leading-none">
+              Diego Salas
+            </p>
+            <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+              Owner · diego@luminar.mx
+            </p>
+          </div>
+          <ChevronDown className="h-3 w-3 -rotate-90 text-muted-foreground" />
+        </button>
       </aside>
 
       {/* Main */}
