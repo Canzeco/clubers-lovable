@@ -810,6 +810,165 @@ function Analytics() {
           <p className="text-[10px] text-emerald-400">+0.8×</p>
         </div>
       </div>
+
+      <ValidatorActivity />
+    </div>
+  );
+}
+
+/* ============== WALLET ============== */
+
+function ValidatorActivity() {
+  const validators = [
+    {
+      n: "Carlos",
+      role: "Bar lead",
+      avatar: "C",
+      color: "from-emerald-400 to-teal-500",
+      online: true,
+      validated: 18,
+      flagged: 1,
+      lastAgo: "2m",
+      chat: [
+        { who: "bot", t: "🦚 Mesa 7 · Valeria · $840 · 20% cashback", at: "20:12" },
+        { who: "me", t: "OK validado", at: "20:12" },
+        { who: "bot", t: "Mesa 3 · Diego · $1,420 · 10%", at: "20:31" },
+        { who: "me", t: "OK", at: "20:31" },
+        { who: "bot", t: "Mesa 11 · Sofía · $620 · 20% · ⚠ ticket sin propina", at: "20:48" },
+        { who: "me", t: "Corregido, propina incluida", at: "20:49" },
+      ],
+    },
+    {
+      n: "Lucía",
+      role: "Hostess",
+      avatar: "L",
+      color: "from-rose-400 to-pink-500",
+      online: true,
+      validated: 11,
+      flagged: 0,
+      lastAgo: "8m",
+      chat: [
+        { who: "bot", t: "Reserva · Tomás (+1) · 21:00", at: "20:05" },
+        { who: "me", t: "Llegaron, sentados en mesa 4", at: "21:02" },
+        { who: "bot", t: "Mesa 4 · Tomás · $1,160 · 20%", at: "22:40" },
+        { who: "me", t: "OK validado", at: "22:40" },
+        { who: "bot", t: "Mesa 9 · Renata · $980 · 10%", at: "22:55" },
+        { who: "me", t: "OK", at: "22:55" },
+      ],
+    },
+    {
+      n: "Toño",
+      role: "Waiter",
+      avatar: "T",
+      color: "from-amber-400 to-orange-500",
+      online: false,
+      validated: 7,
+      flagged: 2,
+      lastAgo: "1h",
+      chat: [
+        { who: "bot", t: "Mesa 2 · Andrés · $540 · 5%", at: "19:14" },
+        { who: "me", t: "OK", at: "19:14" },
+        { who: "bot", t: "Mesa 6 · Camila · $2,100 · 50% · ⚠ revisar tier Diamond", at: "19:45" },
+        { who: "me", t: "Confirmado, es Diamond", at: "19:47" },
+        { who: "bot", t: "Story verificada · @camivb · +10%", at: "19:48" },
+      ],
+    },
+  ];
+  const [active, setActive] = useState(0);
+  const v = validators[active];
+
+  return (
+    <div className="rounded-xl border border-border bg-card-soft">
+      <div className="flex items-center justify-between border-b border-border px-4 py-3">
+        <div>
+          <p className="text-sm font-medium">Validator activity</p>
+          <p className="text-[10px] text-muted-foreground">
+            Read-only monitor of every WhatsApp validation from your team.
+          </p>
+        </div>
+        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+          <MessageCircle className="h-3 w-3 text-[oklch(0.72_0.16_152)]" /> Live
+        </div>
+      </div>
+
+      <div className="grid grid-cols-[180px_1fr]">
+        {/* Validator list */}
+        <div className="border-r border-border">
+          {validators.map((val, i) => (
+            <button
+              key={val.n}
+              onClick={() => setActive(i)}
+              className={`flex w-full items-center gap-2 border-b border-border/40 px-3 py-2.5 text-left last:border-0 transition ${
+                i === active ? "bg-muted/50" : "hover:bg-muted/30"
+              }`}
+            >
+              <div className="relative">
+                <div
+                  className={`flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br ${val.color} text-xs font-bold text-white`}
+                >
+                  {val.avatar}
+                </div>
+                <span
+                  className={`absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full ring-2 ring-card ${
+                    val.online ? "bg-emerald-400" : "bg-muted-foreground/50"
+                  }`}
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-medium">{val.n}</p>
+                <p className="truncate text-[10px] text-muted-foreground">
+                  {val.role} · {val.lastAgo}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-[10px] font-semibold text-foreground">{val.validated}</p>
+                {val.flagged > 0 && (
+                  <p className="text-[9px] text-rose-400">⚠ {val.flagged}</p>
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Embedded chat */}
+        <div className="bg-[oklch(0.96_0.012_150)]/40">
+          <div className="flex items-center gap-2 border-b border-border px-3 py-2">
+            <div
+              className={`flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br ${v.color} text-[10px] font-bold text-white`}
+            >
+              {v.avatar}
+            </div>
+            <div className="flex-1">
+              <p className="text-xs font-medium">{v.n} · Mesita 🦚</p>
+              <p className="text-[9px] text-muted-foreground">
+                {v.online ? "online" : `last seen ${v.lastAgo} ago`}
+              </p>
+            </div>
+            <p className="text-[10px] text-muted-foreground">
+              Today · {v.validated} validated · {v.flagged} flagged
+            </p>
+          </div>
+          <div className="max-h-64 space-y-1.5 overflow-y-auto px-3 py-3">
+            {v.chat.map((m, i) => (
+              <div
+                key={i}
+                className={`flex ${m.who === "me" ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className={`max-w-[78%] rounded-lg px-2.5 py-1.5 text-[11px] shadow-sm ${
+                    m.who === "me"
+                      ? "bg-[oklch(0.85_0.10_152)] text-foreground"
+                      : "bg-white text-foreground"
+                  }`}
+                >
+                  <p className="leading-snug">{m.t}</p>
+                  <p className="mt-0.5 text-right text-[8px] text-muted-foreground">{m.at}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
