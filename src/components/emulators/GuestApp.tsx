@@ -27,6 +27,7 @@ import {
   Search,
   Locate,
   Wallet,
+  Plus,
   CreditCard,
   Banknote,
   ChevronRight,
