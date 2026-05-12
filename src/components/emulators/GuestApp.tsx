@@ -1279,29 +1279,29 @@ function MapMode() {
             </g>
           ))}
         </svg>
-        {/* pins */}
+        {/* pins — emoji by category + cashback % */}
         {[
-          { x: "25%", y: "30%", tier: "gold", n: "Casa Luminar", cb: 20 },
-          { x: "60%", y: "45%", tier: "silver", n: "Neón Bar", cb: 20 },
-          { x: "40%", y: "65%", tier: "bronze", n: "Mar Verde", cb: 0 },
-          { x: "75%", y: "75%", tier: "gold", n: "Loto Café", cb: 10 },
+          { x: "22%", y: "28%", emoji: "🍸", n: "Casa Luminar", cb: 20 },
+          { x: "58%", y: "40%", emoji: "🎶", n: "Neón Bar", cb: 20 },
+          { x: "38%", y: "60%", emoji: "🐟", n: "Mar Verde", cb: 0 },
+          { x: "72%", y: "70%", emoji: "☕", n: "Loto Café", cb: 10 },
+          { x: "30%", y: "78%", emoji: "🌮", n: "El Tope", cb: 15 },
+          { x: "82%", y: "30%", emoji: "🍕", n: "Forno", cb: 5 },
         ].map((p, i) => (
           <div
             key={i}
             className="absolute -translate-x-1/2 -translate-y-1/2"
             style={{ left: p.x, top: p.y }}
           >
-            <div
-              className={`relative flex h-10 w-10 items-center justify-center rounded-full text-[10px] font-bold text-black shadow-glow ${
-                p.tier === "gold"
-                  ? "bg-tier-gold"
-                  : p.tier === "silver"
-                  ? "bg-tier-silver"
-                  : "bg-tier-bronze"
-              }`}
-            >
-              {p.cb > 0 ? `${p.cb}%` : "·"}
-              <span className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-inherit" />
+            <div className="relative flex flex-col items-center">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-background text-base shadow-elev">
+                <span className="leading-none">{p.emoji}</span>
+              </div>
+              {p.cb > 0 && (
+                <span className="mt-1 rounded-full bg-tier-gold px-1.5 py-px text-[9px] font-bold text-black shadow-sm">
+                  {p.cb}%
+                </span>
+              )}
             </div>
           </div>
         ))}
