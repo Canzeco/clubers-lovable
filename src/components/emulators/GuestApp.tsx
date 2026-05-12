@@ -260,7 +260,7 @@ function VenueDetailSheet({
           <div className="flex items-center gap-2">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{venue.type}</p>
             {venue.affiliated && (
-              <span className="rounded-full bg-tier-gold px-2 py-0.5 text-[9px] font-bold text-black">
+              <span className="rounded-full bg-secondary px-2 py-0.5 text-[9px] font-bold text-secondary-foreground">
                 {venue.cashback}% CASHBACK
               </span>
             )}
@@ -491,7 +491,7 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
                 </span>
               </div>
               {v.affiliated && (
-                <span className="mt-1 w-fit rounded-full bg-tier-gold px-1.5 py-0.5 text-[9px] font-bold text-black">
+                <span className="mt-1 w-fit rounded-full bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-secondary-foreground">
                   {v.cashback}% cashback
                 </span>
               )}
@@ -622,7 +622,7 @@ function TinderMode() {
           </div>
           <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
             {v.affiliated ? (
-              <span className="rounded-full bg-tier-gold px-3 py-1 text-[11px] font-bold text-black">
+              <span className="rounded-full bg-secondary px-3 py-1 text-[11px] font-bold text-secondary-foreground">
                 {v.cashback}% CASHBACK
               </span>
             ) : (
@@ -675,7 +675,7 @@ function TinderMode() {
           >
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tier-gold text-sm font-bold text-black">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-sm font-bold text-secondary-foreground">
                 {saved.cashback}%
               </div>
               <div className="flex-1">
