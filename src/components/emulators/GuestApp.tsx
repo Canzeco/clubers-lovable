@@ -906,12 +906,6 @@ function TinderMode() {
         </div>
       )}
 
-      {saved && (
-        <div
-          className="absolute inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm"
-          onClick={() => { setSaved(null); setStep("ask"); setPickedTime(null); setPickedDay(0); setPartySize(2); setPrefs([]); }}
-        >
-
       {askReserve && !saved && !celebrate && (
         <div
           className="absolute inset-0 z-40 flex items-center justify-center bg-black/55 backdrop-blur-sm animate-fade-in"
@@ -954,6 +948,12 @@ function TinderMode() {
           </div>
         </div>
       )}
+
+      {saved && (
+        <div
+          className="absolute inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm"
+          onClick={() => { setSaved(null); setStep("ask"); setPickedTime(null); setPickedDay(0); setPartySize(2); setPrefs([]); }}
+        >
           <div
             className="w-full rounded-t-3xl border-t border-border bg-card p-5 pb-8 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
