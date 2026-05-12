@@ -39,9 +39,22 @@ import {
   Check,
   X as XIcon,
   RefreshCw,
+  Bot,
+  KeyRound,
+  Cpu,
+  Workflow,
+  Zap,
+  Activity,
+  Database,
+  Mic,
+  Send,
+  AlertTriangle,
+  ExternalLink,
+  PlayCircle,
+  PauseCircle,
 } from "lucide-react";
 
-type Tab = "pipeline" | "portfolio" | "editor" | "discover" | "promos" | "metrics" | "trust";
+type Tab = "pipeline" | "bots" | "stack" | "portfolio" | "editor" | "discover" | "promos" | "metrics" | "trust";
 
 const stages = [
   { id: "lead", label: "Leads", color: "bg-muted-foreground/30", count: 84 },
@@ -98,6 +111,8 @@ export function AdminWeb() {
 
   const nav: { id: Tab; label: string; Icon: any }[] = [
     { id: "pipeline", label: "Sourcing pipeline", Icon: LayoutGrid },
+    { id: "bots", label: "Bot fleet", Icon: Bot },
+    { id: "stack", label: "SaaS stack", Icon: KeyRound },
     { id: "portfolio", label: "Venue portfolio", Icon: Building2 },
     { id: "editor", label: "Venue editor", Icon: PencilLine },
     { id: "discover", label: "Discover venues", Icon: MapIcon },
@@ -159,6 +174,8 @@ export function AdminWeb() {
         </div>
 
         {tab === "pipeline" && <Pipeline />}
+        {tab === "bots" && <BotFleet />}
+        {tab === "stack" && <SaasStack />}
         {tab === "portfolio" && <Portfolio />}
         {tab === "editor" && <VenueEditor />}
         {tab === "discover" && <DiscoverVenues />}
@@ -1068,6 +1085,458 @@ function ScoreRow({ Icon, label, hint, value, locked }: { Icon: any; label: stri
         <p className="text-[10px] text-muted-foreground">{hint}</p>
       </div>
       <input defaultValue={value} disabled={locked} className="w-56 rounded-md border border-border bg-card px-2 py-1 text-xs outline-none disabled:opacity-60" />
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// BOT FLEET — agentic workers sourcing & enriching venues
+// ─────────────────────────────────────────────────────────
+type BotStatus = "running" | "idle" | "error";
+type BotDef = {
+  name: string;
+  role: string;
+  Icon: any;
+  status: BotStatus;
+  region: string;
+  found: number;
+  goal: number;
+  uses: string[];
+  lastEvent: string;
+};
+
+const BOTS: BotDef[] = [
+  {
+    name: "Scout-01",
+    role: "Discovery",
+    Icon: MapIcon,
+    status: "running",
+    region: "CDMX · Roma / Condesa",
+    found: 312,
+    goal: 400,
+    uses: ["Google Places", "Foursquare", "Instagram Graph"],
+    lastEvent: "Added Bar Próximo to qualification queue",
+  },
+  {
+    name: "Scout-02",
+    role: "Discovery",
+    Icon: MapIcon,
+    status: "running",
+    region: "GDL · Chapultepec",
+    found: 84,
+    goal: 150,
+    uses: ["TripAdvisor", "Yelp Fusion"],
+    lastEvent: "Scanned 412 IG locations · 19 candidates",
+  },
+  {
+    name: "Enricher-Alpha",
+    role: "Enrichment",
+    Icon: Sparkles,
+    status: "running",
+    region: "Global queue",
+    found: 1284,
+    goal: 2000,
+    uses: ["Facebook Graph", "Instagram", "Firecrawl", "Apollo"],
+    lastEvent: "Filled owner email for 7 venues via Hunter.io",
+  },
+  {
+    name: "Qualifier",
+    role: "Qualification",
+    Icon: ShieldCheck,
+    status: "idle",
+    region: "Awaiting batch",
+    found: 642,
+    goal: 1000,
+    uses: ["OpenAI", "Mesita scorer v3"],
+    lastEvent: "Scored 38 venues · 11 marked Hot",
+  },
+  {
+    name: "Outreach-WA",
+    role: "Outreach",
+    Icon: Send,
+    status: "running",
+    region: "Hot leads · CDMX",
+    found: 42,
+    goal: 60,
+    uses: ["Twilio WA", "Resend", "GPT drafter"],
+    lastEvent: "Sent 12 personalized intros · 4 replies",
+  },
+  {
+    name: "Voice-Caller",
+    role: "Outreach",
+    Icon: Mic,
+    status: "error",
+    region: "Reservations queue",
+    found: 18,
+    goal: 25,
+    uses: ["ElevenLabs", "Twilio Voice"],
+    lastEvent: "Rate-limited by Twilio · retry in 4m",
+  },
+  {
+    name: "Monitor",
+    role: "Monitoring",
+    Icon: Activity,
+    status: "running",
+    region: "Affiliated venues",
+    found: 96,
+    goal: 96,
+    uses: ["Perplexity", "Firecrawl"],
+    lastEvent: "Detected new IG promo at Casa Luminar",
+  },
+];
+
+const FEED = [
+  { t: "2s", b: "Scout-01", msg: "Discovered Mezcalería La Niña · Roma Nte", kind: "found" },
+  { t: "11s", b: "Enricher-Alpha", msg: "Pulled IG followers (12.4k) + last 30 posts", kind: "info" },
+  { t: "34s", b: "Qualifier", msg: "Bar Próximo scored 87 / 100 → Hot", kind: "hot" },
+  { t: "1m", b: "Outreach-WA", msg: "Drafted WA intro for owner Ana M.", kind: "info" },
+  { t: "1m", b: "Voice-Caller", msg: "Twilio rate limit hit — paused", kind: "error" },
+  { t: "2m", b: "Monitor", msg: "Loto Café changed hours · synced", kind: "info" },
+  { t: "3m", b: "Scout-02", msg: "Found 19 new candidates in Chapultepec", kind: "found" },
+];
+
+function BotFleet() {
+  return (
+    <div className="space-y-6 p-6">
+      {/* header */}
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl font-semibold">Bot fleet</h1>
+          <p className="text-xs text-muted-foreground">
+            Agentic workers sourcing, enriching and qualifying venues across the network.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-xs">
+            <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+            <span className="font-medium">5 running</span>
+            <span className="text-muted-foreground">· 1 idle · 1 error</span>
+          </div>
+          <button className="flex items-center gap-1 rounded-lg bg-gradient-to-r from-accent to-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-glow">
+            <Plus className="h-3.5 w-3.5" /> Deploy bot
+          </button>
+        </div>
+      </div>
+
+      {/* fleet stats */}
+      <div className="grid grid-cols-4 gap-3">
+        {[
+          { label: "Venues sourced (7d)", value: "1,284", delta: "+18%", Icon: MapIcon },
+          { label: "Enriched profiles", value: "642", delta: "+22%", Icon: Sparkles },
+          { label: "Outreach sent", value: "317", delta: "+12%", Icon: Send },
+          { label: "Cost · last 24h", value: "$ 184", delta: "−6%", Icon: Wallet },
+        ].map((s) => (
+          <div key={s.label} className="rounded-xl border border-border bg-card p-3">
+            <div className="flex items-center justify-between text-muted-foreground">
+              <s.Icon className="h-3.5 w-3.5" />
+              <span className="text-[10px] font-semibold uppercase tracking-widest">{s.delta}</span>
+            </div>
+            <p className="mt-1 font-display text-xl">{s.value}</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* bot grid + live feed */}
+      <div className="grid grid-cols-[1fr_320px] gap-4">
+        <div className="grid grid-cols-2 gap-3">
+          {BOTS.map((b) => (
+            <div key={b.name} className="relative overflow-hidden rounded-xl border border-border bg-card p-4">
+              {/* pulse for running */}
+              {b.status === "running" && (
+                <span className="absolute right-3 top-3 inline-flex h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+              )}
+              {b.status === "idle" && (
+                <span className="absolute right-3 top-3 inline-flex h-2 w-2 rounded-full bg-muted-foreground/50" />
+              )}
+              {b.status === "error" && (
+                <span className="absolute right-3 top-3 inline-flex h-2 w-2 animate-pulse rounded-full bg-destructive" />
+              )}
+
+              <div className="flex items-start gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary/15 text-secondary">
+                  <b.Icon className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="font-display text-sm font-semibold leading-none">{b.name}</p>
+                    <span className="rounded bg-muted px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
+                      {b.role}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-[11px] text-muted-foreground">{b.region}</p>
+                </div>
+              </div>
+
+              {/* progress */}
+              <div className="mt-3">
+                <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                  <span>
+                    <span className="font-semibold text-foreground">{b.found.toLocaleString()}</span> / {b.goal.toLocaleString()}
+                  </span>
+                  <span>{Math.round((b.found / b.goal) * 100)}%</span>
+                </div>
+                <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className={`h-full ${b.status === "error" ? "bg-destructive" : "bg-secondary"}`}
+                    style={{ width: `${Math.min(100, (b.found / b.goal) * 100)}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* tools */}
+              <div className="mt-3 flex flex-wrap gap-1">
+                {b.uses.map((u) => (
+                  <span key={u} className="rounded-full border border-border bg-card-soft px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground">
+                    {u}
+                  </span>
+                ))}
+              </div>
+
+              {/* last event */}
+              <p className="mt-3 line-clamp-1 text-[11px] italic text-foreground/80">
+                <Zap className="mr-1 inline h-3 w-3 text-secondary" />
+                {b.lastEvent}
+              </p>
+
+              <div className="mt-3 flex items-center gap-2">
+                <button className="flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-[10px] font-medium text-muted-foreground">
+                  {b.status === "running" ? <PauseCircle className="h-3 w-3" /> : <PlayCircle className="h-3 w-3" />}
+                  {b.status === "running" ? "Pause" : "Run"}
+                </button>
+                <button className="flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-[10px] font-medium text-muted-foreground">
+                  <Workflow className="h-3 w-3" /> Workflow
+                </button>
+                <button className="ml-auto text-[10px] text-muted-foreground hover:text-foreground">
+                  <MoreHorizontal className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* live feed */}
+        <div className="rounded-xl border border-border bg-card p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="font-display text-sm font-semibold">Live feed</p>
+            <span className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-emerald-600">
+              <span className="inline-flex h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+              streaming
+            </span>
+          </div>
+          <div className="space-y-2">
+            {FEED.map((f, i) => (
+              <div key={i} className="flex gap-2 border-b border-border/60 pb-2 last:border-0">
+                <span className="w-7 flex-shrink-0 font-mono text-[9px] text-muted-foreground">{f.t}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] leading-snug">
+                    <span
+                      className={`mr-1 font-semibold ${
+                        f.kind === "hot"
+                          ? "text-secondary"
+                          : f.kind === "error"
+                          ? "text-destructive"
+                          : f.kind === "found"
+                          ? "text-foreground"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      {f.b}
+                    </span>
+                    {f.msg}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// SAAS STACK — API keys & integrations powering the platform
+// ─────────────────────────────────────────────────────────
+type StackStatus = "connected" | "missing" | "expired" | "low_credits";
+type Integration = {
+  name: string;
+  category: string;
+  purpose: string;
+  status: StackStatus;
+  monthly: string;
+  usage: string;
+  link?: string;
+};
+
+const STACK: { group: string; items: Integration[] }[] = [
+  {
+    group: "Discovery & enrichment",
+    items: [
+      { name: "Google Places API", category: "Maps", purpose: "Venue discovery + base profile", status: "connected", monthly: "$ 320", usage: "78% of quota" },
+      { name: "Foursquare Places", category: "Maps", purpose: "Secondary discovery + categories", status: "connected", monthly: "$ 90", usage: "31%" },
+      { name: "Yelp Fusion", category: "Reviews", purpose: "Ratings + review enrichment", status: "low_credits", monthly: "$ 40", usage: "94%" },
+      { name: "TripAdvisor Content", category: "Reviews", purpose: "Tourist venue scoring", status: "missing", monthly: "—", usage: "—" },
+      { name: "Firecrawl", category: "Scraping", purpose: "Menu + hours scraping", status: "connected", monthly: "$ 49", usage: "62%" },
+      { name: "Apify", category: "Scraping", purpose: "IG / FB scraper actors", status: "connected", monthly: "$ 120", usage: "44%" },
+    ],
+  },
+  {
+    group: "Social & owner data",
+    items: [
+      { name: "Instagram Graph API", category: "Social", purpose: "Follower count, posts, reels", status: "connected", monthly: "—", usage: "Free tier" },
+      { name: "Facebook Graph API", category: "Social", purpose: "Page reviews + events", status: "expired", monthly: "—", usage: "Token expired" },
+      { name: "Apollo.io", category: "B2B", purpose: "Owner email + role", status: "connected", monthly: "$ 99", usage: "57%" },
+      { name: "Hunter.io", category: "B2B", purpose: "Email finder fallback", status: "connected", monthly: "$ 49", usage: "23%" },
+      { name: "Clearbit", category: "B2B", purpose: "Domain → company info", status: "missing", monthly: "—", usage: "—" },
+    ],
+  },
+  {
+    group: "AI agents & reasoning",
+    items: [
+      { name: "OpenAI", category: "LLM", purpose: "Scorer + draft outreach", status: "connected", monthly: "$ 412", usage: "68%" },
+      { name: "Anthropic", category: "LLM", purpose: "Long-context enrichment", status: "connected", monthly: "$ 188", usage: "29%" },
+      { name: "Perplexity", category: "Research", purpose: "Owner background research", status: "connected", monthly: "$ 20", usage: "11%" },
+      { name: "ElevenLabs", category: "Voice", purpose: "Reservation calls (es-MX)", status: "connected", monthly: "$ 99", usage: "84%" },
+    ],
+  },
+  {
+    group: "Outreach & ops",
+    items: [
+      { name: "Twilio (WA + SMS)", category: "Messaging", purpose: "WhatsApp validator + outreach", status: "connected", monthly: "$ 240", usage: "high" },
+      { name: "Twilio Voice", category: "Messaging", purpose: "Outbound AI calls", status: "low_credits", monthly: "$ 60", usage: "97%" },
+      { name: "Resend", category: "Email", purpose: "Transactional + drips", status: "connected", monthly: "$ 35", usage: "47%" },
+      { name: "Slack", category: "Ops", purpose: "Alerts + bot escalations", status: "connected", monthly: "—", usage: "Free" },
+      { name: "Stripe", category: "Payments", purpose: "Cashback payouts + Connect", status: "connected", monthly: "%", usage: "—" },
+    ],
+  },
+];
+
+function statusMeta(s: StackStatus) {
+  switch (s) {
+    case "connected":
+      return { label: "Connected", cls: "bg-emerald-500/15 text-emerald-600", Icon: Check };
+    case "missing":
+      return { label: "Needs key", cls: "bg-muted text-muted-foreground", Icon: KeyRound };
+    case "expired":
+      return { label: "Expired", cls: "bg-destructive/15 text-destructive", Icon: XIcon };
+    case "low_credits":
+      return { label: "Low credits", cls: "bg-amber-500/15 text-amber-600", Icon: AlertTriangle };
+  }
+}
+
+function SaasStack() {
+  const all = STACK.flatMap((g) => g.items);
+  const counts = {
+    total: all.length,
+    connected: all.filter((i) => i.status === "connected").length,
+    issues: all.filter((i) => i.status !== "connected").length,
+  };
+
+  return (
+    <div className="space-y-6 p-6">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl font-semibold">SaaS stack</h1>
+          <p className="text-xs text-muted-foreground">
+            API keys and integrations powering the agentic platform. Top up, rotate or add new tools.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-3 py-1.5 text-xs">
+            <span className="flex items-center gap-1"><Check className="h-3 w-3 text-emerald-600" /> {counts.connected} live</span>
+            <span className="flex items-center gap-1 text-amber-600"><AlertTriangle className="h-3 w-3" /> {counts.issues} need attention</span>
+            <span className="text-muted-foreground">· {counts.total} tools</span>
+          </div>
+          <button className="flex items-center gap-1 rounded-lg bg-gradient-to-r from-accent to-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-glow">
+            <Plus className="h-3.5 w-3.5" /> Add integration
+          </button>
+        </div>
+      </div>
+
+      {/* monthly burn summary */}
+      <div className="grid grid-cols-4 gap-3">
+        {[
+          { label: "Monthly spend", value: "$ 1,761", delta: "+9%", Icon: Wallet },
+          { label: "Cost / sourced venue", value: "$ 1.37", delta: "−14%", Icon: TrendingUp },
+          { label: "Active credentials", value: `${counts.connected}`, delta: "stable", Icon: KeyRound },
+          { label: "Quotas > 80%", value: "3", delta: "watchlist", Icon: AlertTriangle },
+        ].map((s) => (
+          <div key={s.label} className="rounded-xl border border-border bg-card p-3">
+            <div className="flex items-center justify-between text-muted-foreground">
+              <s.Icon className="h-3.5 w-3.5" />
+              <span className="text-[10px] font-semibold uppercase tracking-widest">{s.delta}</span>
+            </div>
+            <p className="mt-1 font-display text-xl">{s.value}</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* groups */}
+      {STACK.map((group) => (
+        <div key={group.group} className="space-y-2">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{group.group}</p>
+          <div className="overflow-hidden rounded-xl border border-border bg-card">
+            <table className="w-full text-sm">
+              <thead className="bg-card-soft text-[10px] uppercase tracking-widest text-muted-foreground">
+                <tr>
+                  <th className="px-3 py-2 text-left font-semibold">Tool</th>
+                  <th className="px-3 py-2 text-left font-semibold">Purpose</th>
+                  <th className="px-3 py-2 text-left font-semibold">Status</th>
+                  <th className="px-3 py-2 text-left font-semibold">Usage</th>
+                  <th className="px-3 py-2 text-right font-semibold">Monthly</th>
+                  <th className="px-3 py-2"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {group.items.map((i) => {
+                  const m = statusMeta(i.status);
+                  return (
+                    <tr key={i.name} className="border-t border-border/60">
+                      <td className="px-3 py-2">
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                            <Cpu className="h-3.5 w-3.5" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold leading-none">{i.name}</p>
+                            <p className="mt-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">{i.category}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-3 py-2 text-xs text-muted-foreground">{i.purpose}</td>
+                      <td className="px-3 py-2">
+                        <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${m.cls}`}>
+                          <m.Icon className="h-2.5 w-2.5" /> {m.label}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2 text-xs text-muted-foreground">{i.usage}</td>
+                      <td className="px-3 py-2 text-right font-mono text-xs">{i.monthly}</td>
+                      <td className="px-3 py-2">
+                        <div className="flex items-center justify-end gap-1">
+                          {i.status === "connected" ? (
+                            <button className="rounded-md border border-border bg-card px-2 py-1 text-[10px] font-medium text-muted-foreground">
+                              <RefreshCw className="mr-1 inline h-3 w-3" /> Rotate
+                            </button>
+                          ) : (
+                            <button className="rounded-md bg-foreground px-2 py-1 text-[10px] font-medium text-background">
+                              <KeyRound className="mr-1 inline h-3 w-3" /> Add key
+                            </button>
+                          )}
+                          <button className="rounded-md border border-border bg-card px-1.5 py-1 text-[10px] text-muted-foreground">
+                            <ExternalLink className="h-3 w-3" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
