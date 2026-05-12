@@ -351,6 +351,38 @@ function VenueDetailSheet({
             <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
           </div>
 
+          {/* Schedule */}
+          <div>
+            <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <Clock className="h-3 w-3" /> Hours
+              </span>
+              <span className="text-secondary">{venue.status}</span>
+            </p>
+            <div className="overflow-hidden rounded-2xl border border-border bg-card-soft">
+              {venue.schedule.map((s, i) => {
+                const todayIdx = (new Date().getDay() + 6) % 7;
+                const isToday = i === todayIdx;
+                const isClosed = s.hours === "Closed";
+                return (
+                  <div
+                    key={s.day}
+                    className={`flex items-center justify-between px-4 py-2 text-[12px] ${
+                      isToday ? "bg-secondary/10" : ""
+                    } ${i !== venue.schedule.length - 1 ? "border-b border-border/60" : ""}`}
+                  >
+                    <span className={`${isToday ? "font-semibold text-secondary" : "text-foreground/80"}`}>
+                      {s.day}{isToday && " · Today"}
+                    </span>
+                    <span className={`${isClosed ? "text-muted-foreground/70" : isToday ? "font-semibold text-foreground" : "text-foreground/80"}`}>
+                      {s.hours}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Location mini-map */}
           <div>
             <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
