@@ -2351,16 +2351,22 @@ function ProfileView() {
               </div>
             ))}
           </div>
-        </div>
 
-        {/* Appeal upgrade — slim inline link */}
-        <button
-          onClick={() => setShowAppeal(true)}
-          className="mt-3 flex w-full items-center justify-between rounded-xl px-1 py-2 text-left text-[12px] text-muted-foreground transition hover:text-foreground"
-        >
-          <span>Model, chef, press? <span className="text-secondary font-medium">Appeal for upgrade</span></span>
-          <ChevronRight className="h-3.5 w-3.5" />
-        </button>
+          {/* Appeal upgrade — sits right below Diamond row */}
+          <button
+            onClick={() => setShowAppeal(true)}
+            className="mt-3 flex w-full items-center gap-3 rounded-xl border border-dashed border-tier-diamond/50 bg-tier-diamond/5 p-3 text-left transition hover:bg-tier-diamond/10"
+          >
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-tier-diamond/15 text-tier-diamond">
+              <Crown className="h-4 w-4" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[12px] font-semibold leading-none">Appeal for upgrade</p>
+              <p className="mt-1 text-[10px] text-muted-foreground">Model, chef, press, founder? Request manual review.</p>
+            </div>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </button>
+        </div>
           </>
         )}
 
