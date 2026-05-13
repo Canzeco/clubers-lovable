@@ -1478,6 +1478,7 @@ function Discover() {
   return (
     <div className="relative flex h-full flex-col overflow-hidden">
       <TopBar title="Discover" subtitle={sub} />
+      <SearchConfigBar />
       <ModeSwitcher mode={mode} setMode={setMode} />
       {mode === "catalog" && (
         <div className="flex-1 overflow-y-auto scrollbar-hide">
@@ -1489,6 +1490,82 @@ function Discover() {
       {mode === "ai" && <AISearchMode onSelect={setSelected} />}
       {selected && (
         <VenueDetailSheet venue={selected} onClose={() => setSelected(null)} />
+      )}
+    </div>
+  );
+}
+
+function SearchConfigBar() {
+  const [open, setOpen] = useState<null | "city" | "date" | "time" | "party">(null);
+  const [city, setCity] = useState("Monterrey");
+  const [date, setDate] = useState("Tonight");
+  const [time, setTime] = useState("8:00 PM");
+  const [party, setParty] = useState(2);
+
+  const cities = ["Monterrey", "CDMX", "Guadalajara", "Miami", "New York", "Madrid", "Barcelona", "Tokyo"];
+  const dates = ["Tonight", "Tomorrow", "Thu May 14", "Fri May 15", "Sat May 16", "Sun May 17", "Next Fri May 22", "Next Sat May 23"];
+  const times = ["6:00 PM","6:30 PM","7:00 PM","7:30 PM","8:00 PM","8:30 PM","9:00 PM","9:30 PM","10:00 PM","10:30 PM"];
+  const parties = [1,2,3,4,5,6,7,8];
+
+  const cell = (id: typeof open, Icon: any, label: string, value: string) => (
+    <button
+      onClick={() => setOpen(open === id ? null : id)}
+      className={`flex flex-1 flex-col items-start gap-0.5 px-2.5 py-1.5 text-left transition ${
+        open === id ? "bg-muted/60" : ""
+      }`}
+    >
+      <span className="flex items-center gap-1 text-[9px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        <Icon className="h-2.5 w-2.5" /> {label}
+      </span>
+      <span className="truncate text-[12px] font-semibold text-foreground">{value}</span>
+    </button>
+  );
+
+  const options =
+    open === "city" ? cities :
+    open === "date" ? dates :
+    open === "time" ? times :
+    open === "party" ? parties.map((n) => `${n} ${n === 1 ? "guest" : "guests"}`) :
+    [];
+
+  const current =
+    open === "city" ? city :
+    open === "date" ? date :
+    open === "time" ? time :
+    open === "party" ? `${party} ${party === 1 ? "guest" : "guests"}` :
+    "";
+
+  const pick = (v: string) => {
+    if (open === "city") setCity(v);
+    else if (open === "date") setDate(v);
+    else if (open === "time") setTime(v);
+    else if (open === "party") setParty(parseInt(v, 10));
+    setOpen(null);
+  };
+
+  return (
+    <div className="mx-3 mb-2">
+      <div className="flex items-stretch divide-x divide-border overflow-hidden rounded-xl border border-border bg-card/60">
+        {cell("city", MapPin, "Where", city)}
+        {cell("date", Calendar, "When", date)}
+        {cell("time", Clock, "Time", time)}
+        {cell("party", Users, "Party", `${party}`)}
+      </div>
+      {open && (
+        <div className="mt-1.5 max-h-44 overflow-y-auto rounded-xl border border-border bg-card p-1 shadow-sm scrollbar-hide">
+          {options.map((opt) => (
+            <button
+              key={opt}
+              onClick={() => pick(opt)}
+              className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-[12px] transition hover:bg-muted/60 ${
+                opt === current ? "font-semibold text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              <span>{opt}</span>
+              {opt === current && <Check className="h-3 w-3" />}
+            </button>
+          ))}
+        </div>
       )}
     </div>
   );
