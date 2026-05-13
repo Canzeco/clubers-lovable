@@ -2619,11 +2619,11 @@ function CreditsView() {
   const [balance, setBalance] = useState(1284);
   const [topUp, setTopUp] = useState(false);
   const txs = [
-    { name: "Casa Luminar", emoji: "🦚", amt: 140, ago: "2 days ago" },
-    { name: "Neón Bar", emoji: "🌃", amt: -380, ago: "5 days ago" },
-    { name: "Loto Café", emoji: "☕", amt: 180, ago: "1 week ago" },
-    { name: "Mar Verde", emoji: "🌊", amt: -260, ago: "2 weeks ago" },
-    { name: "Casa Luminar", emoji: "🦚", amt: 90, ago: "3 weeks ago" },
+    { name: "Casa Luminar", emoji: "🦚", amt: 140, ago: "2 days ago", expiresIn: 88 },
+    { name: "Neón Bar", emoji: "🌃", amt: -380, ago: "5 days ago", expiresIn: 85 },
+    { name: "Loto Café", emoji: "☕", amt: 180, ago: "1 week ago", expiresIn: 83 },
+    { name: "Mar Verde", emoji: "🌊", amt: -260, ago: "2 weeks ago", expiresIn: 76 },
+    { name: "Casa Luminar", emoji: "🦚", amt: 90, ago: "3 weeks ago", expiresIn: 69 },
   ];
   return (
     <div className="px-5 pb-24 pt-2">
@@ -2638,7 +2638,7 @@ function CreditsView() {
         ${balance.toLocaleString()}
       </p>
       <p className="mt-3 text-[13px] text-muted-foreground">
-        Expires Aug 12 · Auto-applies on your next visit
+        Expires 90 days after your last usage · Auto-applies on your next visit
       </p>
 
       <button
@@ -2662,7 +2662,10 @@ function CreditsView() {
               <span className="text-base leading-none">{t.emoji}</span>
               <div className="min-w-0">
                 <p className="text-sm font-medium truncate">{t.name}</p>
-                <p className="text-[11px] text-muted-foreground">{t.ago}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {t.ago}
+                  {t.amt > 0 ? ` · expires in ${t.expiresIn}d` : ""}
+                </p>
               </div>
             </div>
             <p
