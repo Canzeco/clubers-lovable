@@ -29,6 +29,8 @@ import {
   CreditCard,
   FileText,
   ChevronRight,
+  GraduationCap,
+  Mail,
 } from "lucide-react";
 
 type TabId =
