@@ -4241,7 +4241,7 @@ function ShareView() {
                 { t: "Auto IG stories", d: "Each visit becomes organic reach." },
                 { t: "Live insights", d: "Repeat guests, AI visit summaries." },
                 { t: "Setup in 10 min", d: "All from a browser, no app." },
-                { t: "Free to start", d: "Pay only on first redemption." },
+                { t: "Free to start", d: "Costs nothing until it pays off." },
               ].map((b) => (
                 <div key={b.t} className="rounded-xl border border-border bg-card-soft p-2">
                   <p className="text-[11px] font-semibold leading-tight">{b.t}</p>
