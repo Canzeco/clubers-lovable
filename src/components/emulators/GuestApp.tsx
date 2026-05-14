@@ -2236,6 +2236,70 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
 }
 
 function RedeemFlow({ coupon }: { coupon: any }) {
+  return <PayWithCouponSheetInner coupon={coupon} />;
+}
+function PayWithCouponSheetInner({ coupon }: { coupon: any }) {
+  void coupon;
+  return null;
+}
+
+function PayWithCouponSheet({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+  return (
+    <div className="absolute inset-0 z-40 flex items-end justify-center bg-black/60 p-4" onClick={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-sm rounded-3xl border border-border bg-background p-5 shadow-elev"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[10px] uppercase tracking-widest text-secondary">Pay at venue</p>
+            <p className="font-display text-lg font-semibold leading-tight">{coupon.name}</p>
+            <p className="text-[11px] text-muted-foreground">
+              Coupon {coupon.code} · {coupon.cb}% cashback
+            </p>
+          </div>
+          <button onClick={onClose} className="rounded-full p-1 text-muted-foreground hover:bg-card">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="mt-4 flex justify-center">
+          <div className="relative rounded-2xl bg-card p-4 shadow-elev">
+            <div className="grid h-48 w-48 grid-cols-12 grid-rows-12 gap-[2px] rounded-lg bg-background p-2">
+              {Array.from({ length: 144 }).map((_, i) => {
+                const on = (i * 71 + ((i * i) % 19)) % 3 !== 0;
+                return (
+                  <div key={i} className={on ? "bg-foreground" : "bg-transparent"} />
+                );
+              })}
+            </div>
+            <div className="pointer-events-none absolute left-2 top-2 h-9 w-9 rounded-md border-[5px] border-foreground" />
+            <div className="pointer-events-none absolute right-2 top-2 h-9 w-9 rounded-md border-[5px] border-foreground" />
+            <div className="pointer-events-none absolute bottom-2 left-2 h-9 w-9 rounded-md border-[5px] border-foreground" />
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-peacock text-sm shadow-glow">
+                🦚
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p className="mt-3 text-center text-[11px] text-muted-foreground">
+          Show this QR to the waiter to apply your <span className="font-semibold text-foreground">{coupon.cb}% cashback</span>.
+        </p>
+
+        <button
+          onClick={onClose}
+          className="mt-4 w-full rounded-full border border-border py-2.5 text-sm text-muted-foreground"
+        >
+          Done
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function _RedeemFlowOriginal({ coupon }: { coupon: any }) {
   const requireStory = (coupon.cb ?? 0) >= 15;
   const [step, setStep] = useState<"form" | "sending" | "waiting" | "approved">("form");
   const [bill, setBill] = useState("");
