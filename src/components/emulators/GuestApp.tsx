@@ -2666,7 +2666,7 @@ function CouponTicket({
       }`}
     >
       <div
-        className={`relative flex items-stretch overflow-hidden rounded-3xl bg-background shadow-[0_18px_40px_-20px_rgba(0,0,0,0.28),0_4px_12px_-4px_rgba(0,0,0,0.08)] ring-1 ring-border/70 ${
+        className={`relative flex items-stretch overflow-hidden rounded-none bg-background shadow-[0_18px_40px_-20px_rgba(0,0,0,0.28),0_4px_12px_-4px_rgba(0,0,0,0.08)] ring-1 ring-border/70 ${
           isExpired ? "ring-dashed grayscale" : ""
         } ${isUsed ? "ring-dashed" : ""} ${isReservation ? "ring-secondary/30" : ""}`}
       >
