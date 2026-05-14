@@ -1949,7 +1949,7 @@ function CatalogRow({
           )}
         </div>
       </div>
-      <div className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 scrollbar-hide">
+      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-1 scrollbar-hide">
         {items.map((v, idx) => (
           <CatalogCard
             key={v.name + idx}
