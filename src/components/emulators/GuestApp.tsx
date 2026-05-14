@@ -478,17 +478,12 @@ function ModeSwitcher({
 }
 
 const VENUE_QUICKNAV = [
-  { id: "vsec-photos", label: "Photos" },
-  { id: "vsec-scores", label: "Scores" },
-  { id: "vsec-activity", label: "Activity" },
-  { id: "vsec-offers", label: "Offers" },
-  { id: "vsec-about", label: "About" },
-  { id: "vsec-menu", label: "Menu" },
-  { id: "vsec-hours", label: "Hours" },
-  { id: "vsec-location", label: "Location" },
+  { id: "vsec-photos", label: "Media" },
+  { id: "vsec-scores", label: "External" },
+  { id: "vsec-reviews", label: "Mesita Reviews" },
   { id: "vsec-visitors", label: "Visitors" },
-  { id: "vsec-reviews", label: "Reviews" },
-  { id: "vsec-concierge", label: "Concierge" },
+  { id: "vsec-location", label: "Location" },
+  { id: "vsec-menu", label: "Menu" },
   { id: "vsec-details", label: "Details" },
 ];
 
@@ -620,11 +615,13 @@ function VenueDetailSheet({
         <VenueQuickNav />
 
         <div className="space-y-4 px-5 pt-5">
-          {/* Instagram-style 4:3 carousel with dots */}
+          {/* Media Carousel — Instagram-style 4:3 with dots */}
           <section id="vsec-photos" className="scroll-mt-16"><PhotoCarousel /></section>
 
-          {/* Scores across platforms */}
-          <section id="vsec-scores" className="scroll-mt-16 grid grid-cols-5 gap-1">
+          {/* External Reviews — scores across platforms */}
+          <section id="vsec-scores" className="scroll-mt-16">
+            <SectionLabel>External reviews</SectionLabel>
+            <div className="grid grid-cols-5 gap-1">
             <div className="rounded-xl border border-secondary/30 bg-secondary/10 p-2">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-secondary">
                 <Sparkles className="h-2.5 w-2.5" /> Mesita
@@ -662,95 +659,14 @@ function VenueDetailSheet({
               <p className="mt-1 font-display text-base font-semibold leading-none">{venue.igFollowers}</p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.igMentions} mentions</p>
             </div>
-          </section>
-
-          {/* Current activity */}
-          <section id="vsec-activity" className="scroll-mt-16"><CurrentActivitySection /></section>
-
-          {/* Offers & cashback */}
-          <section id="vsec-offers" className="scroll-mt-16"><OffersSection cashback={venue.cashback} /></section>
-
-          {/* About the venue */}
-          <section id="vsec-about" className="scroll-mt-16">
-            <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-              About
-            </p>
-            {venue.about ? (
-              <div className="space-y-4">
-                <p className="font-display text-base leading-snug text-foreground">
-                  {venue.about.tagline}
-                </p>
-                {venue.about.sections.map((s) => (
-                  <div key={s.title}>
-                    <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-secondary">
-                      {s.title}
-                    </p>
-                    <p className="text-[13px] leading-relaxed text-foreground/85">{s.body}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
-            )}
-          </section>
-
-          {/* Menu */}
-          <section id="vsec-menu" className="scroll-mt-16">
-            <MenuTabs />
-            <div className="overflow-hidden rounded-2xl border border-border bg-card-soft">
-              {[
-                { name: "Burrata & heirloom tomato", price: "$280" },
-                { name: "Octopus, smoked paprika", price: "$420" },
-                { name: "Wagyu tagliata, truffle", price: "$680" },
-                { name: "Saffron risotto", price: "$340" },
-              ].map((d, i, arr) => (
-                <div
-                  key={d.name}
-                  className={`flex items-center justify-between px-4 py-2.5 text-[12px] ${
-                    i !== arr.length - 1 ? "border-b border-border/60" : ""
-                  }`}
-                >
-                  <span className="text-foreground/85">{d.name}</span>
-                  <span className="font-semibold text-foreground">{d.price}</span>
-                </div>
-              ))}
-            </div>
-            <button className="mt-2 w-full rounded-full border border-border bg-card px-4 py-2 text-[11px] font-medium text-foreground/80">
-              View full menu
-            </button>
-          </section>
-
-          {/* Schedule */}
-          <section id="vsec-hours" className="scroll-mt-16">
-            <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <Clock className="h-3 w-3" /> Hours
-              </span>
-              <span className="text-secondary">{venue.status}</span>
-            </p>
-            <div className="overflow-hidden rounded-2xl border border-border bg-card-soft">
-              {venue.schedule.map((s, i) => {
-                const todayIdx = (new Date().getDay() + 6) % 7;
-                const isToday = i === todayIdx;
-                const isClosed = s.hours === "Closed";
-                return (
-                  <div
-                    key={s.day}
-                    className={`flex items-center justify-between px-4 py-2 text-[12px] ${
-                      isToday ? "bg-secondary/10" : ""
-                    } ${i !== venue.schedule.length - 1 ? "border-b border-border/60" : ""}`}
-                  >
-                    <span className={`${isToday ? "font-semibold text-secondary" : "text-foreground/80"}`}>
-                      {s.day}{isToday && " · Today"}
-                    </span>
-                    <span className={`${isClosed ? "text-muted-foreground/70" : isToday ? "font-semibold text-foreground" : "text-foreground/80"}`}>
-                      {s.hours}
-                    </span>
-                  </div>
-                );
-              })}
             </div>
           </section>
+
+          {/* Mesita Reviews */}
+          <section id="vsec-reviews" className="scroll-mt-16"><ReviewsSection /></section>
+
+          {/* Mesita Visitors Carousel — sorted by relevance (recency × tier × influence) */}
+          <section id="vsec-visitors" className="scroll-mt-16"><MesitaVisitors venue={venue} /></section>
 
           {/* Location mini-map */}
           <section id="vsec-location" className="scroll-mt-16">
@@ -789,17 +705,102 @@ function VenueDetailSheet({
             </div>
           </section>
 
-          {/* Mesita Visitors — sorted by relevance (recency × tier × influence) */}
-          <section id="vsec-visitors" className="scroll-mt-16"><MesitaVisitors venue={venue} /></section>
+          {/* Menu */}
+          <section id="vsec-menu" className="scroll-mt-16">
+            <MenuTabs />
+            <div className="overflow-hidden rounded-2xl border border-border bg-card-soft">
+              {[
+                { name: "Burrata & heirloom tomato", price: "$280" },
+                { name: "Octopus, smoked paprika", price: "$420" },
+                { name: "Wagyu tagliata, truffle", price: "$680" },
+                { name: "Saffron risotto", price: "$340" },
+              ].map((d, i, arr) => (
+                <div
+                  key={d.name}
+                  className={`flex items-center justify-between px-4 py-2.5 text-[12px] ${
+                    i !== arr.length - 1 ? "border-b border-border/60" : ""
+                  }`}
+                >
+                  <span className="text-foreground/85">{d.name}</span>
+                  <span className="font-semibold text-foreground">{d.price}</span>
+                </div>
+              ))}
+            </div>
+            <button className="mt-2 w-full rounded-full border border-border bg-card px-4 py-2 text-[11px] font-medium text-foreground/80">
+              View full menu
+            </button>
+          </section>
 
-          {/* Reviews */}
-          <section id="vsec-reviews" className="scroll-mt-16"><ReviewsSection /></section>
+          {/* Details — hours, about, activity, offers, concierge, info */}
+          <section id="vsec-details" className="scroll-mt-16 space-y-4">
+            <SectionLabel>Details</SectionLabel>
 
-          {/* Concierge AI */}
-          <section id="vsec-concierge" className="scroll-mt-16"><ConciergeSection venueName={venue.name} /></section>
+            {/* About */}
+            <div>
+              <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">About</p>
+              {venue.about ? (
+                <div className="space-y-4">
+                  <p className="font-display text-base leading-snug text-foreground">
+                    {venue.about.tagline}
+                  </p>
+                  {venue.about.sections.map((s) => (
+                    <div key={s.title}>
+                      <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-secondary">
+                        {s.title}
+                      </p>
+                      <p className="text-[13px] leading-relaxed text-foreground/85">{s.body}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
+              )}
+            </div>
 
-          {/* Details */}
-          <section id="vsec-details" className="scroll-mt-16"><DetailsSection /></section>
+            {/* Current activity */}
+            <CurrentActivitySection />
+
+            {/* Offers & cashback */}
+            <OffersSection cashback={venue.cashback} />
+
+            {/* Hours */}
+            <div>
+              <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <Clock className="h-3 w-3" /> Hours
+              </span>
+              <span className="text-secondary">{venue.status}</span>
+            </p>
+            <div className="overflow-hidden rounded-2xl border border-border bg-card-soft">
+              {venue.schedule.map((s, i) => {
+                const todayIdx = (new Date().getDay() + 6) % 7;
+                const isToday = i === todayIdx;
+                const isClosed = s.hours === "Closed";
+                return (
+                  <div
+                    key={s.day}
+                    className={`flex items-center justify-between px-4 py-2 text-[12px] ${
+                      isToday ? "bg-secondary/10" : ""
+                    } ${i !== venue.schedule.length - 1 ? "border-b border-border/60" : ""}`}
+                  >
+                    <span className={`${isToday ? "font-semibold text-secondary" : "text-foreground/80"}`}>
+                      {s.day}{isToday && " · Today"}
+                    </span>
+                    <span className={`${isClosed ? "text-muted-foreground/70" : isToday ? "font-semibold text-foreground" : "text-foreground/80"}`}>
+                      {s.hours}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            </div>
+
+            {/* Concierge AI */}
+            <ConciergeSection venueName={venue.name} />
+
+            {/* Other info */}
+            <DetailsSection />
+          </section>
 
         </div>
         </div>
