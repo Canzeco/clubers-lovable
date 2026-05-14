@@ -528,6 +528,28 @@ function Promos() {
   const [commState, setCommState] = useState(
     Object.fromEntries(communities.map((c) => [c.id, { boost: c.boost, on: c.on }])),
   );
+  const COUNTRIES = [
+    { code: "MX", flag: "🇲🇽", name: "Mexico" },
+    { code: "US", flag: "🇺🇸", name: "United States" },
+    { code: "CO", flag: "🇨🇴", name: "Colombia" },
+    { code: "AR", flag: "🇦🇷", name: "Argentina" },
+    { code: "ES", flag: "🇪🇸", name: "Spain" },
+    { code: "BR", flag: "🇧🇷", name: "Brazil" },
+  ];
+  const [audience, setAudience] = useState({
+    on: false,
+    countries: ["MX", "US"] as string[],
+    ageMin: 21,
+    ageMax: 35,
+    sex: "all" as "all" | "female" | "male",
+  });
+  const toggleCountry = (code: string) =>
+    setAudience((a) => ({
+      ...a,
+      countries: a.countries.includes(code)
+        ? a.countries.filter((c) => c !== code)
+        : [...a.countries, code],
+    }));
   return (
     <div className="space-y-5 p-6">
       <div>
