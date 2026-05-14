@@ -3173,12 +3173,7 @@ function CouponTicket({
         {/* perforation between content and cashback column */}
         <span
           aria-hidden
-          className="pointer-events-none absolute top-0 z-10 h-3 w-3 translate-x-1/2 -translate-y-1/2 rounded-full bg-muted ring-1 ring-border/70"
-          style={{ right: "58px" }}
-        />
-        <span
-          aria-hidden
-          className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 translate-x-1/2 translate-y-1/2 rounded-full bg-muted ring-1 ring-border/70"
+          className="pointer-events-none absolute top-0 z-10 h-3 w-3 translate-x-1/2 -translate-y-1/2 rounded-full bg-hero ring-1 ring-border/70"
           style={{ right: "58px" }}
         />
 
