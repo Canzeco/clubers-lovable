@@ -3144,9 +3144,9 @@ function CouponTicket({
     const current = stepLabels[stepIdx];
     // Color the pill by phase
     const isStripe = current === "Paid";
-    const isStory = current === "Story";
-    const isFinal = current === "Cashback";
-    const isWaiter = current === "Bill submitted";
+    const isStory = current === "Story posted";
+    const isFinal = current === "Cashback credited";
+    const isWaiter = current === "QR scanned";
     pill = {
       label: current,
       cls: isStripe
@@ -3335,45 +3335,50 @@ const VENUE_IMAGES = {
 } as const;
 
 // === 5 coupon workflows ===
-// 1. Reservation only
-// 2. Reservation + Payment + Cashback
-// 3. Reservation + Payment + Story + Cashback
-// 4. Payment + Cashback
-// 5. Payment + Story + Cashback
+// R    — Reservation only
+// RPC  — Reservation + Payment + Cashback
+// RPSC — Reservation + Payment + Story + Cashback
+// PC   — Payment + Cashback
+// PSC  — Payment + Story + Cashback
 const WF_RESERVATION: { label: string; Icon: any }[] = [
-  { label: "Requested", Icon: Ticket },
-  { label: "Secured", Icon: CalendarCheck },
+  { label: "Saved", Icon: Ticket },
+  { label: "AI calling venue", Icon: Phone },
+  { label: "Reservation confirmed", Icon: CalendarCheck },
   { label: "Visited", Icon: MapPin },
 ];
 const WF_RES_PAY_CB: { label: string; Icon: any }[] = [
-  { label: "Requested", Icon: Ticket },
-  { label: "Secured", Icon: CalendarCheck },
+  { label: "Saved", Icon: Ticket },
+  { label: "AI calling venue", Icon: Phone },
+  { label: "Reservation confirmed", Icon: CalendarCheck },
   { label: "Visited", Icon: MapPin },
-  { label: "Bill submitted", Icon: Banknote },
+  { label: "QR scanned", Icon: QrCode },
   { label: "Paid", Icon: CreditCard },
-  { label: "Cashback", Icon: Coins },
+  { label: "Cashback credited", Icon: Coins },
 ];
 const WF_RES_PAY_STORY_CB: { label: string; Icon: any }[] = [
-  { label: "Requested", Icon: Ticket },
-  { label: "Secured", Icon: CalendarCheck },
+  { label: "Saved", Icon: Ticket },
+  { label: "AI calling venue", Icon: Phone },
+  { label: "Reservation confirmed", Icon: CalendarCheck },
   { label: "Visited", Icon: MapPin },
-  { label: "Bill submitted", Icon: Banknote },
+  { label: "QR scanned", Icon: QrCode },
   { label: "Paid", Icon: CreditCard },
-  { label: "Story", Icon: Camera },
-  { label: "Cashback", Icon: Coins },
+  { label: "Story posted", Icon: Camera },
+  { label: "Cashback credited", Icon: Coins },
 ];
 const WF_PAY_CB: { label: string; Icon: any }[] = [
   { label: "Saved", Icon: Ticket },
-  { label: "Bill submitted", Icon: Banknote },
+  { label: "Visited", Icon: MapPin },
+  { label: "QR scanned", Icon: QrCode },
   { label: "Paid", Icon: CreditCard },
-  { label: "Cashback", Icon: Coins },
+  { label: "Cashback credited", Icon: Coins },
 ];
 const WF_PAY_STORY_CB: { label: string; Icon: any }[] = [
   { label: "Saved", Icon: Ticket },
-  { label: "Bill submitted", Icon: Banknote },
+  { label: "Visited", Icon: MapPin },
+  { label: "QR scanned", Icon: QrCode },
   { label: "Paid", Icon: CreditCard },
-  { label: "Story", Icon: Camera },
-  { label: "Cashback", Icon: Coins },
+  { label: "Story posted", Icon: Camera },
+  { label: "Cashback credited", Icon: Coins },
 ];
 
 export type CouponType =
