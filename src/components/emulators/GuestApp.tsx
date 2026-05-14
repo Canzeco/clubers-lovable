@@ -1119,7 +1119,7 @@ function CurrentActivitySection() {
 function OffersSection({ cashback }: { cashback: number }) {
   return (
     <div>
-      <SectionLabel action="Active">Cashback</SectionLabel>
+      <SectionLabel action="Active">Cashback coupon</SectionLabel>
       <div className="flex items-start gap-3 rounded-2xl border border-border bg-card-soft p-3">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-secondary/15 text-secondary">
           <Sparkles className="h-4 w-4" />
