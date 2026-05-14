@@ -3128,25 +3128,9 @@ function CouponTicket({
   const hasCashback = (c.cb ?? 0) > 0;
   const venueImg = VENUE_IMAGES[c.name as keyof typeof VENUE_IMAGES] ?? VENUE_IMAGES._default;
 
-  // Workflow status — derived from current step so the pill always reflects
-  // where the guest is in the redemption pipeline, not the coupon "type".
-  const requireStory = (c.cb ?? 0) >= 15;
-  const buildStepLabels = () => {
-    const labels: string[] = [];
-    if (isReservation) {
-      labels.push(isPending ? "AI calling venue" : "Reservation confirmed");
-      labels.push("Arrive & dine");
-    } else {
-      labels.push("Ready to dine");
-    }
-    labels.push("Tap to show QR");
-    labels.push("Waiter scanning");
-    labels.push("Stripe checkout open");
-    if (requireStory) labels.push("Post Instagram story");
-    labels.push("Cashback credited");
-    return labels;
-  };
-  const stepLabels = buildStepLabels();
+  // Workflow derived from coupon type — one of 5 unique flows.
+  const workflow = getCouponWorkflow(c);
+  const stepLabels = workflow.map((s) => s.label);
   const stepIdx = Math.max(0, Math.min(stepLabels.length - 1, c.step ?? 0));
 
   let pill: { label: string; cls: string };
@@ -3159,10 +3143,10 @@ function CouponTicket({
   } else {
     const current = stepLabels[stepIdx];
     // Color the pill by phase
-    const isStripe = current === "Stripe checkout open";
-    const isStory = current === "Post Instagram story";
-    const isFinal = current === "Cashback credited";
-    const isWaiter = current === "Waiter scanning";
+    const isStripe = current === "Paid";
+    const isStory = current === "Story";
+    const isFinal = current === "Cashback";
+    const isWaiter = current === "Bill submitted";
     pill = {
       label: current,
       cls: isStripe
@@ -3273,16 +3257,7 @@ function CouponTicket({
             )}
           </span>
           {state === "active" && (
-            <HorizontalStepper
-              step={c.step ?? 0}
-              steps={
-                isReservation
-                  ? c.reserveOnly || (c.cb ?? 0) === 0
-                    ? RESERVATION_STEPS
-                    : COMBINED_STEPS
-                  : PIPELINE_STEPS
-              }
-            />
+            <HorizontalStepper step={c.step ?? 0} steps={workflow} />
           )}
         </div>
 
