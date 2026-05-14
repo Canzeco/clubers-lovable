@@ -3357,31 +3357,77 @@ const VENUE_IMAGES = {
     "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=240&h=320&fit=crop&q=70",
 } as const;
 
-const PIPELINE_STEPS: { label: string; Icon: any }[] = [
+// === 5 coupon workflows ===
+// 1. Reservation only
+// 2. Reservation + Payment + Cashback
+// 3. Reservation + Payment + Story + Cashback
+// 4. Payment + Cashback
+// 5. Payment + Story + Cashback
+const WF_RESERVATION: { label: string; Icon: any }[] = [
+  { label: "Requested", Icon: Ticket },
+  { label: "Secured", Icon: CalendarCheck },
+  { label: "Visited", Icon: MapPin },
+];
+const WF_RES_PAY_CB: { label: string; Icon: any }[] = [
+  { label: "Requested", Icon: Ticket },
+  { label: "Secured", Icon: CalendarCheck },
+  { label: "Visited", Icon: MapPin },
+  { label: "Bill submitted", Icon: Banknote },
+  { label: "Paid", Icon: CreditCard },
+  { label: "Cashback", Icon: Coins },
+];
+const WF_RES_PAY_STORY_CB: { label: string; Icon: any }[] = [
+  { label: "Requested", Icon: Ticket },
+  { label: "Secured", Icon: CalendarCheck },
+  { label: "Visited", Icon: MapPin },
+  { label: "Bill submitted", Icon: Banknote },
+  { label: "Paid", Icon: CreditCard },
+  { label: "Story", Icon: Camera },
+  { label: "Cashback", Icon: Coins },
+];
+const WF_PAY_CB: { label: string; Icon: any }[] = [
   { label: "Saved", Icon: Ticket },
   { label: "Bill submitted", Icon: Banknote },
   { label: "Paid", Icon: CreditCard },
-  { label: "Review", Icon: Star },
-  { label: "Story", Icon: Camera },
   { label: "Cashback", Icon: Coins },
 ];
-
-const RESERVATION_STEPS: { label: string; Icon: any }[] = [
-  { label: "Requested", Icon: Ticket },
-  { label: "Secured", Icon: CalendarCheck },
-  { label: "Visited", Icon: MapPin },
-];
-
-const COMBINED_STEPS: { label: string; Icon: any }[] = [
-  { label: "Requested", Icon: Ticket },
-  { label: "Secured", Icon: CalendarCheck },
-  { label: "Visited", Icon: MapPin },
+const WF_PAY_STORY_CB: { label: string; Icon: any }[] = [
+  { label: "Saved", Icon: Ticket },
   { label: "Bill submitted", Icon: Banknote },
   { label: "Paid", Icon: CreditCard },
-  { label: "Review", Icon: Star },
   { label: "Story", Icon: Camera },
   { label: "Cashback", Icon: Coins },
 ];
+
+export type CouponType =
+  | "reservation"
+  | "reservation_pay_cashback"
+  | "reservation_pay_story_cashback"
+  | "pay_cashback"
+  | "pay_story_cashback";
+
+export function getCouponType(c: any): CouponType {
+  const isRes = !!c.isReservation;
+  const cb = c.cb ?? 0;
+  const reserveOnly = isRes && (c.reserveOnly || cb === 0);
+  const story = cb >= 15;
+  if (reserveOnly) return "reservation";
+  if (isRes) return story ? "reservation_pay_story_cashback" : "reservation_pay_cashback";
+  return story ? "pay_story_cashback" : "pay_cashback";
+}
+
+export function getCouponWorkflow(c: any): { label: string; Icon: any }[] {
+  switch (getCouponType(c)) {
+    case "reservation": return WF_RESERVATION;
+    case "reservation_pay_cashback": return WF_RES_PAY_CB;
+    case "reservation_pay_story_cashback": return WF_RES_PAY_STORY_CB;
+    case "pay_cashback": return WF_PAY_CB;
+    case "pay_story_cashback": return WF_PAY_STORY_CB;
+  }
+}
+
+// Legacy aliases (kept so any out-of-file references still resolve)
+const PIPELINE_STEPS = WF_PAY_STORY_CB;
 
 function HorizontalStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: { label: string; Icon: any }[] }) {
   return (
