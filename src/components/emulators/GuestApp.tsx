@@ -3457,6 +3457,10 @@ function ShareView() {
   ];
   const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [audience, setAudience] = useState<"guests" | "venues">("guests");
+  const [venueCopied, setVenueCopied] = useState(false);
+  const venueLink = "mesita.app/v/invite/47847";
+  const venueMessage = `¿Conoces a alguien con un restaurante o bar? Mándale esta invitación para que abra su Mesita en la web — sin costo, sin contrato, en 10 minutos: ${venueLink}`;
 
   const remaining = totalCards - claimed.length;
   const gifted = claimed.length;
@@ -3476,7 +3480,26 @@ function ShareView() {
       <div className="flex h-full flex-col overflow-hidden">
         <TopBar title="Share with friends" />
 
-        <div className="flex flex-1 flex-col overflow-hidden px-5 pb-3 pt-4">
+        <div className="flex flex-1 flex-col overflow-y-auto scrollbar-hide px-5 pb-3 pt-4">
+          {/* Audience tabs */}
+          <div className="mb-4 grid grid-cols-2 gap-1 rounded-full border border-border bg-card-soft p-1">
+            {(["guests", "venues"] as const).map((a) => (
+              <button
+                key={a}
+                onClick={() => setAudience(a)}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold capitalize transition ${
+                  audience === a
+                    ? "bg-foreground text-background shadow-sm"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {a === "guests" ? "For guests" : "For venues"}
+              </button>
+            ))}
+          </div>
+
+          {audience === "guests" ? (
+          <>
           <p className="text-[11px] leading-snug text-muted-foreground">
             You've got {totalCards} gift cards to hand out. Send your code and the first friends who use it each get $100 MXN — courtesy of you.
           </p>
@@ -3619,6 +3642,79 @@ function ShareView() {
           >
             Send a gift to a friend <ChevronRight className="h-4 w-4" />
           </button>
+          </>
+          ) : (
+          <div className="flex flex-1 flex-col">
+            <p className="text-[11px] leading-snug text-muted-foreground">
+              Know someone who runs a restaurant or bar? This isn't a gift — it's an invitation to set up their Mesita venue on the web. Free, no contract, ready in about 10 minutes.
+            </p>
+
+            {/* Venue invite card */}
+            <div className="mt-5 rounded-2xl border border-border bg-card p-4 shadow-sm">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                Mesita for venues
+              </p>
+              <p className="mt-2 font-display text-lg font-semibold leading-tight">
+                Invite a venue owner
+              </p>
+              <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
+                They'll get a guided setup, their own QR, and access to the same experience-intelligence tools the best venues on Mesita use.
+              </p>
+
+              <div className="mt-3 rounded-xl border border-dashed border-border bg-card-soft p-2.5">
+                <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground">Invite link</p>
+                <div className="mt-1 flex items-center justify-between gap-2">
+                  <span className="truncate font-mono text-[11px] text-foreground">{venueLink}</span>
+                  <button
+                    onClick={() => {
+                      if (typeof navigator !== "undefined" && navigator.clipboard) {
+                        navigator.clipboard.writeText(venueLink).catch(() => {});
+                      }
+                      setVenueCopied(true);
+                      setTimeout(() => setVenueCopied(false), 1500);
+                    }}
+                    className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-foreground/50 transition hover:text-foreground"
+                  >
+                    {venueCopied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Why send it */}
+            <div className="mt-4 space-y-2">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                What they get
+              </p>
+              {[
+                { t: "Web setup in ~10 min", d: "No app to install. Menu, hours, photos, cashback rules — all from a browser." },
+                { t: "Their own QR & coupons", d: "Guests scan to redeem cashback or save offers for later." },
+                { t: "Experience intelligence", d: "Live activity, repeat-guest insights, and AI summaries of every visit." },
+                { t: "Free to start", d: "No contract, no monthly fee until their first cashback redemption." },
+              ].map((b) => (
+                <div key={b.t} className="rounded-xl border border-border bg-card-soft p-2.5">
+                  <p className="text-[12px] font-semibold">{b.t}</p>
+                  <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">{b.d}</p>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => {
+                if (typeof navigator !== "undefined" && (navigator as Navigator & { share?: (data: ShareData) => Promise<void> }).share) {
+                  (navigator as Navigator & { share: (data: ShareData) => Promise<void> }).share({
+                    title: "Mesita for venues",
+                    text: venueMessage,
+                    url: `https://${venueLink}`,
+                  }).catch(() => {});
+                }
+              }}
+              className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 py-3.5 text-sm font-semibold text-background shadow-lg active:scale-[0.98]"
+            >
+              Send invitation <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+          )}
         </div>
       </div>
 
