@@ -516,7 +516,23 @@ function VenueDetailSheet({
             <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
               About
             </p>
-            <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
+            {venue.about ? (
+              <div className="space-y-4">
+                <p className="font-display text-base leading-snug text-foreground">
+                  {venue.about.tagline}
+                </p>
+                {venue.about.sections.map((s) => (
+                  <div key={s.title}>
+                    <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-secondary">
+                      {s.title}
+                    </p>
+                    <p className="text-[13px] leading-relaxed text-foreground/85">{s.body}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
+            )}
           </div>
 
           {/* Menu */}
