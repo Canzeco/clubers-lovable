@@ -4228,59 +4228,42 @@ function ShareView() {
           {audience === "venues" && (
           <div className="flex flex-1 flex-col">
             <p className="text-[11px] leading-snug text-muted-foreground">
-              Know someone who runs a restaurant or bar? This isn't a gift — it's an invitation to set up their Mesita venue on the web. Free, no contract, ready in about 10 minutes.
+              Know someone who runs a restaurant or bar? Invite them to set up on Mesita — free, ~10 min.
+            </p>
+            <p className="mt-2 font-display text-lg font-semibold leading-tight">
+              Invite a venue owner
             </p>
 
-            {/* Venue invite card */}
-            <div className="mt-5 rounded-2xl border border-border bg-card p-4 shadow-sm">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-                Mesita for venues
-              </p>
-              <p className="mt-2 font-display text-lg font-semibold leading-tight">
-                Invite a venue owner
-              </p>
-              <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
-                They'll get a guided setup, their own QR, and access to the same experience-intelligence tools the best venues on Mesita use.
-              </p>
-
-              <div className="mt-3 rounded-xl border border-dashed border-border bg-card-soft p-2.5">
-                <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground">Invite link</p>
-                <div className="mt-1 flex items-center justify-between gap-2">
-                  <span className="truncate font-mono text-[11px] text-foreground">{venueLink}</span>
-                  <button
-                    onClick={() => {
-                      if (typeof navigator !== "undefined" && navigator.clipboard) {
-                        navigator.clipboard.writeText(venueLink).catch(() => {});
-                      }
-                      setVenueCopied(true);
-                      setTimeout(() => setVenueCopied(false), 1500);
-                    }}
-                    className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-foreground/50 transition hover:text-foreground"
-                  >
-                    {venueCopied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Why send it */}
-            <div className="mt-4 space-y-2">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                What they get
-              </p>
+            <div className="mt-2 grid grid-cols-2 gap-1.5">
               {[
-                { t: "More customers, every week", d: "Featured discovery inside the Mesita app puts the venue in front of thousands of guests actively looking for where to go tonight." },
-                { t: "Automated Instagram stories", d: "Every guest who visits is nudged to upload and share one story with their friends — turning each visit into organic reach that compounds week after week." },
-                { t: "Web setup in ~10 min", d: "No app to install. Menu, hours, photos, cashback rules — all from a browser." },
-                { t: "Their own QR & coupons", d: "Guests scan to redeem cashback or save offers for later." },
-                { t: "Experience intelligence", d: "Live activity, repeat-guest insights, and AI summaries of every visit." },
-                { t: "Free to start", d: "No contract, no monthly fee until their first cashback redemption." },
+                { t: "More customers", d: "Featured in Mesita discovery." },
+                { t: "Auto IG stories", d: "Each visit becomes organic reach." },
+                { t: "Setup in 10 min", d: "All from a browser, no app." },
+                { t: "Own QR & coupons", d: "Cashback and saved offers." },
+                { t: "Live insights", d: "Repeat guests, AI visit summaries." },
+                { t: "Free to start", d: "Pay only on first redemption." },
               ].map((b) => (
-                <div key={b.t} className="rounded-xl border border-border bg-card-soft p-2.5">
-                  <p className="text-[12px] font-semibold">{b.t}</p>
-                  <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">{b.d}</p>
+                <div key={b.t} className="rounded-xl border border-border bg-card-soft p-2">
+                  <p className="text-[11px] font-semibold leading-tight">{b.t}</p>
+                  <p className="mt-0.5 text-[10px] leading-snug text-muted-foreground">{b.d}</p>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-dashed border-border bg-card-soft px-3 py-2">
+              <span className="truncate font-mono text-[11px] text-foreground">{venueLink}</span>
+              <button
+                onClick={() => {
+                  if (typeof navigator !== "undefined" && navigator.clipboard) {
+                    navigator.clipboard.writeText(venueLink).catch(() => {});
+                  }
+                  setVenueCopied(true);
+                  setTimeout(() => setVenueCopied(false), 1500);
+                }}
+                className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-foreground/50 transition hover:text-foreground"
+              >
+                {venueCopied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+              </button>
             </div>
 
             <button
@@ -4293,7 +4276,7 @@ function ShareView() {
                   }).catch(() => {});
                 }
               }}
-              className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 py-3.5 text-sm font-semibold text-background shadow-lg active:scale-[0.98]"
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 py-3 text-sm font-semibold text-background shadow-lg active:scale-[0.98]"
             >
               Send invitation <ChevronRight className="h-4 w-4" />
             </button>
