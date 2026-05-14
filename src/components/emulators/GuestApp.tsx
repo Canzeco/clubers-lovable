@@ -3219,10 +3219,16 @@ function CouponTicket({
             </p>
           </div>
           <span
-            className={`self-start rounded-sm px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.18em] ${pill.cls}`}
+            className={`inline-flex items-center gap-1 self-start rounded-sm px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.18em] ${pill.cls}`}
           >
-            {pill.label}
+            {isPending && <Phone className="h-2.5 w-2.5 animate-pulse" />}
+            {isPending ? "AI calling venue" : pill.label}
           </span>
+          {isPending && (
+            <p className="text-[9px] leading-snug text-muted-foreground">
+              Expect a call in ~3 min to confirm.
+            </p>
+          )}
         </div>
 
         {/* RIGHT — cashback + stepper */}
