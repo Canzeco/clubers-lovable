@@ -1365,12 +1365,6 @@ function MesitaVisitors({ venue }: { venue: any }) {
                     </div>
                   )}
                 </div>
-                <div className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1">
-                  <Star className="h-3 w-3 fill-secondary text-secondary" />
-                  <span className="font-display text-sm font-semibold text-secondary">
-                    {u.score.toFixed(1)}
-                  </span>
-                </div>
               </div>
               {showComment && (
                 <p className="mt-2 line-clamp-2 text-[12px] italic leading-snug text-foreground/85">
