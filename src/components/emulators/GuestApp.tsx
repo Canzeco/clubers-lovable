@@ -3492,6 +3492,19 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
 
   const currentStep = Math.max(0, Math.min(steps.length - 1, coupon.step ?? 0));
 
+  // After the waiter scans + confirms in WhatsApp, the flow advances to the
+  // "Pay via Stripe link" step. From that point on the primary CTA streams
+  // the Stripe checkout into the app instead of showing the QR.
+  const stripeStepIndex = steps.findIndex((s) => s.label === "Pay via Stripe link");
+  const waiterConfirmed = stripeStepIndex >= 0 && currentStep >= stripeStepIndex;
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  // Auto-pop the checkout the first time the user opens the coupon after the
+  // waiter has confirmed — emulates "waiter scanned, sheet flies up".
+  useEffect(() => {
+    if (waiterConfirmed && showPay) setCheckoutOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="mt-5 space-y-4">
       {/* SECTION 2 — Cashback amount + QR */}
@@ -3603,7 +3616,14 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
 
       {/* SECTION 5 — Primary action button */}
       <div>
-        {showPay ? (
+        {showPay && waiterConfirmed ? (
+          <button
+            onClick={() => setCheckoutOpen(true)}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#635BFF] px-4 py-3 text-sm font-semibold text-white shadow-glow transition hover:bg-[#5046e5]"
+          >
+            <CreditCard className="h-4 w-4" /> Go to pay · Stripe checkout
+          </button>
+        ) : showPay ? (
           <button
             onClick={() => setPayOpen(true)}
             className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-3 text-sm font-semibold text-white shadow-glow"
@@ -3622,6 +3642,9 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
         )}
       </div>
       {payOpen && <PayWithCouponSheet coupon={coupon} onClose={() => setPayOpen(false)} />}
+      {checkoutOpen && (
+        <StripeCheckoutModal coupon={coupon} onClose={() => setCheckoutOpen(false)} />
+      )}
     </div>
   );
 }
