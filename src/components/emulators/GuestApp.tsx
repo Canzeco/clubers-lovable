@@ -3632,6 +3632,7 @@ function ProfileView() {
                 "Model / talent agency",
                 "Chef · sommelier · F&B press",
                 "Founder / executive",
+                "Local influence · featured in city magazines",
                 "Other public figure",
               ].map((o) => (
                 <button
