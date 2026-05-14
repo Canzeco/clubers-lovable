@@ -3371,7 +3371,7 @@ function RewardsView() {
   return (
     <div>
       <div className="sticky top-0 z-10 border-b border-border bg-background/95 px-4 pt-4 pb-3 backdrop-blur">
-        <p className="font-display text-xl font-semibold">Rewards</p>
+        <p className="font-display text-xl font-semibold">Saved</p>
         <div className="mt-3 flex gap-1 rounded-full bg-muted p-1">
           {[
             { id: "reservations" as const, label: "Reservations" },
@@ -3485,7 +3485,7 @@ function GuestAppShell({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) 
         <div className="flex justify-around">
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
-            { id: "rewards", Icon: Ticket, label: "Rewards" },
+            { id: "rewards", Icon: Ticket, label: "Saved" },
             { id: "qr", Icon: QrCode, label: "My QR" },
             { id: "share", Icon: Share2, label: "Share" },
             { id: "profile", Icon: User, label: "Profile" },
