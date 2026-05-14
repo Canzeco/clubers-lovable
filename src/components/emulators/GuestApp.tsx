@@ -4185,7 +4185,7 @@ function ShareView() {
           {audience === "creators" && (
           <div className="flex flex-1 flex-col">
             <p className="text-[11px] leading-snug text-muted-foreground">
-              Love Mesita and create content about food, nightlife or travel? We partner with creators who genuinely live the experience — collabs, custom codes, revenue share, private venue events, and equity for long-term partners.
+              Love Mesita and create content about food, nightlife, travel, lifestyle, hotels, coffee, wine or city guides? We partner with creators worldwide who genuinely live the experience — collabs, custom codes, revenue share, private venue events, and equity for long-term partners.
             </p>
             <p className="mt-2 font-display text-lg font-semibold leading-tight">
               Let's collaborate
