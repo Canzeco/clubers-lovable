@@ -3477,112 +3477,137 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   const [payOpen, setPayOpen] = useState(false);
   const showPay = !coupon.used && !coupon.reserveOnly && (coupon.cb ?? 0) > 0;
 
+  // Build the step list dynamically based on coupon state
+  type Step = { label: string; detail?: string };
+  const steps: Step[] = [];
+  if (isReservation) {
+    steps.push({
+      label: isPending ? "AI agent calling venue" : "Reservation confirmed",
+      detail: isPending
+        ? `Requesting ${coupon.resRequested || "your time"}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`
+        : `${coupon.resWhen || ""}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`,
+    });
+    steps.push({ label: "Arrive & dine", detail: "Mesita doesn't touch the experience" });
+  } else {
+    steps.push({ label: "Walk in & dine", detail: "Order normally — no menu changes" });
+  }
+  steps.push({ label: "Tap Pay with this coupon", detail: "Your personal QR opens" });
+  steps.push({ label: "Waiter scans your QR", detail: "Opens Mesita bot on WhatsApp" });
+  steps.push({ label: "Pay via Stripe link", detail: "Sent to app + WhatsApp" });
+  steps.push({ label: "Cashback credited", detail: `+${coupon.cb}% to your Mesita balance` });
+
+  const currentStep = Math.max(0, Math.min(steps.length - 1, coupon.step ?? 0));
+
   return (
     <div className="mt-5 space-y-4">
-      {isPending && (
-        <div className="rounded-3xl border border-primary/20 bg-primary/5 p-4">
-          <div className="flex items-start gap-3">
-            <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
-              <Phone className="h-4 w-4 animate-pulse" />
-            </div>
-            <div className="min-w-0">
-              <p className="font-display text-sm font-semibold leading-tight">
-                Mesita AI is calling {coupon.name}
-              </p>
-              <p className="mt-1 text-[12px] leading-snug text-muted-foreground">
-                Our AI agent is on the phone right now requesting your table for{" "}
-                <span className="font-medium text-foreground">
-                  {coupon.resRequested || coupon.resWhen || "the time you picked"}
-                </span>
-                {coupon.resParty ? ` for ${coupon.resParty} ${coupon.resParty === 1 ? "person" : "people"}` : ""}.
-                You'll receive a call back in <span className="font-semibold text-foreground">~3 minutes</span> to confirm.
-              </p>
-            </div>
-          </div>
+      {/* SECTION 2 — Cashback amount + QR */}
+      <div className="flex items-stretch gap-3 rounded-3xl bg-card-soft p-4">
+        <div className="flex flex-1 flex-col justify-center">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Cashback</p>
+          <p className="font-display text-4xl font-semibold leading-none text-secondary">{coupon.cb}%</p>
+          <p className="mt-1 text-[11px] text-muted-foreground">on every visit · up to $1,000 MXN</p>
         </div>
-      )}
-      {/* What this coupon gets you */}
+        <button
+          onClick={() => showPay && setPayOpen(true)}
+          disabled={!showPay}
+          className="flex flex-col items-center justify-center gap-1 rounded-2xl bg-background p-3 shadow-elev transition hover:bg-card disabled:opacity-50"
+        >
+          <div className="grid h-16 w-16 grid-cols-6 grid-rows-6 gap-[1.5px] rounded-md bg-foreground p-1.5">
+            {Array.from({ length: 36 }).map((_, i) => {
+              const on = (i * 71 + ((i * i) % 19)) % 3 !== 0;
+              return <div key={i} className={on ? "bg-background" : "bg-foreground"} />;
+            })}
+          </div>
+          <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Tap to pay</span>
+        </button>
+      </div>
+
+      {/* SECTION 3 — Coupon details */}
       <div className="rounded-3xl bg-card-soft p-5">
         <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Coupon details</p>
         <div className="mt-2 space-y-1.5 text-sm">
-          <div className="flex justify-between"><span className="text-muted-foreground">Venue</span><span className="font-medium">{coupon.name}</span></div>
-          <div className="flex justify-between"><span className="text-muted-foreground">Cashback</span><span className="font-semibold text-secondary">{coupon.cb}%</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">Code</span><span className="font-mono text-[12px]">{coupon.code || "—"}</span></div>
           <div className="flex justify-between"><span className="text-muted-foreground">Cap per visit</span><span>$1,000 MXN</span></div>
           {isReservation ? (
             <>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Reservation</span>
+                <span className={isPending ? "text-primary" : "text-secondary"}>
+                  {isPending ? "Pending (AI calling)" : "Confirmed"}
+                </span>
+              </div>
               <div className="flex justify-between"><span className="text-muted-foreground">When</span><span>{coupon.resWhen || coupon.resRequested || "—"}</span></div>
               {coupon.resParty && (
                 <div className="flex justify-between"><span className="text-muted-foreground">Party</span><span>{coupon.resParty} guests</span></div>
               )}
             </>
           ) : (
-            coupon.expiresIn && (
-              <div className="flex justify-between"><span className="text-muted-foreground">Expires in</span><span>{coupon.expiresIn}</span></div>
-            )
+            <div className="flex justify-between"><span className="text-muted-foreground">Type</span><span>Walk-in coupon</span></div>
+          )}
+          {coupon.expiresIn && coupon.expiresIn !== "—" && (
+            <div className="flex justify-between"><span className="text-muted-foreground">Expires in</span><span>{coupon.expiresIn}</span></div>
           )}
         </div>
-        <p className="mt-3 text-[11px] leading-snug text-muted-foreground">
-          Cashback covers up to $1,000 MXN per visit. Anything above that is paid in full. Your balance can only be spent at affiliated venues — it pulls you back for the next visit.
-        </p>
       </div>
 
-      {/* How it works — full Mesita flow */}
+      {/* SECTION 4 — Current steps (vertical) */}
       <div className="rounded-3xl bg-card-soft p-5">
-        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">How it works</p>
-
-        <div className="mt-3">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-secondary">During the meal</p>
-          <ol className="mt-1.5 space-y-1.5 text-[12px] leading-snug text-foreground/80">
-            <li><span className="text-muted-foreground">1.</span> Order and dine normally — Mesita doesn't touch the experience.</li>
-            <li><span className="text-muted-foreground">2.</span> Optional: post an Instagram story tagging the venue to unlock a bonus later.</li>
-          </ol>
-        </div>
-
-        <div className="mt-4">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-secondary">Checkout (card only)</p>
-          <ol className="mt-1.5 space-y-1.5 text-[12px] leading-snug text-foreground/80">
-            <li><span className="text-muted-foreground">3.</span> Ask for the bill and tap <span className="font-semibold">Pay with this coupon</span> — your personal QR opens.</li>
-            <li><span className="text-muted-foreground">4.</span> The waiter scans your QR with their phone; it opens a chat with the Mesita bot on WhatsApp.</li>
-            <li><span className="text-muted-foreground">5.</span> Waiter enters the bill total and tip, and submits.</li>
-            <li><span className="text-muted-foreground">6.</span> You instantly get a Stripe checkout link (in-app + WhatsApp) and pay from your phone.</li>
-            <li><span className="text-muted-foreground">7.</span> Payment clears → waiter gets a WhatsApp confirmation. Done.</li>
-          </ol>
-        </div>
-
-        <div className="mt-4">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-secondary">Rewards</p>
-          <ol className="mt-1.5 space-y-1.5 text-[12px] leading-snug text-foreground/80">
-            <li><span className="text-muted-foreground">8.</span> Cashback is auto-credited to your Mesita balance at the venue's rate.</li>
-            <li><span className="text-muted-foreground">9.</span> Story bonus: an AI bot detects the @venue tag and auto-approves; the waiter is the fallback.</li>
-            <li><span className="text-muted-foreground">10.</span> Next visit: Stripe checkout applies your accumulated balance as a discount.</li>
-          </ol>
-        </div>
-
-        <p className="mt-3 text-[10px] leading-snug text-muted-foreground">
-          Mesita is card-only — built for full-service restaurants, not quick-service.
-        </p>
+        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Your progress</p>
+        <ol className="mt-3 space-y-0">
+          {steps.map((s, i) => {
+            const done = i < currentStep;
+            const active = i === currentStep;
+            const isLast = i === steps.length - 1;
+            return (
+              <li key={i} className="relative flex gap-3 pb-4 last:pb-0">
+                {!isLast && (
+                  <span
+                    className={`absolute left-[11px] top-6 h-full w-px ${done ? "bg-secondary" : "bg-border"}`}
+                  />
+                )}
+                <div
+                  className={`relative z-10 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
+                    done
+                      ? "bg-secondary text-secondary-foreground"
+                      : active
+                      ? "bg-primary text-primary-foreground ring-4 ring-primary/20"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {done ? <Check className="h-3 w-3" strokeWidth={3} /> : i + 1}
+                </div>
+                <div className="min-w-0 flex-1 pt-0.5">
+                  <p
+                    className={`text-[13px] font-medium leading-tight ${
+                      active ? "text-foreground" : done ? "text-muted-foreground line-through" : "text-foreground/70"
+                    }`}
+                  >
+                    {s.label}
+                  </p>
+                  {s.detail && (
+                    <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">{s.detail}</p>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
       </div>
 
-      {/* Actions */}
-      <div className="space-y-2">
-        {showPay && (
+      {/* SECTION 5 — Primary action button */}
+      <div>
+        {showPay ? (
           <button
             onClick={() => setPayOpen(true)}
             className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-3 text-sm font-semibold text-white shadow-glow"
           >
             <QrCode className="h-4 w-4" /> Pay with this coupon
           </button>
-        )}
-        {isReservation ? (
-          <>
-            <button className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow">
-              <Calendar className="h-4 w-4" />
-              {isPending ? "Edit request" : "Change reservation"}
-            </button>
-            <button className="flex w-full items-center justify-center gap-2 rounded-full border border-destructive/30 bg-background px-4 py-3 text-sm font-semibold text-destructive">
-              <X className="h-4 w-4" /> Cancel reservation
-            </button>
-          </>
+        ) : isReservation ? (
+          <button className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow">
+            <Calendar className="h-4 w-4" />
+            {isPending ? "Edit request" : "Change reservation"}
+          </button>
         ) : (
           <button className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow">
             <Calendar className="h-4 w-4" /> Make a reservation
