@@ -839,6 +839,14 @@ function VenueDetailSheet({
             </button>
           </div>
         </div>
+        {blockedMsg && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-24 z-20 flex justify-center px-6 animate-fade-in">
+            <div className="pointer-events-auto flex items-center gap-2 rounded-2xl border border-border bg-foreground px-3.5 py-2.5 text-[12px] font-medium text-background shadow-2xl">
+              <BadgeCheck className="h-4 w-4 text-secondary" />
+              <span>Only Partner venues offer cashbacks — always.</span>
+            </div>
+          </div>
+        )}
         {confirm && (
           <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in">
             <div className="pointer-events-auto mx-6 w-full max-w-xs rounded-3xl border border-border bg-card p-5 text-center shadow-2xl">
