@@ -4237,7 +4237,7 @@ function ShareView() {
             <div className="mt-2 grid grid-cols-2 gap-1.5">
               {[
                 { t: "More customers", d: "Featured in Mesita discovery." },
-                { t: "Better customers", d: "Higher-spend, repeat-friendly guests." },
+                { t: "Better customers", d: "Socially-magnetic, higher-spend, loyal guests." },
                 { t: "Auto IG stories", d: "Each visit becomes organic reach." },
                 { t: "Live insights", d: "Repeat guests, AI visit summaries." },
                 { t: "Setup in 10 min", d: "All from a browser, no app." },
