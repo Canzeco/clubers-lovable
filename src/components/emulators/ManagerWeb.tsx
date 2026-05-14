@@ -701,10 +701,12 @@ function Promos() {
         ))}
       </div>
 
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+      <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
         Communities · email-verified audiences
+        <span className="rounded-full bg-tier-gold/20 px-2 py-0.5 text-[9px] font-bold text-tier-gold">Coming soon</span>
       </p>
-      <div className="rounded-xl border border-border bg-card-soft p-4">
+      <div className="relative rounded-xl border border-dashed border-border bg-card-soft p-4">
+        <div className="pointer-events-none opacity-40">
         <div className="mb-3 flex items-start justify-between gap-3">
           <div>
             <p className="text-sm font-medium">Filter & boost by community</p>
@@ -792,12 +794,15 @@ function Promos() {
         <p className="mt-1 text-[10px] text-muted-foreground">
           Note: community boosts don't apply to the welcome cashback — first-visit reward stays flat for everyone.
         </p>
+        </div>
       </div>
 
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+      <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
         Audience filters · soft targeting
+        <span className="rounded-full bg-tier-gold/20 px-2 py-0.5 text-[9px] font-bold text-tier-gold">Coming soon</span>
       </p>
-      <div className="rounded-xl border border-border bg-card-soft p-4">
+      <div className="relative rounded-xl border border-dashed border-border bg-card-soft p-4">
+        <div className="pointer-events-none opacity-40">
         <div className="mb-3 flex items-start justify-between gap-3">
           <div>
             <p className="text-sm font-medium">Who sees this promo</p>
@@ -922,6 +927,7 @@ function Promos() {
         <p className="mt-3 text-[10px] text-muted-foreground">
           Especially useful for bars and nightclubs (e.g. ladies' night, 25–35 weekend brunch). Check local laws before using sex-based targeting on alcohol or public-accommodation promos.
         </p>
+        </div>
       </div>
 
       <div className="rounded-xl border border-border bg-card-soft p-4">
