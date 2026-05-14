@@ -1750,83 +1750,124 @@ function DetailsSection() {
 }
 
 function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => void }) {
+  const dollars = (price: string) => price; // already "$$$"
+  const rows: { title: string; subtitle?: string; items: typeof venues }[] = [
+    {
+      title: "Available now",
+      subtitle: "Tables open in the next hour",
+      items: venues,
+    },
+    {
+      title: "Best cashback",
+      subtitle: "Up to 20% back on first visit",
+      items: [...venues].sort((a, b) => b.cashback - a.cashback),
+    },
+    {
+      title: "Rooftops & views",
+      items: venues.filter((v) => /rooftop|view/i.test(v.type)).concat(venues).slice(0, 4),
+    },
+    {
+      title: "Late night",
+      items: venues.filter((v) => /late|cocktail|bar/i.test(v.type)).concat(venues).slice(0, 4),
+    },
+    {
+      title: "Brunch spots",
+      items: venues.filter((v) => /brunch|café|cafe|seafood/i.test(v.type)).concat(venues).slice(0, 4),
+    },
+    {
+      title: "Recently viewed",
+      items: venues,
+    },
+  ];
+
   return (
-    <div className="pb-6">
-      {/* filter chips */}
-      <div className="flex gap-2 overflow-x-auto scrollbar-hide px-5 pb-3">
-        <button
-          aria-label="Filters"
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground"
-        >
-          <SlidersHorizontal className="h-3.5 w-3.5" />
-        </button>
-        {["All", "Tonight", "Cashback", "Rooftop", "Brunch", "Late night"].map(
-          (c, i) => (
-            <button
-              key={c}
-              className={`whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-medium ${
-                i === 0
-                  ? "bg-foreground text-background"
-                  : "border border-border text-muted-foreground"
-              }`}
-            >
-              {c}
-            </button>
-          ),
-        )}
+    <div className="space-y-5 pb-6">
+      {rows.map((row) => (
+        <CatalogRow key={row.title} title={row.title} subtitle={row.subtitle} items={row.items} onSelect={onSelect} />
+      ))}
+    </div>
+  );
+}
+
+function CatalogRow({
+  title,
+  subtitle,
+  items,
+  onSelect,
+}: {
+  title: string;
+  subtitle?: string;
+  items: typeof venues;
+  onSelect: (v: typeof venues[number]) => void;
+}) {
+  return (
+    <div>
+      <div className="mb-2 flex items-end justify-between px-5">
+        <div>
+          <p className="font-display text-base font-semibold leading-tight">{title}</p>
+          {subtitle && (
+            <p className="text-[10px] text-muted-foreground">{subtitle}</p>
+          )}
+        </div>
+        <button className="text-[11px] font-semibold text-secondary">View all</button>
       </div>
-
-      {/* venue cards — minimal, click for details */}
-      <div className="flex flex-col gap-3 px-3">
-        {[...venues, ...venues].map((v, idx) => (
-          <button
-            key={v.name + idx}
-            onClick={() => onSelect(v)}
-            className="relative flex w-full overflow-hidden rounded-2xl border border-border bg-card-soft text-left shadow-sm transition active:scale-[0.99]"
-            style={{ aspectRatio: "2 / 1" }}
-          >
-            {/* info — left */}
-            <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4 py-3">
-              <p className="truncate font-display text-base font-semibold leading-tight">
-                {v.name}
-              </p>
-              <p className="truncate text-[10px] uppercase tracking-widest text-muted-foreground">
-                {v.type}
-              </p>
-              <p className="truncate text-[10px] text-muted-foreground">
-                {v.distance} · <span className="text-foreground">{v.price}</span>
-              </p>
-              <div className="mt-0.5 flex items-center gap-2 text-[10px] text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Star className="h-2.5 w-2.5 fill-secondary text-secondary" />
-                  <span className="font-semibold text-foreground">{v.mesita}</span> Mesita
-                </span>
-                <span className="text-border">·</span>
-                <span>
-                  <span className="font-semibold text-foreground">{v.google}</span> Google
-                </span>
-              </div>
-              {v.affiliated && (
-                <span
-                  className={`mt-1 w-fit rounded-full px-1.5 py-0.5 text-[9px] font-bold ${
-                    v.firstVisit
-                      ? "bg-gradient-to-r from-fuchsia-400 to-amber-300 text-black"
-                      : "bg-secondary text-secondary-foreground"
-                  }`}
-                >
-                  {v.cashback}% cashback
-                </span>
-              )}
-            </div>
-
-            {/* image — right, clean */}
-            <div className="relative h-full flex-shrink-0" style={{ aspectRatio: "1 / 1" }}>
-              <img src={v.img} alt={v.name} className="h-full w-full object-cover" />
-            </div>
-          </button>
+      <div className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 scrollbar-hide">
+        {items.map((v, idx) => (
+          <CatalogCard key={v.name + idx} venue={v} onClick={() => onSelect(v)} />
         ))}
       </div>
     </div>
+  );
+}
+
+function CatalogCard({ venue: v, onClick }: { venue: typeof venues[number]; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="group relative w-[68%] shrink-0 snap-start overflow-hidden rounded-2xl border border-border bg-card text-left shadow-sm transition active:scale-[0.99]"
+    >
+      <div className="relative aspect-[4/3] w-full overflow-hidden">
+        <img src={v.img} alt={v.name} className="h-full w-full object-cover" />
+        <button
+          aria-label="Save"
+          onClick={(e) => e.stopPropagation()}
+          className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-background/85 text-foreground backdrop-blur"
+        >
+          <Bookmark className="h-3.5 w-3.5" />
+        </button>
+        {v.affiliated && (
+          <span
+            className={`absolute left-2 top-2 rounded-full px-2 py-0.5 text-[9px] font-bold ${
+              v.firstVisit
+                ? "bg-gradient-to-r from-fuchsia-400 to-amber-300 text-black"
+                : "bg-secondary text-secondary-foreground"
+            }`}
+          >
+            {v.cashback}% cashback
+          </span>
+        )}
+      </div>
+      <div className="space-y-1 px-3 py-2.5">
+        <p className="truncate font-display text-[15px] font-semibold leading-tight">{v.name}</p>
+        <p className="flex items-center gap-1.5 truncate text-[11px] text-muted-foreground">
+          <span className="font-semibold text-foreground">{v.price}</span>
+          <span>·</span>
+          <span className="truncate">{v.type}</span>
+        </p>
+        <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+          <span className="flex items-center gap-1">
+            <Star className="h-3 w-3 fill-secondary text-secondary" />
+            <span className="font-semibold text-foreground">{v.mesita}</span>
+            <span className="text-border">·</span>
+            <span className="font-semibold text-foreground">{v.google}</span>
+            <span>G</span>
+          </span>
+          <span className="flex items-center gap-1">
+            <Navigation className="h-3 w-3" /> {v.distance}
+          </span>
+        </div>
+      </div>
+    </button>
   );
 }
 
