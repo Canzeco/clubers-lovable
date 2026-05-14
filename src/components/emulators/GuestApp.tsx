@@ -3378,6 +3378,10 @@ function ProfileView() {
             ))}
           </div>
 
+          <p className="mt-2 px-1 text-[10px] leading-relaxed text-muted-foreground">
+            No VIP gimmicks — tiers just unlock a higher cashback %. Linear, honest.
+          </p>
+
           {/* Appeal upgrade — sits right below Diamond row */}
           <button
             onClick={() => setShowAppeal(true)}
