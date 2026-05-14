@@ -789,6 +789,9 @@ function Promos() {
         <p className="mt-3 text-[10px] text-muted-foreground">
           Boost stacks on top of tier cashback. A Tec-verified Gold guest gets {values.Gold}% + community boost.
         </p>
+        <p className="mt-1 text-[10px] text-muted-foreground">
+          Note: community boosts don't apply to the welcome cashback — first-visit reward stays flat for everyone.
+        </p>
       </div>
 
       <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
