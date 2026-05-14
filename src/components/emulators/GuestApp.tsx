@@ -558,6 +558,12 @@ function VenueDetailSheet({
 }) {
   const [confirm, setConfirm] = useState<null | "save" | "reserve" | "both">(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [blockedMsg, setBlockedMsg] = useState(false);
+  const isPartner = venue.affiliated;
+  const showBlocked = () => {
+    setBlockedMsg(true);
+    setTimeout(() => setBlockedMsg(false), 2200);
+  };
 
   const handleSave = () => {
     setConfirm("save");
