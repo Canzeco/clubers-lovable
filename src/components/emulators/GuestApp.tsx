@@ -3349,7 +3349,7 @@ function ProfileView() {
               { t: "Bronze", min: "Everyone", color: "tier-bronze", done: true, perk: "Base cashback" },
               { t: "Silver", min: "1k+ followers", color: "tier-silver", done: true, perk: "Boosted cashback" },
               { t: "Gold", min: "5k+ followers", color: "tier-gold", done: true, perk: "VIP perks · top venues", active: true },
-              { t: "Diamond", min: "Invite only", color: "tier-diamond", done: false, perk: "Comped tables" },
+              { t: "Diamond", min: "20k+ followers · invite-only", color: "tier-diamond", done: false, perk: "Comped tables" },
             ].map((r) => (
               <div
                 key={r.t}

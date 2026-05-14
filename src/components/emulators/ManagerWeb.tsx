@@ -486,9 +486,9 @@ function Promos() {
     handles: string[];
     reach: string;
   }[] = [
-    { name: "Bronze", color: "bg-tier-bronze", cb: 5, visits: "0 – 2 visits", audience: 18420, handles: [], reach: "Anonymous" },
-    { name: "Silver", color: "bg-tier-silver", cb: 10, visits: "3 – 6 visits", audience: 6240, handles: ["@sofip", "@renatak", "@tomasl"], reach: "+1K followers" },
-    { name: "Gold", color: "bg-tier-gold", cb: 20, visits: "7 – 19 visits", audience: 1860, handles: ["@valenrose", "@lucasm", "@camivb", "@matef", "@anat"], reach: "+5K followers" },
+    { name: "Bronze", color: "bg-tier-bronze", cb: 5, visits: "0 – 2 visits", audience: 18420, handles: [], reach: "Everyone" },
+    { name: "Silver", color: "bg-tier-silver", cb: 10, visits: "3 – 6 visits", audience: 6240, handles: ["@sofip", "@renatak", "@tomasl"], reach: "1K+ followers" },
+    { name: "Gold", color: "bg-tier-gold", cb: 20, visits: "7 – 19 visits", audience: 1860, handles: ["@valenrose", "@lucasm", "@camivb", "@matef", "@anat"], reach: "5K+ followers" },
     {
       name: "Diamond",
       color: "bg-gradient-to-r from-cyan-300 to-sky-400",
@@ -496,7 +496,7 @@ function Promos() {
       visits: "20+ visits",
       audience: 184,
       handles: ["@valenrose", "@camivb", "@anat", "@matef"],
-      reach: "Hand-picked elite",
+      reach: "20K+ followers · invite-only",
     },
   ];
   const [values, setValues] = useState({
