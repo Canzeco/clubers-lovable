@@ -1846,6 +1846,7 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
     "Cena romántica en Polanco",
     "Brunch dominical familiar",
     "Mezcal y vinilo después de medianoche",
+    "El antro más fresa de San Pedro",
   ];
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
