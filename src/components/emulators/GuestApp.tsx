@@ -2072,7 +2072,7 @@ function TinderMode() {
                   </p>
                   <div className="mt-4 w-full space-y-2 rounded-2xl border border-border bg-card/60 p-3 text-left">
                     <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                      You'll hear back in ~30s
+                      You'll hear back in ~3 min
                     </p>
                     <div className="flex items-center gap-2 text-xs">
                       <MessageCircle className="h-3.5 w-3.5 text-[var(--wa-accent)]" />
