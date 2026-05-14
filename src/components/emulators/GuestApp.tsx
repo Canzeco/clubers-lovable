@@ -54,10 +54,25 @@ import {
   Wine,
   Beef,
   GlassWater,
+  GraduationCap,
+  Lock,
 } from "lucide-react";
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
+
+// Community catalog — shared across guest app & manager web. Joining a
+// community requires email-domain verification (e.g. @tec.mx).
+const COMMUNITIES: Record<
+  string,
+  { id: string; label: string; short: string; emailDomain: string; color: string }
+> = {
+  tec: { id: "tec", label: "Tec de Monterrey", short: "Tec", emailDomain: "@tec.mx", color: "bg-[#0033A0] text-white" },
+  udem: { id: "udem", label: "UDEM", short: "UDEM", emailDomain: "@udem.edu", color: "bg-[#003F2D] text-white" },
+  stanford: { id: "stanford", label: "Stanford", short: "Stanford", emailDomain: "@stanford.edu", color: "bg-[#8C1515] text-white" },
+  itam: { id: "itam", label: "ITAM", short: "ITAM", emailDomain: "@itam.mx", color: "bg-[#003366] text-white" },
+  ibero: { id: "ibero", label: "Ibero", short: "Ibero", emailDomain: "@ibero.mx", color: "bg-[#0072CE] text-white" },
+};
 
 function GoogleLogo({ className = "" }: { className?: string }) {
   return (
@@ -146,10 +161,10 @@ const venues = [
       { day: "Sun", hours: "12:00pm – 11:00pm" },
     ],
     visitors: [
-      { name: "Valentina R.", handle: "@valenrose", tier: "gold", score: 5.0, when: "Sat", comment: "Best sunset terrace in the city.", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80" },
-      { name: "Lucas M.", handle: "@lucasm", tier: "gold", score: 4.8, when: "Fri", comment: "The DJ set elevated everything.", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80" },
-      { name: "Sofía P.", handle: "@sofip", tier: "silver", score: 5.0, when: "Last week", comment: "Service was flawless.", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80" },
-      { name: "Diego A.", handle: "@diegoa", tier: "bronze", score: 4.5, when: "2 weeks ago", comment: "Worth the price tag.", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80" },
+      { name: "Valentina R.", handle: "@valenrose", tier: "gold", communities: ["tec"], score: 5.0, when: "Sat", comment: "Best sunset terrace in the city.", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80" },
+      { name: "Lucas M.", handle: "@lucasm", tier: "gold", communities: ["stanford"], score: 4.8, when: "Fri", comment: "The DJ set elevated everything.", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80" },
+      { name: "Sofía P.", handle: "@sofip", tier: "silver", communities: ["udem"], score: 5.0, when: "Last week", comment: "Service was flawless.", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80" },
+      { name: "Diego A.", handle: "@diegoa", tier: "bronze", communities: ["itam"], score: 4.5, when: "2 weeks ago", comment: "Worth the price tag.", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80" },
     ],
   },
   {
@@ -213,9 +228,9 @@ const venues = [
       { day: "Sun", hours: "9:00pm – 1:00am" },
     ],
     visitors: [
-      { name: "Camila V.", handle: "@camivb", tier: "gold", score: 5.0, when: "Wed", comment: "Mezcal flight is unreal.", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&q=80" },
-      { name: "Mateo F.", handle: "@matef", tier: "gold", score: 4.7, when: "Last Sat", comment: "Best vinyl set in town.", img: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=120&q=80" },
-      { name: "Renata K.", handle: "@renatak", tier: "silver", score: 4.5, when: "Last week", comment: "Hidden gem, intimate vibe.", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" },
+      { name: "Camila V.", handle: "@camivb", tier: "gold", communities: ["tec", "stanford"], score: 5.0, when: "Wed", comment: "Mezcal flight is unreal.", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&q=80" },
+      { name: "Mateo F.", handle: "@matef", tier: "gold", communities: ["udem"], score: 4.7, when: "Last Sat", comment: "Best vinyl set in town.", img: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=120&q=80" },
+      { name: "Renata K.", handle: "@renatak", tier: "silver", communities: ["itam"], score: 4.5, when: "Last week", comment: "Hidden gem, intimate vibe.", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" },
     ],
   },
   {
@@ -279,8 +294,8 @@ const venues = [
       { day: "Sun", hours: "8:00am – 6:00pm" },
     ],
     visitors: [
-      { name: "Ana T.", handle: "@anat", tier: "gold", score: 4.8, when: "Yesterday", comment: "Brunch with ocean breeze, dreamy.", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&q=80" },
-      { name: "Tomás L.", handle: "@tomasl", tier: "silver", score: 4.6, when: "Last Sun", comment: "Seafood was incredibly fresh.", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&q=80" },
+      { name: "Ana T.", handle: "@anat", tier: "gold", communities: ["tec"], score: 4.8, when: "Yesterday", comment: "Brunch with ocean breeze, dreamy.", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&q=80" },
+      { name: "Tomás L.", handle: "@tomasl", tier: "silver", communities: ["stanford"], score: 4.6, when: "Last Sun", comment: "Seafood was incredibly fresh.", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&q=80" },
     ],
   },
 ];
@@ -632,72 +647,7 @@ function VenueDetailSheet({
           </div>
 
           {/* Mesita Visitors — sorted by relevance (recency × tier × influence) */}
-          <div>
-            <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
-              <span>Mesita Visitors</span>
-              <span className="flex items-center gap-1 text-secondary">
-                <Flame className="h-3 w-3" /> Top 10
-              </span>
-            </p>
-            <div className="space-y-2">
-              {Array.from({ length: 10 }).map((_, i) => {
-                const u = venue.visitors[i % venue.visitors.length];
-                const ig = `${(126 - i * 9).toString()}.${(i * 3) % 10}k`;
-                return (
-                  <div
-                    key={"mv" + i}
-                    className="rounded-2xl border border-border bg-card-soft p-3"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <div className="relative">
-                        <img
-                          src={u.img}
-                          alt={u.name}
-                          className={`h-10 w-10 rounded-full object-cover ring-2 ${
-                            u.tier === "gold"
-                              ? "ring-tier-gold"
-                              : u.tier === "silver"
-                              ? "ring-tier-silver"
-                              : "ring-tier-bronze"
-                          }`}
-                        />
-                        <span
-                          className={`absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px text-[8px] font-bold uppercase text-black ${
-                            u.tier === "gold"
-                              ? "bg-tier-gold"
-                              : u.tier === "silver"
-                              ? "bg-tier-silver"
-                              : "bg-tier-bronze"
-                          }`}
-                        >
-                          {u.tier}
-                        </span>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium leading-tight">{u.name}</p>
-                        <p className="flex items-center gap-1.5 truncate text-[10px] text-muted-foreground">
-                          <span>{u.handle}</span>
-                          <span className="flex items-center gap-0.5 text-pink-400">
-                            <Instagram className="h-2.5 w-2.5" />
-                            {ig}
-                          </span>
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1">
-                        <Star className="h-3 w-3 fill-secondary text-secondary" />
-                        <span className="font-display text-sm font-semibold text-secondary">
-                          {u.score.toFixed(1)}
-                        </span>
-                      </div>
-                    </div>
-                    <p className="mt-2 text-[12px] italic leading-snug text-foreground/85">
-                      “{u.comment}”
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          <MesitaVisitors venue={venue} />
 
           {/* Reviews */}
           <ReviewsSection />
@@ -946,6 +896,317 @@ function MenuTabs() {
 }
 
 function ReviewsSection() {
+  return (
+    <ReviewsSectionInner />
+  );
+}
+
+function MesitaVisitors({ venue }: { venue: any }) {
+  const allCommunities = Array.from(
+    new Set<string>(venue.visitors.flatMap((v: any) => v.communities ?? [])),
+  );
+  const [filter, setFilter] = useState<string>("all");
+  const filtered =
+    filter === "all"
+      ? venue.visitors
+      : venue.visitors.filter((v: any) => (v.communities ?? []).includes(filter));
+  const list = filtered.length ? filtered : venue.visitors;
+  return (
+    <div>
+      <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+        <span>Mesita Visitors</span>
+        <span className="flex items-center gap-1 text-secondary">
+          <Flame className="h-3 w-3" /> Top 10
+        </span>
+      </p>
+      {allCommunities.length > 0 && (
+        <div className="mb-2 -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 scrollbar-hide">
+          <button
+            onClick={() => setFilter("all")}
+            className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold transition ${
+              filter === "all"
+                ? "border-secondary bg-secondary text-secondary-foreground"
+                : "border-border bg-card text-muted-foreground"
+            }`}
+          >
+            All
+          </button>
+          {allCommunities.map((cid) => {
+            const c = COMMUNITIES[cid];
+            if (!c) return null;
+            return (
+              <button
+                key={cid}
+                onClick={() => setFilter(cid)}
+                className={`shrink-0 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-semibold transition ${
+                  filter === cid
+                    ? "border-secondary bg-secondary text-secondary-foreground"
+                    : "border-border bg-card text-muted-foreground"
+                }`}
+              >
+                <GraduationCap className="h-3 w-3" /> {c.short}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      <div className="space-y-2">
+        {Array.from({ length: 10 }).map((_, i) => {
+          const u = list[i % list.length];
+          const ig = `${(126 - i * 9).toString()}.${(i * 3) % 10}k`;
+          return (
+            <div key={"mv" + i} className="rounded-2xl border border-border bg-card-soft p-3">
+              <div className="flex items-center gap-2.5">
+                <div className="relative">
+                  <img
+                    src={u.img}
+                    alt={u.name}
+                    className={`h-10 w-10 rounded-full object-cover ring-2 ${
+                      u.tier === "gold"
+                        ? "ring-tier-gold"
+                        : u.tier === "silver"
+                        ? "ring-tier-silver"
+                        : "ring-tier-bronze"
+                    }`}
+                  />
+                  <span
+                    className={`absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px text-[8px] font-bold uppercase text-black ${
+                      u.tier === "gold"
+                        ? "bg-tier-gold"
+                        : u.tier === "silver"
+                        ? "bg-tier-silver"
+                        : "bg-tier-bronze"
+                    }`}
+                  >
+                    {u.tier}
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium leading-tight">{u.name}</p>
+                  <p className="flex items-center gap-1.5 truncate text-[10px] text-muted-foreground">
+                    <span>{u.handle}</span>
+                    <span className="flex items-center gap-0.5 text-pink-400">
+                      <Instagram className="h-2.5 w-2.5" />
+                      {ig}
+                    </span>
+                  </p>
+                  {(u.communities ?? []).length > 0 && (
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {(u.communities as string[]).map((cid) => {
+                        const c = COMMUNITIES[cid];
+                        if (!c) return null;
+                        return (
+                          <span
+                            key={cid}
+                            className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-px text-[9px] font-semibold ${c.color}`}
+                          >
+                            <GraduationCap className="h-2.5 w-2.5" /> {c.short}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1">
+                  <Star className="h-3 w-3 fill-secondary text-secondary" />
+                  <span className="font-display text-sm font-semibold text-secondary">
+                    {u.score.toFixed(1)}
+                  </span>
+                </div>
+              </div>
+              <p className="mt-2 text-[12px] italic leading-snug text-foreground/85">
+                "{u.comment}"
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ReviewsSectionInner() {
+  return <ReviewsSectionBody />;
+}
+
+function CommunitiesBlock() {
+  const [joined, setJoined] = useState<string[]>(["tec"]);
+  const [showJoin, setShowJoin] = useState(false);
+  const [pendingId, setPendingId] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+
+  const remaining = Object.values(COMMUNITIES).filter((c) => !joined.includes(c.id));
+
+  const startJoin = (id: string) => {
+    setPendingId(id);
+    setEmail("");
+    setSent(false);
+  };
+  const sendVerification = () => {
+    setSent(true);
+    setTimeout(() => {
+      if (pendingId) setJoined((j) => [...j, pendingId]);
+      setPendingId(null);
+      setShowJoin(false);
+    }, 1400);
+  };
+
+  return (
+    <>
+      <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+        <div className="mb-3 flex items-center justify-between">
+          <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <GraduationCap className="h-3 w-3 text-secondary" /> Communities
+          </p>
+          <span className="text-[10px] text-muted-foreground">Email-verified</span>
+        </div>
+        <div className="space-y-2">
+          {joined.map((cid) => {
+            const c = COMMUNITIES[cid];
+            if (!c) return null;
+            return (
+              <div
+                key={cid}
+                className="flex items-center gap-3 rounded-xl bg-card-soft p-2.5 ring-1 ring-secondary/20"
+              >
+                <span
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg text-[10px] font-bold ${c.color}`}
+                >
+                  <GraduationCap className="h-4 w-4" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold leading-none">{c.label}</p>
+                  <p className="mt-0.5 text-[10px] text-muted-foreground truncate">
+                    Verified via {c.emailDomain}
+                  </p>
+                </div>
+                <span className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1 text-[9px] font-semibold text-secondary">
+                  <BadgeCheck className="h-3 w-3" /> Member
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        <button
+          onClick={() => setShowJoin(true)}
+          className="mt-3 flex w-full items-center gap-3 rounded-xl border border-dashed border-secondary/40 bg-secondary/5 p-3 text-left transition hover:bg-secondary/10"
+        >
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary/15 text-secondary">
+            <Plus className="h-4 w-4" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[12px] font-semibold leading-none">Join a community</p>
+            <p className="mt-1 text-[10px] text-muted-foreground">
+              Verify your school or org email — unlock filtered venues.
+            </p>
+          </div>
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        </button>
+        <p className="mt-2 text-[10px] text-muted-foreground">
+          You can be in many communities — but only one Class.
+        </p>
+      </div>
+
+      {showJoin && (
+        <div
+          className="absolute inset-0 z-50 flex items-end bg-black/60 backdrop-blur-sm"
+          onClick={() => {
+            setShowJoin(false);
+            setPendingId(null);
+          }}
+        >
+          <div
+            className="relative max-h-[80%] w-full overflow-y-auto rounded-t-3xl border-t border-border bg-card p-5 shadow-2xl scrollbar-hide"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => {
+                setShowJoin(false);
+                setPendingId(null);
+              }}
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-card-soft text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Join community
+            </p>
+            <p className="mt-1 font-display text-xl font-semibold">
+              {pendingId ? COMMUNITIES[pendingId].label : "Pick your community"}
+            </p>
+
+            {!pendingId ? (
+              <div className="mt-4 space-y-2">
+                {remaining.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => startJoin(c.id)}
+                    className="flex w-full items-center gap-3 rounded-xl border border-border bg-card-soft p-3 text-left transition hover:border-secondary/40"
+                  >
+                    <span
+                      className={`flex h-9 w-9 items-center justify-center rounded-lg ${c.color}`}
+                    >
+                      <GraduationCap className="h-4 w-4" />
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="truncate text-sm font-semibold leading-none">{c.label}</p>
+                      <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+                        Verify with {c.emailDomain}
+                      </p>
+                    </div>
+                    <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                  </button>
+                ))}
+                {remaining.length === 0 && (
+                  <p className="rounded-xl bg-card-soft p-3 text-center text-xs text-muted-foreground">
+                    You're already in every supported community.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="mt-4 space-y-3">
+                <div className="flex items-center gap-2 rounded-xl border border-border bg-card-soft p-3">
+                  <Mail className="h-4 w-4 text-secondary" />
+                  <p className="text-[11px] text-muted-foreground">
+                    Enter your <span className="font-semibold text-foreground">{COMMUNITIES[pendingId].emailDomain}</span> email — we'll send a verification link.
+                  </p>
+                </div>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={`yourname${COMMUNITIES[pendingId].emailDomain}`}
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-secondary focus:outline-none"
+                />
+                <button
+                  disabled={!email.includes(COMMUNITIES[pendingId].emailDomain) || sent}
+                  onClick={sendVerification}
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow disabled:opacity-40"
+                >
+                  {sent ? (
+                    <>
+                      <Check className="h-4 w-4" /> Verification sent
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4" /> Send verification email
+                    </>
+                  )}
+                </button>
+                <p className="text-center text-[10px] text-muted-foreground">
+                  We never share your email. Membership grants access to community-only filters.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function ReviewsSectionBody() {
   return (
     <div>
       <SectionLabel action="129 total">Reviews</SectionLabel>
@@ -3129,6 +3390,7 @@ function ProfileView() {
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </button>
         </div>
+        <CommunitiesBlock />
           </>
         )}
 

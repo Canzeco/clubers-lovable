@@ -29,6 +29,8 @@ import {
   CreditCard,
   FileText,
   ChevronRight,
+  GraduationCap,
+  Mail,
 } from "lucide-react";
 
 type TabId =
@@ -508,6 +510,23 @@ function Promos() {
     { name: "Birthday boost", desc: "+30% during birthday week", on: true },
     { name: "Weekday lift", desc: "+5% Mon – Wed", on: false },
   ];
+  const communities: {
+    id: string;
+    name: string;
+    color: string;
+    audience: number;
+    handles: string[];
+    boost: number;
+    on: boolean;
+  }[] = [
+    { id: "tec", name: "Tec de Monterrey", color: "bg-[#0033A0] text-white", audience: 1840, handles: ["@valenrose", "@camivb", "@anat"], boost: 5, on: true },
+    { id: "udem", name: "UDEM", color: "bg-[#003F2D] text-white", audience: 920, handles: ["@sofip", "@matef"], boost: 5, on: true },
+    { id: "stanford", name: "Stanford", color: "bg-[#8C1515] text-white", audience: 312, handles: ["@lucasm", "@tomasl"], boost: 10, on: false },
+    { id: "itam", name: "ITAM", color: "bg-[#003366] text-white", audience: 640, handles: ["@diegoa", "@renatak"], boost: 5, on: false },
+  ];
+  const [commState, setCommState] = useState(
+    Object.fromEntries(communities.map((c) => [c.id, { boost: c.boost, on: c.on }])),
+  );
   return (
     <div className="space-y-5 p-6">
       <div>
@@ -657,6 +676,96 @@ function Promos() {
             </div>
           </div>
         ))}
+      </div>
+
+      <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+        Communities · email-verified audiences
+      </p>
+      <div className="rounded-xl border border-border bg-card-soft p-4">
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-medium">Filter & boost by community</p>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              Reach members of specific schools or orgs (Tec, UDEM, Stanford…). Membership requires email verification — only verified members see the boost.
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1 text-[10px] font-semibold text-secondary">
+            <Mail className="h-3 w-3" /> Verified
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {communities.map((c) => {
+            const s = commState[c.id];
+            return (
+              <div key={c.id} className="rounded-lg border border-border bg-card p-3">
+                <div className="flex items-center justify-between">
+                  <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${c.color}`}>
+                    <GraduationCap className="h-3 w-3" /> {c.name}
+                  </span>
+                  <button
+                    onClick={() =>
+                      setCommState((st) => ({ ...st, [c.id]: { ...st[c.id], on: !st[c.id].on } }))
+                    }
+                    className={`flex h-5 w-9 items-center rounded-full px-0.5 ${
+                      s.on ? "bg-secondary" : "bg-muted"
+                    }`}
+                  >
+                    <div className={`h-4 w-4 rounded-full bg-white transition ${s.on ? "ml-auto" : ""}`} />
+                  </button>
+                </div>
+                <div className="mt-3 flex items-end gap-1">
+                  <span className={`font-display text-3xl font-semibold ${s.on ? "text-secondary" : "text-muted-foreground"}`}>
+                    +{s.boost}
+                  </span>
+                  <span className={`mb-1 text-base ${s.on ? "text-secondary" : "text-muted-foreground"}`}>%</span>
+                  <span className="mb-1.5 ml-1 text-[9px] uppercase tracking-widest text-muted-foreground">
+                    boost
+                  </span>
+                </div>
+                <div className="mt-2 grid grid-cols-3 gap-1">
+                  {[5, 10, 15].map((v) => (
+                    <button
+                      key={v}
+                      onClick={() =>
+                        setCommState((st) => ({ ...st, [c.id]: { ...st[c.id], boost: v } }))
+                      }
+                      className={`rounded-md border px-1 py-1 text-[10px] font-semibold transition ${
+                        s.boost === v
+                          ? "border-secondary bg-secondary text-secondary-foreground"
+                          : "border-border text-muted-foreground"
+                      }`}
+                    >
+                      +{v}%
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-3 rounded-md bg-card-soft p-2">
+                  <div className="flex items-baseline justify-between">
+                    <span className="font-display text-sm font-semibold">{c.audience.toLocaleString()}</span>
+                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground">members nearby</span>
+                  </div>
+                  <div className="mt-1.5 flex flex-wrap gap-1">
+                    {c.handles.slice(0, 3).map((h) => (
+                      <a
+                        key={h}
+                        href={`https://instagram.com/${h.replace("@", "")}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-0.5 rounded-full bg-card px-1.5 py-0.5 text-[9px] font-medium text-foreground hover:text-secondary"
+                      >
+                        <Instagram className="h-2.5 w-2.5" />
+                        {h}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <p className="mt-3 text-[10px] text-muted-foreground">
+          Boost stacks on top of tier cashback. A Tec-verified Gold guest gets {values.Gold}% + community boost.
+        </p>
       </div>
 
       <div className="rounded-xl border border-border bg-card-soft p-4">
