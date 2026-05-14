@@ -2171,6 +2171,8 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
 function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }) {
   const isReservation = !!coupon.isReservation || coupon.res === "pending" || coupon.res === "confirmed";
   const isPending = coupon.res === "pending";
+  const [payOpen, setPayOpen] = useState(false);
+  const showPay = !coupon.used && !coupon.reserveOnly && (coupon.cb ?? 0) > 0;
 
   return (
     <div className="mt-5 space-y-4">
@@ -2204,6 +2206,14 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
 
       {/* Actions */}
       <div className="space-y-2">
+        {showPay && (
+          <button
+            onClick={() => setPayOpen(true)}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-3 text-sm font-semibold text-white shadow-glow"
+          >
+            <QrCode className="h-4 w-4" /> Pay with this coupon
+          </button>
+        )}
         {isReservation ? (
           <>
             <button className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow">
@@ -2220,6 +2230,7 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
           </button>
         )}
       </div>
+      {payOpen && <PayWithCouponSheet coupon={coupon} onClose={() => setPayOpen(false)} />}
     </div>
   );
 }
