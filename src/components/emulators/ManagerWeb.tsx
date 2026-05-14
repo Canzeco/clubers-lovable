@@ -510,6 +510,23 @@ function Promos() {
     { name: "Birthday boost", desc: "+30% during birthday week", on: true },
     { name: "Weekday lift", desc: "+5% Mon – Wed", on: false },
   ];
+  const communities: {
+    id: string;
+    name: string;
+    color: string;
+    audience: number;
+    handles: string[];
+    boost: number;
+    on: boolean;
+  }[] = [
+    { id: "tec", name: "Tec de Monterrey", color: "bg-[#0033A0] text-white", audience: 1840, handles: ["@valenrose", "@camivb", "@anat"], boost: 5, on: true },
+    { id: "udem", name: "UDEM", color: "bg-[#003F2D] text-white", audience: 920, handles: ["@sofip", "@matef"], boost: 5, on: true },
+    { id: "stanford", name: "Stanford", color: "bg-[#8C1515] text-white", audience: 312, handles: ["@lucasm", "@tomasl"], boost: 10, on: false },
+    { id: "itam", name: "ITAM", color: "bg-[#003366] text-white", audience: 640, handles: ["@diegoa", "@renatak"], boost: 5, on: false },
+  ];
+  const [commState, setCommState] = useState(
+    Object.fromEntries(communities.map((c) => [c.id, { boost: c.boost, on: c.on }])),
+  );
   return (
     <div className="space-y-5 p-6">
       <div>
