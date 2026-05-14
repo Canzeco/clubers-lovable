@@ -1213,6 +1213,14 @@ function MesitaVisitors({ venue }: { venue: any }) {
     new Set<string>(venue.visitors.flatMap((v: any) => v.communities ?? [])),
   );
   const [filter, setFilter] = useState<string>("all");
+  const sorts = [
+    { id: "top", label: "Top" },
+    { id: "recent", label: "Recent" },
+    { id: "rated", label: "Highest rated" },
+    { id: "followed", label: "Most followed" },
+    { id: "tier", label: "Gold tier" },
+  ] as const;
+  const [sort, setSort] = useState<(typeof sorts)[number]["id"]>("top");
   const filtered =
     filter === "all"
       ? venue.visitors
@@ -1226,6 +1234,21 @@ function MesitaVisitors({ venue }: { venue: any }) {
           <Flame className="h-3 w-3" /> Top 10
         </span>
       </p>
+      <div className="mb-1.5 -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 scrollbar-hide">
+        {sorts.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => setSort(s.id)}
+            className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold transition ${
+              sort === s.id
+                ? "border-foreground bg-foreground text-background"
+                : "border-border bg-card text-muted-foreground"
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
       {allCommunities.length > 0 && (
         <div className="mb-2 -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 scrollbar-hide">
           <button
