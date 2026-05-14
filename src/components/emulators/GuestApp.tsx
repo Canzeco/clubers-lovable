@@ -3478,13 +3478,40 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
 }
 
 function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }) {
-  const isReservation = !!coupon.isReservation || coupon.res === "pending" || coupon.res === "confirmed";
-  const isPending = coupon.res === "pending";
+  const isReservation =
+    !!coupon.isReservation ||
+    coupon.res === "pending" ||
+    coupon.res === "confirmed" ||
+    coupon.resStatus === "pending" ||
+    coupon.resStatus === "confirmed";
+  const isPending = coupon.res === "pending" || coupon.resStatus === "pending";
   const [payOpen, setPayOpen] = useState(false);
   const showPay = !coupon.used && !coupon.reserveOnly && (coupon.cb ?? 0) > 0;
 
   return (
     <div className="mt-5 space-y-4">
+      {isPending && (
+        <div className="rounded-3xl border border-primary/20 bg-primary/5 p-4">
+          <div className="flex items-start gap-3">
+            <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+              <Phone className="h-4 w-4 animate-pulse" />
+            </div>
+            <div className="min-w-0">
+              <p className="font-display text-sm font-semibold leading-tight">
+                Mesita AI is calling {coupon.name}
+              </p>
+              <p className="mt-1 text-[12px] leading-snug text-muted-foreground">
+                Our AI agent is on the phone right now requesting your table for{" "}
+                <span className="font-medium text-foreground">
+                  {coupon.resRequested || coupon.resWhen || "the time you picked"}
+                </span>
+                {coupon.resParty ? ` for ${coupon.resParty} ${coupon.resParty === 1 ? "person" : "people"}` : ""}.
+                You'll receive a call back in <span className="font-semibold text-foreground">~3 minutes</span> to confirm.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       {/* What this coupon gets you */}
       <div className="rounded-3xl bg-card-soft p-5">
         <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Coupon details</p>
