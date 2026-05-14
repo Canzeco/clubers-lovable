@@ -3653,7 +3653,7 @@ function ShareView() {
           {audience === "creators" && (
           <div className="flex flex-1 flex-col">
             <p className="text-[11px] leading-snug text-muted-foreground">
-              Love Mesita and create content about food, nightlife or travel? We partner with creators who genuinely live the experience — collabs, custom codes, revenue share, and access to private venue events.
+              Love Mesita and create content about food, nightlife or travel? We partner with creators who genuinely live the experience — collabs, custom codes, revenue share, and access to private venue events. For long-term partnerships, we also open the door to equity participation.
             </p>
 
             <div className="mt-5 rounded-2xl border border-border bg-card p-4 shadow-sm">
@@ -3699,6 +3699,7 @@ function ShareView() {
                 { t: "Revenue share", d: "A cut of cashback redeemed by guests who joined through your code." },
                 { t: "Private venue events", d: "Tastings, openings and chef's tables before they go public." },
                 { t: "Co-created content", d: "We work with you on guides, lists and city editorials inside the app." },
+                { t: "Equity participation", d: "For long-term partners who help shape Mesita, we offer a path to equity — not just a payout." },
               ].map((b) => (
                 <div key={b.t} className="rounded-xl border border-border bg-card-soft p-2.5">
                   <p className="text-[12px] font-semibold">{b.t}</p>
