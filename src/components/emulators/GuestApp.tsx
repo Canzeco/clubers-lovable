@@ -3374,9 +3374,9 @@ function RewardsView() {
   const [sub, setSub] = useState<"reservations" | "coupons">("reservations");
   return (
     <div>
-      <div className="sticky top-0 z-10 border-b border-border bg-background/95 px-4 pt-4 pb-3 backdrop-blur">
-        <p className="font-display text-xl font-semibold">Reservations &amp; Coupons</p>
-        <div className="mt-3 flex gap-1 rounded-full bg-muted p-1">
+      <TopBar title="Reservations & Coupons" />
+      <div className="px-5 pb-3 pt-3">
+        <div className="flex gap-1 rounded-full bg-muted p-1">
           {[
             { id: "reservations" as const, label: "Reservations" },
             { id: "coupons" as const, label: "Coupons" },
