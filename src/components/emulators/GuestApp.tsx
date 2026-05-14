@@ -3143,10 +3143,10 @@ function CouponTicket({
   } else {
     const current = stepLabels[stepIdx];
     // Color the pill by phase
-    const isStripe = current === "Paid";
-    const isStory = current === "Story posted";
-    const isFinal = current === "Cashback credited";
-    const isWaiter = current === "QR scanned";
+    const isStripe = current === "Pay from your phone";
+    const isStory = current === "Post story & submit screenshot";
+    const isFinal = current === "Cashback lands";
+    const isWaiter = current === "Waiter scans your QR" || current === "Waiter validates screenshot";
     pill = {
       label: current,
       cls: isStripe
