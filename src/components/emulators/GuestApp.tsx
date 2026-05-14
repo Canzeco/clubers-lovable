@@ -4611,7 +4611,7 @@ function MyQrView() {
         </div>
       </div>
 
-      <WhySaveFaq />
+      <QrFaqList />
     </div>
   );
 }
