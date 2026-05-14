@@ -3264,7 +3264,7 @@ function CouponTicket({
           {/* vertical pipeline stepper */}
           {state === "active" && (
             <div className="flex w-[24px] flex-shrink-0 items-center justify-center border-l border-dotted border-border/70 bg-card-soft">
-              <PipelineStepper step={c.step ?? 0} />
+              <PipelineStepper step={c.step ?? 0} steps={isReservation ? RESERVATION_STEPS : PIPELINE_STEPS} />
             </div>
           )}
         </div>
