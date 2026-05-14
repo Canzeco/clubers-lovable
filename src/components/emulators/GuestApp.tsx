@@ -1304,7 +1304,7 @@ function MesitaVisitors({ venue }: { venue: any }) {
           const u = list[i % list.length];
           const ig = `${(126 - i * 9).toString()}.${(i * 3) % 10}k`;
           const base = u.score as number;
-          const jitter = (n: number) => Math.max(3.5, Math.min(5, +(base + n).toFixed(1)));
+          const jitter = (n: number) => Math.max(3, Math.min(5, Math.round(base + n)));
           const subs = [
             { l: "Food", v: jitter(0) },
             { l: "Service", v: jitter(-0.2) },
