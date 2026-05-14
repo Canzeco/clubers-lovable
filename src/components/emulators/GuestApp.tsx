@@ -4184,17 +4184,14 @@ function ShareView() {
 
           {audience === "creators" && (
           <div className="flex flex-1 flex-col">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-              Mesita for creators
+            <p className="text-[11px] leading-snug text-muted-foreground">
+              Love Mesita and create about food, nightlife or travel? Let's collaborate.
             </p>
-            <p className="mt-1 font-display text-lg font-semibold leading-tight">
+            <p className="mt-2 font-display text-lg font-semibold leading-tight">
               Let's collaborate
             </p>
-            <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
-              Custom code, revenue share, private events — and equity for long-term partners.
-            </p>
 
-            <div className="mt-3 grid grid-cols-2 gap-1.5">
+            <div className="mt-2 grid grid-cols-2 gap-1.5">
               {[
                 { t: "Custom code", d: "Bigger welcome gift for your followers." },
                 { t: "Revenue share", d: "Cut of cashback from your signups." },
