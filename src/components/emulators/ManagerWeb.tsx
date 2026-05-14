@@ -493,6 +493,7 @@ function Promos() {
       name: "Diamond",
       color: "bg-gradient-to-r from-cyan-300 to-sky-400",
       cb: 30,
+      visits: "20+ visits",
       audience: 184,
       handles: ["@valenrose", "@camivb", "@anat", "@matef"],
       reach: "20K+ followers · invite-only",
