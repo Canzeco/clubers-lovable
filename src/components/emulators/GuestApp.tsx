@@ -652,6 +652,11 @@ function VenueDetailSheet({
           {/* Media Carousel — Instagram-style 4:3 with dots */}
           <section id="vsec-photos" className="scroll-mt-16"><PhotoCarousel /></section>
 
+          {/* Cashback — why save */}
+          <section id="vsec-offers" className="scroll-mt-16">
+            <OffersSection cashback={venue.cashback} />
+          </section>
+
           {/* External Reviews — scores across platforms */}
           <section id="vsec-scores" className="scroll-mt-16">
             <SectionLabel>External reviews</SectionLabel>
@@ -692,11 +697,6 @@ function VenueDetailSheet({
 
           {/* Mesita Visitors Carousel — sorted by relevance (recency × tier × influence) */}
           <section id="vsec-visitors" className="scroll-mt-16"><MesitaVisitors venue={venue} /></section>
-
-          {/* Cashback — why save */}
-          <section id="vsec-offers" className="scroll-mt-16">
-            <OffersSection cashback={venue.cashback} />
-          </section>
 
           {/* Menu */}
           <section id="vsec-menu" className="scroll-mt-16">
