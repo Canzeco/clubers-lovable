@@ -1632,10 +1632,10 @@ function ReviewsSectionBody() {
       <SectionLabel action="129 total">Mesita Reviews</SectionLabel>
       <div className="grid grid-cols-4 gap-1.5">
         {[
+          { l: "Overall", v: "4.5" },
           { l: "Food", v: "4.4" },
           { l: "Service", v: "4.4" },
-          { l: "Atmosphere", v: "4.6" },
-          { l: "Value", v: "4.3" },
+          { l: "Ambiance", v: "4.6" },
         ].map((s) => (
           <div key={s.l} className="rounded-xl bg-card-soft p-2 text-center">
             <p className="text-[9px] text-muted-foreground">{s.l}</p>
