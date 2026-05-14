@@ -22,6 +22,7 @@ import {
   Eye,
   Phone,
   MessageCircle,
+  Mail,
   QrCode,
   Navigation,
   Search,
