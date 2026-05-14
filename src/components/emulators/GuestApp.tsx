@@ -673,6 +673,11 @@ function VenueDetailSheet({
                   ? `Our AI agent is calling ${venue.name} to confirm your table.`
                   : `${venue.cashback}% cashback locked · AI agent is calling ${venue.name}.`}
               </p>
+              {confirm === "save" && (
+                <div className="mt-3 text-left">
+                  <WhySaveFaq />
+                </div>
+              )}
             </div>
           </div>
         )}
