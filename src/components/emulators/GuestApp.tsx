@@ -3340,45 +3340,75 @@ const VENUE_IMAGES = {
 // RPSC — Reservation + Payment + Story + Cashback
 // PC   — Payment + Cashback
 // PSC  — Payment + Story + Cashback
-const WF_RESERVATION: { label: string; Icon: any }[] = [
-  { label: "Saved", Icon: Ticket },
-  { label: "AI calling venue", Icon: Phone },
-  { label: "Reservation confirmed", Icon: CalendarCheck },
-  { label: "Visited", Icon: MapPin },
+// Each workflow step has a short `label` (used by the pill/stepper) and a
+// longer `desc` (shown in the detail sheet under the label).
+export type WorkflowStep = { label: string; desc: string; Icon: any };
+
+const S_RESERVE: WorkflowStep = {
+  label: "Reserving your spot",
+  desc: "Calling the venue… → Confirmed · Fri May 16 · 9:30 PM · 4 guests",
+  Icon: Phone,
+};
+const S_ARRIVE: WorkflowStep = {
+  label: "Arrive & enjoy",
+  desc: "Mesita doesn't touch the experience",
+  Icon: MapPin,
+};
+const S_TAP_PAY: WorkflowStep = {
+  label: 'Tap "Pay with this coupon"',
+  desc: "Show your personal QR to the waiter",
+  Icon: QrCode,
+};
+const S_WAITER_SCAN: WorkflowStep = {
+  label: "Waiter scans your QR",
+  desc: "They enter your bill in the Mesita bot",
+  Icon: QrCode,
+};
+const S_PAY_PHONE: WorkflowStep = {
+  label: "Pay from your phone",
+  desc: "Tap the Stripe link we send you",
+  Icon: CreditCard,
+};
+const S_STORY_BEFORE: WorkflowStep = {
+  label: "Post story & submit screenshot",
+  desc: "Tag @venue and upload your screenshot",
+  Icon: Camera,
+};
+const S_STORY_AFTER: WorkflowStep = {
+  label: "Post story & submit screenshot",
+  desc: "In case you haven't yet",
+  Icon: Camera,
+};
+const S_WAITER_VALIDATE: WorkflowStep = {
+  label: "Waiter validates screenshot",
+  desc: "They confirm your @venue tag",
+  Icon: Check,
+};
+const S_CASHBACK_PLAIN: WorkflowStep = {
+  label: "Cashback lands",
+  desc: "Credited straight to your Mesita balance",
+  Icon: Coins,
+};
+const S_CASHBACK_STORY: WorkflowStep = {
+  label: "Cashback lands",
+  desc: "Credited once your story checks out — no story, no cashback",
+  Icon: Coins,
+};
+
+const WF_RESERVATION: WorkflowStep[] = [S_RESERVE, S_ARRIVE];
+const WF_PAY_CB: WorkflowStep[] = [
+  S_ARRIVE, S_TAP_PAY, S_WAITER_SCAN, S_PAY_PHONE, S_CASHBACK_PLAIN,
 ];
-const WF_RES_PAY_CB: { label: string; Icon: any }[] = [
-  { label: "Saved", Icon: Ticket },
-  { label: "AI calling venue", Icon: Phone },
-  { label: "Reservation confirmed", Icon: CalendarCheck },
-  { label: "Visited", Icon: MapPin },
-  { label: "QR scanned", Icon: QrCode },
-  { label: "Paid", Icon: CreditCard },
-  { label: "Cashback credited", Icon: Coins },
+const WF_RES_PAY_CB: WorkflowStep[] = [
+  S_RESERVE, S_ARRIVE, S_TAP_PAY, S_WAITER_SCAN, S_PAY_PHONE, S_CASHBACK_PLAIN,
 ];
-const WF_RES_PAY_STORY_CB: { label: string; Icon: any }[] = [
-  { label: "Saved", Icon: Ticket },
-  { label: "AI calling venue", Icon: Phone },
-  { label: "Reservation confirmed", Icon: CalendarCheck },
-  { label: "Visited", Icon: MapPin },
-  { label: "QR scanned", Icon: QrCode },
-  { label: "Paid", Icon: CreditCard },
-  { label: "Story posted", Icon: Camera },
-  { label: "Cashback credited", Icon: Coins },
+const WF_PAY_STORY_CB: WorkflowStep[] = [
+  S_ARRIVE, S_STORY_BEFORE, S_TAP_PAY, S_WAITER_SCAN, S_PAY_PHONE,
+  S_STORY_AFTER, S_WAITER_VALIDATE, S_CASHBACK_STORY,
 ];
-const WF_PAY_CB: { label: string; Icon: any }[] = [
-  { label: "Saved", Icon: Ticket },
-  { label: "Visited", Icon: MapPin },
-  { label: "QR scanned", Icon: QrCode },
-  { label: "Paid", Icon: CreditCard },
-  { label: "Cashback credited", Icon: Coins },
-];
-const WF_PAY_STORY_CB: { label: string; Icon: any }[] = [
-  { label: "Saved", Icon: Ticket },
-  { label: "Visited", Icon: MapPin },
-  { label: "QR scanned", Icon: QrCode },
-  { label: "Paid", Icon: CreditCard },
-  { label: "Story posted", Icon: Camera },
-  { label: "Cashback credited", Icon: Coins },
+const WF_RES_PAY_STORY_CB: WorkflowStep[] = [
+  S_RESERVE, S_ARRIVE, S_STORY_BEFORE, S_TAP_PAY, S_WAITER_SCAN, S_PAY_PHONE,
+  S_STORY_AFTER, S_WAITER_VALIDATE, S_CASHBACK_STORY,
 ];
 
 export type CouponType =
@@ -3398,7 +3428,7 @@ export function getCouponType(c: any): CouponType {
   return story ? "pay_story_cashback" : "pay_cashback";
 }
 
-export function getCouponWorkflow(c: any): { label: string; Icon: any }[] {
+export function getCouponWorkflow(c: any): WorkflowStep[] {
   switch (getCouponType(c)) {
     case "reservation": return WF_RESERVATION;
     case "reservation_pay_cashback": return WF_RES_PAY_CB;
