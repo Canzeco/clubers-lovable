@@ -764,6 +764,9 @@ function VenueDetailSheet({
             </div>
             </div>
 
+            {/* Popular times */}
+            <PopularTimes />
+
             {/* Other info */}
             <DetailsSection />
           </section>
