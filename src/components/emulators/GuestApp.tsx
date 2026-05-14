@@ -1696,14 +1696,6 @@ function CouponTicket({
   state: "active" | "expired" | "used";
   onClick: () => void;
 }) {
-  c,
-  state,
-  onClick,
-}: {
-  c: any;
-  state: "active" | "expired" | "used";
-  onClick: () => void;
-}) {
   const isExpired = state === "expired";
   const isUsed = state === "used";
   const isInactive = isExpired || isUsed;
