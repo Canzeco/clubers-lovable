@@ -632,6 +632,15 @@ function VenueDetailSheet({
             </div>
           </div>
 
+          {/* Reviews */}
+          <ReviewsSection />
+
+          {/* Concierge AI */}
+          <ConciergeSection venueName={venue.name} />
+
+          {/* Details */}
+          <DetailsSection />
+
         </div>
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center px-4 pb-4">
