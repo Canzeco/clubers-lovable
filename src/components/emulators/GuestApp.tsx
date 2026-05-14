@@ -57,6 +57,7 @@ import {
   GraduationCap,
   Lock,
   ArrowLeft,
+  FileText,
 } from "lucide-react";
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
@@ -554,6 +555,7 @@ function VenueDetailSheet({
   onClose: () => void;
 }) {
   const [confirm, setConfirm] = useState<null | "save" | "reserve" | "both">(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleSave = () => {
     setConfirm("save");
@@ -707,27 +709,19 @@ function VenueDetailSheet({
 
           {/* Menu */}
           <section id="vsec-menu" className="scroll-mt-16">
-            <MenuTabs />
-            <div className="overflow-hidden rounded-2xl border border-border bg-card-soft">
-              {[
-                { name: "Burrata & heirloom tomato", price: "$280" },
-                { name: "Octopus, smoked paprika", price: "$420" },
-                { name: "Wagyu tagliata, truffle", price: "$680" },
-                { name: "Saffron risotto", price: "$340" },
-              ].map((d, i, arr) => (
-                <div
-                  key={d.name}
-                  className={`flex items-center justify-between px-4 py-2.5 text-[12px] ${
-                    i !== arr.length - 1 ? "border-b border-border/60" : ""
-                  }`}
-                >
-                  <span className="text-foreground/85">{d.name}</span>
-                  <span className="font-semibold text-foreground">{d.price}</span>
-                </div>
-              ))}
-            </div>
-            <button className="mt-2 w-full rounded-full border border-border bg-card px-4 py-2 text-[11px] font-medium text-foreground/80">
-              View full menu
+            <SectionLabel>Menu</SectionLabel>
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="group flex w-full items-center gap-3 rounded-2xl border border-border bg-card-soft p-3 text-left transition hover:border-foreground/30"
+            >
+              <div className="flex h-12 w-10 shrink-0 items-center justify-center rounded-md bg-foreground text-background shadow-sm">
+                <FileText className="h-5 w-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold leading-tight">View menu</p>
+                <p className="text-[10px] text-muted-foreground">PDF · 4 pages · updated this week</p>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-foreground" />
             </button>
           </section>
 
@@ -862,6 +856,71 @@ function VenueDetailSheet({
           </div>
         )}
       </div>
+      {menuOpen && (
+        <div
+          className="absolute inset-0 z-30 flex flex-col bg-black/70 backdrop-blur-sm animate-fade-in"
+          onClick={() => setMenuOpen(false)}
+        >
+          <div className="flex items-center justify-between px-4 py-3 text-background">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              <p className="text-[11px] font-semibold uppercase tracking-widest">{venue.name} · Menu.pdf</p>
+            </div>
+            <button
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          <div
+            className="flex-1 overflow-y-auto px-4 pb-4 scrollbar-hide"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mx-auto aspect-[3/4] w-full max-w-sm rounded-md bg-[#f5f1e8] p-6 text-[11px] text-neutral-900 shadow-2xl">
+              <p className="text-center font-display text-lg font-semibold tracking-wide">{venue.name}</p>
+              <p className="mt-0.5 text-center text-[9px] uppercase tracking-[0.3em] text-neutral-500">Menú · {venue.type}</p>
+              <div className="mt-4 h-px bg-neutral-900/20" />
+              <p className="mt-3 text-[9px] font-bold uppercase tracking-widest text-neutral-500">Para empezar</p>
+              {[
+                { name: "Burrata & heirloom tomato", price: "$280" },
+                { name: "Octopus, smoked paprika", price: "$420" },
+              ].map((d) => (
+                <div key={d.name} className="mt-2 flex items-baseline justify-between gap-3">
+                  <span>{d.name}</span>
+                  <span className="flex-1 border-b border-dotted border-neutral-400/60" />
+                  <span className="font-semibold">{d.price}</span>
+                </div>
+              ))}
+              <p className="mt-4 text-[9px] font-bold uppercase tracking-widest text-neutral-500">Principales</p>
+              {[
+                { name: "Wagyu tagliata, truffle", price: "$680" },
+                { name: "Saffron risotto", price: "$340" },
+                { name: "Catch of the day", price: "$520" },
+              ].map((d) => (
+                <div key={d.name} className="mt-2 flex items-baseline justify-between gap-3">
+                  <span>{d.name}</span>
+                  <span className="flex-1 border-b border-dotted border-neutral-400/60" />
+                  <span className="font-semibold">{d.price}</span>
+                </div>
+              ))}
+              <p className="mt-4 text-[9px] font-bold uppercase tracking-widest text-neutral-500">Postres</p>
+              {[
+                { name: "Tiramisú", price: "$180" },
+                { name: "Chocolate fondant", price: "$210" },
+              ].map((d) => (
+                <div key={d.name} className="mt-2 flex items-baseline justify-between gap-3">
+                  <span>{d.name}</span>
+                  <span className="flex-1 border-b border-dotted border-neutral-400/60" />
+                  <span className="font-semibold">{d.price}</span>
+                </div>
+              ))}
+              <p className="mt-6 text-center text-[8px] uppercase tracking-[0.3em] text-neutral-400">Página 1 · {venue.name}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
