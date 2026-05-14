@@ -937,6 +937,90 @@ function SectionLabel({
   );
 }
 
+function PopularTimes() {
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const todayIdx = (new Date().getDay() + 6) % 7;
+  const [day, setDay] = useState(todayIdx);
+  // 16 bars: 7a → 10p
+  const startHour = 7;
+  const patterns: number[][] = [
+    [10, 25, 45, 60, 70, 55, 35, 20, 15, 25, 50, 75, 85, 70, 45, 20], // Mon
+    [12, 28, 40, 50, 55, 45, 30, 20, 18, 30, 55, 78, 82, 65, 40, 18], // Tue
+    [10, 25, 42, 55, 65, 50, 32, 20, 18, 32, 58, 80, 88, 72, 48, 22], // Wed
+    [15, 30, 48, 60, 72, 58, 38, 25, 22, 40, 65, 88, 95, 80, 55, 28], // Thu
+    [18, 35, 52, 68, 82, 70, 50, 35, 35, 55, 80, 95, 100, 92, 70, 40], // Fri
+    [22, 38, 55, 72, 85, 75, 60, 50, 55, 70, 88, 98, 100, 95, 78, 50], // Sat
+    [25, 42, 58, 70, 65, 50, 38, 30, 28, 35, 55, 70, 75, 60, 38, 20], // Sun
+  ];
+  const bars = patterns[day];
+  const nowHour = new Date().getHours();
+  const nowIdx = day === todayIdx ? Math.max(0, Math.min(15, nowHour - startHour)) : -1;
+  const highlight = nowIdx >= 0 ? nowIdx : bars.indexOf(Math.max(...bars));
+  const label = (() => {
+    const v = bars[highlight];
+    if (v >= 80) return "As busy as it gets";
+    if (v >= 60) return "Usually busy";
+    if (v >= 35) return "Usually a little busy";
+    return "Usually not busy";
+  })();
+  const hourLabel = (i: number) => {
+    const h = startHour + i;
+    return h === 12 ? "12p" : h > 12 ? `${h - 12}p` : `${h}a`;
+  };
+  return (
+    <div>
+      <SectionLabel
+        action={<span className="text-muted-foreground">1–3 hrs typical visit</span>}
+      >
+        Popular times
+      </SectionLabel>
+      <div className="rounded-2xl border border-border bg-card-soft p-3">
+        <div className="-mx-1 mb-3 flex gap-0.5 overflow-x-auto px-1 scrollbar-hide">
+          {days.map((d, i) => (
+            <button
+              key={d}
+              onClick={() => setDay(i)}
+              className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition ${
+                day === i
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {d}
+            </button>
+          ))}
+        </div>
+        <p className="flex items-center gap-1.5 text-[11px] text-foreground">
+          <Users className="h-3 w-3 text-secondary" />
+          <span className="font-semibold text-secondary">{hourLabel(highlight)}:</span>
+          <span className="text-foreground/85">{label}</span>
+        </p>
+        <div className="mt-2 flex h-20 items-end gap-1">
+          {bars.map((v, i) => {
+            const isNow = i === highlight;
+            return (
+              <div key={i} className="flex flex-1 flex-col items-center justify-end">
+                <div
+                  className={`w-full rounded-t-sm transition ${
+                    isNow ? "bg-secondary" : "bg-secondary/30"
+                  }`}
+                  style={{ height: `${Math.max(4, v)}%` }}
+                />
+              </div>
+            );
+          })}
+        </div>
+        <div className="mt-1 flex justify-between text-[9px] text-muted-foreground">
+          {[0, 4, 8, 12].map((i) => (
+            <span key={i}>{hourLabel(i)}</span>
+          ))}
+          <span>10p</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CurrentActivitySection() {
   const bars = [20, 20, 20, 20, 20, 20, 20, 20, 20, 45, 60, 75, 90, 85, 70, 40, 30, 20];
   const nowIdx = 11;
