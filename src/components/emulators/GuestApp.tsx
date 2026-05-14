@@ -347,11 +347,7 @@ function WhySaveFaq() {
   );
 }
 
-function QrFaqItem({ q, children }: { q: string; children: React.ReactNode }) {
-  return _QrFaqItem({ q, children });
-}
-
-function IGStoryRequirement({ venue, handle = "@casaluminar" }: { venue: string; handle?: string }) {
+function IGStoryRequirement({ handle = "@casaluminar" }: { venue?: string; handle?: string }) {
   // Gold/Silver/Diamond tiers with Instagram on file. In this prototype the
   // user is always Gold w/ IG, so we always render this requirement.
   return (
@@ -377,7 +373,7 @@ function IGStoryRequirement({ venue, handle = "@casaluminar" }: { venue: string;
   );
 }
 
-function _QrFaqItem({ q, children }: { q: string; children: React.ReactNode }) {
+function QrFaqItem({ q, children }: { q: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="rounded-xl border border-border bg-background/60">
