@@ -3460,8 +3460,8 @@ function ShareView() {
   const [copied, setCopied] = useState(false);
   const [audience, setAudience] = useState<"guests" | "creators" | "venues">("guests");
   const [venueCopied, setVenueCopied] = useState(false);
-  const venueLink = "mesita.app/v/invite/47847";
-  const venueMessage = `¿Conoces a alguien con un restaurante o bar? Mándale esta invitación para que abra su Mesita en la web — sin costo, sin contrato, en 10 minutos: ${venueLink}`;
+  const venueLink = "mesita.app";
+  const venueMessage = `¿Conoces a alguien con un restaurante o bar? Mándale Mesita — pueden abrir su venue en la web sin costo, sin contrato, en 10 minutos: ${venueLink}`;
 
   const remaining = totalCards - claimed.length;
   const gifted = claimed.length;
