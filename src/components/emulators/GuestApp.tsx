@@ -2594,13 +2594,13 @@ function WalletView({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   return (
     <>
       {!hideHeader && (
-        <TopBar title="Coupon Wallet" subtitle={`${active.length} active · ${used.length} redeemed · ${expired.length} expired`} />
+        <TopBar title="Coupon Wallet" subtitle={`${active.length} active · ${used.length} used · ${expired.length} expired`} />
       )}
       {/* segmented control */}
       <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
         {([
           { id: "active", label: "Active", count: active.length },
-          { id: "used", label: "Redeemed", count: used.length },
+          { id: "used", label: "Used", count: used.length },
           { id: "expired", label: "Expired", count: expired.length },
         ] as const).map((s) => (
           <button
@@ -2718,7 +2718,7 @@ function CouponTicket({
   const pill = isExpired
     ? { label: "Expired", cls: "bg-muted text-muted-foreground" }
     : isUsed
-    ? { label: "Redeemed", cls: "bg-muted text-muted-foreground" }
+    ? { label: "Used", cls: "bg-muted text-muted-foreground" }
     : isPending
     ? { label: "Pending", cls: "bg-amber-500/10 text-amber-600 border border-amber-500/20" }
     : isReservation
@@ -2766,7 +2766,7 @@ function CouponTicket({
           {/* state stamp */}
           {isUsed && (
             <span className="absolute bottom-2 left-2 -rotate-6 rounded border border-secondary/80 bg-background/90 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-widest text-secondary/90 backdrop-blur-sm">
-              Redeemed
+              Used
             </span>
           )}
           {isExpired && (
@@ -2839,7 +2839,7 @@ function CouponTicket({
                 )}
                 {state === "used" && (
                   <p className="mt-1 truncate text-[11px] font-semibold tracking-tight text-muted-foreground">
-                    Redeemed · {c.when}
+                    Used · {c.when}
                   </p>
                 )}
               </>
@@ -3035,7 +3035,7 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
           </div>
           <div className="flex-1">
             <p className="text-[10px] uppercase tracking-widest text-secondary">
-              {coupon.used ? "Redeemed coupon" : "Cashback coupon"}
+              {coupon.used ? "Used coupon" : "Cashback coupon"}
             </p>
             <p className="font-display text-2xl font-semibold leading-tight">{coupon.name}</p>
             <p className="text-[11px] text-muted-foreground">
