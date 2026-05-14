@@ -1375,7 +1375,7 @@ function MesitaVisitors({ venue }: { venue: any }) {
                 {subs.map((s) => (
                   <div key={s.l} className="rounded-md bg-background py-1 text-center">
                     <p className="text-[9px] text-muted-foreground">{s.l}</p>
-                    <p className="text-[11px] font-semibold">{s.v.toFixed(1)}</p>
+                    <p className="text-[11px] font-semibold">{s.v}</p>
                   </div>
                 ))}
               </div>
