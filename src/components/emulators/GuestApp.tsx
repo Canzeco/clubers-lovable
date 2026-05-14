@@ -171,7 +171,32 @@ const venues = [
     googleCount: 642,
     uber: 4.6,
     uberCount: 540,
-    info: "Tucked behind an unmarked door at the back of a vintage vinyl store, Neón is a 25-seat speakeasy obsessed with two things: rare Mexican mezcal and analog sound. The bar program is built around a rotating flight of small-batch mezcales sourced directly from Oaxaca and Michoacán producers, served alongside seasonal cocktails that lean smoky, herbaceous and low-sugar. Every night, a resident DJ spins original pressings on a custom Klipschorn system — expect deep funk on Wednesdays, dub and afrobeat on Thursdays, and rare disco from Friday through Sunday. The room is intimate by design: low amber lighting, leather banquettes, and a single marble bar that seats eight. Reservations are strongly recommended on weekends; walk-ins are welcome before 10pm. Open Wednesday through Sunday, 9pm to 3am (Sundays close at 1am).",
+    info: "Speakeasy-style cocktail bar hidden behind a record store. Mezcal flights, vinyl DJ sets, 25 seats. Open 9pm–3am Wed–Sun.",
+    about: {
+      tagline: "A 25-seat mezcal speakeasy hidden behind a vintage vinyl store.",
+      sections: [
+        {
+          title: "The story",
+          body: "Neón opened in 2019, the side project of two friends — a sound engineer and a third-generation mezcalero from Santiago Matatlán. They wanted a room small enough to feel like a private living room and a bar program serious enough to honor the families behind every bottle. The unmarked door at the back of Disco Mar (a working record store since 1978) was a happy accident: the building's previous tenant left a sealed back room, and the team kept it that way.",
+        },
+        {
+          title: "The space & architecture",
+          body: "Designed by local studio Taller Mostro, the room is a 60 m² shell of hand-burnished tadelakt walls, exposed brick, and a single 4-meter slab of veined Tecali marble that forms the bar. Lighting is entirely amber and indirect — paper sconces by Oaxacan artisan Lucía Toledo, plus a single brass pendant above each leather banquette. The custom Klipschorn corner-loaded sound system is the centerpiece: built in 1972, restored by the owners over two years, and tuned specifically for the room's dimensions.",
+        },
+        {
+          title: "The experience",
+          body: "Every night begins with a complimentary copita of the house mezcal and a small bite from the kitchen — usually grasshopper salt, jicama, and a citrus from the morning market. The vibe shifts with the night: quiet conversation and rare jazz pressings before 10pm, then deeper grooves until close. The DJ booth is part of the bar; guests are encouraged to flip through the crate and request the next side.",
+        },
+        {
+          title: "Behind the bar",
+          body: "The mezcal list rotates weekly and currently holds 47 single-village agaves, including pieces from the family palenque in Matatlán. Cocktails lean smoky, herbaceous and low-sugar — the signature is the Neón Negroni (mezcal espadín, Campari, house vermouth aged in oak for 90 days). Every spirit on the back bar is sourced direct from producer; nothing here passes through a distributor.",
+        },
+        {
+          title: "Recognition",
+          body: "Featured in Condé Nast Traveler's '50 best bars in Latin America' (2024), World's 50 Best Bars Discovery list (2023, 2024), and Time Out's 'Best new bar' (2020).",
+        },
+      ],
+    },
     mesita: 4.8,
     mesitaCount: 62,
     ig: "1.8k mentions",
@@ -212,7 +237,32 @@ const venues = [
     googleCount: 980,
     uber: 4.5,
     uberCount: 760,
-    info: "An oceanfront seafood house and all-day brunch spot built on a single principle: only what the boats brought in this morning makes it onto the plate. Chef Lucía Marín works with a tight network of small-scale fishermen along the coast, and the menu shifts daily based on the catch — expect crudos, ceviches, whole grilled fish over wood embers, and a raw bar stocked with oysters, clams and sea urchin from nearby coves. Brunch leans Mediterranean: shakshuka with smoked tuna, chilaquiles verdes with prawns, and house-baked sourdough served with cultured butter and trout roe. The terrace seats 60 under linen sails with an unobstructed view of the bay, and weekends bring a rotating cast of acoustic guitarists and bossa nova trios from 11am to 3pm. Open daily 9am to 5pm, with extended hours on weekends.",
+    info: "Oceanfront seafood & brunch. Sustainable sourcing, weekend brunch with live acoustic sets. Open 9am–5pm.",
+    about: {
+      tagline: "An oceanfront seafood house where the menu changes with the morning catch.",
+      sections: [
+        {
+          title: "The story",
+          body: "Mar Verde was founded in 2017 by chef Lucía Marín after a decade cooking on the Mediterranean coast. She came home with a single rule: only what the boats bring in that morning goes on the plate. The restaurant began as a 12-seat shack on the pier, expanded into the current beachfront house in 2021, and now works with a tight network of seven small-scale fishermen up and down the coast.",
+        },
+        {
+          title: "The space & architecture",
+          body: "The building is a restored 1940s fishermen's cooperative with original Talavera tile floors and bleached wood beams from a decommissioned trawler. Architect Mariana Rul kept the bones intact and added a 60-seat terrace under hand-sewn linen sails that shift with the wind. The open kitchen is built around a 3-meter wood-fired grill imported from Galicia. Every table has an uninterrupted view of the bay.",
+        },
+        {
+          title: "The experience",
+          body: "Service is unhurried and intentionally beach-pace. Brunch (9am–1pm) brings a rotating cast of acoustic guitarists and bossa nova trios. Lunch leans into long, multi-course tasting menus paired with low-intervention wines from Baja and Valle de Guadalupe. The raw bar is the social heart of the room — guests sit elbow-to-elbow on tall stools watching oysters get shucked to order.",
+        },
+        {
+          title: "From the kitchen",
+          body: "Crudos, ceviches, and whole fish over embers anchor the menu, but the team is best known for the daily 'lo que trajo el mar' — a chef-driven tasting of whatever was most beautiful at the dock that morning. The bread program is its own thing: house-milled sourdough served with cultured butter, smoked sea salt, and trout roe.",
+        },
+        {
+          title: "Recognition",
+          body: "One Michelin star (2024), Gault & Millau 'Chef to Watch' (2022), and a permanent listing on Mexico's Top 50 restaurants since 2020.",
+        },
+      ],
+    },
     mesita: 4.6,
     mesitaCount: 41,
     ig: "920 mentions",
