@@ -3128,15 +3128,6 @@ function CouponTicket({
     ? { label: "Reservation", cls: "bg-secondary/10 text-secondary border border-secondary/20" }
     : { label: "Coupon", cls: "bg-foreground/5 text-foreground/70 border border-foreground/10" };
 
-  const tierBar =
-    c.color === "tier-gold"
-      ? "bg-tier-gold"
-      : c.color === "tier-silver"
-      ? "bg-tier-silver"
-      : c.color === "tier-bronze"
-      ? "bg-tier-bronze"
-      : "bg-secondary";
-
   return (
     <button
       onClick={onClick}
