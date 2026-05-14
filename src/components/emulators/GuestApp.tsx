@@ -3509,7 +3509,6 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   const stripeStepIndex = steps.findIndex((s) => s.label === "Pay via Stripe link");
   const waiterConfirmed = stripeStepIndex >= 0 && currentStep >= stripeStepIndex;
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const storyStepIndex = steps.findIndex((s) => s.label === "Post Instagram story");
   const [storyEvidence, setStoryEvidence] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const handleStoryFile = (e: React.ChangeEvent<HTMLInputElement>) => {
