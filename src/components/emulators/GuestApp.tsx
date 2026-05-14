@@ -433,21 +433,24 @@ function VenueQuickNav() {
   const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const opts: IntersectionObserverInit = {
-      root: null,
-      rootMargin: "-40% 0px -55% 0px",
-      threshold: 0,
+    const first = document.getElementById(VENUE_QUICKNAV[0].id);
+    let scroller: HTMLElement | null = first?.parentElement ?? null;
+    while (scroller && getComputedStyle(scroller).overflowY !== "auto" && getComputedStyle(scroller).overflowY !== "scroll") {
+      scroller = scroller.parentElement;
+    }
+    if (!scroller) return;
+    const onScroll = () => {
+      const top = scroller!.getBoundingClientRect().top + 80;
+      let current = VENUE_QUICKNAV[0].id;
+      for (const s of VENUE_QUICKNAV) {
+        const el = document.getElementById(s.id);
+        if (el && el.getBoundingClientRect().top <= top) current = s.id;
+      }
+      setActive(current);
     };
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) setActive(e.target.id);
-      });
-    }, opts);
-    VENUE_QUICKNAV.forEach((s) => {
-      const el = document.getElementById(s.id);
-      if (el) obs.observe(el);
-    });
-    return () => obs.disconnect();
+    onScroll();
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    return () => scroller!.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
