@@ -647,18 +647,7 @@ function VenueDetailSheet({
           </div>
 
           {/* Mesita Visitors — sorted by relevance (recency × tier × influence) */}
-          <div>
-            <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
-              <span>Mesita Visitors</span>
-              <span className="flex items-center gap-1 text-secondary">
-                <Flame className="h-3 w-3" /> Top 10
-              </span>
-            </p>
-            <div className="space-y-2">
-              {Array.from({ length: 10 }).map((_, i) => {
-                const u = venue.visitors[i % venue.visitors.length];
-                const ig = `${(126 - i * 9).toString()}.${(i * 3) % 10}k`;
-                return (
+          <MesitaVisitors venue={venue} />
                   <div
                     key={"mv" + i}
                     className="rounded-2xl border border-border bg-card-soft p-3"
