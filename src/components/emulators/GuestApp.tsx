@@ -705,6 +705,349 @@ function VenueDetailSheet({
   );
 }
 
+function SectionLabel({
+  children,
+  action,
+}: {
+  children: React.ReactNode;
+  action?: React.ReactNode;
+}) {
+  return (
+    <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+      <span>{children}</span>
+      {action ? <span className="normal-case tracking-normal text-secondary">{action}</span> : null}
+    </p>
+  );
+}
+
+function CurrentActivitySection() {
+  const bars = [20, 20, 20, 20, 20, 20, 20, 20, 20, 45, 60, 75, 90, 85, 70, 40, 30, 20];
+  const nowIdx = 11;
+  return (
+    <div>
+      <SectionLabel
+        action={
+          <span className="inline-flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-0.5 text-[10px] font-medium text-secondary">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-secondary" />
+            Live
+          </span>
+        }
+      >
+        Current activity
+      </SectionLabel>
+      <div className="flex items-center gap-3 rounded-2xl bg-secondary/10 px-3 py-2.5">
+        <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-secondary" />
+        <div className="min-w-0">
+          <p className="truncate text-[12px] font-semibold text-secondary">
+            12 people inside right now
+          </p>
+          <p className="truncate text-[10px] text-muted-foreground">
+            Mesita check-ins · updated 3 min ago
+          </p>
+        </div>
+      </div>
+      <div className="mt-2 grid grid-cols-2 gap-2">
+        {[
+          { label: "Visitors this month", val: "50", sub: "Mesita guests", trend: "+18%", up: true },
+          { label: "Reservations this week", val: "24", sub: "via Mesita", trend: "+7%", up: true },
+          { label: "Coupons redeemed", val: "38", sub: "this month", trend: "−3%", up: false },
+          { label: "Avg. spend", val: "$480", sub: "per Mesita guest", trend: "+5%", up: true },
+        ].map((s) => (
+          <div key={s.label} className="rounded-2xl bg-card-soft p-3">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-[10px] leading-snug text-muted-foreground">{s.label}</p>
+              <span
+                className={`flex shrink-0 items-center gap-0.5 text-[10px] font-semibold ${
+                  s.up ? "text-emerald-500" : "text-secondary"
+                }`}
+              >
+                {s.up ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                {s.trend}
+              </span>
+            </div>
+            <p className="mt-1 font-display text-xl font-semibold leading-none">{s.val}</p>
+            <p className="mt-1 text-[10px] text-muted-foreground">{s.sub}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-3">
+        <p className="mb-1 text-[10px] text-muted-foreground">Busy times today</p>
+        <div className="flex h-9 items-end gap-[3px]">
+          {bars.map((h, i) => (
+            <div
+              key={i}
+              className={`flex-1 rounded-t-sm ${
+                i === nowIdx
+                  ? "bg-secondary"
+                  : h >= 60
+                  ? "bg-secondary/50"
+                  : h >= 35
+                  ? "bg-card-soft"
+                  : "bg-muted"
+              }`}
+              style={{ height: `${h}%` }}
+            />
+          ))}
+        </div>
+        <div className="mt-1 flex justify-between text-[9px] text-muted-foreground">
+          <span>7pm</span>
+          <span>9pm</span>
+          <span className="font-semibold text-secondary">Now</span>
+          <span>12am</span>
+          <span>1am</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OffersSection({ cashback }: { cashback: number }) {
+  const offers = [
+    { Icon: GlassWater, title: "Triple cocktail promo", desc: "All cocktails · Every day, all the time" },
+    { Icon: Beef, title: "Burgers 3×2", desc: "All burgers · Every day, all the time" },
+    { Icon: Wine, title: "2nd bottle at half price", desc: "All bottles · Every day, all the time" },
+  ];
+  return (
+    <div>
+      <SectionLabel action={`${offers.length} active`}>Offers & cashback</SectionLabel>
+      <div className="space-y-2">
+        {offers.map(({ Icon, title, desc }) => (
+          <div
+            key={title}
+            className="flex items-start gap-3 rounded-2xl border border-border bg-card-soft p-3"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-secondary/15 text-secondary">
+              <Icon className="h-4 w-4" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[13px] font-semibold leading-tight">{title}</p>
+              <p className="mt-0.5 text-[11px] text-muted-foreground">{desc}</p>
+              <span className="mt-1.5 inline-block rounded-md bg-secondary px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-secondary-foreground">
+                {cashback}% cashback
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MenuTabs() {
+  const [tab, setTab] = useState<"tasting" | "alacarte">("tasting");
+  const items = tab === "tasting"
+    ? [
+        { name: "Burrata & heirloom tomato", price: "$280" },
+        { name: "Octopus, smoked paprika", price: "$420" },
+        { name: "Wagyu tagliata, truffle", price: "$680" },
+        { name: "Saffron risotto", price: "$340" },
+      ]
+    : [
+        { name: "Catch of the day", price: "$520" },
+        { name: "Mediterranean lamb", price: "$640" },
+        { name: "Charred octopus salad", price: "$380" },
+        { name: "Tiramisu", price: "$180" },
+      ];
+  return (
+    <>
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Menu</span>
+        <div className="flex gap-1">
+          {([
+            { id: "tasting" as const, label: "Tasting" },
+            { id: "alacarte" as const, label: "À la carte" },
+          ]).map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`rounded-full px-2.5 py-0.5 text-[10px] font-medium transition ${
+                tab === t.id
+                  ? "bg-secondary text-secondary-foreground"
+                  : "border border-border text-muted-foreground"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="overflow-hidden rounded-2xl border border-border bg-card-soft">
+        {items.map((d, i, arr) => (
+          <div
+            key={d.name}
+            className={`flex items-center justify-between px-4 py-2.5 text-[12px] ${
+              i !== arr.length - 1 ? "border-b border-border/60" : ""
+            }`}
+          >
+            <span className="text-foreground/85">{d.name}</span>
+            <span className="font-semibold text-foreground">{d.price}</span>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function ReviewsSection() {
+  return (
+    <div>
+      <SectionLabel action="129 total">Reviews</SectionLabel>
+      <div className="grid grid-cols-4 gap-1.5">
+        {[
+          { l: "Food", v: "4.4" },
+          { l: "Service", v: "4.4" },
+          { l: "Atmosphere", v: "4.6" },
+          { l: "Value", v: "4.3" },
+        ].map((s) => (
+          <div key={s.l} className="rounded-xl bg-card-soft p-2 text-center">
+            <p className="text-[9px] text-muted-foreground">{s.l}</p>
+            <p className="font-display text-base font-semibold leading-none">{s.v}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-3 rounded-2xl border border-border bg-card-soft p-3">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-[11px] font-semibold">
+            JC
+          </div>
+          <div className="flex-1">
+            <p className="text-[12px] font-semibold leading-tight">Juan Carlos</p>
+            <p className="text-[10px] text-muted-foreground">4 days ago</p>
+          </div>
+          <span className="flex items-center gap-0.5 text-[12px] font-semibold text-secondary">
+            <Star className="h-3 w-3 fill-secondary" /> 5.0
+          </span>
+        </div>
+        <p className="mt-2 text-[12px] leading-snug text-foreground/85">
+          "Excellent venue with music and very delicious food."
+        </p>
+        <div className="mt-2 grid grid-cols-4 gap-1">
+          {[
+            { l: "Food", v: 5 },
+            { l: "Service", v: 5 },
+            { l: "Atm.", v: 5 },
+            { l: "Value", v: 5 },
+          ].map((s) => (
+            <div key={s.l} className="rounded-md bg-background py-1 text-center">
+              <p className="text-[9px] text-muted-foreground">{s.l}</p>
+              <p className="text-[11px] font-semibold">{s.v}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <button className="mt-2 w-full rounded-full border border-border bg-card px-4 py-2 text-[11px] font-medium text-foreground/80">
+        View all 129 reviews
+      </button>
+    </div>
+  );
+}
+
+function ConciergeSection({ venueName }: { venueName: string }) {
+  void venueName;
+  return (
+    <div>
+      <SectionLabel
+        action={
+          <span className="rounded-md bg-secondary/15 px-1.5 py-0.5 text-[9px] font-bold uppercase text-secondary">
+            Beta
+          </span>
+        }
+      >
+        Concierge AI
+      </SectionLabel>
+      <div className="rounded-2xl border border-border bg-card-soft p-3">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
+            <Sparkles className="h-4 w-4" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[12px] font-semibold leading-tight">Ask about this venue</p>
+            <p className="text-[10px] text-muted-foreground">Powered by Mesita AI</p>
+          </div>
+        </div>
+        <div className="mt-3 space-y-1.5">
+          {[
+            "Is this good for large groups?",
+            "What's the best dish on the menu?",
+            "What's the best way to get there?",
+          ].map((q) => (
+            <button
+              key={q}
+              className="block w-full rounded-full border border-border bg-background px-3 py-1.5 text-left text-[11px] text-foreground/80"
+            >
+              {q}
+            </button>
+          ))}
+        </div>
+        <div className="mt-3 flex items-center gap-1.5">
+          <input
+            placeholder="Ask anything about this place…"
+            className="flex-1 rounded-full border border-border bg-background px-3 py-1.5 text-[11px] text-foreground placeholder:text-muted-foreground focus:outline-none"
+          />
+          <button className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
+            <Send className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DetailsSection() {
+  const rows: { Icon: any; label: string; val: React.ReactNode }[] = [
+    { Icon: Phone, label: "Contact", val: <a className="text-secondary" href="#">444 714 0346</a> },
+    { Icon: Globe, label: "Website", val: <a className="text-secondary" href="#">@casaluminar</a> },
+    { Icon: Banknote, label: "Price range", val: "MXN 310 – 500" },
+    { Icon: Sparkles, label: "Dress code", val: "Smart casual" },
+    {
+      Icon: CreditCard,
+      label: "Payment",
+      val: (
+        <div className="flex flex-wrap gap-1">
+          {["Visa", "Mastercard", "AMEX"].map((c) => (
+            <span key={c} className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] text-muted-foreground">
+              {c}
+            </span>
+          ))}
+        </div>
+      ),
+    },
+    { Icon: Car, label: "Parking", val: "Public parking available" },
+    {
+      Icon: Accessibility,
+      label: "Access",
+      val: (
+        <div className="flex flex-wrap gap-1">
+          {["Wheelchair access", "Non-smoking", "Full bar"].map((c) => (
+            <span key={c} className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] text-muted-foreground">
+              {c}
+            </span>
+          ))}
+        </div>
+      ),
+    },
+  ];
+  return (
+    <div>
+      <SectionLabel>Details</SectionLabel>
+      <div className="rounded-2xl border border-border bg-card-soft px-3">
+        {rows.map(({ Icon, label, val }, i) => (
+          <div
+            key={label}
+            className={`flex items-start gap-3 py-2.5 text-[12px] ${
+              i !== rows.length - 1 ? "border-b border-border/60" : ""
+            }`}
+          >
+            <Icon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+            <span className="w-16 shrink-0 text-muted-foreground">{label}</span>
+            <div className="min-w-0 flex-1 text-foreground">{val}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => void }) {
   return (
     <div className="pb-6">
