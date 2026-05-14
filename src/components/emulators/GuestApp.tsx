@@ -3186,11 +3186,6 @@ function CouponTicket({
           className="pointer-events-none absolute top-0 z-10 h-3 w-3 translate-x-1/2 -translate-y-1/2 rounded-full bg-hero ring-1 ring-border/70"
           style={{ right: "58px" }}
         />
-        <span
-          aria-hidden
-          className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 translate-x-1/2 translate-y-1/2 rounded-full bg-hero ring-1 ring-border/70"
-          style={{ right: "58px" }}
-        />
 
         {/* MIDDLE — content */}
         <div className="relative flex min-w-0 flex-1 flex-col justify-center gap-2 px-3 py-3">
