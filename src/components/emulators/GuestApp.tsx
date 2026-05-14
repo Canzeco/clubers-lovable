@@ -4227,11 +4227,11 @@ function ShareView() {
 
           {audience === "venues" && (
           <div className="flex flex-1 flex-col">
-            <p className="text-[11px] leading-snug text-muted-foreground">
-              Know someone who runs a restaurant or bar? Invite them to set up on Mesita — free, ~10 min.
+            <p className="font-display text-2xl font-semibold leading-tight text-foreground">
+              Know someone who runs a restaurant or bar?
             </p>
-            <p className="mt-2 font-display text-lg font-semibold leading-tight">
-              Invite a venue owner
+            <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
+              Invite them to set up on Mesita — free, ~10 min.
             </p>
 
             <div className="mt-2 grid grid-cols-2 gap-1.5">
