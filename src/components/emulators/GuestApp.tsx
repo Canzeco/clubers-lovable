@@ -44,9 +44,10 @@ import {
   Bell,
   Shield,
   ChevronDown,
+  CalendarCheck,
 } from "lucide-react";
 
-type Tab = "discover" | "coupons" | "share" | "profile";
+type Tab = "discover" | "reservations" | "coupons" | "share" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
 
 function GoogleLogo({ className = "" }: { className?: string }) {
@@ -1686,6 +1687,61 @@ function WalletView() {
   );
 }
 
+function ReservationsView() {
+  const [openCoupon, setOpenCoupon] = useState<any | null>(null);
+  const upcoming = [
+    { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Wed May 14 · 8:00 PM", resParty: 2, expiresIn: "6d 12h", code: "MV-7702", firstVisit: false, step: 1 },
+    { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, isReservation: true, resStatus: "pending" as const, resRequested: "Fri May 16 · 9:30 PM", resParty: 4, expiresIn: "—", code: "NB-9914", firstVisit: false, step: 0 },
+    { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, isReservation: true, resStatus: "confirmed" as const, resWhen: "Sat May 17 · 9:00 PM", resParty: 6, expiresIn: "8d 04h", code: "CL-3320", firstVisit: false, step: 1 },
+  ];
+  const past = [
+    { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, isReservation: true, resStatus: "confirmed" as const, resWhen: "Sun May 4 · 11:00 AM", resParty: 3, code: "LC-1101" },
+    { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Sat May 3 · 8:30 PM", resParty: 2, code: "MV-2204" },
+  ];
+  const [seg, setSeg] = useState<"upcoming" | "past">("upcoming");
+  const list = seg === "upcoming" ? upcoming : past;
+  return (
+    <>
+      <TopBar title="Reservations" subtitle={`${upcoming.length} upcoming · ${past.length} past`} />
+      <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
+        {([
+          { id: "upcoming", label: "Upcoming", count: upcoming.length },
+          { id: "past", label: "Past", count: past.length },
+        ] as const).map((s) => (
+          <button
+            key={s.id}
+            onClick={() => setSeg(s.id)}
+            className={`flex flex-1 items-center justify-center gap-1.5 rounded-full py-1.5 text-xs font-medium transition ${
+              seg === s.id ? "bg-foreground text-background" : "text-muted-foreground"
+            }`}
+          >
+            {s.label}
+            <span className={`rounded-full px-1.5 text-[10px] ${seg === s.id ? "bg-background/20" : "bg-muted"}`}>
+              {s.count}
+            </span>
+          </button>
+        ))}
+      </div>
+      <div className="space-y-4 px-5 pb-24">
+        {list.map((c: any, idx: number) => (
+          <CouponTicket
+            key={(c.name || "") + (c.code || idx)}
+            c={c}
+            state="active"
+            onClick={() => setOpenCoupon({ ...c })}
+          />
+        ))}
+        {list.length === 0 && (
+          <p className="py-10 text-center text-xs text-muted-foreground">No reservations here yet.</p>
+        )}
+      </div>
+      {openCoupon && (
+        <CouponDetailSheet coupon={openCoupon} onClose={() => setOpenCoupon(null)} />
+      )}
+    </>
+  );
+}
+
 function CouponTicket({
   c,
   state,
@@ -3265,6 +3321,11 @@ export function GuestApp() {
       <StatusBar />
       <div className="relative flex flex-1 flex-col overflow-hidden pb-20">
         {tab === "discover" && <Discover />}
+        {tab === "reservations" && (
+          <div className="flex-1 overflow-y-auto scrollbar-hide">
+            <ReservationsView />
+          </div>
+        )}
         {tab === "coupons" && (
           <div className="flex-1 overflow-y-auto scrollbar-hide">
             <WalletView />
@@ -3285,6 +3346,7 @@ export function GuestApp() {
         <div className="flex justify-around">
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
+            { id: "reservations", Icon: CalendarCheck, label: "Reservations" },
             { id: "coupons", Icon: Ticket, label: "Coupons" },
             { id: "share", Icon: Share2, label: "Share" },
             { id: "profile", Icon: User, label: "Profile" },
@@ -3292,11 +3354,11 @@ export function GuestApp() {
             <button
               key={id}
               onClick={() => setTab(id as Tab)}
-              className={`flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition ${
+              className={`flex flex-col items-center gap-0.5 px-1.5 py-1 text-[9.5px] transition ${
                 tab === id ? "text-primary" : "text-muted-foreground"
               }`}
             >
-              <Icon className="h-5 w-5" />
+              <Icon className="h-4.5 w-4.5" />
               {label}
             </button>
           ))}
