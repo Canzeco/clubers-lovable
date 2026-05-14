@@ -3905,6 +3905,7 @@ function ProfileView() {
                 "Chef · sommelier · F&B press",
                 "Founder / executive",
                 "Local influence · featured in city magazines",
+                "Exceptionally handsome / pretty",
                 "Other public figure",
               ].map((o) => (
                 <button
