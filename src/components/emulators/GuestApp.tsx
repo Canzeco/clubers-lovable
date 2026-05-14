@@ -767,9 +767,6 @@ function VenueDetailSheet({
             </div>
             </div>
 
-            {/* Concierge AI */}
-            <ConciergeSection venueName={venue.name} />
-
             {/* Other info */}
             <DetailsSection />
           </section>
