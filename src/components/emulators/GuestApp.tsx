@@ -229,6 +229,46 @@ const venues = [
 
 function StatusBar() {
   return (
+    <_StatusBar />
+  );
+}
+function WhySaveFaq() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-3 rounded-xl border border-border bg-background/60">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-[11px] font-semibold text-foreground"
+      >
+        <span className="flex items-center gap-1.5">
+          <HelpCircle className="h-3.5 w-3.5 text-secondary" />
+          Why save the coupon?
+        </span>
+        <ChevronDown
+          className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <div className="space-y-2 border-t border-border px-3 py-2.5 text-[11px] leading-snug text-muted-foreground">
+          <p>
+            <span className="font-semibold text-foreground">Lock the rate.</span> The
+            cashback % can drop or disappear at any time as the venue's promo fills up.
+          </p>
+          <p>
+            <span className="font-semibold text-foreground">Save it now</span> and the
+            rate you see is the rate you get — even if the public offer changes.
+          </p>
+          <p>
+            <span className="font-semibold text-foreground">Expires in 7 days</span> from
+            today (or 7 days after your booking if you reserve a table).
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+function _StatusBar() {
+  return (
     <div className="flex h-9 items-end justify-between px-7 pb-1 pt-2 text-[11px] font-semibold text-foreground">
       <span>9:41</span>
       <span className="flex items-center gap-1">
