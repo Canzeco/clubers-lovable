@@ -3248,8 +3248,8 @@ function CouponTicket({
             />
             {hasCashback ? (
               <>
-                <p className="relative z-[1] font-display text-[36px] font-bold leading-none tracking-tight drop-shadow-sm">
-                  {c.cb}<span className="text-lg font-light opacity-80">%</span>
+                <p className="relative z-[1] font-display text-[26px] font-bold leading-none tracking-tight drop-shadow-sm">
+                  {c.cb}<span className="text-sm font-light opacity-80">%</span>
                 </p>
                 <p className="relative z-[1] mt-1 text-[8px] font-black uppercase tracking-[0.22em] opacity-90">
                   {c.firstVisit && !isInactive ? "welcome" : "cashback"}
