@@ -1847,6 +1847,7 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
     "Brunch dominical familiar",
     "Mezcal y vinilo después de medianoche",
     "El antro más fresa de San Pedro",
+    "Lugar famoso de Luis Miguel en Acapulco",
   ];
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
