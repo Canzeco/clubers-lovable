@@ -1235,6 +1235,8 @@ function TinderMode() {
 function MapMode() {
   const [locating, setLocating] = useState(false);
   const [located, setLocated] = useState(false);
+  const [filter, setFilter] = useState("All");
+  const filters = ["All", "Tonight", "Cashback", "Rooftop", "Brunch", "Late night"];
   const useMyLocation = () => {
     setLocating(true);
     setTimeout(() => {
@@ -1274,15 +1276,35 @@ function MapMode() {
             </g>
           ))}
         </svg>
+        {/* floating category filters */}
+        <div className="absolute inset-x-0 top-3 z-10 flex justify-center px-3">
+          <div className="flex max-w-full gap-1.5 overflow-x-auto rounded-full border border-border bg-background/85 p-1 shadow-elev backdrop-blur scrollbar-hide">
+            {filters.map((c) => (
+              <button
+                key={c}
+                onClick={() => setFilter(c)}
+                className={`whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-medium transition ${
+                  filter === c
+                    ? "bg-foreground text-background"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </div>
         {/* pins — emoji by category + cashback % */}
         {[
-          { x: "22%", y: "28%", emoji: "🍸", n: "Casa Luminar", cb: 20 },
-          { x: "58%", y: "40%", emoji: "🎶", n: "Neón Bar", cb: 20 },
-          { x: "38%", y: "60%", emoji: "🐟", n: "Mar Verde", cb: 0 },
-          { x: "72%", y: "70%", emoji: "☕", n: "Loto Café", cb: 10 },
-          { x: "30%", y: "78%", emoji: "🌮", n: "El Tope", cb: 15 },
-          { x: "82%", y: "30%", emoji: "🍕", n: "Forno", cb: 5 },
-        ].map((p, i) => (
+          { x: "22%", y: "28%", emoji: "🍸", n: "Casa Luminar", cb: 20, tags: ["Rooftop", "Late night", "Cashback", "Tonight"] },
+          { x: "58%", y: "40%", emoji: "🎶", n: "Neón Bar", cb: 20, tags: ["Late night", "Cashback", "Tonight"] },
+          { x: "38%", y: "60%", emoji: "🐟", n: "Mar Verde", cb: 0, tags: ["Brunch"] },
+          { x: "72%", y: "70%", emoji: "☕", n: "Loto Café", cb: 10, tags: ["Brunch", "Cashback"] },
+          { x: "30%", y: "78%", emoji: "🌮", n: "El Tope", cb: 15, tags: ["Late night", "Cashback", "Tonight"] },
+          { x: "82%", y: "30%", emoji: "🍕", n: "Forno", cb: 5, tags: ["Cashback", "Tonight"] },
+        ]
+          .filter((p) => filter === "All" || p.tags.includes(filter))
+          .map((p, i) => (
           <div
             key={i}
             className="absolute -translate-x-1/2 -translate-y-1/2"
