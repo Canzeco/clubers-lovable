@@ -65,13 +65,22 @@ type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
 // community requires email-domain verification (e.g. @tec.mx).
 const COMMUNITIES: Record<
   string,
-  { id: string; label: string; short: string; emailDomain: string; color: string }
+  { id: string; label: string; short: string; emailDomain: string; color: string; city: string }
 > = {
-  tec: { id: "tec", label: "Tec de Monterrey", short: "Tec", emailDomain: "@tec.mx", color: "bg-[#0033A0] text-white" },
-  udem: { id: "udem", label: "UDEM", short: "UDEM", emailDomain: "@udem.edu", color: "bg-[#003F2D] text-white" },
-  stanford: { id: "stanford", label: "Stanford", short: "Stanford", emailDomain: "@stanford.edu", color: "bg-[#8C1515] text-white" },
-  itam: { id: "itam", label: "ITAM", short: "ITAM", emailDomain: "@itam.mx", color: "bg-[#003366] text-white" },
-  ibero: { id: "ibero", label: "Ibero", short: "Ibero", emailDomain: "@ibero.mx", color: "bg-[#0072CE] text-white" },
+  tec: { id: "tec", label: "Tec de Monterrey", short: "Tec", emailDomain: "@tec.mx", color: "bg-[#0033A0] text-white", city: "Monterrey · CDMX · Guadalajara" },
+  udem: { id: "udem", label: "UDEM", short: "UDEM", emailDomain: "@udem.edu", color: "bg-[#003F2D] text-white", city: "Monterrey" },
+  stanford: { id: "stanford", label: "Stanford", short: "Stanford", emailDomain: "@stanford.edu", color: "bg-[#8C1515] text-white", city: "Palo Alto, CA" },
+  itam: { id: "itam", label: "ITAM", short: "ITAM", emailDomain: "@itam.mx", color: "bg-[#003366] text-white", city: "CDMX" },
+  ibero: { id: "ibero", label: "Ibero", short: "Ibero", emailDomain: "@ibero.mx", color: "bg-[#0072CE] text-white", city: "CDMX" },
+  unam: { id: "unam", label: "UNAM", short: "UNAM", emailDomain: "@unam.mx", color: "bg-[#0F3F2C] text-white", city: "CDMX" },
+  anahuac: { id: "anahuac", label: "Anáhuac", short: "Anáhuac", emailDomain: "@anahuac.mx", color: "bg-[#1B3A6B] text-white", city: "CDMX · Querétaro" },
+  lasalle: { id: "lasalle", label: "La Salle", short: "La Salle", emailDomain: "@lasalle.mx", color: "bg-[#7A0019] text-white", city: "CDMX" },
+  panamericana: { id: "panamericana", label: "Universidad Panamericana", short: "UP", emailDomain: "@up.edu.mx", color: "bg-[#C8102E] text-white", city: "CDMX · Guadalajara" },
+  iteso: { id: "iteso", label: "ITESO", short: "ITESO", emailDomain: "@iteso.mx", color: "bg-[#E25822] text-white", city: "Guadalajara" },
+  harvard: { id: "harvard", label: "Harvard", short: "Harvard", emailDomain: "@harvard.edu", color: "bg-[#A41034] text-white", city: "Cambridge, MA" },
+  mit: { id: "mit", label: "MIT", short: "MIT", emailDomain: "@mit.edu", color: "bg-[#8A8B8C] text-white", city: "Cambridge, MA" },
+  nyu: { id: "nyu", label: "NYU", short: "NYU", emailDomain: "@nyu.edu", color: "bg-[#57068C] text-white", city: "New York, NY" },
+  berkeley: { id: "berkeley", label: "UC Berkeley", short: "Berkeley", emailDomain: "@berkeley.edu", color: "bg-[#003262] text-white", city: "Berkeley, CA" },
 };
 
 function GoogleLogo({ className = "" }: { className?: string }) {
