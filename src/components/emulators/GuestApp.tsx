@@ -5261,19 +5261,26 @@ function RewardsView() {
       <div className="px-5 pb-3 pt-3">
         <div className="flex gap-1 rounded-full bg-muted p-1">
           {[
-            { id: "reservations" as const, label: "Reservations" },
-            { id: "coupons" as const, label: "Coupons" },
+            { id: "reservations" as const, label: "Reservations", count: 6 },
+            { id: "coupons" as const, label: "Coupons", count: 14 },
           ].map((s) => (
             <button
               key={s.id}
               onClick={() => setSub(s.id)}
-              className={`flex-1 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+              className={`flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
                 sub === s.id
                   ? "bg-foreground text-background shadow-sm"
                   : "text-muted-foreground"
               }`}
             >
               {s.label}
+              <span
+                className={`rounded-full px-1.5 text-[10px] ${
+                  sub === s.id ? "bg-background/20" : "bg-muted-foreground/15"
+                }`}
+              >
+                {s.count}
+              </span>
             </button>
           ))}
         </div>
