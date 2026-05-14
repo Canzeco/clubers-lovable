@@ -3509,6 +3509,16 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   const stripeStepIndex = steps.findIndex((s) => s.label === "Pay via Stripe link");
   const waiterConfirmed = stripeStepIndex >= 0 && currentStep >= stripeStepIndex;
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [storyEvidence, setStoryEvidence] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  const handleStoryFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setStoryEvidence(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+  const igHandle = `@${coupon.name?.toLowerCase().replace(/\s+/g, "") || "venue"}`;
   // Auto-pop the checkout the first time the user opens the coupon after the
   // waiter has confirmed — emulates "waiter scanned, sheet flies up".
   useEffect(() => {
@@ -3580,6 +3590,92 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
           </div>
         )}
       </div>
+
+      {/* Instagram story evidence — required to unlock cashback */}
+      {requireStory && (
+        <div className="rounded-3xl bg-card-soft p-5">
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Story evidence
+            </p>
+            {storyEvidence ? (
+              <span className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-0.5 text-[10px] font-semibold text-secondary">
+                <Check className="h-3 w-3" strokeWidth={3} /> Verified
+              </span>
+            ) : (
+              <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                Required
+              </span>
+            )}
+          </div>
+          <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
+            Upload a screenshot of your story tagging{" "}
+            <span className="font-mono text-foreground">{igHandle}</span>. We
+            verify the tag automatically.
+          </p>
+
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleStoryFile}
+          />
+
+          {storyEvidence ? (
+            <div className="mt-3 flex gap-3">
+              <div className="relative h-28 w-20 flex-shrink-0 overflow-hidden rounded-xl border border-border bg-background">
+                <img
+                  src={storyEvidence}
+                  alt="Instagram story evidence"
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-1.5 py-1 text-[8px] font-semibold text-white">
+                  {igHandle}
+                </div>
+              </div>
+              <div className="flex flex-1 flex-col justify-between text-[11px]">
+                <div>
+                  <p className="font-semibold text-foreground">Screenshot attached</p>
+                  <p className="mt-0.5 text-muted-foreground">
+                    Tag <span className="font-mono text-secondary">{igHandle}</span> detected ·
+                    cashback unlocked
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => fileRef.current?.click()}
+                    className="rounded-full border border-border px-3 py-1 text-[11px] text-muted-foreground"
+                  >
+                    Replace
+                  </button>
+                  <button
+                    onClick={() => setStoryEvidence(null)}
+                    className="rounded-full px-3 py-1 text-[11px] text-muted-foreground hover:text-foreground"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => fileRef.current?.click()}
+              className="mt-3 flex w-full flex-col items-center justify-center gap-1 rounded-2xl border-2 border-dashed border-primary/40 bg-gradient-to-br from-fuchsia-500/5 to-amber-400/5 px-4 py-5 text-center transition hover:border-primary/70"
+            >
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-tr from-fuchsia-500 to-amber-400 text-white">
+                <Instagram className="h-4 w-4" />
+              </div>
+              <p className="text-[12px] font-semibold text-foreground">
+                Attach story screenshot
+              </p>
+              <p className="text-[10px] text-muted-foreground">
+                PNG or JPG · must show the {igHandle} tag
+              </p>
+            </button>
+          )}
+        </div>
+      )}
 
       {/* SECTION 4 — Current steps (vertical) */}
       <div className="rounded-3xl bg-card-soft p-5">
