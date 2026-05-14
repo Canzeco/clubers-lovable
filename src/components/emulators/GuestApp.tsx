@@ -1968,7 +1968,6 @@ function CatalogRow({
             <p className="text-[10px] text-muted-foreground">{subtitle}</p>
           )}
         </div>
-        <button className="text-[11px] font-semibold text-secondary">View all</button>
       </div>
       <div className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 scrollbar-hide">
         {items.map((v, idx) => (
