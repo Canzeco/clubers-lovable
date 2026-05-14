@@ -4994,23 +4994,9 @@ function RewardsView() {
 
 function MyQrView() {
   return (
-    <div className="flex h-full flex-col overflow-y-auto scrollbar-hide bg-background px-6 py-6">
-      <div className="flex items-center gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-peacock text-base shadow-glow">
-          🦚
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <p className="font-display text-base font-semibold leading-tight truncate">Patricio Canseco</p>
-            <span className="flex shrink-0 items-center gap-1 rounded-full bg-tier-gold/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-tier-gold">
-              <Crown className="h-3 w-3" /> Gold
-            </span>
-          </div>
-          <p className="text-[11px] text-muted-foreground">Member · No. 47847</p>
-        </div>
-      </div>
-
-      <div className="mt-6 text-center">
+    <div className="flex h-full flex-col overflow-y-auto scrollbar-hide bg-background">
+      <TopBar title="Your QR" />
+      <div className="px-6 pt-6 text-center">
         <p className="font-display text-lg font-semibold">Show this QR to the waiter</p>
         <p className="mt-1 text-[11px] text-muted-foreground">
           Earn cashback at any Mesita venue — even without a saved coupon.
