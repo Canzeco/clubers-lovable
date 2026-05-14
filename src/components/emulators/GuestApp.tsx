@@ -3365,14 +3365,14 @@ export function GuestApp() {
       <StatusBar />
       <div className="relative flex flex-1 flex-col overflow-hidden pb-20">
         {tab === "discover" && <Discover />}
-        {tab === "reservations" && (
+        {tab === "rewards" && (
           <div className="flex-1 overflow-y-auto scrollbar-hide">
-            <ReservationsView />
+            <RewardsView />
           </div>
         )}
-        {tab === "coupons" && (
-          <div className="flex-1 overflow-y-auto scrollbar-hide">
-            <WalletView />
+        {tab === "qr" && (
+          <div className="flex-1 overflow-hidden">
+            <MyQrView />
           </div>
         )}
         {tab === "share" && (
@@ -3390,8 +3390,8 @@ export function GuestApp() {
         <div className="flex justify-around">
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
-            { id: "reservations", Icon: CalendarCheck, label: "Reservations" },
-            { id: "coupons", Icon: Ticket, label: "Coupons" },
+            { id: "rewards", Icon: Ticket, label: "Rewards" },
+            { id: "qr", Icon: QrCode, label: "My QR" },
             { id: "share", Icon: Share2, label: "Share" },
             { id: "profile", Icon: User, label: "Profile" },
           ].map(({ id, Icon, label }) => (
