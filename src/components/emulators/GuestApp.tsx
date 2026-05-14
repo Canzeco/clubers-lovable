@@ -272,7 +272,7 @@ function ModeSwitcher({
     { id: "tinder", label: "Swipe", Icon: Flame },
     { id: "map", label: "Map", Icon: MapIcon },
     { id: "catalog", label: "Catalog", Icon: LayoutGrid },
-    { id: "ai", label: "AI Search", Icon: Sparkles },
+    { id: "ai", label: "AI", Icon: Sparkles },
   ];
   return (
     <div className="mx-3 mb-3 grid grid-cols-4 items-center gap-1 rounded-full border border-border bg-card/60 p-1">
