@@ -227,11 +227,6 @@ const venues = [
   },
 ];
 
-function StatusBar() {
-  return (
-    <_StatusBar />
-  );
-}
 function WhySaveFaq() {
   const [open, setOpen] = useState(false);
   return (
@@ -267,7 +262,7 @@ function WhySaveFaq() {
     </div>
   );
 }
-function _StatusBar() {
+function StatusBar() {
   return (
     <div className="flex h-9 items-end justify-between px-7 pb-1 pt-2 text-[11px] font-semibold text-foreground">
       <span>9:41</span>
