@@ -729,28 +729,6 @@ function VenueDetailSheet({
           <section id="vsec-details" className="scroll-mt-16 space-y-4">
             <SectionLabel>Details</SectionLabel>
 
-            {/* About */}
-            <div>
-              <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">About</p>
-              {venue.about ? (
-                <div className="space-y-4">
-                  <p className="font-display text-base leading-snug text-foreground">
-                    {venue.about.tagline}
-                  </p>
-                  {venue.about.sections.map((s) => (
-                    <div key={s.title}>
-                      <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-secondary">
-                        {s.title}
-                      </p>
-                      <p className="text-[13px] leading-relaxed text-foreground/85">{s.body}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
-              )}
-            </div>
-
             {/* Current activity */}
             <CurrentActivitySection />
 
@@ -794,6 +772,28 @@ function VenueDetailSheet({
 
             {/* Other info */}
             <DetailsSection />
+          </section>
+
+          {/* About — long-form copy, sits below details, above the action bar */}
+          <section className="pb-2">
+            <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">About</p>
+            {venue.about ? (
+              <div className="space-y-4">
+                <p className="font-display text-base leading-snug text-foreground">
+                  {venue.about.tagline}
+                </p>
+                {venue.about.sections.map((s) => (
+                  <div key={s.title}>
+                    <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-secondary">
+                      {s.title}
+                    </p>
+                    <p className="text-[13px] leading-relaxed text-foreground/85">{s.body}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
+            )}
           </section>
 
         </div>
