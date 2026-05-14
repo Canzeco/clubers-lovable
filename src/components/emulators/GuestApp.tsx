@@ -3143,10 +3143,10 @@ function CouponTicket({
   } else {
     const current = stepLabels[stepIdx];
     // Color the pill by phase
-    const isStripe = current === "Paid";
-    const isStory = current === "Story posted";
-    const isFinal = current === "Cashback credited";
-    const isWaiter = current === "QR scanned";
+    const isStripe = current === "Pay from your phone";
+    const isStory = current === "Post story & submit screenshot";
+    const isFinal = current === "Cashback lands";
+    const isWaiter = current === "Waiter scans your QR" || current === "Waiter validates screenshot";
     pill = {
       label: current,
       cls: isStripe
@@ -3340,45 +3340,75 @@ const VENUE_IMAGES = {
 // RPSC — Reservation + Payment + Story + Cashback
 // PC   — Payment + Cashback
 // PSC  — Payment + Story + Cashback
-const WF_RESERVATION: { label: string; Icon: any }[] = [
-  { label: "Saved", Icon: Ticket },
-  { label: "AI calling venue", Icon: Phone },
-  { label: "Reservation confirmed", Icon: CalendarCheck },
-  { label: "Visited", Icon: MapPin },
+// Each workflow step has a short `label` (used by the pill/stepper) and a
+// longer `desc` (shown in the detail sheet under the label).
+export type WorkflowStep = { label: string; desc: string; Icon: any };
+
+const S_RESERVE: WorkflowStep = {
+  label: "Reserving your spot",
+  desc: "Calling the venue… → Confirmed · Fri May 16 · 9:30 PM · 4 guests",
+  Icon: Phone,
+};
+const S_ARRIVE: WorkflowStep = {
+  label: "Arrive & enjoy",
+  desc: "Mesita doesn't touch the experience",
+  Icon: MapPin,
+};
+const S_TAP_PAY: WorkflowStep = {
+  label: 'Tap "Pay with this coupon"',
+  desc: "Show your personal QR to the waiter",
+  Icon: QrCode,
+};
+const S_WAITER_SCAN: WorkflowStep = {
+  label: "Waiter scans your QR",
+  desc: "They enter your bill in the Mesita bot",
+  Icon: QrCode,
+};
+const S_PAY_PHONE: WorkflowStep = {
+  label: "Pay from your phone",
+  desc: "Tap the Stripe link we send you",
+  Icon: CreditCard,
+};
+const S_STORY_BEFORE: WorkflowStep = {
+  label: "Post story & submit screenshot",
+  desc: "Tag @venue and upload your screenshot",
+  Icon: Camera,
+};
+const S_STORY_AFTER: WorkflowStep = {
+  label: "Post story & submit screenshot",
+  desc: "In case you haven't yet",
+  Icon: Camera,
+};
+const S_WAITER_VALIDATE: WorkflowStep = {
+  label: "Waiter validates screenshot",
+  desc: "They confirm your @venue tag",
+  Icon: Check,
+};
+const S_CASHBACK_PLAIN: WorkflowStep = {
+  label: "Cashback lands",
+  desc: "Credited straight to your Mesita balance",
+  Icon: Coins,
+};
+const S_CASHBACK_STORY: WorkflowStep = {
+  label: "Cashback lands",
+  desc: "Credited once your story checks out — no story, no cashback",
+  Icon: Coins,
+};
+
+const WF_RESERVATION: WorkflowStep[] = [S_RESERVE, S_ARRIVE];
+const WF_PAY_CB: WorkflowStep[] = [
+  S_ARRIVE, S_TAP_PAY, S_WAITER_SCAN, S_PAY_PHONE, S_CASHBACK_PLAIN,
 ];
-const WF_RES_PAY_CB: { label: string; Icon: any }[] = [
-  { label: "Saved", Icon: Ticket },
-  { label: "AI calling venue", Icon: Phone },
-  { label: "Reservation confirmed", Icon: CalendarCheck },
-  { label: "Visited", Icon: MapPin },
-  { label: "QR scanned", Icon: QrCode },
-  { label: "Paid", Icon: CreditCard },
-  { label: "Cashback credited", Icon: Coins },
+const WF_RES_PAY_CB: WorkflowStep[] = [
+  S_RESERVE, S_ARRIVE, S_TAP_PAY, S_WAITER_SCAN, S_PAY_PHONE, S_CASHBACK_PLAIN,
 ];
-const WF_RES_PAY_STORY_CB: { label: string; Icon: any }[] = [
-  { label: "Saved", Icon: Ticket },
-  { label: "AI calling venue", Icon: Phone },
-  { label: "Reservation confirmed", Icon: CalendarCheck },
-  { label: "Visited", Icon: MapPin },
-  { label: "QR scanned", Icon: QrCode },
-  { label: "Paid", Icon: CreditCard },
-  { label: "Story posted", Icon: Camera },
-  { label: "Cashback credited", Icon: Coins },
+const WF_PAY_STORY_CB: WorkflowStep[] = [
+  S_ARRIVE, S_STORY_BEFORE, S_TAP_PAY, S_WAITER_SCAN, S_PAY_PHONE,
+  S_STORY_AFTER, S_WAITER_VALIDATE, S_CASHBACK_STORY,
 ];
-const WF_PAY_CB: { label: string; Icon: any }[] = [
-  { label: "Saved", Icon: Ticket },
-  { label: "Visited", Icon: MapPin },
-  { label: "QR scanned", Icon: QrCode },
-  { label: "Paid", Icon: CreditCard },
-  { label: "Cashback credited", Icon: Coins },
-];
-const WF_PAY_STORY_CB: { label: string; Icon: any }[] = [
-  { label: "Saved", Icon: Ticket },
-  { label: "Visited", Icon: MapPin },
-  { label: "QR scanned", Icon: QrCode },
-  { label: "Paid", Icon: CreditCard },
-  { label: "Story posted", Icon: Camera },
-  { label: "Cashback credited", Icon: Coins },
+const WF_RES_PAY_STORY_CB: WorkflowStep[] = [
+  S_RESERVE, S_ARRIVE, S_STORY_BEFORE, S_TAP_PAY, S_WAITER_SCAN, S_PAY_PHONE,
+  S_STORY_AFTER, S_WAITER_VALIDATE, S_CASHBACK_STORY,
 ];
 
 export type CouponType =
@@ -3398,7 +3428,7 @@ export function getCouponType(c: any): CouponType {
   return story ? "pay_story_cashback" : "pay_cashback";
 }
 
-export function getCouponWorkflow(c: any): { label: string; Icon: any }[] {
+export function getCouponWorkflow(c: any): WorkflowStep[] {
   switch (getCouponType(c)) {
     case "reservation": return WF_RESERVATION;
     case "reservation_pay_cashback": return WF_RES_PAY_CB;
@@ -3411,7 +3441,7 @@ export function getCouponWorkflow(c: any): { label: string; Icon: any }[] {
 // Legacy aliases (kept so any out-of-file references still resolve)
 const PIPELINE_STEPS = WF_PAY_STORY_CB;
 
-function HorizontalStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: { label: string; Icon: any }[] }) {
+function HorizontalStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: WorkflowStep[] }) {
   return (
     <div className="pointer-events-none mt-0.5 flex w-full items-center">
       {steps.map((s, i) => {
@@ -3419,7 +3449,7 @@ function HorizontalStepper({ step, steps = PIPELINE_STEPS }: { step: number; ste
         const current = i === step;
         const Icon = s.Icon;
         return (
-          <div key={s.label} className="flex flex-1 items-center last:flex-none">
+          <div key={i} className="flex flex-1 items-center last:flex-none">
             <div
               title={s.label}
               className={`flex h-3 w-3 flex-shrink-0 items-center justify-center rounded-full border transition ${
@@ -3450,7 +3480,7 @@ function HorizontalStepper({ step, steps = PIPELINE_STEPS }: { step: number; ste
   );
 }
 
-function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: { label: string; Icon: any }[] }) {
+function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: WorkflowStep[] }) {
   // step = number of completed stages (0..5). Current = step (next to complete).
   return (
     <div className="pointer-events-none flex flex-col items-center gap-0.5 py-2">
@@ -3459,7 +3489,7 @@ function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps
         const current = i === step;
         const Icon = s.Icon;
         return (
-          <div key={s.label} className="flex flex-col items-center">
+          <div key={i} className="flex flex-col items-center">
             <div
               title={s.label}
               className={`flex h-3.5 w-3.5 items-center justify-center rounded-full border transition ${
@@ -3567,56 +3597,6 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   const isPending = coupon.res === "pending" || coupon.resStatus === "pending";
   const [payOpen, setPayOpen] = useState(false);
   const showPay = !coupon.used && !coupon.reserveOnly && (coupon.cb ?? 0) > 0;
-
-  // Build the step list dynamically based on coupon state
-  type Step = {
-    label: string;
-    detail?: string;
-    action?: { label: string; onClick: () => void; tone?: "primary" | "stripe" | "story" | "neutral" };
-  };
-  const steps: Step[] = [];
-  if (isReservation) {
-    steps.push({
-      label: isPending ? "AI agent calling venue" : "Reservation confirmed",
-      detail: isPending
-        ? `Requesting ${coupon.resRequested || "your time"}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`
-        : `${coupon.resWhen || ""}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`,
-      action: isPending
-        ? { label: "Edit request", onClick: () => {}, tone: "neutral" }
-        : { label: "Change reservation", onClick: () => {}, tone: "neutral" },
-    });
-    steps.push({ label: "Arrive & dine", detail: "Mesita doesn't touch the experience" });
-  } else {
-    steps.push({ label: "Walk in & dine", detail: "Order normally — no menu changes" });
-  }
-  steps.push({
-    label: "Tap Pay with this coupon",
-    detail: "Your personal QR opens",
-    action: { label: "Show my QR", onClick: () => setPayOpen(true), tone: "primary" },
-  });
-  steps.push({ label: "Waiter scans your QR", detail: "Opens Mesita bot on WhatsApp" });
-  steps.push({
-    label: "Pay via Stripe link",
-    detail: "Sent to app + WhatsApp",
-    action: { label: "Open Stripe checkout", onClick: () => setCheckoutOpen(true), tone: "stripe" },
-  });
-  const requireStory = (coupon.cb ?? 0) >= 15;
-  if (requireStory) {
-    steps.push({
-      label: "Post Instagram story",
-      detail: `Tag @${coupon.name?.toLowerCase().replace(/\s+/g, "") || "venue"} — required to unlock cashback`,
-      action: { label: "Attach screenshot", onClick: () => fileRef.current?.click(), tone: "story" },
-    });
-  }
-  steps.push({ label: "Cashback credited", detail: `+${coupon.cb}% to your Mesita balance` });
-
-  const currentStep = Math.max(0, Math.min(steps.length - 1, coupon.step ?? 0));
-
-  // After the waiter scans + confirms in WhatsApp, the flow advances to the
-  // "Pay via Stripe link" step. From that point on the primary CTA streams
-  // the Stripe checkout into the app instead of showing the QR.
-  const stripeStepIndex = steps.findIndex((s) => s.label === "Pay via Stripe link");
-  const waiterConfirmed = stripeStepIndex >= 0 && currentStep >= stripeStepIndex;
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [storyEvidence, setStoryEvidence] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -3628,6 +3608,46 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
     reader.readAsDataURL(file);
   };
   const igHandle = `@${coupon.name?.toLowerCase().replace(/\s+/g, "") || "venue"}`;
+
+  // Build steps from the coupon's canonical workflow. Actions are attached
+  // per step label so each of the 5 workflows gets the right CTAs.
+  type Step = {
+    label: string;
+    detail?: string;
+    action?: { label: string; onClick: () => void; tone?: "primary" | "stripe" | "story" | "neutral" };
+  };
+  const workflow = getCouponWorkflow(coupon);
+  const requireStory = workflow.some((s) => s.label.startsWith("Post story"));
+  const steps: Step[] = workflow.map((s) => {
+    // Override the reservation step copy with live state when available.
+    if (s.label === "Reserving your spot") {
+      return {
+        label: isPending ? "Reserving your spot" : "Reservation confirmed",
+        detail: isPending
+          ? `Calling ${coupon.name}… requesting ${coupon.resRequested || "your time"}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`
+          : `${coupon.resWhen || "Confirmed"}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`,
+        action: isPending
+          ? { label: "Edit request", onClick: () => {}, tone: "neutral" }
+          : { label: "Change reservation", onClick: () => {}, tone: "neutral" },
+      };
+    }
+    if (s.label === 'Tap "Pay with this coupon"') {
+      return { label: s.label, detail: s.desc, action: { label: "Show my QR", onClick: () => setPayOpen(true), tone: "primary" } };
+    }
+    if (s.label === "Pay from your phone") {
+      return { label: s.label, detail: s.desc, action: { label: "Open Stripe checkout", onClick: () => setCheckoutOpen(true), tone: "stripe" } };
+    }
+    if (s.label === "Post story & submit screenshot") {
+      return { label: s.label, detail: s.desc, action: { label: "Attach screenshot", onClick: () => fileRef.current?.click(), tone: "story" } };
+    }
+    return { label: s.label, detail: s.desc };
+  });
+
+  const currentStep = Math.max(0, Math.min(steps.length - 1, coupon.step ?? 0));
+  // After the waiter scans + confirms, the flow advances to "Pay from your phone".
+  // From that point on the primary CTA streams the Stripe checkout.
+  const stripeStepIndex = steps.findIndex((s) => s.label === "Pay from your phone");
+  const waiterConfirmed = stripeStepIndex >= 0 && currentStep >= stripeStepIndex;
   // Auto-pop the checkout the first time the user opens the coupon after the
   // waiter has confirmed — emulates "waiter scanned, sheet flies up".
   useEffect(() => {
