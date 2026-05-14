@@ -156,7 +156,7 @@ const venues = [
     googleCount: 1284,
     uber: 4.8,
     uberCount: 2100,
-    info: "Rooftop restaurant on 14th floor. Mediterranean tasting menu by chef Iván Solís. Open 7pm–1am · live DJ Thu–Sat · reservations recommended.",
+    info: "Casa Luminar sits on the 14th-floor rooftop of an old textile building in Roma Norte, with 270° views over the city skyline and Chapultepec park in the distance. Chef Iván Solís — formerly of Pujol and Quintonil — runs a Mediterranean tasting menu anchored in Baja seafood, wood-fired vegetables and house-made pastas, with an optional pairing from a 400-label cellar leaning into low-intervention wines from Valle de Guadalupe and the Mediterranean coast. The room is intimate (42 seats, mostly two- and four-tops at the edge for the view), candlelit, and quiet enough for conversation until the live DJ takes over Thursday through Saturday from 11pm. Open nightly 7pm–1am · reservations strongly recommended, especially for sunset · smart casual · terrace heated year-round.",
     mesita: 4.9,
     mesitaCount: 84,
     ig: "3.2k mentions",
