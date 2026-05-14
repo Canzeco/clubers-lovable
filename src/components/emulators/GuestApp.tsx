@@ -4600,7 +4600,7 @@ function GuestAppShell({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) 
         <div className="flex justify-around">
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
-            { id: "rewards", Icon: Ticket, label: "Saved" },
+            { id: "rewards", Icon: Bookmark, label: "Saved" },
             { id: "qr", Icon: QrCode, label: "My QR" },
             { id: "share", Icon: Share2, label: "Share" },
             { id: "profile", Icon: User, label: "Profile" },
