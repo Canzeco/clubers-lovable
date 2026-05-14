@@ -2479,7 +2479,7 @@ const PIPELINE_STEPS: { label: string; Icon: any }[] = [
 function PipelineStepper({ step }: { step: number }) {
   // step = number of completed stages (0..5). Current = step (next to complete).
   return (
-    <div className="pointer-events-none absolute right-1.5 top-1/2 z-10 flex -translate-y-1/2 flex-col items-center gap-0.5">
+    <div className="pointer-events-none flex flex-col items-center gap-0.5 py-2">
       {PIPELINE_STEPS.map((s, i) => {
         const done = i < step;
         const current = i === step;
