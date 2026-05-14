@@ -2439,38 +2439,40 @@ function CouponTicket({
         <div className="relative flex flex-shrink-0 items-stretch">
           {/* cashback column */}
           <div
-            className={`relative flex w-[60px] flex-col items-center justify-center overflow-hidden px-1 py-2 ${
+            className={`relative flex w-[64px] flex-col items-center justify-center overflow-hidden px-1 py-2 ${
               !hasCashback
                 ? "bg-muted/40 text-muted-foreground"
                 : isInactive
                 ? "bg-gradient-to-b from-muted to-card text-muted-foreground"
                 : c.firstVisit
                 ? "bg-gradient-to-b from-fuchsia-500 via-rose-400 to-amber-300 text-black"
-                : "bg-gradient-to-b from-secondary via-secondary/90 to-secondary/70 text-secondary-foreground"
+                : "bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground"
             }`}
           >
+            {/* soft inner sheen */}
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-40 mix-blend-overlay"
+              className="pointer-events-none absolute inset-0 opacity-50 mix-blend-overlay"
               style={{
                 background:
-                  "linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.3) 100%)",
+                  "radial-gradient(ellipse at top left, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 60%)",
               }}
             />
+            {/* inner shadow on left edge */}
+            <span aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-2 bg-gradient-to-r from-black/15 to-transparent" />
             {hasCashback ? (
               <>
-                <p className="relative z-[1] font-display text-[34px] font-extrabold leading-none tracking-tight drop-shadow-sm">
-                  {c.cb}
-                  <span className="text-base">%</span>
+                <p className="relative z-[1] font-display text-[36px] font-bold leading-none tracking-tight drop-shadow-sm">
+                  {c.cb}<span className="text-lg font-light opacity-80">%</span>
                 </p>
-                <p className="relative z-[1] mt-0.5 text-[7px] font-black uppercase tracking-[0.25em] opacity-80">
+                <p className="relative z-[1] mt-1 text-[8px] font-black uppercase tracking-[0.22em] opacity-90">
                   {c.firstVisit && !isInactive ? "welcome" : "cashback"}
                 </p>
               </>
             ) : (
               <>
                 <Calendar className="relative z-[1] h-5 w-5" />
-                <p className="relative z-[1] mt-1 text-[7px] font-black uppercase tracking-[0.2em]">
+                <p className="relative z-[1] mt-1 text-[8px] font-black uppercase tracking-[0.2em]">
                   reserve
                 </p>
               </>
@@ -2479,7 +2481,7 @@ function CouponTicket({
 
           {/* vertical pipeline stepper */}
           {state === "active" && (
-            <div className="flex w-[22px] flex-shrink-0 items-center justify-center border-l border-dotted border-border/70 bg-card-soft">
+            <div className="flex w-[24px] flex-shrink-0 items-center justify-center border-l border-dotted border-border/70 bg-card-soft">
               <PipelineStepper step={c.step ?? 0} />
             </div>
           )}
