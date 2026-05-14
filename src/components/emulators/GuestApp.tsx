@@ -3371,7 +3371,7 @@ function RewardsView() {
   return (
     <div>
       <div className="sticky top-0 z-10 border-b border-border bg-background/95 px-4 pt-4 pb-3 backdrop-blur">
-        <p className="font-display text-xl font-semibold">Saved</p>
+        <p className="font-display text-xl font-semibold">Reservations &amp; Coupons</p>
         <div className="mt-3 flex gap-1 rounded-full bg-muted p-1">
           {[
             { id: "reservations" as const, label: "Reservations" },
