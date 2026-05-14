@@ -2441,7 +2441,7 @@ function CouponTicket({
           <div
             className={`relative flex w-[58px] flex-col items-center justify-center overflow-hidden px-1 py-2 ${
               !hasCashback
-                ? "bg-muted/40 text-muted-foreground"
+                ? "bg-gradient-to-br from-stone-100 via-amber-50 to-stone-100 text-stone-700"
                 : isInactive
                 ? "bg-gradient-to-b from-muted to-card text-muted-foreground"
                 : c.firstVisit
@@ -2459,7 +2459,12 @@ function CouponTicket({
               }}
             />
             {/* inner shadow on left edge */}
-            <span aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-2 bg-gradient-to-r from-black/15 to-transparent" />
+            <span
+              aria-hidden
+              className={`pointer-events-none absolute inset-y-0 left-0 w-2 bg-gradient-to-r ${
+                hasCashback ? "from-black/15 to-transparent" : "from-black/5 to-transparent"
+              }`}
+            />
             {hasCashback ? (
               <>
                 <p className="relative z-[1] font-display text-[36px] font-bold leading-none tracking-tight drop-shadow-sm">
@@ -2471,9 +2476,25 @@ function CouponTicket({
               </>
             ) : (
               <>
-                <Calendar className="relative z-[1] h-5 w-5" />
-                <p className="relative z-[1] mt-1 text-[8px] font-black uppercase tracking-[0.2em]">
-                  reserve
+                {/* engraved monogram */}
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 opacity-[0.07]"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle at 1px 1px, currentColor 0.6px, transparent 0)",
+                    backgroundSize: "6px 6px",
+                  }}
+                />
+                <p className="relative z-[1] font-display text-[26px] font-bold italic leading-none tracking-tight">
+                  M
+                </p>
+                <span
+                  aria-hidden
+                  className="relative z-[1] my-1 block h-px w-5 bg-gradient-to-r from-transparent via-stone-400/60 to-transparent"
+                />
+                <p className="relative z-[1] text-[8px] font-black uppercase tracking-[0.22em] opacity-80">
+                  Table held
                 </p>
               </>
             )}
