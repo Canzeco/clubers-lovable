@@ -3208,7 +3208,7 @@ function CouponTicket({
           <div
             className={`relative flex w-[58px] flex-col items-stretch overflow-hidden ${
               !hasCashback
-                ? "bg-gradient-to-br from-stone-100 via-amber-50 to-stone-100 text-stone-700"
+                ? "bg-muted text-muted-foreground"
                 : isInactive
                 ? "bg-gradient-to-b from-muted to-card text-muted-foreground"
                 : c.firstVisit
@@ -3249,28 +3249,7 @@ function CouponTicket({
                 </div>
               </>
             ) : (
-              <div className="relative z-[1] flex flex-1 flex-col items-center justify-center px-1 py-2">
-                {/* engraved monogram */}
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 opacity-[0.07]"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle at 1px 1px, currentColor 0.6px, transparent 0)",
-                    backgroundSize: "6px 6px",
-                  }}
-                />
-                <p className="relative z-[1] font-display text-[26px] font-bold italic leading-none tracking-tight">
-                  M
-                </p>
-                <span
-                  aria-hidden
-                  className="relative z-[1] my-1 block h-px w-5 bg-gradient-to-r from-transparent via-stone-400/60 to-transparent"
-                />
-                <p className="relative z-[1] text-[8px] font-black uppercase tracking-[0.22em] opacity-80">
-                  Table held
-                </p>
-              </div>
+              <div className="relative z-[1] flex flex-1 items-center justify-center px-1 py-2" />
             )}
           </div>
         </div>
