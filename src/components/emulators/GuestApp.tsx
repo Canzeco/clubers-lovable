@@ -3182,89 +3182,18 @@ function CouponTicket({
         />
 
         {/* MIDDLE — content */}
-        <div className="relative flex min-w-0 flex-1 flex-col justify-between gap-1.5 px-3 py-2.5">
-          {/* top: pill + serial / tier accent */}
-          <div className="flex items-center justify-between gap-2">
-            <span
-              className={`rounded-sm px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.18em] ${pill.cls}`}
-            >
-              {pill.label}
-            </span>
-            <span className="font-mono text-[8px] font-bold uppercase tracking-tight text-muted-foreground/60">
-              {c.code || "MES-•••"}
-            </span>
+        <div className="relative flex min-w-0 flex-1 flex-col justify-center gap-2 px-3 py-3">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span aria-hidden className={`h-3.5 w-1 flex-shrink-0 rounded-full opacity-90 ${tierBar}`} />
+            <p className="truncate font-display text-[16px] font-bold leading-none tracking-tight text-foreground">
+              {c.name}
+            </p>
           </div>
-
-          {/* hero */}
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <span aria-hidden className={`h-3.5 w-1 flex-shrink-0 rounded-full opacity-90 ${tierBar}`} />
-              <p className="truncate font-display text-[16px] font-bold leading-none tracking-tight text-foreground">
-                {c.name}
-              </p>
-            </div>
-            {isReservation ? (
-              isPending ? (
-                <p className="mt-1 flex items-center gap-1 truncate text-[10px] font-bold uppercase tracking-wider text-amber-600">
-                  <Loader2 className="h-3 w-3 animate-spin" /> AI calling venue
-                </p>
-              ) : (
-                <p className="mt-1 truncate text-[11px] font-semibold tracking-tight text-foreground/70">
-                  {c.resWhen}
-                </p>
-              )
-            ) : (
-              <>
-                {state === "active" && (
-                  <p className="mt-1 truncate text-[11px] font-semibold tracking-tight text-foreground/70">
-                    Expires in <span className="text-foreground">{c.expiresIn}</span>
-                  </p>
-                )}
-                {state === "expired" && (
-                  <p className="mt-1 truncate text-[11px] font-semibold tracking-tight text-muted-foreground">
-                    Expired {c.expiredOn}
-                  </p>
-                )}
-                {state === "used" && (
-                  <p className="mt-1 truncate text-[11px] font-semibold tracking-tight text-muted-foreground">
-                    Used · {c.when}
-                  </p>
-                )}
-              </>
-            )}
-          </div>
-
-          {/* bottom: status footer */}
-          <div className="flex min-w-0 items-center gap-1.5 border-t border-border/60 pt-1.5">
-            {isReservation && !isPending && (
-              <>
-                <span className="flex h-3.5 w-3.5 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-                  <Check className="h-2 w-2" strokeWidth={4} />
-                </span>
-                <p className="truncate text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
-                  Confirmed · {c.resParty} guests
-                </p>
-              </>
-            )}
-            {isReservation && isPending && (
-              <p className="truncate text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
-                {c.resRequested} · {c.resParty} guests
-              </p>
-            )}
-            {!isReservation && state === "active" && (
-              <>
-                <Clock className="h-2.5 w-2.5 flex-shrink-0 text-muted-foreground" />
-                <p className="truncate text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
-                  {c.category} · {c.distance}
-                </p>
-              </>
-            )}
-            {!isReservation && state !== "active" && (
-              <p className="truncate text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
-                {c.category} · {c.distance}
-              </p>
-            )}
-          </div>
+          <span
+            className={`self-start rounded-sm px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.18em] ${pill.cls}`}
+          >
+            {pill.label}
+          </span>
         </div>
 
         {/* RIGHT — cashback + stepper */}
