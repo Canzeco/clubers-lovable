@@ -884,8 +884,9 @@ function VenueDetailSheet({
                   ? `Our AI agent is calling ${venue.name} to confirm your table.`
                   : `${venue.cashback}% cashback locked · AI agent is calling ${venue.name}.`}
               </p>
-              {confirm === "save" && (
+              {(confirm === "save" || confirm === "saveReserve") && (
                 <div className="mt-3 text-left">
+                  <IGStoryRequirement handle={`@${venue.name.toLowerCase().replace(/\s+/g, "")}`} />
                   <WhySaveFaq />
                 </div>
               )}
