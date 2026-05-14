@@ -1287,6 +1287,12 @@ function MapMode() {
         {/* floating category filters */}
         <div className="absolute inset-x-0 top-3 z-10 flex justify-center px-3">
           <div className="flex max-w-full gap-1.5 overflow-x-auto rounded-full border border-border bg-background/85 p-1 shadow-elev backdrop-blur scrollbar-hide">
+            <button
+              aria-label="Filters"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted/60 hover:text-foreground"
+            >
+              <SlidersHorizontal className="h-3.5 w-3.5" />
+            </button>
             {filters.map((c) => (
               <button
                 key={c}
