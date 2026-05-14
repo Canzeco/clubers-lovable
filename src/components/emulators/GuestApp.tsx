@@ -1486,7 +1486,7 @@ function Discover() {
   );
 }
 
-function SearchConfigBar() {
+function DiscoverHeader() {
   const [open, setOpen] = useState<null | "city" | "when">(null);
   const [city, setCity] = useState("Monterrey");
 
@@ -1502,37 +1502,42 @@ function SearchConfigBar() {
   };
 
   return (
-    <div className="mx-3 mb-2">
-      <div className="flex items-center gap-1.5 rounded-full border border-border bg-card/70 p-1 shadow-sm backdrop-blur">
-        <button
-          onClick={() => setOpen(open === "city" ? null : "city")}
-          className={`group flex flex-1 items-center gap-2 rounded-full px-3 py-1.5 text-left transition ${
-            open === "city" ? "bg-muted" : "hover:bg-muted/50"
-          }`}
-        >
-          <MapPin className="h-3.5 w-3.5 shrink-0 text-secondary" />
-          <div className="min-w-0 flex-1">
-            <div className="text-[8.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80">Where</div>
-            <div className="truncate font-display text-[13px] font-semibold leading-tight text-foreground">{city}</div>
-          </div>
-        </button>
-        <div className="h-7 w-px bg-border/70" />
-        <button
-          onClick={() => setOpen(open === "when" ? null : "when")}
-          className={`group flex flex-1 items-center gap-2 rounded-full px-3 py-1.5 text-left transition ${
-            open === "when" ? "bg-muted" : "hover:bg-muted/50"
-          }`}
-        >
-          <Calendar className="h-3.5 w-3.5 shrink-0 text-secondary" />
-          <div className="min-w-0 flex-1">
-            <div className="text-[8.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80">When</div>
-            <div className="truncate font-display text-[13px] font-semibold leading-tight text-foreground">{whenDate} · {whenTime}</div>
-          </div>
-        </button>
+    <div className="border-b border-border/60 px-3 pb-2.5 pt-1">
+      <div className="flex items-center gap-2">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-peacock text-base shadow-glow">
+          🦚
+        </div>
+        <div className="flex min-w-0 flex-1 items-center gap-1 rounded-full border border-border bg-card/70 p-1 shadow-sm backdrop-blur">
+          <button
+            onClick={() => setOpen(open === "city" ? null : "city")}
+            className={`flex min-w-0 flex-1 items-center gap-1.5 rounded-full px-2.5 py-1 text-left transition ${
+              open === "city" ? "bg-muted" : "hover:bg-muted/50"
+            }`}
+          >
+            <MapPin className="h-3 w-3 shrink-0 text-secondary" />
+            <div className="min-w-0 flex-1">
+              <div className="text-[7.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80 leading-none">Where</div>
+              <div className="mt-0.5 truncate font-display text-[12px] font-semibold leading-none text-foreground">{city}</div>
+            </div>
+          </button>
+          <div className="h-6 w-px bg-border/70" />
+          <button
+            onClick={() => setOpen(open === "when" ? null : "when")}
+            className={`flex min-w-0 flex-1 items-center gap-1.5 rounded-full px-2.5 py-1 text-left transition ${
+              open === "when" ? "bg-muted" : "hover:bg-muted/50"
+            }`}
+          >
+            <Calendar className="h-3 w-3 shrink-0 text-secondary" />
+            <div className="min-w-0 flex-1">
+              <div className="text-[7.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80 leading-none">When</div>
+              <div className="mt-0.5 truncate font-display text-[12px] font-semibold leading-none text-foreground">{whenDate} · {whenTime}</div>
+            </div>
+          </button>
+        </div>
       </div>
 
       {open === "city" && (
-        <div className="mt-1.5 max-h-44 overflow-y-auto rounded-2xl border border-border bg-card p-1 shadow-md scrollbar-hide">
+        <div className="mt-2 max-h-44 overflow-y-auto rounded-2xl border border-border bg-card p-1 shadow-md scrollbar-hide">
           {cities.map((opt) => (
             <button
               key={opt}
@@ -1549,7 +1554,7 @@ function SearchConfigBar() {
       )}
 
       {open === "when" && (
-        <div className="mt-1.5 grid grid-cols-2 gap-1.5 rounded-2xl border border-border bg-card p-2 shadow-md">
+        <div className="mt-2 grid grid-cols-2 gap-1.5 rounded-2xl border border-border bg-card p-2 shadow-md">
           <div>
             <div className="px-1 pb-1 text-[8.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground">Date</div>
             <div className="max-h-40 space-y-0.5 overflow-y-auto pr-0.5 scrollbar-hide">
