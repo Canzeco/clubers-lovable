@@ -46,7 +46,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-type Tab = "discover" | "coupons" | "share" | "profile";
+type Tab = "discover" | "reservations" | "coupons" | "share" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
 
 function GoogleLogo({ className = "" }: { className?: string }) {
