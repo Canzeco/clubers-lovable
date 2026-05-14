@@ -3151,13 +3151,6 @@ function CouponTicket({
           />
           {/* gradient veil for legibility */}
           <span aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-          {/* brand pill */}
-          <span className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded-full border border-white/40 bg-background/90 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.18em] text-foreground/80 shadow-sm backdrop-blur">
-            <span className="flex h-2 w-2 items-center justify-center rounded-full bg-secondary">
-              <span className="h-[3px] w-[3px] rounded-full bg-white" />
-            </span>
-            Mesita
-          </span>
           {/* state stamp */}
           {isUsed && (
             <span className="absolute bottom-2 left-2 -rotate-6 rounded border border-secondary/80 bg-background/90 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-widest text-secondary/90 backdrop-blur-sm">
