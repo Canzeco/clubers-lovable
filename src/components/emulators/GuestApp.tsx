@@ -46,6 +46,13 @@ import {
   ChevronDown,
   CalendarCheck,
   SlidersHorizontal,
+  TrendingDown,
+  Globe,
+  Car,
+  Accessibility,
+  Wine,
+  Beef,
+  GlassWater,
 } from "lucide-react";
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
