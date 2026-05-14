@@ -3128,15 +3128,6 @@ function CouponTicket({
     ? { label: "Reservation", cls: "bg-secondary/10 text-secondary border border-secondary/20" }
     : { label: "Coupon", cls: "bg-foreground/5 text-foreground/70 border border-foreground/10" };
 
-  const tierBar =
-    c.color === "tier-gold"
-      ? "bg-tier-gold"
-      : c.color === "tier-silver"
-      ? "bg-tier-silver"
-      : c.color === "tier-bronze"
-      ? "bg-tier-bronze"
-      : "bg-secondary";
-
   return (
     <button
       onClick={onClick}
@@ -3192,7 +3183,6 @@ function CouponTicket({
         {/* MIDDLE — content */}
         <div className="relative flex min-w-0 flex-1 flex-col justify-center gap-2 px-3 py-3">
           <div className="flex items-center gap-1.5 min-w-0">
-            <span aria-hidden className={`h-3.5 w-1 flex-shrink-0 rounded-full opacity-90 ${tierBar}`} />
             <p className="truncate font-display text-[16px] font-bold leading-none tracking-tight text-foreground">
               {c.name}
             </p>
