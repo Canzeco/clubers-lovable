@@ -797,7 +797,7 @@ function VenueDetailSheet({
 
           {/* About — long-form copy, sits below details, above the action bar */}
           <section className="pb-2">
-            <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">About</p>
+            <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">The Story</p>
             {venue.about ? (
               <div className="space-y-4">
                 <p className="font-display text-base leading-snug text-foreground">
