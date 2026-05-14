@@ -348,6 +348,36 @@ function WhySaveFaq() {
 }
 
 function QrFaqItem({ q, children }: { q: string; children: React.ReactNode }) {
+  return _QrFaqItem({ q, children });
+}
+
+function IGStoryRequirement({ venue, handle = "@casaluminar" }: { venue: string; handle?: string }) {
+  // Gold/Silver/Diamond tiers with Instagram on file. In this prototype the
+  // user is always Gold w/ IG, so we always render this requirement.
+  return (
+    <div className="mt-3 overflow-hidden rounded-2xl border border-fuchsia-300/50 bg-gradient-to-br from-fuchsia-50 via-rose-50 to-amber-50">
+      <div className="flex items-center gap-2 border-b border-fuchsia-200/60 px-3 py-2">
+        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-gradient-to-br from-fuchsia-500 via-rose-500 to-amber-400 text-white shadow-sm">
+          <Instagram className="h-3.5 w-3.5" />
+        </span>
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+          To activate this cashback coupon
+        </p>
+      </div>
+      <div className="space-y-1.5 px-3 py-2.5 text-[11px] leading-snug text-foreground/80">
+        <p>
+          Upload an <span className="font-semibold text-foreground">Instagram story</span> mentioning{" "}
+          <span className="font-semibold text-foreground">{handle}</span> during your visit.
+        </p>
+        <p className="text-[10px] text-muted-foreground">
+          Required for Silver, Gold &amp; Diamond members with Instagram. No story · no cashback.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function _QrFaqItem({ q, children }: { q: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="rounded-xl border border-border bg-background/60">
