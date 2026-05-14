@@ -805,15 +805,23 @@ function VenueDetailSheet({
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center px-4 pb-4">
           <div className="pointer-events-auto flex w-full items-stretch gap-1.5 rounded-3xl border border-border/60 bg-card/85 p-2 shadow-2xl backdrop-blur-xl">
             <button
-              onClick={handleSave}
-              className="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl border border-foreground/15 bg-background px-2 py-2 text-[11px] font-semibold leading-tight text-foreground shadow-sm transition hover:border-foreground/30 active:scale-[0.98]"
+              onClick={isPartner ? handleSave : showBlocked}
+              className={`flex flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl border px-2 py-2 text-[11px] font-semibold leading-tight shadow-sm transition active:scale-[0.98] ${
+                isPartner
+                  ? "border-foreground/15 bg-background text-foreground hover:border-foreground/30"
+                  : "border-dashed border-foreground/15 bg-muted/40 text-muted-foreground/60"
+              }`}
             >
-              <Ticket className="h-4 w-4 text-secondary" />
+              <Ticket className={`h-4 w-4 ${isPartner ? "text-secondary" : "text-muted-foreground/50"}`} />
               <span>Save Coupon</span>
             </button>
             <button
-              onClick={handleSaveReserve}
-              className="flex flex-[1.4] flex-col items-center justify-center gap-0.5 rounded-2xl bg-secondary px-2 py-2 text-[11px] font-semibold leading-tight text-secondary-foreground shadow-sm transition active:scale-[0.98]"
+              onClick={isPartner ? handleSaveReserve : showBlocked}
+              className={`flex flex-[1.4] flex-col items-center justify-center gap-0.5 rounded-2xl px-2 py-2 text-[11px] font-semibold leading-tight shadow-sm transition active:scale-[0.98] ${
+                isPartner
+                  ? "bg-secondary text-secondary-foreground"
+                  : "border border-dashed border-foreground/15 bg-muted/40 text-muted-foreground/60"
+              }`}
             >
               <span className="flex items-center gap-1">
                 <Ticket className="h-3.5 w-3.5" />
