@@ -3413,12 +3413,17 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
 
         {/* Status row */}
         <div className="mt-4 flex flex-wrap gap-2">
-          {coupon.res === "pending" && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-2.5 py-1 text-[11px] font-medium text-primary">
-              <Phone className="h-3 w-3 animate-pulse" /> AI agent calling venue
-            </span>
+          {(coupon.res === "pending" || coupon.resStatus === "pending") && (
+            <div className="flex w-full flex-col gap-1">
+              <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-primary/15 px-2.5 py-1 text-[11px] font-medium text-primary">
+                <Phone className="h-3 w-3 animate-pulse" /> AI agent calling venue
+              </span>
+              <p className="text-[10px] leading-snug text-muted-foreground">
+                Expect a call in ~3 min to confirm.
+              </p>
+            </div>
           )}
-          {coupon.res === "confirmed" && (
+          {(coupon.res === "confirmed" || coupon.resStatus === "confirmed") && (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/15 px-2.5 py-1 text-[11px] font-medium text-secondary">
               <Check className="h-3 w-3" /> Reserved {coupon.resWhen || coupon.resRequested || ""}{coupon.resParty ? ` for ${coupon.resParty} ${coupon.resParty === 1 ? "person" : "people"}` : ""}
             </span>
