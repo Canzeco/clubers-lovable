@@ -3441,7 +3441,7 @@ export function getCouponWorkflow(c: any): WorkflowStep[] {
 // Legacy aliases (kept so any out-of-file references still resolve)
 const PIPELINE_STEPS = WF_PAY_STORY_CB;
 
-function HorizontalStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: { label: string; Icon: any }[] }) {
+function HorizontalStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: WorkflowStep[] }) {
   return (
     <div className="pointer-events-none mt-0.5 flex w-full items-center">
       {steps.map((s, i) => {
@@ -3449,7 +3449,7 @@ function HorizontalStepper({ step, steps = PIPELINE_STEPS }: { step: number; ste
         const current = i === step;
         const Icon = s.Icon;
         return (
-          <div key={s.label} className="flex flex-1 items-center last:flex-none">
+          <div key={i} className="flex flex-1 items-center last:flex-none">
             <div
               title={s.label}
               className={`flex h-3 w-3 flex-shrink-0 items-center justify-center rounded-full border transition ${
@@ -3480,7 +3480,7 @@ function HorizontalStepper({ step, steps = PIPELINE_STEPS }: { step: number; ste
   );
 }
 
-function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: { label: string; Icon: any }[] }) {
+function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: WorkflowStep[] }) {
   // step = number of completed stages (0..5). Current = step (next to complete).
   return (
     <div className="pointer-events-none flex flex-col items-center gap-0.5 py-2">
@@ -3489,7 +3489,7 @@ function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps
         const current = i === step;
         const Icon = s.Icon;
         return (
-          <div key={s.label} className="flex flex-col items-center">
+          <div key={i} className="flex flex-col items-center">
             <div
               title={s.label}
               className={`flex h-3.5 w-3.5 items-center justify-center rounded-full border transition ${
