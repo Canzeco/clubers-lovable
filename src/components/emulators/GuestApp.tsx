@@ -3799,19 +3799,15 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
 }
 
 function StripeCheckoutModal({ coupon, onClose }: { coupon: any; onClose: () => void }) {
-  // Sample bill — in a real flow this comes from the validator's confirmation
-  const billItems = coupon.bill?.items ?? [
-    { name: "Tasting menu", qty: 2, price: 420 },
-    { name: "Natural wine pairing", qty: 1, price: 380 },
-    { name: "Espresso", qty: 2, price: 60 },
-  ];
-  const subtotal = billItems.reduce((s: number, i: any) => s + i.qty * i.price, 0);
-  // Apply prior-purchase Mesita balance as a discount line if the user has one
-  const balanceAvailable = Math.min(coupon.balance ?? 180, Math.floor(subtotal * 0.4));
-  const discountQty = balanceAvailable > 0 ? 1 : 0;
-  const discount = balanceAvailable * discountQty;
-  const total = Math.max(0, subtotal - discount);
-  const cashbackEarned = Math.round(total * ((coupon.cb ?? 0) / 100));
+  // The waiter only types in the final bill amount on their phone.
+  const billTotal: number = coupon.bill?.total ?? 1340;
+  const balanceAvailable = Math.min(coupon.balance ?? 180, Math.floor(billTotal * 0.4));
+  const discount = balanceAvailable;
+  const [tipPct, setTipPct] = useState<number>(10);
+  const tipOptions = [0, 10, 15, 20];
+  const tip = Math.round(billTotal * (tipPct / 100));
+  const total = Math.max(0, billTotal - discount + tip);
+  const cashbackEarned = Math.round((billTotal - discount) * ((coupon.cb ?? 0) / 100));
   const [paying, setPaying] = useState(false);
   const [done, setDone] = useState(false);
 
@@ -3875,29 +3871,52 @@ function StripeCheckoutModal({ coupon, onClose }: { coupon: any; onClose: () => 
 
             {/* Bill */}
             <div className="rounded-3xl bg-card-soft p-5">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Bill from waiter</p>
-              <ul className="mt-3 space-y-2 text-sm">
-                {billItems.map((it: any, i: number) => (
-                  <li key={i} className="flex items-baseline justify-between gap-3">
-                    <span className="flex-1">
-                      <span className="text-muted-foreground">{it.qty}×</span> {it.name}
-                    </span>
-                    <span className="font-mono text-[12px]">${(it.qty * it.price).toLocaleString()}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-3 space-y-1.5 border-t border-border/60 pt-3 text-sm">
+              <div className="flex items-baseline justify-between">
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Final bill</p>
+                <p className="text-[10px] text-muted-foreground">Sent by waiter</p>
+              </div>
+              <p className="mt-1 font-display text-3xl font-semibold leading-none">
+                ${billTotal.toLocaleString()}
+                <span className="ml-1 text-sm font-medium text-muted-foreground">MXN</span>
+              </p>
+
+              {/* Tip */}
+              <div className="mt-4">
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Tip</p>
+                <div className="mt-2 flex gap-1.5">
+                  {tipOptions.map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => setTipPct(p)}
+                      className={`flex-1 rounded-full px-2 py-1.5 text-[12px] font-semibold transition ${
+                        tipPct === p
+                          ? "bg-foreground text-background shadow-sm"
+                          : "bg-background text-muted-foreground border border-border"
+                      }`}
+                    >
+                      {p === 0 ? "No tip" : `${p}%`}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4 space-y-1.5 border-t border-border/60 pt-3 text-sm">
                 <div className="flex justify-between text-muted-foreground">
-                  <span>Subtotal</span>
-                  <span className="font-mono">${subtotal.toLocaleString()}</span>
+                  <span>Bill</span>
+                  <span className="font-mono">${billTotal.toLocaleString()}</span>
                 </div>
                 {discount > 0 && (
                   <div className="flex justify-between text-secondary">
-                    <span>
-                      Mesita balance{" "}
-                      <span className="text-[10px] text-muted-foreground">× {discountQty}</span>
-                    </span>
+                    <span>Mesita balance</span>
                     <span className="font-mono">−${discount.toLocaleString()}</span>
+                  </div>
+                )}
+                {tip > 0 && (
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>
+                      Tip <span className="text-[10px]">({tipPct}%)</span>
+                    </span>
+                    <span className="font-mono">+${tip.toLocaleString()}</span>
                   </div>
                 )}
                 <div className="flex justify-between pt-1.5 font-semibold">
