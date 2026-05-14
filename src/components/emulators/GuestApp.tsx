@@ -413,6 +413,77 @@ function ModeSwitcher({
   );
 }
 
+const VENUE_QUICKNAV = [
+  { id: "vsec-photos", label: "Photos" },
+  { id: "vsec-scores", label: "Scores" },
+  { id: "vsec-activity", label: "Activity" },
+  { id: "vsec-offers", label: "Offers" },
+  { id: "vsec-about", label: "About" },
+  { id: "vsec-menu", label: "Menu" },
+  { id: "vsec-hours", label: "Hours" },
+  { id: "vsec-location", label: "Location" },
+  { id: "vsec-visitors", label: "Visitors" },
+  { id: "vsec-reviews", label: "Reviews" },
+  { id: "vsec-concierge", label: "Concierge" },
+  { id: "vsec-details", label: "Details" },
+];
+
+function VenueQuickNav() {
+  const [active, setActive] = useState(VENUE_QUICKNAV[0].id);
+  const navRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const opts: IntersectionObserverInit = {
+      root: null,
+      rootMargin: "-40% 0px -55% 0px",
+      threshold: 0,
+    };
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) setActive(e.target.id);
+      });
+    }, opts);
+    VENUE_QUICKNAV.forEach((s) => {
+      const el = document.getElementById(s.id);
+      if (el) obs.observe(el);
+    });
+    return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const btn = navRef.current?.querySelector<HTMLButtonElement>(`[data-qid="${active}"]`);
+    btn?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [active]);
+
+  const go = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  return (
+    <div className="sticky top-0 z-20 -mx-px border-b border-border/60 bg-card/90 backdrop-blur-xl">
+      <div ref={navRef} className="scrollbar-hide flex gap-1 overflow-x-auto px-4 py-2">
+        {VENUE_QUICKNAV.map((s) => {
+          const isActive = active === s.id;
+          return (
+            <button
+              key={s.id}
+              data-qid={s.id}
+              onClick={() => go(s.id)}
+              className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${
+                isActive
+                  ? "bg-foreground text-background shadow-sm"
+                  : "bg-card-soft text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {s.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function VenueDetailSheet({
   venue,
   onClose,
