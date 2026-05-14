@@ -2366,7 +2366,7 @@ function CouponTicket({
                 </>
               ) : (
                 <>
-                  <p className="mt-0.5 truncate font-display text-[12px] font-semibold leading-tight text-foreground/90">
+                  <p className="mt-0.5 font-display text-[12px] font-semibold leading-tight text-foreground/90">
                     {c.resWhen}
                   </p>
                   <p className="mt-0.5 flex items-center gap-1 text-[10px] text-muted-foreground">
