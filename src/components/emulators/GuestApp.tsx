@@ -1504,8 +1504,13 @@ function DiscoverHeader() {
   return (
     <div className="border-b border-border/60 px-3 pb-2.5 pt-1">
       <div className="flex items-center gap-2">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-peacock text-base shadow-glow">
-          🦚
+        <div className="relative shrink-0">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-peacock text-base shadow-glow ring-2 ring-tier-gold ring-offset-2 ring-offset-background">
+            🦚
+          </div>
+          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full bg-tier-gold px-1.5 py-px text-[7.5px] font-bold uppercase tracking-wider text-black shadow-sm">
+            Gold
+          </span>
         </div>
         <div className="flex min-w-0 flex-1 items-center gap-1 rounded-full border border-border bg-card/70 p-1 shadow-sm backdrop-blur">
           <button
