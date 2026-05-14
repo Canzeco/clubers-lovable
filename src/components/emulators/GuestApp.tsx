@@ -3873,7 +3873,7 @@ function RewardsView() {
 
 function MyQrView() {
   return (
-    <div className="flex h-full flex-col bg-background px-6 py-6">
+    <div className="flex h-full flex-col overflow-y-auto scrollbar-hide bg-background px-6 py-6">
       <div className="flex items-center gap-3">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-peacock text-base shadow-glow">
           🦚
@@ -3896,7 +3896,7 @@ function MyQrView() {
         </p>
       </div>
 
-      <div className="mt-5 flex flex-1 items-center justify-center">
+      <div className="mt-5 flex items-center justify-center">
         <div className="relative rounded-3xl bg-card p-5 shadow-elev">
           <div className="grid h-56 w-56 grid-cols-12 grid-rows-12 gap-[2px] rounded-xl bg-background p-2">
             {Array.from({ length: 144 }).map((_, i) => {
@@ -3921,19 +3921,7 @@ function MyQrView() {
         </div>
       </div>
 
-      <div className="mt-4 rounded-2xl border border-border bg-card-soft p-3">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          How it works
-        </p>
-        <p className="mt-1 text-[12px] leading-snug text-foreground/80">
-          Forgot to save a coupon? No problem. Show this QR and the waiter applies your
-          venue's default cashback to the bill instantly.
-        </p>
-      </div>
-
-      <div className="mt-3">
-        <WhySaveFaq />
-      </div>
+      <WhySaveFaq />
     </div>
   );
 }
