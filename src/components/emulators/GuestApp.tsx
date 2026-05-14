@@ -3400,6 +3400,16 @@ function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps
 }
 
 function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+  const photoMap: Record<string, string> = {
+    "Casa Luminar": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
+    "Neón Bar": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80",
+    "Mar Verde": "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80",
+    "Loto Café": "https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=800&q=80",
+    "Atelier Nueve": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80",
+    "El Tope": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&q=80",
+    "Forno": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80",
+  };
+  const photo = photoMap[coupon.name] || "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80";
   return (
     <div className="absolute inset-0 z-30 flex items-end bg-black/50" onClick={onClose}>
       <div
@@ -3408,51 +3418,25 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
       >
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted-foreground/30" />
 
-        {/* Header */}
-        <div className="flex items-center gap-3">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary text-base font-bold text-secondary-foreground">
-            {coupon.cb}%
-          </div>
-          <div className="flex-1">
-            <p className="text-[10px] uppercase tracking-widest text-secondary">
+        {/* SECTION 1 — Photo + name */}
+        <div className="relative overflow-hidden rounded-3xl">
+          <img src={photo} alt={coupon.name} className="h-36 w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+          <button
+            onClick={onClose}
+            className="absolute right-3 top-3 rounded-full bg-black/40 p-1.5 text-white backdrop-blur hover:bg-black/60"
+          >
+            <X className="h-4 w-4" />
+          </button>
+          <div className="absolute bottom-3 left-3 right-3">
+            <p className="text-[10px] uppercase tracking-widest text-white/80">
               {coupon.used ? "Used coupon" : "Cashback coupon"}
             </p>
-            <p className="font-display text-2xl font-semibold leading-tight">{coupon.name}</p>
-            <p className="text-[11px] text-muted-foreground">
-              {coupon.note || (coupon.when ? `Used · ${coupon.when}` : "")}
-            </p>
+            <p className="font-display text-2xl font-semibold leading-tight text-white">{coupon.name}</p>
+            {coupon.category && (
+              <p className="text-[11px] text-white/80">{coupon.category}{coupon.distance ? ` · ${coupon.distance}` : ""}</p>
+            )}
           </div>
-          <button onClick={onClose} className="rounded-full p-1 text-muted-foreground hover:bg-card">
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        {/* Status row */}
-        <div className="mt-4 flex flex-wrap gap-2">
-          {(coupon.res === "pending" || coupon.resStatus === "pending") && (
-            <span className="inline-flex w-fit items-center gap-1.5 rounded-2xl bg-primary/15 px-2.5 py-1.5 text-[11px] font-medium text-primary">
-              <Phone className="h-3 w-3 shrink-0 animate-pulse" />
-              <span>
-                <span className="font-semibold uppercase tracking-wider">AI calling venue</span>
-                <span className="ml-1.5 font-normal opacity-80">· expect a call in ~3 min to confirm</span>
-              </span>
-            </span>
-          )}
-          {(coupon.res === "confirmed" || coupon.resStatus === "confirmed") && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/15 px-2.5 py-1 text-[11px] font-medium text-secondary">
-              <Check className="h-3 w-3" /> Reserved {coupon.resWhen || coupon.resRequested || ""}{coupon.resParty ? ` for ${coupon.resParty} ${coupon.resParty === 1 ? "person" : "people"}` : ""}
-            </span>
-          )}
-          {coupon.exp && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-card px-2.5 py-1 text-[11px] text-secondary">
-              <Clock className="h-3 w-3" /> {coupon.exp}
-            </span>
-          )}
-          {coupon.used && coupon.saved && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/15 px-2.5 py-1 text-[11px] font-medium text-secondary">
-              <Sparkles className="h-3 w-3" /> Saved {coupon.saved}
-            </span>
-          )}
         </div>
 
         {!coupon.used ? (
