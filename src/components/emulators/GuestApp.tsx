@@ -3177,6 +3177,14 @@ function CouponTicket({
             <p className="truncate font-display text-[16px] font-bold leading-none tracking-tight text-foreground">
               {c.name}
             </p>
+            {(c.cb ?? 0) >= 15 && state !== "expired" && (
+              <span
+                title="Instagram story required to redeem"
+                className="inline-flex flex-shrink-0 items-center gap-0.5 rounded-full bg-gradient-to-tr from-fuchsia-500 to-amber-400 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-white"
+              >
+                <Camera className="h-2.5 w-2.5" /> Story
+              </span>
+            )}
           </div>
           <span
             className={`inline-flex items-center gap-1.5 self-start rounded-sm px-1.5 py-0.5 text-[10px] font-medium ${pill.cls}`}
