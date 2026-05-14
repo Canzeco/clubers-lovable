@@ -2267,17 +2267,19 @@ function CouponTicket({
   const isInactive = isExpired || isUsed;
   const isReservation = !!c.isReservation && state === "active";
   const isPending = isReservation && c.resStatus === "pending";
-  // Scalloped bottom edge via radial-gradient mask
-  const scallop = {
-    WebkitMaskImage:
-      "radial-gradient(circle 6px at 8px 100%, transparent 6px, black 6.5px)",
-    WebkitMaskSize: "16px 100%",
-    WebkitMaskRepeat: "repeat-x",
-    maskImage:
-      "radial-gradient(circle 6px at 8px 100%, transparent 6px, black 6.5px)",
-    maskSize: "16px 100%",
-    maskRepeat: "repeat-x",
-  } as React.CSSProperties;
+  const hasCashback = (c.cb ?? 0) > 0;
+  const venueImg = VENUE_IMAGES[c.name as keyof typeof VENUE_IMAGES] ?? VENUE_IMAGES._default;
+
+  // status pill content
+  const pill = isExpired
+    ? { label: "Expired", cls: "bg-muted text-muted-foreground" }
+    : isUsed
+    ? { label: "Redeemed", cls: "bg-muted text-muted-foreground" }
+    : isPending
+    ? { label: "Pending", cls: "bg-amber-500/15 text-amber-600" }
+    : isReservation
+    ? { label: "Reservation", cls: "bg-secondary/15 text-secondary" }
+    : { label: "Coupon", cls: "bg-foreground/10 text-foreground/70" };
 
   return (
     <button
@@ -2286,167 +2288,85 @@ function CouponTicket({
         isInactive ? "opacity-80" : ""
       }`}
     >
-      {/* outer ticket */}
       <div
-        className={`relative flex items-stretch overflow-hidden rounded-2xl border bg-card-soft shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] aspect-[2.2/1] ${
+        className={`relative flex items-stretch overflow-hidden rounded-2xl border bg-card-soft shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] ${
           isExpired ? "border-dashed border-border grayscale" : "border-border"
         } ${isUsed ? "border-dashed" : ""} ${isReservation ? "ring-1 ring-secondary/40" : ""}`}
       >
-        {/* left stub */}
-        <div
-          className={`relative flex w-[32%] flex-shrink-0 flex-col items-stretch justify-between overflow-hidden px-2.5 py-3 ${
-            isInactive
-              ? "bg-gradient-to-br from-muted to-card text-muted-foreground"
-              : c.firstVisit
-              ? "bg-gradient-to-br from-fuchsia-500 via-rose-400 to-amber-300 text-black"
-              : "bg-gradient-to-br from-secondary via-secondary/90 to-secondary/70 text-secondary-foreground"
-          }`}
-        >
-          {/* foil sheen */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-40 mix-blend-overlay"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0) 65%, rgba(255,255,255,0.35) 100%)",
-            }}
+        {/* LEFT — restaurant image */}
+        <div className="relative w-[88px] flex-shrink-0 overflow-hidden bg-muted">
+          <img
+            src={venueImg}
+            alt={c.name}
+            loading="lazy"
+            className={`h-full w-full object-cover ${isInactive ? "grayscale" : ""}`}
           />
-          {/* fine grid pattern */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-[0.18]"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 1px 1px, currentColor 0.6px, transparent 0)",
-              backgroundSize: "8px 8px",
-            }}
-          />
-          {/* glow blob */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute -left-6 -top-6 h-20 w-20 rounded-full bg-white/30 blur-2xl"
-          />
-
-          {/* TOP — tiny brand row */}
-          <div className="relative z-[1] flex items-center justify-between text-[8px] font-bold uppercase tracking-[0.25em] opacity-80">
-            <span className="flex items-center gap-0.5">
-              <span className="text-[10px] leading-none">🦚</span>
-              <span>Mesita</span>
-            </span>
-            {isReservation && !isInactive && (
-              <Calendar className="h-2.5 w-2.5" />
-            )}
-          </div>
-
-          {/* CENTER — the % */}
-          <div className="relative z-[1] flex flex-col items-center justify-center">
-            <p className="font-display text-[44px] font-extrabold leading-none tracking-tight drop-shadow-sm">
-              {c.cb}
-              <span className="text-2xl">%</span>
-            </p>
-            <p className="mt-1 text-[8px] font-black uppercase tracking-[0.3em] opacity-80">
-              {c.firstVisit && !isInactive ? "welcome · cashback" : "cashback"}
-            </p>
-          </div>
-
-          {/* BOTTOM — chip / signature */}
-          <div className="relative z-[1] flex items-end justify-between">
-            <span
-              aria-hidden
-              className="block h-3 w-5 rounded-[2px] bg-gradient-to-br from-white/70 to-white/30 shadow-inner"
-            />
-            <span className="font-display text-[9px] font-bold italic tracking-tight opacity-70">
-              gift
-            </span>
-          </div>
-
-          {/* state stamps */}
+          {/* tiny brand mark */}
+          <span className="absolute left-1.5 top-1.5 flex items-center gap-0.5 rounded-full bg-background/80 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.2em] text-foreground/80 backdrop-blur">
+            <span className="text-[10px] leading-none">🦚</span> Mesita
+          </span>
+          {/* state stamp */}
           {isUsed && (
-            <span className="absolute left-1/2 top-1/2 z-[2] -translate-x-1/2 -translate-y-1/2 -rotate-12 rounded border-2 border-secondary/80 bg-background/60 px-2 py-0.5 font-display text-[11px] font-black uppercase tracking-widest text-secondary/90 backdrop-blur-sm">
+            <span className="absolute bottom-1.5 left-1.5 -rotate-6 rounded border border-secondary/80 bg-background/85 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-widest text-secondary/90 backdrop-blur-sm">
               Redeemed
             </span>
           )}
           {isExpired && (
-            <span className="absolute left-1/2 top-1/2 z-[2] -translate-x-1/2 -translate-y-1/2 -rotate-12 rounded border-2 border-foreground/60 bg-background/60 px-2 py-0.5 font-display text-[11px] font-black uppercase tracking-widest text-foreground/70 backdrop-blur-sm">
+            <span className="absolute bottom-1.5 left-1.5 -rotate-6 rounded border border-foreground/60 bg-background/85 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-widest text-foreground/70 backdrop-blur-sm">
               Expired
             </span>
           )}
         </div>
 
-        {/* perforation notches + dashed line */}
+        {/* perforation between image and content */}
         <span
           aria-hidden
           className="pointer-events-none absolute top-0 z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-border bg-background"
-          style={{ left: "32%" }}
+          style={{ left: "88px" }}
         />
         <span
           aria-hidden
           className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full border border-border bg-background"
-          style={{ left: "32%" }}
+          style={{ left: "88px" }}
         />
         <span
           aria-hidden
           className="pointer-events-none absolute top-3 bottom-3 border-l-2 border-dotted border-border"
-          style={{ left: "32%" }}
+          style={{ left: "88px" }}
         />
 
-        {/* right info */}
-        <div className="relative flex min-w-0 flex-1 flex-col justify-between px-4 py-3 pr-9">
-          {state === "active" && (
-            <PipelineStepper step={c.step ?? 0} />
-          )}
-
-          {/* TOP: chip + serial */}
+        {/* MIDDLE — content */}
+        <div className="relative flex min-w-0 flex-1 flex-col justify-between px-3 py-2.5">
+          {/* top: pill + code */}
           <div className="flex items-center justify-between gap-2">
             <span
-              className={`rounded-sm px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.18em] ${
-                isPending
-                  ? "bg-amber-500/15 text-amber-600"
-                  : isReservation
-                  ? "bg-secondary/15 text-secondary"
-                  : isExpired
-                  ? "bg-muted text-muted-foreground"
-                  : isUsed
-                  ? "bg-muted text-muted-foreground"
-                  : "bg-foreground/10 text-foreground/70"
-              }`}
+              className={`rounded-sm px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.18em] ${pill.cls}`}
             >
-              {isPending
-                ? "Pending"
-                : isReservation
-                ? "Reservation"
-                : isExpired
-                ? "Expired"
-                : isUsed
-                ? "Redeemed"
-                : "Coupon"}
+              {pill.label}
             </span>
             <span className="font-mono text-[8px] tracking-widest text-muted-foreground/70">
               {c.code || "MES-•••"}
             </span>
           </div>
 
-          {/* HERO: the most important thing */}
+          {/* hero */}
           <div className="min-w-0">
+            <p className="truncate font-display text-[15px] font-bold leading-tight text-foreground">
+              {c.name}
+            </p>
             {isReservation ? (
               isPending ? (
                 <>
-                  <p className="truncate font-display text-base font-bold leading-tight">
-                    {c.name}
-                  </p>
-                  <p className="mt-1 flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-amber-600">
-                    <Loader2 className="h-3 w-3 animate-spin" /> AI agent calling venue
+                  <p className="mt-0.5 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-600">
+                    <Loader2 className="h-3 w-3 animate-spin" /> AI calling venue
                   </p>
                   <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
-                    Requested {c.resRequested} · {c.resParty} guests
+                    {c.resRequested} · {c.resParty} guests
                   </p>
                 </>
               ) : (
                 <>
-                  <p className="truncate font-display text-sm font-semibold leading-none text-muted-foreground">
-                    {c.name}
-                  </p>
-                  <p className="mt-1 font-display text-[17px] font-bold leading-tight text-foreground">
+                  <p className="mt-0.5 font-display text-[12px] font-semibold leading-tight text-foreground/90">
                     {c.resWhen}
                   </p>
                   <p className="mt-0.5 flex items-center gap-1 text-[10px] text-muted-foreground">
@@ -2457,52 +2377,96 @@ function CouponTicket({
               )
             ) : (
               <>
-                <p className="truncate font-display text-base font-bold leading-tight">
-                  {c.name}
-                </p>
                 {state === "active" && (
-                  <p className="mt-1 flex items-baseline gap-1.5">
-                    <Clock className="h-3 w-3 text-foreground/70" />
-                    <span className="font-display text-[15px] font-bold leading-none text-foreground">
-                      {c.expiresIn}
-                    </span>
-                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground">
-                      left
-                    </span>
+                  <p className="mt-0.5 flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <Clock className="h-3 w-3" />
+                    <span className="font-semibold text-foreground/80">{c.expiresIn}</span>
+                    <span className="uppercase tracking-widest">left</span>
                   </p>
                 )}
                 {state === "expired" && (
-                  <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Expired {c.expiredOn}
                   </p>
                 )}
                 {state === "used" && (
-                  <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Redeemed · {c.when}
                   </p>
                 )}
               </>
             )}
           </div>
+        </div>
 
+        {/* RIGHT — cashback + stepper */}
+        <div className="relative flex flex-shrink-0 items-stretch">
+          {/* cashback column */}
+          <div
+            className={`relative flex w-[60px] flex-col items-center justify-center overflow-hidden px-1 py-2 ${
+              !hasCashback
+                ? "bg-muted/40 text-muted-foreground"
+                : isInactive
+                ? "bg-gradient-to-b from-muted to-card text-muted-foreground"
+                : c.firstVisit
+                ? "bg-gradient-to-b from-fuchsia-500 via-rose-400 to-amber-300 text-black"
+                : "bg-gradient-to-b from-secondary via-secondary/90 to-secondary/70 text-secondary-foreground"
+            }`}
+          >
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 opacity-40 mix-blend-overlay"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.3) 100%)",
+              }}
+            />
+            {hasCashback ? (
+              <>
+                <p className="relative z-[1] font-display text-[34px] font-extrabold leading-none tracking-tight drop-shadow-sm">
+                  {c.cb}
+                  <span className="text-base">%</span>
+                </p>
+                <p className="relative z-[1] mt-0.5 text-[7px] font-black uppercase tracking-[0.25em] opacity-80">
+                  {c.firstVisit && !isInactive ? "welcome" : "cashback"}
+                </p>
+              </>
+            ) : (
+              <>
+                <Calendar className="relative z-[1] h-5 w-5" />
+                <p className="relative z-[1] mt-1 text-[7px] font-black uppercase tracking-[0.2em]">
+                  reserve
+                </p>
+              </>
+            )}
+          </div>
+
+          {/* vertical pipeline stepper */}
+          {state === "active" && (
+            <div className="flex w-[22px] flex-shrink-0 items-center justify-center border-l border-dotted border-border/70 bg-card-soft">
+              <PipelineStepper step={c.step ?? 0} />
+            </div>
+          )}
         </div>
       </div>
-
-      {/* scalloped tear-off edge under the ticket */}
-      <div
-        className={`-mt-px h-2 ${
-          isExpired
-            ? "bg-card/60"
-            : isUsed
-            ? "bg-card/70"
-            : "bg-card-soft"
-        }`}
-        style={scallop}
-        aria-hidden
-      />
     </button>
   );
 }
+
+const VENUE_IMAGES = {
+  "Mar Verde":
+    "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=240&h=320&fit=crop&q=70",
+  "Neón Bar":
+    "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=240&h=320&fit=crop&q=70",
+  "Casa Luminar":
+    "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=240&h=320&fit=crop&q=70",
+  "Loto Café":
+    "https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=240&h=320&fit=crop&q=70",
+  "Atelier Nueve":
+    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=240&h=320&fit=crop&q=70",
+  _default:
+    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=240&h=320&fit=crop&q=70",
+} as const;
 
 const PIPELINE_STEPS: { label: string; Icon: any }[] = [
   { label: "Saved", Icon: Ticket },
@@ -2515,7 +2479,7 @@ const PIPELINE_STEPS: { label: string; Icon: any }[] = [
 function PipelineStepper({ step }: { step: number }) {
   // step = number of completed stages (0..5). Current = step (next to complete).
   return (
-    <div className="pointer-events-none absolute right-1.5 top-1/2 z-10 flex -translate-y-1/2 flex-col items-center gap-0.5">
+    <div className="pointer-events-none flex flex-col items-center gap-0.5 py-2">
       {PIPELINE_STEPS.map((s, i) => {
         const done = i < step;
         const current = i === step;
