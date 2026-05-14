@@ -3163,17 +3163,7 @@ function CouponTicket({
           )}
         </div>
 
-        {/* perforation between image and content */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute top-0 z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-hero ring-1 ring-border/70"
-          style={{ left: "84px" }}
-        />
-        <span
-          aria-hidden
-          className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full bg-hero ring-1 ring-border/70"
-          style={{ left: "84px" }}
-        />
+        {/* divider between image and content */}
         <span
           aria-hidden
           className="pointer-events-none absolute top-3 bottom-3 border-l border-dotted border-border"
