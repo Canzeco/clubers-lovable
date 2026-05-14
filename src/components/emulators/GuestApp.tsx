@@ -2235,14 +2235,6 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   );
 }
 
-function RedeemFlow({ coupon }: { coupon: any }) {
-  return <PayWithCouponSheetInner coupon={coupon} />;
-}
-function PayWithCouponSheetInner({ coupon }: { coupon: any }) {
-  void coupon;
-  return null;
-}
-
 function PayWithCouponSheet({ coupon, onClose }: { coupon: any; onClose: () => void }) {
   return (
     <div className="absolute inset-0 z-40 flex items-end justify-center bg-black/60 p-4" onClick={onClose}>
@@ -2299,7 +2291,7 @@ function PayWithCouponSheet({ coupon, onClose }: { coupon: any; onClose: () => v
   );
 }
 
-function _RedeemFlowOriginal({ coupon }: { coupon: any }) {
+function RedeemFlow({ coupon }: { coupon: any }) {
   const requireStory = (coupon.cb ?? 0) >= 15;
   const [step, setStep] = useState<"form" | "sending" | "waiting" | "approved">("form");
   const [bill, setBill] = useState("");
