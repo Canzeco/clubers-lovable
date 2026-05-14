@@ -729,9 +729,6 @@ function VenueDetailSheet({
           <section id="vsec-details" className="scroll-mt-16 space-y-4">
             <SectionLabel>Details</SectionLabel>
 
-            {/* Current activity */}
-            <CurrentActivitySection />
-
             {/* Offers & cashback */}
             <OffersSection cashback={venue.cashback} />
 
