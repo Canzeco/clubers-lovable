@@ -347,6 +347,32 @@ function WhySaveFaq() {
   );
 }
 
+function IGStoryRequirement({ handle = "@casaluminar" }: { venue?: string; handle?: string }) {
+  // Gold/Silver/Diamond tiers with Instagram on file. In this prototype the
+  // user is always Gold w/ IG, so we always render this requirement.
+  return (
+    <div className="mt-3 overflow-hidden rounded-2xl border border-fuchsia-300/50 bg-gradient-to-br from-fuchsia-50 via-rose-50 to-amber-50">
+      <div className="flex items-center gap-2 border-b border-fuchsia-200/60 px-3 py-2">
+        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-gradient-to-br from-fuchsia-500 via-rose-500 to-amber-400 text-white shadow-sm">
+          <Instagram className="h-3.5 w-3.5" />
+        </span>
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+          To activate this cashback coupon
+        </p>
+      </div>
+      <div className="space-y-1.5 px-3 py-2.5 text-[11px] leading-snug text-foreground/80">
+        <p>
+          Upload an <span className="font-semibold text-foreground">Instagram story</span> mentioning{" "}
+          <span className="font-semibold text-foreground">{handle}</span> during your visit.
+        </p>
+        <p className="text-[10px] text-muted-foreground">
+          Required for Silver, Gold &amp; Diamond members with Instagram. No story · no cashback.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function QrFaqItem({ q, children }: { q: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
@@ -858,8 +884,9 @@ function VenueDetailSheet({
                   ? `Our AI agent is calling ${venue.name} to confirm your table.`
                   : `${venue.cashback}% cashback locked · AI agent is calling ${venue.name}.`}
               </p>
-              {confirm === "save" && (
+              {(confirm === "save" || confirm === "both") && (
                 <div className="mt-3 text-left">
+                  <IGStoryRequirement handle={`@${venue.name.toLowerCase().replace(/\s+/g, "")}`} />
                   <WhySaveFaq />
                 </div>
               )}
@@ -2312,6 +2339,7 @@ function TinderMode() {
             <p className="mt-1 text-xs text-muted-foreground">
               Our AI agent will call the venue for you. The coupon expires 7 days after your booking.
             </p>
+            <IGStoryRequirement handle={`@${askReserve.name.toLowerCase().replace(/\s+/g, "")}`} />
             <WhySaveFaq />
             <div className="mt-4 flex items-center gap-2">
               <button
@@ -2371,6 +2399,7 @@ function TinderMode() {
                 <p className="mt-1 text-[10px] text-muted-foreground">
                   Always covers up to <span className="font-semibold text-foreground">$1,000 MXN</span> per visit — anything over is paid in full.
                 </p>
+                <IGStoryRequirement handle={`@${saved.name.toLowerCase().replace(/\s+/g, "")}`} />
                 <WhySaveFaq />
                 <div className="mt-4 flex gap-2">
                   <button
