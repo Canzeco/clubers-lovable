@@ -3177,6 +3177,14 @@ function CouponTicket({
             <p className="truncate font-display text-[16px] font-bold leading-none tracking-tight text-foreground">
               {c.name}
             </p>
+            {(c.cb ?? 0) >= 15 && state !== "expired" && (
+              <span
+                title="Instagram story required to redeem"
+                className="inline-flex flex-shrink-0 items-center gap-0.5 rounded-full bg-gradient-to-tr from-fuchsia-500 to-amber-400 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-white"
+              >
+                <Camera className="h-2.5 w-2.5" /> Story
+              </span>
+            )}
           </div>
           <span
             className={`inline-flex items-center gap-1.5 self-start rounded-sm px-1.5 py-0.5 text-[10px] font-medium ${pill.cls}`}
@@ -3473,6 +3481,13 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   steps.push({ label: "Tap Pay with this coupon", detail: "Your personal QR opens" });
   steps.push({ label: "Waiter scans your QR", detail: "Opens Mesita bot on WhatsApp" });
   steps.push({ label: "Pay via Stripe link", detail: "Sent to app + WhatsApp" });
+  const requireStory = (coupon.cb ?? 0) >= 15;
+  if (requireStory) {
+    steps.push({
+      label: "Post Instagram story",
+      detail: `Tag @${coupon.name?.toLowerCase().replace(/\s+/g, "") || "venue"} — required to unlock cashback`,
+    });
+  }
   steps.push({ label: "Cashback credited", detail: `+${coupon.cb}% to your Mesita balance` });
 
   const currentStep = Math.max(0, Math.min(steps.length - 1, coupon.step ?? 0));
@@ -3527,6 +3542,19 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
             <div className="flex justify-between"><span className="text-muted-foreground">Expires in</span><span>{coupon.expiresIn}</span></div>
           )}
         </div>
+        {requireStory && (
+          <div className="mt-3 flex items-start gap-2 rounded-2xl border border-primary/30 bg-gradient-to-br from-fuchsia-500/10 to-amber-400/10 p-3">
+            <Camera className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+            <p className="text-[11px] leading-snug text-foreground/80">
+              <span className="font-semibold text-foreground">Instagram story required.</span>{" "}
+              Post a story tagging{" "}
+              <span className="font-mono text-primary">
+                @{coupon.name?.toLowerCase().replace(/\s+/g, "")}
+              </span>{" "}
+              during your visit to unlock the {coupon.cb}% cashback. No story · no cashback.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* SECTION 4 — Current steps (vertical) */}
