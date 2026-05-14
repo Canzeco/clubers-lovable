@@ -751,7 +751,7 @@ function VenueDetailSheet({
             </button>
             <button
               onClick={handleSaveReserve}
-              className="flex flex-[1.4] flex-col items-center justify-center gap-0.5 rounded-2xl bg-gradient-to-r from-peacock to-secondary px-2 py-2 text-[11px] font-semibold leading-tight text-white shadow-glow transition active:scale-[0.98]"
+              className="flex flex-[1.4] flex-col items-center justify-center gap-0.5 rounded-2xl bg-secondary px-2 py-2 text-[11px] font-semibold leading-tight text-secondary-foreground shadow-sm transition active:scale-[0.98]"
             >
               <span className="flex items-center gap-1">
                 <Ticket className="h-3.5 w-3.5" />
