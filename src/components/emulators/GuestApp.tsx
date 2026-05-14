@@ -1044,8 +1044,20 @@ function CommunitiesBlock() {
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+  const [category, setCategory] = useState<"colleges" | "companies" | "sports" | "alumni">("colleges");
+  const [query, setQuery] = useState("");
 
   const remaining = Object.values(COMMUNITIES).filter((c) => !joined.includes(c.id));
+  const filtered = remaining.filter((c) => {
+    if (!query.trim()) return true;
+    const q = query.toLowerCase();
+    return (
+      c.label.toLowerCase().includes(q) ||
+      c.short.toLowerCase().includes(q) ||
+      c.city.toLowerCase().includes(q) ||
+      c.emailDomain.toLowerCase().includes(q)
+    );
+  });
 
   const startJoin = (id: string) => {
     setPendingId(id);
