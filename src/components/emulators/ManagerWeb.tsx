@@ -31,6 +31,7 @@ import {
   ChevronRight,
   GraduationCap,
   Mail,
+  Filter,
 } from "lucide-react";
 
 type TabId =
@@ -527,6 +528,28 @@ function Promos() {
   const [commState, setCommState] = useState(
     Object.fromEntries(communities.map((c) => [c.id, { boost: c.boost, on: c.on }])),
   );
+  const COUNTRIES = [
+    { code: "MX", flag: "🇲🇽", name: "Mexico" },
+    { code: "US", flag: "🇺🇸", name: "United States" },
+    { code: "CO", flag: "🇨🇴", name: "Colombia" },
+    { code: "AR", flag: "🇦🇷", name: "Argentina" },
+    { code: "ES", flag: "🇪🇸", name: "Spain" },
+    { code: "BR", flag: "🇧🇷", name: "Brazil" },
+  ];
+  const [audience, setAudience] = useState({
+    on: false,
+    countries: ["MX", "US"] as string[],
+    ageMin: 21,
+    ageMax: 35,
+    sex: "all" as "all" | "female" | "male",
+  });
+  const toggleCountry = (code: string) =>
+    setAudience((a) => ({
+      ...a,
+      countries: a.countries.includes(code)
+        ? a.countries.filter((c) => c !== code)
+        : [...a.countries, code],
+    }));
   return (
     <div className="space-y-5 p-6">
       <div>
@@ -765,6 +788,136 @@ function Promos() {
         </div>
         <p className="mt-3 text-[10px] text-muted-foreground">
           Boost stacks on top of tier cashback. A Tec-verified Gold guest gets {values.Gold}% + community boost.
+        </p>
+      </div>
+
+      <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+        Audience filters · soft targeting
+      </p>
+      <div className="rounded-xl border border-border bg-card-soft p-4">
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-medium">Who sees this promo</p>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              Narrow distribution by country, age, or sex using guests' profile data. Internal targeting only — guests never see they were filtered. Use responsibly and within local advertising rules.
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-[10px] font-semibold text-muted-foreground">
+            <Lock className="h-3 w-3" /> Manager-only
+          </span>
+        </div>
+
+        <div className="mb-3 flex items-center justify-between rounded-lg border border-border bg-card px-3 py-2">
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <span className="text-xs font-medium">Enable audience filters</span>
+          </div>
+          <button
+            onClick={() => setAudience((a) => ({ ...a, on: !a.on }))}
+            className={`flex h-5 w-9 items-center rounded-full px-0.5 ${
+              audience.on ? "bg-secondary" : "bg-muted"
+            }`}
+          >
+            <div className={`h-4 w-4 rounded-full bg-white transition ${audience.on ? "ml-auto" : ""}`} />
+          </button>
+        </div>
+
+        <div className={`grid gap-3 lg:grid-cols-3 ${audience.on ? "" : "opacity-50 pointer-events-none"}`}>
+          <div className="rounded-lg border border-border bg-card p-3">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              Countries
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {COUNTRIES.map((c) => {
+                const active = audience.countries.includes(c.code);
+                return (
+                  <button
+                    key={c.code}
+                    onClick={() => toggleCountry(c.code)}
+                    className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] font-medium transition ${
+                      active
+                        ? "border-secondary bg-secondary/15 text-secondary"
+                        : "border-border bg-card text-muted-foreground"
+                    }`}
+                  >
+                    <span className="text-sm leading-none">{c.flag}</span>
+                    {c.code}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-2 text-[10px] text-muted-foreground">
+              {audience.countries.length === 0 ? "All countries" : `${audience.countries.length} selected`}
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-border bg-card p-3">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              Age range
+            </p>
+            <div className="flex items-end gap-1">
+              <span className="font-display text-3xl font-semibold text-secondary">{audience.ageMin}</span>
+              <span className="mb-1 text-muted-foreground">–</span>
+              <span className="font-display text-3xl font-semibold text-secondary">{audience.ageMax}</span>
+              <span className="mb-1.5 ml-1 text-[9px] uppercase tracking-widest text-muted-foreground">years</span>
+            </div>
+            <div className="mt-2 space-y-2">
+              <div>
+                <label className="text-[10px] uppercase tracking-widest text-muted-foreground">Min</label>
+                <input
+                  type="range"
+                  min={18}
+                  max={80}
+                  value={audience.ageMin}
+                  onChange={(e) =>
+                    setAudience((a) => ({ ...a, ageMin: Math.min(Number(e.target.value), a.ageMax) }))
+                  }
+                  className="w-full accent-secondary"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] uppercase tracking-widest text-muted-foreground">Max</label>
+                <input
+                  type="range"
+                  min={18}
+                  max={80}
+                  value={audience.ageMax}
+                  onChange={(e) =>
+                    setAudience((a) => ({ ...a, ageMax: Math.max(Number(e.target.value), a.ageMin) }))
+                  }
+                  className="w-full accent-secondary"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-border bg-card p-3">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              Sex
+            </p>
+            <div className="grid grid-cols-3 gap-1.5">
+              {(["all", "female", "male"] as const).map((opt) => (
+                <button
+                  key={opt}
+                  onClick={() => setAudience((a) => ({ ...a, sex: opt }))}
+                  className={`rounded-md border px-2 py-2 text-[11px] font-semibold capitalize transition ${
+                    audience.sex === opt
+                      ? "border-secondary bg-secondary text-secondary-foreground"
+                      : "border-border text-muted-foreground"
+                  }`}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-[10px] text-muted-foreground">
+              Based on the guest's self-declared profile. Optional field — guests who didn't share are excluded when not "all".
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-3 text-[10px] text-muted-foreground">
+          Especially useful for bars and nightclubs (e.g. ladies' night, 25–35 weekend brunch). Check local laws before using sex-based targeting on alcohol or public-accommodation promos.
         </p>
       </div>
 
