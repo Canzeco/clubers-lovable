@@ -3408,7 +3408,7 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
           )}
           {coupon.res === "confirmed" && (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/15 px-2.5 py-1 text-[11px] font-medium text-secondary">
-              <Check className="h-3 w-3" /> Reservation confirmed
+              <Check className="h-3 w-3" /> Reserved {coupon.resWhen || coupon.resRequested || ""}{coupon.resParty ? ` for ${coupon.resParty} ${coupon.resParty === 1 ? "person" : "people"}` : ""}
             </span>
           )}
           {coupon.exp && (
