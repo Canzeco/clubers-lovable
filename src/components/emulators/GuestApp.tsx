@@ -3665,12 +3665,28 @@ function ShareView() {
               <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
                 Tell us a bit about you and where you publish. We review every application personally and reply within a few days.
               </p>
-              <a
-                href="mailto:creators@mesita.app?subject=Creator%20partnership"
-                className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-foreground px-3 py-1.5 text-[11px] font-semibold text-background"
-              >
-                creators@mesita.app
-              </a>
+              <div className="mt-3 flex flex-col gap-2">
+                <a
+                  href="mailto:creators@mesita.app?subject=Creator%20partnership"
+                  className="flex items-center justify-between gap-2 rounded-xl border border-border bg-card-soft px-3 py-2.5"
+                >
+                  <span className="flex items-center gap-2">
+                    <Mail className="h-3.5 w-3.5 text-secondary" />
+                    <span className="text-[12px] font-medium text-foreground">Email us</span>
+                  </span>
+                  <span className="text-[11px] text-muted-foreground">creators@mesita.app</span>
+                </a>
+                <a
+                  href="https://wa.me/525512345678?text=Hola%20Mesita%2C%20soy%20creador%20y%20quiero%20colaborar"
+                  className="flex items-center justify-between gap-2 rounded-xl border border-border bg-card-soft px-3 py-2.5"
+                >
+                  <span className="flex items-center gap-2">
+                    <MessageCircle className="h-3.5 w-3.5 text-secondary" />
+                    <span className="text-[12px] font-medium text-foreground">WhatsApp</span>
+                  </span>
+                  <span className="text-[11px] text-muted-foreground">+52 55 1234 5678</span>
+                </a>
+              </div>
             </div>
 
             <div className="mt-4 space-y-2">
