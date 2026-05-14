@@ -897,6 +897,136 @@ function MenuTabs() {
 
 function ReviewsSection() {
   return (
+    <ReviewsSectionInner />
+  );
+}
+
+function MesitaVisitors({ venue }: { venue: any }) {
+  const allCommunities = Array.from(
+    new Set<string>(venue.visitors.flatMap((v: any) => v.communities ?? [])),
+  );
+  const [filter, setFilter] = useState<string>("all");
+  const filtered =
+    filter === "all"
+      ? venue.visitors
+      : venue.visitors.filter((v: any) => (v.communities ?? []).includes(filter));
+  const list = filtered.length ? filtered : venue.visitors;
+  return (
+    <div>
+      <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+        <span>Mesita Visitors</span>
+        <span className="flex items-center gap-1 text-secondary">
+          <Flame className="h-3 w-3" /> Top 10
+        </span>
+      </p>
+      {allCommunities.length > 0 && (
+        <div className="mb-2 -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 scrollbar-hide">
+          <button
+            onClick={() => setFilter("all")}
+            className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold transition ${
+              filter === "all"
+                ? "border-secondary bg-secondary text-secondary-foreground"
+                : "border-border bg-card text-muted-foreground"
+            }`}
+          >
+            All
+          </button>
+          {allCommunities.map((cid) => {
+            const c = COMMUNITIES[cid];
+            if (!c) return null;
+            return (
+              <button
+                key={cid}
+                onClick={() => setFilter(cid)}
+                className={`shrink-0 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-semibold transition ${
+                  filter === cid
+                    ? "border-secondary bg-secondary text-secondary-foreground"
+                    : "border-border bg-card text-muted-foreground"
+                }`}
+              >
+                <GraduationCap className="h-3 w-3" /> {c.short}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      <div className="space-y-2">
+        {Array.from({ length: 10 }).map((_, i) => {
+          const u = list[i % list.length];
+          const ig = `${(126 - i * 9).toString()}.${(i * 3) % 10}k`;
+          return (
+            <div key={"mv" + i} className="rounded-2xl border border-border bg-card-soft p-3">
+              <div className="flex items-center gap-2.5">
+                <div className="relative">
+                  <img
+                    src={u.img}
+                    alt={u.name}
+                    className={`h-10 w-10 rounded-full object-cover ring-2 ${
+                      u.tier === "gold"
+                        ? "ring-tier-gold"
+                        : u.tier === "silver"
+                        ? "ring-tier-silver"
+                        : "ring-tier-bronze"
+                    }`}
+                  />
+                  <span
+                    className={`absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px text-[8px] font-bold uppercase text-black ${
+                      u.tier === "gold"
+                        ? "bg-tier-gold"
+                        : u.tier === "silver"
+                        ? "bg-tier-silver"
+                        : "bg-tier-bronze"
+                    }`}
+                  >
+                    {u.tier}
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium leading-tight">{u.name}</p>
+                  <p className="flex items-center gap-1.5 truncate text-[10px] text-muted-foreground">
+                    <span>{u.handle}</span>
+                    <span className="flex items-center gap-0.5 text-pink-400">
+                      <Instagram className="h-2.5 w-2.5" />
+                      {ig}
+                    </span>
+                  </p>
+                  {(u.communities ?? []).length > 0 && (
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {(u.communities as string[]).map((cid) => {
+                        const c = COMMUNITIES[cid];
+                        if (!c) return null;
+                        return (
+                          <span
+                            key={cid}
+                            className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-px text-[9px] font-semibold ${c.color}`}
+                          >
+                            <GraduationCap className="h-2.5 w-2.5" /> {c.short}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1">
+                  <Star className="h-3 w-3 fill-secondary text-secondary" />
+                  <span className="font-display text-sm font-semibold text-secondary">
+                    {u.score.toFixed(1)}
+                  </span>
+                </div>
+              </div>
+              <p className="mt-2 text-[12px] italic leading-snug text-foreground/85">
+                "{u.comment}"
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ReviewsSectionInner() {
+  return (
     <div>
       <SectionLabel action="129 total">Reviews</SectionLabel>
       <div className="grid grid-cols-4 gap-1.5">
