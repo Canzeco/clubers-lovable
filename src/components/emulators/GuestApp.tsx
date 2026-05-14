@@ -2276,43 +2276,57 @@ function CouponTicket({
     : isUsed
     ? { label: "Redeemed", cls: "bg-muted text-muted-foreground" }
     : isPending
-    ? { label: "Pending", cls: "bg-amber-500/15 text-amber-600" }
+    ? { label: "Pending", cls: "bg-amber-500/10 text-amber-600 border border-amber-500/20" }
     : isReservation
-    ? { label: "Reservation", cls: "bg-secondary/15 text-secondary" }
-    : { label: "Coupon", cls: "bg-foreground/10 text-foreground/70" };
+    ? { label: "Reservation", cls: "bg-secondary/10 text-secondary border border-secondary/20" }
+    : { label: "Coupon", cls: "bg-foreground/5 text-foreground/70 border border-foreground/10" };
+
+  const tierBar =
+    c.color === "tier-gold"
+      ? "bg-tier-gold"
+      : c.color === "tier-silver"
+      ? "bg-tier-silver"
+      : c.color === "tier-bronze"
+      ? "bg-tier-bronze"
+      : "bg-secondary";
 
   return (
     <button
       onClick={onClick}
-      className={`relative mx-auto block w-full max-w-[360px] text-left transition active:scale-[0.99] ${
+      className={`relative mx-auto block w-full max-w-[360px] text-left transition hover:-translate-y-0.5 active:scale-[0.99] ${
         isInactive ? "opacity-80" : ""
       }`}
     >
       <div
-        className={`relative flex items-stretch overflow-hidden rounded-2xl border bg-card-soft shadow-[0_8px_24px_-12px_rgba(0,0,0,0.25)] ${
-          isExpired ? "border-dashed border-border grayscale" : "border-border"
-        } ${isUsed ? "border-dashed" : ""} ${isReservation ? "ring-1 ring-secondary/40" : ""}`}
+        className={`relative flex items-stretch overflow-hidden rounded-3xl bg-background shadow-[0_18px_40px_-20px_rgba(0,0,0,0.28),0_4px_12px_-4px_rgba(0,0,0,0.08)] ring-1 ring-border/70 ${
+          isExpired ? "ring-dashed grayscale" : ""
+        } ${isUsed ? "ring-dashed" : ""} ${isReservation ? "ring-secondary/30" : ""}`}
       >
         {/* LEFT — restaurant image */}
-        <div className="relative w-[88px] flex-shrink-0 overflow-hidden bg-muted">
+        <div className="relative w-[96px] flex-shrink-0 overflow-hidden bg-muted">
           <img
             src={venueImg}
             alt={c.name}
             loading="lazy"
             className={`h-full w-full object-cover ${isInactive ? "grayscale" : ""}`}
           />
-          {/* tiny brand mark */}
-          <span className="absolute left-1.5 top-1.5 flex items-center gap-0.5 rounded-full bg-background/80 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.2em] text-foreground/80 backdrop-blur">
-            <span className="text-[10px] leading-none">🦚</span> Mesita
+          {/* gradient veil for legibility */}
+          <span aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+          {/* brand pill */}
+          <span className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded-full border border-white/40 bg-background/90 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.18em] text-foreground/80 shadow-sm backdrop-blur">
+            <span className="flex h-2 w-2 items-center justify-center rounded-full bg-secondary">
+              <span className="h-[3px] w-[3px] rounded-full bg-white" />
+            </span>
+            Mesita
           </span>
           {/* state stamp */}
           {isUsed && (
-            <span className="absolute bottom-1.5 left-1.5 -rotate-6 rounded border border-secondary/80 bg-background/85 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-widest text-secondary/90 backdrop-blur-sm">
+            <span className="absolute bottom-2 left-2 -rotate-6 rounded border border-secondary/80 bg-background/90 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-widest text-secondary/90 backdrop-blur-sm">
               Redeemed
             </span>
           )}
           {isExpired && (
-            <span className="absolute bottom-1.5 left-1.5 -rotate-6 rounded border border-foreground/60 bg-background/85 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-widest text-foreground/70 backdrop-blur-sm">
+            <span className="absolute bottom-2 left-2 -rotate-6 rounded border border-foreground/60 bg-background/90 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-widest text-foreground/70 backdrop-blur-sm">
               Expired
             </span>
           )}
@@ -2321,80 +2335,102 @@ function CouponTicket({
         {/* perforation between image and content */}
         <span
           aria-hidden
-          className="pointer-events-none absolute top-0 z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-border bg-background"
-          style={{ left: "88px" }}
+          className="pointer-events-none absolute top-0 z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-hero ring-1 ring-border/70"
+          style={{ left: "96px" }}
         />
         <span
           aria-hidden
-          className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full border border-border bg-background"
-          style={{ left: "88px" }}
+          className="pointer-events-none absolute bottom-0 z-10 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full bg-hero ring-1 ring-border/70"
+          style={{ left: "96px" }}
         />
         <span
           aria-hidden
-          className="pointer-events-none absolute top-3 bottom-3 border-l-2 border-dotted border-border"
-          style={{ left: "88px" }}
+          className="pointer-events-none absolute top-3 bottom-3 border-l border-dotted border-border"
+          style={{ left: "96px" }}
         />
 
         {/* MIDDLE — content */}
-        <div className="relative flex min-w-0 flex-1 flex-col justify-between px-3 py-2.5">
-          {/* top: pill + code */}
-          <div className="flex items-center justify-between gap-2">
-            <span
-              className={`rounded-sm px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.18em] ${pill.cls}`}
-            >
-              {pill.label}
-            </span>
-            <span className="font-mono text-[8px] tracking-widest text-muted-foreground/70">
-              {c.code || "MES-•••"}
-            </span>
+        <div className="relative flex min-w-0 flex-1 flex-col justify-between px-3.5 py-3">
+          {/* top: pill + serial / tier accent */}
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex flex-col items-start gap-1 min-w-0">
+              <span
+                className={`rounded-sm px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-[0.18em] ${pill.cls}`}
+              >
+                {pill.label}
+              </span>
+              <span className="font-mono text-[8px] font-bold uppercase tracking-tight text-muted-foreground/60">
+                {c.code || "MES-•••"}
+              </span>
+            </div>
+            <span aria-hidden className={`mt-0.5 h-5 w-1 rounded-full opacity-80 ${tierBar}`} />
           </div>
 
           {/* hero */}
           <div className="min-w-0">
-            <p className="truncate font-display text-[15px] font-bold leading-tight text-foreground">
+            <p className="truncate font-display text-[17px] font-bold leading-none tracking-tight text-foreground">
               {c.name}
             </p>
             {isReservation ? (
               isPending ? (
-                <>
-                  <p className="mt-0.5 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-600">
-                    <Loader2 className="h-3 w-3 animate-spin" /> AI calling venue
-                  </p>
-                  <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
-                    {c.resRequested} · {c.resParty} guests
-                  </p>
-                </>
+                <p className="mt-1 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-600">
+                  <Loader2 className="h-3 w-3 animate-spin" /> AI calling venue
+                </p>
               ) : (
-                <>
-                  <p className="mt-0.5 font-display text-[12px] font-semibold leading-tight text-foreground/90">
-                    {c.resWhen}
-                  </p>
-                  <p className="mt-0.5 flex items-center gap-1 text-[10px] text-muted-foreground">
-                    <BadgeCheck className="h-3 w-3 text-secondary" />
-                    Confirmed · {c.resParty} guests
-                  </p>
-                </>
+                <p className="mt-1 text-[11px] font-semibold tracking-tight text-foreground/70">
+                  {c.resWhen}
+                </p>
               )
             ) : (
               <>
                 {state === "active" && (
-                  <p className="mt-0.5 flex items-center gap-1 text-[10px] text-muted-foreground">
-                    <Clock className="h-3 w-3" />
-                    <span className="font-semibold text-foreground/80">{c.expiresIn}</span>
-                    <span className="uppercase tracking-widest">left</span>
+                  <p className="mt-1 text-[11px] font-semibold tracking-tight text-foreground/70">
+                    Expires in <span className="text-foreground">{c.expiresIn}</span>
                   </p>
                 )}
                 {state === "expired" && (
-                  <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="mt-1 text-[11px] font-semibold tracking-tight text-muted-foreground">
                     Expired {c.expiredOn}
                   </p>
                 )}
                 {state === "used" && (
-                  <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="mt-1 text-[11px] font-semibold tracking-tight text-muted-foreground">
                     Redeemed · {c.when}
                   </p>
                 )}
               </>
+            )}
+          </div>
+
+          {/* bottom: status footer */}
+          <div className="flex items-center gap-1.5 border-t border-border/60 pt-1.5">
+            {isReservation && !isPending && (
+              <>
+                <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                  <Check className="h-2 w-2" strokeWidth={4} />
+                </span>
+                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+                  Confirmed · {c.resParty} guests
+                </p>
+              </>
+            )}
+            {isReservation && isPending && (
+              <p className="truncate text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+                {c.resRequested} · {c.resParty} guests
+              </p>
+            )}
+            {!isReservation && state === "active" && (
+              <>
+                <Clock className="h-2.5 w-2.5 text-muted-foreground" />
+                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+                  {c.category} · {c.distance}
+                </p>
+              </>
+            )}
+            {!isReservation && state !== "active" && (
+              <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+                {c.category} · {c.distance}
+              </p>
             )}
           </div>
         </div>
