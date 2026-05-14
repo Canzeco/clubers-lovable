@@ -1225,7 +1225,7 @@ function MesitaVisitors({ venue }: { venue: any }) {
           <Flame className="h-3 w-3" /> Top 10
         </span>
       </p>
-      <div className="mb-1.5 -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 scrollbar-hide">
+      <div className="mb-2 -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 scrollbar-hide">
         {sorts.map((s) => (
           <button
             key={s.id}
@@ -1239,38 +1239,39 @@ function MesitaVisitors({ venue }: { venue: any }) {
             {s.label}
           </button>
         ))}
+        {allCommunities.length > 0 && (
+          <>
+            <span className="shrink-0 self-center h-4 w-px bg-border mx-0.5" />
+            <button
+              onClick={() => setFilter("all")}
+              className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold transition ${
+                filter === "all"
+                  ? "border-secondary bg-secondary text-secondary-foreground"
+                  : "border-border bg-card text-muted-foreground"
+              }`}
+            >
+              All
+            </button>
+            {allCommunities.map((cid) => {
+              const c = COMMUNITIES[cid];
+              if (!c) return null;
+              return (
+                <button
+                  key={cid}
+                  onClick={() => setFilter(cid)}
+                  className={`shrink-0 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-semibold transition ${
+                    filter === cid
+                      ? "border-secondary bg-secondary text-secondary-foreground"
+                      : "border-border bg-card text-muted-foreground"
+                  }`}
+                >
+                  <GraduationCap className="h-3 w-3" /> {c.short}
+                </button>
+              );
+            })}
+          </>
+        )}
       </div>
-      {allCommunities.length > 0 && (
-        <div className="mb-2 -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 scrollbar-hide">
-          <button
-            onClick={() => setFilter("all")}
-            className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold transition ${
-              filter === "all"
-                ? "border-secondary bg-secondary text-secondary-foreground"
-                : "border-border bg-card text-muted-foreground"
-            }`}
-          >
-            All
-          </button>
-          {allCommunities.map((cid) => {
-            const c = COMMUNITIES[cid];
-            if (!c) return null;
-            return (
-              <button
-                key={cid}
-                onClick={() => setFilter(cid)}
-                className={`shrink-0 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-semibold transition ${
-                  filter === cid
-                    ? "border-secondary bg-secondary text-secondary-foreground"
-                    : "border-border bg-card text-muted-foreground"
-                }`}
-              >
-                <GraduationCap className="h-3 w-3" /> {c.short}
-              </button>
-            );
-          })}
-        </div>
-      )}
       <div className="-mx-5 flex snap-x snap-mandatory gap-2 overflow-x-auto px-5 pb-1 scrollbar-hide">
         {Array.from({ length: 10 }).map((_, i) => {
           const u = list[i % list.length];
