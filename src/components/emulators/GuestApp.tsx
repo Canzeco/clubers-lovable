@@ -227,6 +227,41 @@ const venues = [
   },
 ];
 
+function WhySaveFaq() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-3 rounded-xl border border-border bg-background/60">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-[11px] font-semibold text-foreground"
+      >
+        <span className="flex items-center gap-1.5">
+          <HelpCircle className="h-3.5 w-3.5 text-secondary" />
+          Why save the coupon?
+        </span>
+        <ChevronDown
+          className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <div className="space-y-2 border-t border-border px-3 py-2.5 text-[11px] leading-snug text-muted-foreground">
+          <p>
+            <span className="font-semibold text-foreground">Lock the rate.</span> The
+            cashback % can drop or disappear at any time as the venue's promo fills up.
+          </p>
+          <p>
+            <span className="font-semibold text-foreground">Save it now</span> and the
+            rate you see is the rate you get — even if the public offer changes.
+          </p>
+          <p>
+            <span className="font-semibold text-foreground">Expires in 7 days</span> from
+            today (or 7 days after your booking if you reserve a table).
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
 function StatusBar() {
   return (
     <div className="flex h-9 items-end justify-between px-7 pb-1 pt-2 text-[11px] font-semibold text-foreground">
@@ -1014,6 +1049,7 @@ function TinderMode() {
             <p className="mt-1 text-xs text-muted-foreground">
               Our AI agent will call the venue for you. The coupon expires 7 days after your booking.
             </p>
+            <WhySaveFaq />
             <div className="mt-4 flex items-center gap-2">
               <button
                 onClick={() => setAskReserve(null)}
@@ -1072,6 +1108,7 @@ function TinderMode() {
                 <p className="mt-1 text-[10px] text-muted-foreground">
                   Always covers up to <span className="font-semibold text-foreground">$1,000 MXN</span> per visit — anything over is paid in full.
                 </p>
+                <WhySaveFaq />
                 <div className="mt-4 flex gap-2">
                   <button
                     onClick={() => { setSaved(null); setStep("ask"); }}
