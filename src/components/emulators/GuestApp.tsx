@@ -1106,6 +1106,9 @@ function CommunitiesBlock() {
         <p className="mt-2 text-[10px] text-muted-foreground">
           You can be in many communities — but only one Class.
         </p>
+        <p className="mt-1 text-[10px] text-muted-foreground">
+          Some venues boost cashback for verified members of certain communities.
+        </p>
       </div>
 
       {showJoin && (
