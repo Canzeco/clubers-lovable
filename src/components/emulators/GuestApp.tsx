@@ -3244,7 +3244,9 @@ function CouponTicket({
             {hasCashback ? (
               <>
                 <div className="relative z-[1] flex flex-1 items-center justify-center border-b border-current/20 px-1 py-2">
-                  <QrCode className="h-6 w-6 opacity-95" strokeWidth={2} />
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-secondary shadow-md ring-1 ring-black/5">
+                    <QrCode className="h-5 w-5" strokeWidth={2.25} />
+                  </span>
                 </div>
                 <div className="relative z-[1] flex flex-1 flex-col items-center justify-center px-1 py-2">
                   <p className="font-display text-[22px] font-bold leading-none tracking-tight drop-shadow-sm">
