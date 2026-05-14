@@ -3213,33 +3213,35 @@ function CouponTicket({
               {c.name}
             </p>
             {state !== "expired" && (() => {
-              const reserveOnly = !!c.isReservation && (c.reserveOnly || (c.cb ?? 0) === 0);
-              const hasReservation = !!c.isReservation;
-              const hasStory = (c.cb ?? 0) >= 15;
-              const hasCb = (c.cb ?? 0) > 0;
-              const parts: { icon: any; label: string }[] = [];
-              if (hasReservation) parts.push({ icon: Calendar, label: "Reservation" });
-              if (!reserveOnly) parts.push({ icon: CreditCard, label: "Payment" });
-              if (!reserveOnly && hasStory) parts.push({ icon: Camera, label: "Story" });
-              if (!reserveOnly && hasCb) parts.push({ icon: Coins, label: "Cashback" });
-              const hasStoryTag = !reserveOnly && hasStory;
+              const type = getCouponType(c);
+              const code = {
+                reservation: "R",
+                reservation_pay_cashback: "RPC",
+                reservation_pay_story_cashback: "RPSC",
+                pay_cashback: "PC",
+                pay_story_cashback: "PSC",
+              }[type];
+              const fullLabel = {
+                reservation: "Reservation",
+                reservation_pay_cashback: "Reservation + Payment + Cashback",
+                reservation_pay_story_cashback: "Reservation + Payment + Story + Cashback",
+                pay_cashback: "Payment + Cashback",
+                pay_story_cashback: "Payment + Story + Cashback",
+              }[type];
+              const hasStory = type === "reservation_pay_story_cashback" || type === "pay_story_cashback";
+              const isReserveOnly = type === "reservation";
               return (
                 <span
-                  title={parts.map((p) => p.label).join(" + ")}
-                  className={`inline-flex flex-shrink-0 items-center gap-1 rounded-full px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider ${
-                    hasStoryTag
+                  title={fullLabel}
+                  className={`inline-flex flex-shrink-0 items-center rounded-full px-1.5 py-0.5 font-mono text-[9px] font-bold tracking-wider ${
+                    hasStory
                       ? "bg-gradient-to-tr from-fuchsia-500 to-amber-400 text-white"
-                      : reserveOnly
+                      : isReserveOnly
                       ? "bg-secondary/15 text-secondary border border-secondary/25"
                       : "bg-foreground/10 text-foreground/80 border border-foreground/15"
                   }`}
                 >
-                  {parts.map((p, i) => (
-                    <span key={i} className="inline-flex items-center gap-0.5">
-                      {i > 0 && <span className="opacity-60">+</span>}
-                      <p.icon className="h-2.5 w-2.5" />
-                    </span>
-                  ))}
+                  {code}
                 </span>
               );
             })()}
