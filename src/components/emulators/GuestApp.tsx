@@ -558,6 +558,12 @@ function VenueDetailSheet({
 }) {
   const [confirm, setConfirm] = useState<null | "save" | "reserve" | "both">(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [blockedMsg, setBlockedMsg] = useState(false);
+  const isPartner = venue.affiliated;
+  const showBlocked = () => {
+    setBlockedMsg(true);
+    setTimeout(() => setBlockedMsg(false), 2200);
+  };
 
   const handleSave = () => {
     setConfirm("save");
@@ -799,15 +805,23 @@ function VenueDetailSheet({
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center px-4 pb-4">
           <div className="pointer-events-auto flex w-full items-stretch gap-1.5 rounded-3xl border border-border/60 bg-card/85 p-2 shadow-2xl backdrop-blur-xl">
             <button
-              onClick={handleSave}
-              className="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl border border-foreground/15 bg-background px-2 py-2 text-[11px] font-semibold leading-tight text-foreground shadow-sm transition hover:border-foreground/30 active:scale-[0.98]"
+              onClick={isPartner ? handleSave : showBlocked}
+              className={`flex flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl border px-2 py-2 text-[11px] font-semibold leading-tight shadow-sm transition active:scale-[0.98] ${
+                isPartner
+                  ? "border-foreground/15 bg-background text-foreground hover:border-foreground/30"
+                  : "border-dashed border-foreground/15 bg-muted/40 text-muted-foreground/60"
+              }`}
             >
-              <Ticket className="h-4 w-4 text-secondary" />
+              <Ticket className={`h-4 w-4 ${isPartner ? "text-secondary" : "text-muted-foreground/50"}`} />
               <span>Save Coupon</span>
             </button>
             <button
-              onClick={handleSaveReserve}
-              className="flex flex-[1.4] flex-col items-center justify-center gap-0.5 rounded-2xl bg-secondary px-2 py-2 text-[11px] font-semibold leading-tight text-secondary-foreground shadow-sm transition active:scale-[0.98]"
+              onClick={isPartner ? handleSaveReserve : showBlocked}
+              className={`flex flex-[1.4] flex-col items-center justify-center gap-0.5 rounded-2xl px-2 py-2 text-[11px] font-semibold leading-tight shadow-sm transition active:scale-[0.98] ${
+                isPartner
+                  ? "bg-secondary text-secondary-foreground"
+                  : "border border-dashed border-foreground/15 bg-muted/40 text-muted-foreground/60"
+              }`}
             >
               <span className="flex items-center gap-1">
                 <Ticket className="h-3.5 w-3.5" />
@@ -825,6 +839,14 @@ function VenueDetailSheet({
             </button>
           </div>
         </div>
+        {blockedMsg && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-24 z-20 flex justify-center px-6 animate-fade-in">
+            <div className="pointer-events-auto flex items-center gap-2 rounded-2xl border border-border bg-foreground px-3.5 py-2.5 text-[12px] font-medium text-background shadow-2xl">
+              <BadgeCheck className="h-4 w-4 text-secondary" />
+              <span>Only Partner venues offer cashbacks — always.</span>
+            </div>
+          </div>
+        )}
         {confirm && (
           <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in">
             <div className="pointer-events-auto mx-6 w-full max-w-xs rounded-3xl border border-border bg-card p-5 text-center shadow-2xl">
