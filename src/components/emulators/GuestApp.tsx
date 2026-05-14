@@ -3360,6 +3360,101 @@ function AddCreditsSheet({
 
 export function GuestApp() {
   const [tab, setTab] = useState<Tab>("discover");
+
+  return (
+    <GuestAppShell tab={tab} setTab={setTab} />
+  );
+}
+
+function RewardsView() {
+  const [sub, setSub] = useState<"reservations" | "coupons">("reservations");
+  return (
+    <div>
+      <div className="sticky top-0 z-10 border-b border-border bg-background/95 px-4 pt-4 pb-3 backdrop-blur">
+        <p className="font-display text-xl font-semibold">Rewards</p>
+        <div className="mt-3 flex gap-1 rounded-full bg-muted p-1">
+          {[
+            { id: "reservations" as const, label: "Reservations" },
+            { id: "coupons" as const, label: "Coupons" },
+          ].map((s) => (
+            <button
+              key={s.id}
+              onClick={() => setSub(s.id)}
+              className={`flex-1 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                sub === s.id
+                  ? "bg-foreground text-background shadow-sm"
+                  : "text-muted-foreground"
+              }`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      {sub === "reservations" ? <ReservationsView /> : <WalletView />}
+    </div>
+  );
+}
+
+function MyQrView() {
+  return (
+    <div className="flex h-full flex-col bg-background px-6 py-6">
+      <div className="flex items-center gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-peacock text-base shadow-glow">
+          🦚
+        </div>
+        <div>
+          <p className="font-display text-base font-semibold leading-tight">Patricio Canseco</p>
+          <p className="text-[11px] text-muted-foreground">Member · No. 47847 · Gold</p>
+        </div>
+      </div>
+
+      <div className="mt-6 text-center">
+        <p className="font-display text-lg font-semibold">Show this QR to the waiter</p>
+        <p className="mt-1 text-[11px] text-muted-foreground">
+          Earn cashback at any Mesita venue — even without a saved coupon.
+        </p>
+      </div>
+
+      <div className="mt-5 flex flex-1 items-center justify-center">
+        <div className="relative rounded-3xl bg-card p-5 shadow-elev">
+          <div className="grid h-56 w-56 grid-cols-12 grid-rows-12 gap-[2px] rounded-xl bg-background p-2">
+            {Array.from({ length: 144 }).map((_, i) => {
+              const on = (i * 73 + ((i * i) % 17)) % 3 !== 0;
+              return (
+                <div
+                  key={i}
+                  className={on ? "bg-foreground" : "bg-transparent"}
+                />
+              );
+            })}
+          </div>
+          {/* corners */}
+          <div className="pointer-events-none absolute left-3 top-3 h-10 w-10 rounded-md border-[6px] border-foreground" />
+          <div className="pointer-events-none absolute right-3 top-3 h-10 w-10 rounded-md border-[6px] border-foreground" />
+          <div className="pointer-events-none absolute bottom-3 left-3 h-10 w-10 rounded-md border-[6px] border-foreground" />
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-peacock text-base shadow-glow">
+              🦚
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-border bg-card-soft p-3">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          How it works
+        </p>
+        <p className="mt-1 text-[12px] leading-snug text-foreground/80">
+          Forgot to save a coupon? No problem. Show this QR and the waiter applies your
+          venue's default cashback to the bill instantly.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function GuestAppShell({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) {
   return (
     <div className="flex h-full flex-col bg-background text-foreground">
       <StatusBar />
