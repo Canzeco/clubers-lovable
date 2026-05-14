@@ -483,8 +483,10 @@ const VENUE_QUICKNAV = [
   { id: "vsec-scores", label: "External" },
   { id: "vsec-reviews", label: "Mesita Reviews" },
   { id: "vsec-visitors", label: "Visitors" },
-  { id: "vsec-location", label: "Location" },
+  { id: "vsec-offers", label: "Cashback" },
   { id: "vsec-menu", label: "Menu" },
+  { id: "vsec-location", label: "Location" },
+  { id: "vsec-hours", label: "Hours" },
   { id: "vsec-details", label: "Details" },
 ];
 
