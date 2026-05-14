@@ -3215,7 +3215,7 @@ function CouponTicket({
         <div className="relative flex flex-shrink-0 items-stretch">
           {/* cashback column */}
           <div
-            className={`relative flex w-[58px] flex-col items-center justify-center overflow-hidden px-1 py-2 ${
+            className={`relative flex w-[58px] flex-col items-stretch overflow-hidden ${
               !hasCashback
                 ? "bg-gradient-to-br from-stone-100 via-amber-50 to-stone-100 text-stone-700"
                 : isInactive
@@ -3243,16 +3243,20 @@ function CouponTicket({
             />
             {hasCashback ? (
               <>
-                <QrCode className="relative z-[1] mb-1 h-4 w-4 opacity-90" strokeWidth={2.25} />
-                <p className="relative z-[1] font-display text-[26px] font-bold leading-none tracking-tight drop-shadow-sm">
-                  {c.cb}<span className="text-sm font-light opacity-80">%</span>
-                </p>
-                <p className="relative z-[1] mt-1 text-[6px] font-black uppercase tracking-[0.18em] opacity-90">
-                  {c.firstVisit && !isInactive ? "welcome cashback" : "cashback"}
-                </p>
+                <div className="relative z-[1] flex flex-1 items-center justify-center border-b border-current/20 px-1 py-2">
+                  <QrCode className="h-6 w-6 opacity-95" strokeWidth={2} />
+                </div>
+                <div className="relative z-[1] flex flex-1 flex-col items-center justify-center px-1 py-2">
+                  <p className="font-display text-[22px] font-bold leading-none tracking-tight drop-shadow-sm">
+                    {c.cb}<span className="text-xs font-light opacity-80">%</span>
+                  </p>
+                  <p className="mt-1 text-[6px] font-black uppercase tracking-[0.18em] opacity-90">
+                    {c.firstVisit && !isInactive ? "welcome" : "cashback"}
+                  </p>
+                </div>
               </>
             ) : (
-              <>
+              <div className="relative z-[1] flex flex-1 flex-col items-center justify-center px-1 py-2">
                 {/* engraved monogram */}
                 <span
                   aria-hidden
@@ -3273,7 +3277,7 @@ function CouponTicket({
                 <p className="relative z-[1] text-[8px] font-black uppercase tracking-[0.22em] opacity-80">
                   Table held
                 </p>
-              </>
+              </div>
             )}
           </div>
         </div>
