@@ -2236,10 +2236,6 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
 }
 
 function RedeemFlow({ coupon }: { coupon: any }) {
-  void coupon;
-  return null;
-}
-function _RedeemFlowOriginal({ coupon }: { coupon: any }) {
   const requireStory = (coupon.cb ?? 0) >= 15;
   const [step, setStep] = useState<"form" | "sending" | "waiting" | "approved">("form");
   const [bill, setBill] = useState("");
