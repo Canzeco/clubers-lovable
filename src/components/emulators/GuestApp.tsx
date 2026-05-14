@@ -1467,18 +1467,9 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
 function Discover() {
   const [mode, setMode] = useState<DiscoverMode>("catalog");
   const [selected, setSelected] = useState<typeof venues[number] | null>(null);
-  const sub =
-    mode === "catalog"
-      ? "Curated for tonight"
-      : mode === "map"
-      ? "3 affiliated · 12 nearby"
-      : mode === "ai"
-      ? "Ask Mesita anything"
-      : "Swipe to decide";
   return (
     <div className="relative flex h-full flex-col overflow-hidden">
-      <TopBar title="Discover" subtitle={sub} />
-      <SearchConfigBar />
+      <DiscoverHeader />
       <ModeSwitcher mode={mode} setMode={setMode} />
       {mode === "catalog" && (
         <div className="flex-1 overflow-y-auto scrollbar-hide">
