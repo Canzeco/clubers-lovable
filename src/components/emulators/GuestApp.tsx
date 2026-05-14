@@ -1130,6 +1130,9 @@ function CommunitiesBlock() {
         <p className="mt-1 text-[10px] text-muted-foreground">
           Some venues boost cashback for verified members of certain communities.
         </p>
+        <p className="mt-1 text-[10px] text-muted-foreground">
+          E.g. Tec students fill rooftops in San Pedro on Thursdays · Stanford alumni gather at wine bars in Polanco · ITAM crowds the brunch spots in Condesa on Sundays.
+        </p>
       </div>
 
       {showJoin && (
