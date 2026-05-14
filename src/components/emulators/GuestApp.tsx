@@ -4237,10 +4237,10 @@ function ShareView() {
             <div className="mt-2 grid grid-cols-2 gap-1.5">
               {[
                 { t: "More customers", d: "Featured in Mesita discovery." },
+                { t: "Better customers", d: "Higher-spend, repeat-friendly guests." },
                 { t: "Auto IG stories", d: "Each visit becomes organic reach." },
-                { t: "Setup in 10 min", d: "All from a browser, no app." },
-                { t: "Own QR & coupons", d: "Cashback and saved offers." },
                 { t: "Live insights", d: "Repeat guests, AI visit summaries." },
+                { t: "Setup in 10 min", d: "All from a browser, no app." },
                 { t: "Free to start", d: "Pay only on first redemption." },
               ].map((b) => (
                 <div key={b.t} className="rounded-xl border border-border bg-card-soft p-2">
