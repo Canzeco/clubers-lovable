@@ -56,6 +56,7 @@ import {
   GlassWater,
   GraduationCap,
   Lock,
+  ArrowLeft,
 } from "lucide-react";
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
@@ -510,29 +511,23 @@ function VenueDetailSheet({
   };
 
   return (
-    <div
-      className="absolute inset-0 z-50 flex items-end bg-black/60 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="relative flex max-h-[88%] w-full flex-col rounded-t-3xl border-t border-border bg-card shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="absolute inset-0 z-50 flex flex-col bg-background">
+      <div className="relative flex h-full w-full flex-col bg-card">
         <div className="relative flex-1 overflow-y-auto scrollbar-hide pb-24">
         <div className="relative px-5 pt-5">
+          <button
+            onClick={onClose}
+            aria-label="Back"
+            className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-card-soft text-foreground transition hover:bg-muted"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
           <div className="absolute right-3 top-3 flex items-center gap-1.5">
             <button
               aria-label="Share venue"
               className="flex h-8 w-8 items-center justify-center rounded-full bg-card-soft text-foreground transition hover:bg-muted"
             >
               <Share2 className="h-4 w-4" />
-            </button>
-            <button
-              onClick={onClose}
-              aria-label="Close"
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-card-soft text-foreground"
-            >
-              <X className="h-4 w-4" />
             </button>
           </div>
           <div className="flex items-center gap-2">
