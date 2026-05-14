@@ -3346,10 +3346,10 @@ function ProfileView() {
           </div>
           <div className="space-y-2">
             {[
-              { t: "Bronze", min: "Everyone", color: "tier-bronze", done: true, perk: "Base cashback" },
-              { t: "Silver", min: "1k+ followers", color: "tier-silver", done: true, perk: "More cashback" },
-              { t: "Gold", min: "5k+ followers", color: "tier-gold", done: true, perk: "Even more cashback", active: true },
-              { t: "Diamond", min: "20k+ followers · invite-only", color: "tier-diamond", done: false, perk: "Most cashback" },
+              { t: "Bronze", min: "Everyone", color: "tier-bronze", done: true, perk: "Base cashback", tagline: "Welcome to the club" },
+              { t: "Silver", min: "1k+ followers", color: "tier-silver", done: true, perk: "More cashback", tagline: "Insider perks" },
+              { t: "Gold", min: "5k+ followers", color: "tier-gold", done: true, perk: "Even more cashback", tagline: "Priority access", active: true },
+              { t: "Diamond", min: "20k+ followers · invite-only", color: "tier-diamond", done: false, perk: "Most cashback", tagline: "Full VIP treatment" },
             ].map((r) => (
               <div
                 key={r.t}
@@ -3373,14 +3373,13 @@ function ProfileView() {
                   </p>
                   <p className="mt-0.5 text-[10px] text-muted-foreground">{r.min}</p>
                 </div>
-                <p className="text-right text-[10px] text-muted-foreground">{r.perk}</p>
+                <div className="text-right">
+                  <p className="text-[11px] font-semibold leading-none text-foreground">{r.perk}</p>
+                  <p className="mt-0.5 text-[9px] text-muted-foreground">{r.tagline}</p>
+                </div>
               </div>
             ))}
           </div>
-
-          <p className="mt-2 px-1 text-[10px] leading-relaxed text-muted-foreground">
-            No VIP gimmicks — tiers just unlock a higher cashback %. Linear, honest.
-          </p>
 
           {/* Appeal upgrade — sits right below Diamond row */}
           <button
