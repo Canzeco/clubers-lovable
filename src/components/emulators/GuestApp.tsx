@@ -3492,6 +3492,19 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
 
   const currentStep = Math.max(0, Math.min(steps.length - 1, coupon.step ?? 0));
 
+  // After the waiter scans + confirms in WhatsApp, the flow advances to the
+  // "Pay via Stripe link" step. From that point on the primary CTA streams
+  // the Stripe checkout into the app instead of showing the QR.
+  const stripeStepIndex = steps.findIndex((s) => s.label === "Pay via Stripe link");
+  const waiterConfirmed = stripeStepIndex >= 0 && currentStep >= stripeStepIndex;
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  // Auto-pop the checkout the first time the user opens the coupon after the
+  // waiter has confirmed — emulates "waiter scanned, sheet flies up".
+  useEffect(() => {
+    if (waiterConfirmed && showPay) setCheckoutOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="mt-5 space-y-4">
       {/* SECTION 2 — Cashback amount + QR */}
@@ -3603,7 +3616,14 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
 
       {/* SECTION 5 — Primary action button */}
       <div>
-        {showPay ? (
+        {showPay && waiterConfirmed ? (
+          <button
+            onClick={() => setCheckoutOpen(true)}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#635BFF] px-4 py-3 text-sm font-semibold text-white shadow-glow transition hover:bg-[#5046e5]"
+          >
+            <CreditCard className="h-4 w-4" /> Go to pay · Stripe checkout
+          </button>
+        ) : showPay ? (
           <button
             onClick={() => setPayOpen(true)}
             className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-3 text-sm font-semibold text-white shadow-glow"
@@ -3622,6 +3642,168 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
         )}
       </div>
       {payOpen && <PayWithCouponSheet coupon={coupon} onClose={() => setPayOpen(false)} />}
+      {checkoutOpen && (
+        <StripeCheckoutModal coupon={coupon} onClose={() => setCheckoutOpen(false)} />
+      )}
+    </div>
+  );
+}
+
+function StripeCheckoutModal({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+  // Sample bill — in a real flow this comes from the validator's confirmation
+  const billItems = coupon.bill?.items ?? [
+    { name: "Tasting menu", qty: 2, price: 420 },
+    { name: "Natural wine pairing", qty: 1, price: 380 },
+    { name: "Espresso", qty: 2, price: 60 },
+  ];
+  const subtotal = billItems.reduce((s: number, i: any) => s + i.qty * i.price, 0);
+  // Apply prior-purchase Mesita balance as a discount line if the user has one
+  const balanceAvailable = Math.min(coupon.balance ?? 180, Math.floor(subtotal * 0.4));
+  const discountQty = balanceAvailable > 0 ? 1 : 0;
+  const discount = balanceAvailable * discountQty;
+  const total = Math.max(0, subtotal - discount);
+  const cashbackEarned = Math.round(total * ((coupon.cb ?? 0) / 100));
+  const [paying, setPaying] = useState(false);
+  const [done, setDone] = useState(false);
+
+  const handlePay = () => {
+    setPaying(true);
+    setTimeout(() => {
+      setPaying(false);
+      setDone(true);
+    }, 1600);
+  };
+
+  return (
+    <div className="absolute inset-0 z-50 flex flex-col bg-background animate-in slide-in-from-bottom duration-300">
+      {/* Stripe-style header */}
+      <div className="flex items-center justify-between border-b border-border/60 px-5 py-4">
+        <div className="flex items-center gap-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#635BFF] text-white">
+            <CreditCard className="h-4 w-4" />
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Stripe Checkout</p>
+            <p className="text-[12px] font-semibold leading-tight">{coupon.name}</p>
+          </div>
+        </div>
+        <button onClick={onClose} className="rounded-full p-1.5 text-muted-foreground hover:bg-card">
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-5 py-5 space-y-4">
+        {done ? (
+          <div className="flex flex-col items-center justify-center py-10 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
+              <Check className="h-7 w-7" strokeWidth={3} />
+            </div>
+            <p className="mt-4 font-display text-2xl font-semibold">Payment received</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              ${total.toLocaleString()} MXN charged · Receipt sent
+            </p>
+            <div className="mt-5 w-full rounded-2xl bg-card-soft p-4 text-left">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Cashback credited</p>
+              <p className="mt-1 font-display text-2xl font-semibold text-secondary">
+                +${cashbackEarned.toLocaleString()} MXN
+              </p>
+              <p className="text-[11px] text-muted-foreground">Available next visit</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Amount headline */}
+            <div className="rounded-3xl bg-card-soft p-5 text-center">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Total to pay</p>
+              <p className="mt-1 font-display text-5xl font-semibold leading-none">
+                ${total.toLocaleString()}
+                <span className="ml-1 text-base font-medium text-muted-foreground">MXN</span>
+              </p>
+              <p className="mt-2 text-[11px] text-secondary">
+                Earn ${cashbackEarned.toLocaleString()} back as Mesita balance
+              </p>
+            </div>
+
+            {/* Bill */}
+            <div className="rounded-3xl bg-card-soft p-5">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Bill from waiter</p>
+              <ul className="mt-3 space-y-2 text-sm">
+                {billItems.map((it: any, i: number) => (
+                  <li key={i} className="flex items-baseline justify-between gap-3">
+                    <span className="flex-1">
+                      <span className="text-muted-foreground">{it.qty}×</span> {it.name}
+                    </span>
+                    <span className="font-mono text-[12px]">${(it.qty * it.price).toLocaleString()}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-3 space-y-1.5 border-t border-border/60 pt-3 text-sm">
+                <div className="flex justify-between text-muted-foreground">
+                  <span>Subtotal</span>
+                  <span className="font-mono">${subtotal.toLocaleString()}</span>
+                </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-secondary">
+                    <span>
+                      Mesita balance{" "}
+                      <span className="text-[10px] text-muted-foreground">× {discountQty}</span>
+                    </span>
+                    <span className="font-mono">−${discount.toLocaleString()}</span>
+                  </div>
+                )}
+                <div className="flex justify-between pt-1.5 font-semibold">
+                  <span>Total</span>
+                  <span className="font-mono">${total.toLocaleString()} MXN</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment method */}
+            <div className="rounded-3xl bg-card-soft p-5">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Pay with</p>
+              <div className="mt-2 flex items-center justify-between rounded-2xl border border-border bg-background p-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-8 w-12 items-center justify-center rounded-md bg-foreground text-[10px] font-bold text-background">VISA</div>
+                  <div>
+                    <p className="text-sm font-medium">•••• 4242</p>
+                    <p className="text-[10px] text-muted-foreground">Default · expires 09/28</p>
+                  </div>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {!done && (
+        <div className="border-t border-border/60 bg-background px-5 py-4 space-y-2">
+          <button
+            onClick={handlePay}
+            disabled={paying}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#635BFF] px-4 py-3 text-sm font-semibold text-white shadow-glow transition hover:bg-[#5046e5] disabled:opacity-70"
+          >
+            {paying ? (
+              <><Loader2 className="h-4 w-4 animate-spin" /> Processing…</>
+            ) : (
+              <>Pay ${total.toLocaleString()} MXN</>
+            )}
+          </button>
+          <p className="text-center text-[10px] text-muted-foreground">
+            <Check className="mr-1 inline h-3 w-3" /> Secured by Stripe · 256-bit encryption
+          </p>
+        </div>
+      )}
+      {done && (
+        <div className="border-t border-border/60 bg-background px-5 py-4">
+          <button
+            onClick={onClose}
+            className="w-full rounded-full bg-foreground px-4 py-3 text-sm font-semibold text-background"
+          >
+            Done
+          </button>
+        </div>
+      )}
     </div>
   );
 }
