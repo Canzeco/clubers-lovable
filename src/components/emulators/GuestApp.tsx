@@ -1628,7 +1628,7 @@ function CommunitiesBlock() {
 function ReviewsSectionBody() {
   return (
     <div>
-      <SectionLabel action="129 total">Reviews</SectionLabel>
+      <SectionLabel action="129 total">Mesita Reviews</SectionLabel>
       <div className="grid grid-cols-4 gap-1.5">
         {[
           { l: "Food", v: "4.4" },
