@@ -3747,7 +3747,7 @@ function ShareView() {
   const [copied, setCopied] = useState(false);
   const [audience, setAudience] = useState<"guests" | "creators" | "venues">("guests");
   const [venueCopied, setVenueCopied] = useState(false);
-  const venueLink = "mesita.app";
+  const venueLink = "www.mesita.ai";
   const venueMessage = `¿Conoces a alguien con un restaurante o bar? Mándale Mesita — pueden abrir su venue en la web sin costo, sin contrato, en 10 minutos: ${venueLink}`;
 
   const remaining = totalCards - claimed.length;
