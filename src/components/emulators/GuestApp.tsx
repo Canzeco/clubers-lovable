@@ -45,6 +45,7 @@ import {
   Shield,
   ChevronDown,
   CalendarCheck,
+  SlidersHorizontal,
 } from "lucide-react";
 
 type Tab = "discover" | "reservations" | "coupons" | "share" | "profile";
@@ -620,6 +621,12 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
     <div className="pb-6">
       {/* filter chips */}
       <div className="flex gap-2 overflow-x-auto scrollbar-hide px-5 pb-3">
+        <button
+          aria-label="Filters"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground"
+        >
+          <SlidersHorizontal className="h-3.5 w-3.5" />
+        </button>
         {["All", "Tonight", "Cashback", "Rooftop", "Brunch", "Late night"].map(
           (c, i) => (
             <button
