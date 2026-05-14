@@ -3518,7 +3518,11 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   const showPay = !coupon.used && !coupon.reserveOnly && (coupon.cb ?? 0) > 0;
 
   // Build the step list dynamically based on coupon state
-  type Step = { label: string; detail?: string };
+  type Step = {
+    label: string;
+    detail?: string;
+    action?: { label: string; onClick: () => void; tone?: "primary" | "stripe" | "story" | "neutral" };
+  };
   const steps: Step[] = [];
   if (isReservation) {
     steps.push({
@@ -3526,19 +3530,31 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
       detail: isPending
         ? `Requesting ${coupon.resRequested || "your time"}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`
         : `${coupon.resWhen || ""}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`,
+      action: isPending
+        ? { label: "Edit request", onClick: () => {}, tone: "neutral" }
+        : { label: "Change reservation", onClick: () => {}, tone: "neutral" },
     });
     steps.push({ label: "Arrive & dine", detail: "Mesita doesn't touch the experience" });
   } else {
     steps.push({ label: "Walk in & dine", detail: "Order normally — no menu changes" });
   }
-  steps.push({ label: "Tap Pay with this coupon", detail: "Your personal QR opens" });
+  steps.push({
+    label: "Tap Pay with this coupon",
+    detail: "Your personal QR opens",
+    action: { label: "Show my QR", onClick: () => setPayOpen(true), tone: "primary" },
+  });
   steps.push({ label: "Waiter scans your QR", detail: "Opens Mesita bot on WhatsApp" });
-  steps.push({ label: "Pay via Stripe link", detail: "Sent to app + WhatsApp" });
+  steps.push({
+    label: "Pay via Stripe link",
+    detail: "Sent to app + WhatsApp",
+    action: { label: "Open Stripe checkout", onClick: () => setCheckoutOpen(true), tone: "stripe" },
+  });
   const requireStory = (coupon.cb ?? 0) >= 15;
   if (requireStory) {
     steps.push({
       label: "Post Instagram story",
       detail: `Tag @${coupon.name?.toLowerCase().replace(/\s+/g, "") || "venue"} — required to unlock cashback`,
+      action: { label: "Attach screenshot", onClick: () => fileRef.current?.click(), tone: "story" },
     });
   }
   steps.push({ label: "Cashback credited", detail: `+${coupon.cb}% to your Mesita balance` });
@@ -3755,6 +3771,32 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
                   {s.detail && (
                     <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">{s.detail}</p>
                   )}
+                  {s.action && !done && (
+                    <button
+                      onClick={s.action.onClick}
+                      disabled={!active}
+                      className={`mt-2 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${
+                        !active
+                          ? "bg-muted text-muted-foreground/60 cursor-not-allowed"
+                          : s.action.tone === "stripe"
+                          ? "bg-[#635BFF] text-white shadow-glow hover:bg-[#5046e5]"
+                          : s.action.tone === "story"
+                          ? "bg-gradient-to-r from-fuchsia-500 to-amber-400 text-white shadow-glow"
+                          : s.action.tone === "neutral"
+                          ? "bg-foreground text-background"
+                          : "bg-gradient-to-r from-primary to-secondary text-white shadow-glow"
+                      }`}
+                    >
+                      {s.action.tone === "stripe" ? (
+                        <CreditCard className="h-3 w-3" />
+                      ) : s.action.tone === "story" ? (
+                        <Instagram className="h-3 w-3" />
+                      ) : s.action.tone === "primary" ? (
+                        <QrCode className="h-3 w-3" />
+                      ) : null}
+                      {s.action.label}
+                    </button>
+                  )}
                 </div>
               </li>
             );
@@ -3762,33 +3804,6 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
         </ol>
       </div>
 
-      {/* SECTION 5 — Primary action button */}
-      <div>
-        {showPay && waiterConfirmed ? (
-          <button
-            onClick={() => setCheckoutOpen(true)}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#635BFF] px-4 py-3 text-sm font-semibold text-white shadow-glow transition hover:bg-[#5046e5]"
-          >
-            <CreditCard className="h-4 w-4" /> Go to pay · Stripe checkout
-          </button>
-        ) : showPay ? (
-          <button
-            onClick={() => setPayOpen(true)}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-3 text-sm font-semibold text-white shadow-glow"
-          >
-            <QrCode className="h-4 w-4" /> Pay with this coupon
-          </button>
-        ) : isReservation ? (
-          <button className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow">
-            <Calendar className="h-4 w-4" />
-            {isPending ? "Edit request" : "Change reservation"}
-          </button>
-        ) : (
-          <button className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow">
-            <Calendar className="h-4 w-4" /> Make a reservation
-          </button>
-        )}
-      </div>
       {payOpen && <PayWithCouponSheet coupon={coupon} onClose={() => setPayOpen(false)} />}
       {checkoutOpen && (
         <StripeCheckoutModal coupon={coupon} onClose={() => setCheckoutOpen(false)} />
