@@ -1026,6 +1026,187 @@ function MesitaVisitors({ venue }: { venue: any }) {
 }
 
 function ReviewsSectionInner() {
+  return <ReviewsSectionBody />;
+}
+
+function CommunitiesBlock() {
+  const [joined, setJoined] = useState<string[]>(["tec"]);
+  const [showJoin, setShowJoin] = useState(false);
+  const [pendingId, setPendingId] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+
+  const remaining = Object.values(COMMUNITIES).filter((c) => !joined.includes(c.id));
+
+  const startJoin = (id: string) => {
+    setPendingId(id);
+    setEmail("");
+    setSent(false);
+  };
+  const sendVerification = () => {
+    setSent(true);
+    setTimeout(() => {
+      if (pendingId) setJoined((j) => [...j, pendingId]);
+      setPendingId(null);
+      setShowJoin(false);
+    }, 1400);
+  };
+
+  return (
+    <>
+      <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+        <div className="mb-3 flex items-center justify-between">
+          <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <GraduationCap className="h-3 w-3 text-secondary" /> Communities
+          </p>
+          <span className="text-[10px] text-muted-foreground">Email-verified</span>
+        </div>
+        <div className="space-y-2">
+          {joined.map((cid) => {
+            const c = COMMUNITIES[cid];
+            if (!c) return null;
+            return (
+              <div
+                key={cid}
+                className="flex items-center gap-3 rounded-xl bg-card-soft p-2.5 ring-1 ring-secondary/20"
+              >
+                <span
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg text-[10px] font-bold ${c.color}`}
+                >
+                  <GraduationCap className="h-4 w-4" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold leading-none">{c.label}</p>
+                  <p className="mt-0.5 text-[10px] text-muted-foreground truncate">
+                    Verified via {c.emailDomain}
+                  </p>
+                </div>
+                <span className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1 text-[9px] font-semibold text-secondary">
+                  <BadgeCheck className="h-3 w-3" /> Member
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        <button
+          onClick={() => setShowJoin(true)}
+          className="mt-3 flex w-full items-center gap-3 rounded-xl border border-dashed border-secondary/40 bg-secondary/5 p-3 text-left transition hover:bg-secondary/10"
+        >
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary/15 text-secondary">
+            <Plus className="h-4 w-4" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[12px] font-semibold leading-none">Join a community</p>
+            <p className="mt-1 text-[10px] text-muted-foreground">
+              Verify your school or org email — unlock filtered venues.
+            </p>
+          </div>
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        </button>
+        <p className="mt-2 text-[10px] text-muted-foreground">
+          You can be in many communities — but only one Class.
+        </p>
+      </div>
+
+      {showJoin && (
+        <div
+          className="absolute inset-0 z-50 flex items-end bg-black/60 backdrop-blur-sm"
+          onClick={() => {
+            setShowJoin(false);
+            setPendingId(null);
+          }}
+        >
+          <div
+            className="relative max-h-[80%] w-full overflow-y-auto rounded-t-3xl border-t border-border bg-card p-5 shadow-2xl scrollbar-hide"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => {
+                setShowJoin(false);
+                setPendingId(null);
+              }}
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-card-soft text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Join community
+            </p>
+            <p className="mt-1 font-display text-xl font-semibold">
+              {pendingId ? COMMUNITIES[pendingId].label : "Pick your community"}
+            </p>
+
+            {!pendingId ? (
+              <div className="mt-4 space-y-2">
+                {remaining.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => startJoin(c.id)}
+                    className="flex w-full items-center gap-3 rounded-xl border border-border bg-card-soft p-3 text-left transition hover:border-secondary/40"
+                  >
+                    <span
+                      className={`flex h-9 w-9 items-center justify-center rounded-lg ${c.color}`}
+                    >
+                      <GraduationCap className="h-4 w-4" />
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="truncate text-sm font-semibold leading-none">{c.label}</p>
+                      <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+                        Verify with {c.emailDomain}
+                      </p>
+                    </div>
+                    <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                  </button>
+                ))}
+                {remaining.length === 0 && (
+                  <p className="rounded-xl bg-card-soft p-3 text-center text-xs text-muted-foreground">
+                    You're already in every supported community.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="mt-4 space-y-3">
+                <div className="flex items-center gap-2 rounded-xl border border-border bg-card-soft p-3">
+                  <Mail className="h-4 w-4 text-secondary" />
+                  <p className="text-[11px] text-muted-foreground">
+                    Enter your <span className="font-semibold text-foreground">{COMMUNITIES[pendingId].emailDomain}</span> email — we'll send a verification link.
+                  </p>
+                </div>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={`yourname${COMMUNITIES[pendingId].emailDomain}`}
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-secondary focus:outline-none"
+                />
+                <button
+                  disabled={!email.includes(COMMUNITIES[pendingId].emailDomain) || sent}
+                  onClick={sendVerification}
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow disabled:opacity-40"
+                >
+                  {sent ? (
+                    <>
+                      <Check className="h-4 w-4" /> Verification sent
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4" /> Send verification email
+                    </>
+                  )}
+                </button>
+                <p className="text-center text-[10px] text-muted-foreground">
+                  We never share your email. Membership grants access to community-only filters.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function ReviewsSectionBody() {
   return (
     <div>
       <SectionLabel action="129 total">Reviews</SectionLabel>
