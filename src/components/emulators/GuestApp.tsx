@@ -65,13 +65,22 @@ type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
 // community requires email-domain verification (e.g. @tec.mx).
 const COMMUNITIES: Record<
   string,
-  { id: string; label: string; short: string; emailDomain: string; color: string }
+  { id: string; label: string; short: string; emailDomain: string; color: string; city: string }
 > = {
-  tec: { id: "tec", label: "Tec de Monterrey", short: "Tec", emailDomain: "@tec.mx", color: "bg-[#0033A0] text-white" },
-  udem: { id: "udem", label: "UDEM", short: "UDEM", emailDomain: "@udem.edu", color: "bg-[#003F2D] text-white" },
-  stanford: { id: "stanford", label: "Stanford", short: "Stanford", emailDomain: "@stanford.edu", color: "bg-[#8C1515] text-white" },
-  itam: { id: "itam", label: "ITAM", short: "ITAM", emailDomain: "@itam.mx", color: "bg-[#003366] text-white" },
-  ibero: { id: "ibero", label: "Ibero", short: "Ibero", emailDomain: "@ibero.mx", color: "bg-[#0072CE] text-white" },
+  tec: { id: "tec", label: "Tec de Monterrey", short: "Tec", emailDomain: "@tec.mx", color: "bg-[#0033A0] text-white", city: "Monterrey · CDMX · Guadalajara" },
+  udem: { id: "udem", label: "UDEM", short: "UDEM", emailDomain: "@udem.edu", color: "bg-[#003F2D] text-white", city: "Monterrey" },
+  stanford: { id: "stanford", label: "Stanford", short: "Stanford", emailDomain: "@stanford.edu", color: "bg-[#8C1515] text-white", city: "Palo Alto, CA" },
+  itam: { id: "itam", label: "ITAM", short: "ITAM", emailDomain: "@itam.mx", color: "bg-[#003366] text-white", city: "CDMX" },
+  ibero: { id: "ibero", label: "Ibero", short: "Ibero", emailDomain: "@ibero.mx", color: "bg-[#0072CE] text-white", city: "CDMX" },
+  unam: { id: "unam", label: "UNAM", short: "UNAM", emailDomain: "@unam.mx", color: "bg-[#0F3F2C] text-white", city: "CDMX" },
+  anahuac: { id: "anahuac", label: "Anáhuac", short: "Anáhuac", emailDomain: "@anahuac.mx", color: "bg-[#1B3A6B] text-white", city: "CDMX · Querétaro" },
+  lasalle: { id: "lasalle", label: "La Salle", short: "La Salle", emailDomain: "@lasalle.mx", color: "bg-[#7A0019] text-white", city: "CDMX" },
+  panamericana: { id: "panamericana", label: "Universidad Panamericana", short: "UP", emailDomain: "@up.edu.mx", color: "bg-[#C8102E] text-white", city: "CDMX · Guadalajara" },
+  iteso: { id: "iteso", label: "ITESO", short: "ITESO", emailDomain: "@iteso.mx", color: "bg-[#E25822] text-white", city: "Guadalajara" },
+  harvard: { id: "harvard", label: "Harvard", short: "Harvard", emailDomain: "@harvard.edu", color: "bg-[#A41034] text-white", city: "Cambridge, MA" },
+  mit: { id: "mit", label: "MIT", short: "MIT", emailDomain: "@mit.edu", color: "bg-[#8A8B8C] text-white", city: "Cambridge, MA" },
+  nyu: { id: "nyu", label: "NYU", short: "NYU", emailDomain: "@nyu.edu", color: "bg-[#57068C] text-white", city: "New York, NY" },
+  berkeley: { id: "berkeley", label: "UC Berkeley", short: "Berkeley", emailDomain: "@berkeley.edu", color: "bg-[#003262] text-white", city: "Berkeley, CA" },
 };
 
 function GoogleLogo({ className = "" }: { className?: string }) {
@@ -1035,8 +1044,20 @@ function CommunitiesBlock() {
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+  const [category, setCategory] = useState<"colleges" | "companies" | "sports" | "alumni">("colleges");
+  const [query, setQuery] = useState("");
 
   const remaining = Object.values(COMMUNITIES).filter((c) => !joined.includes(c.id));
+  const filtered = remaining.filter((c) => {
+    if (!query.trim()) return true;
+    const q = query.toLowerCase();
+    return (
+      c.label.toLowerCase().includes(q) ||
+      c.short.toLowerCase().includes(q) ||
+      c.city.toLowerCase().includes(q) ||
+      c.emailDomain.toLowerCase().includes(q)
+    );
+  });
 
   const startJoin = (id: string) => {
     setPendingId(id);
@@ -1117,58 +1138,132 @@ function CommunitiesBlock() {
           onClick={() => {
             setShowJoin(false);
             setPendingId(null);
+            setQuery("");
           }}
         >
           <div
-            className="relative max-h-[80%] w-full overflow-y-auto rounded-t-3xl border-t border-border bg-card p-5 shadow-2xl scrollbar-hide"
+            className="relative flex max-h-[88%] w-full flex-col rounded-t-3xl border-t border-border bg-card shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              onClick={() => {
-                setShowJoin(false);
-                setPendingId(null);
-              }}
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-card-soft text-foreground"
-            >
-              <X className="h-4 w-4" />
-            </button>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Join community
-            </p>
-            <p className="mt-1 font-display text-xl font-semibold">
-              {pendingId ? COMMUNITIES[pendingId].label : "Pick your community"}
-            </p>
+            {/* Drag handle */}
+            <div className="flex justify-center pt-2.5">
+              <div className="h-1 w-10 rounded-full bg-border" />
+            </div>
+
+            {/* Header */}
+            <div className="relative px-5 pt-3">
+              <button
+                onClick={() => {
+                  setShowJoin(false);
+                  setPendingId(null);
+                  setQuery("");
+                }}
+                className="absolute right-4 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-card-soft text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                {pendingId ? "Verify membership" : "Join a community"}
+              </p>
+              <p className="mt-1 font-display text-xl font-semibold leading-tight">
+                {pendingId ? COMMUNITIES[pendingId].label : "Find your tribe"}
+              </p>
+              {!pendingId && (
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  Verify once with your school email — unlock community-only filters and the occasional cashback boost.
+                </p>
+              )}
+            </div>
 
             {!pendingId ? (
-              <div className="mt-4 space-y-2">
-                {remaining.map((c) => (
-                  <button
-                    key={c.id}
-                    onClick={() => startJoin(c.id)}
-                    className="flex w-full items-center gap-3 rounded-xl border border-border bg-card-soft p-3 text-left transition hover:border-secondary/40"
-                  >
-                    <span
-                      className={`flex h-9 w-9 items-center justify-center rounded-lg ${c.color}`}
+              <>
+                {/* Category chips */}
+                <div className="mt-3 flex gap-1.5 overflow-x-auto px-5 pb-2 scrollbar-hide">
+                  {[
+                    { id: "colleges", label: "🎓 Colleges", active: true },
+                    { id: "companies", label: "🏢 Companies", active: false },
+                    { id: "sports", label: "⚽ Sports clubs", active: false },
+                    { id: "alumni", label: "🍷 Alumni groups", active: false },
+                  ].map((cat) => (
+                    <button
+                      key={cat.id}
+                      onClick={() => cat.active && setCategory(cat.id as typeof category)}
+                      disabled={!cat.active}
+                      className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-[11px] font-semibold transition ${
+                        category === cat.id && cat.active
+                          ? "bg-foreground text-background"
+                          : cat.active
+                          ? "bg-card-soft text-foreground hover:bg-card-soft/70"
+                          : "bg-card-soft text-muted-foreground/50"
+                      }`}
                     >
-                      <GraduationCap className="h-4 w-4" />
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="truncate text-sm font-semibold leading-none">{c.label}</p>
-                      <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
-                        Verify with {c.emailDomain}
-                      </p>
-                    </div>
-                    <Lock className="h-3.5 w-3.5 text-muted-foreground" />
-                  </button>
-                ))}
-                {remaining.length === 0 && (
-                  <p className="rounded-xl bg-card-soft p-3 text-center text-xs text-muted-foreground">
-                    You're already in every supported community.
+                      {cat.label}
+                      {!cat.active && <span className="ml-1 text-[9px] opacity-70">soon</span>}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Search */}
+                <div className="px-5 pb-3">
+                  <div className="flex items-center gap-2 rounded-xl border border-border bg-card-soft px-3 py-2.5">
+                    <Search className="h-4 w-4 text-muted-foreground" />
+                    <input
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="Search college, city, domain…"
+                      className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+                    />
+                    {query && (
+                      <button
+                        onClick={() => setQuery("")}
+                        className="text-muted-foreground"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* List */}
+                <div className="flex-1 overflow-y-auto px-5 pb-6 scrollbar-hide">
+                  <p className="mb-2 text-[9px] uppercase tracking-widest text-muted-foreground">
+                    {filtered.length} {filtered.length === 1 ? "school" : "schools"}
                   </p>
-                )}
-              </div>
+                  <div className="space-y-2">
+                    {filtered.map((c) => (
+                      <button
+                        key={c.id}
+                        onClick={() => startJoin(c.id)}
+                        className="flex w-full items-center gap-3 rounded-xl border border-border bg-card-soft p-3 text-left transition hover:border-secondary/40"
+                      >
+                        <span
+                          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${c.color}`}
+                        >
+                          <GraduationCap className="h-4 w-4" />
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="truncate text-sm font-semibold leading-tight">{c.label}</p>
+                          <p className="mt-0.5 flex items-center gap-1 truncate text-[10px] text-muted-foreground">
+                            <MapPin className="h-2.5 w-2.5 shrink-0" />
+                            <span className="truncate">{c.city}</span>
+                            <span className="opacity-40">·</span>
+                            <span className="truncate">{c.emailDomain}</span>
+                          </p>
+                        </div>
+                        <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                      </button>
+                    ))}
+                    {filtered.length === 0 && (
+                      <p className="rounded-xl bg-card-soft p-4 text-center text-xs text-muted-foreground">
+                        No school matches "{query}". Don't see yours?{" "}
+                        <span className="font-semibold text-foreground">Request it</span>.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </>
             ) : (
-              <div className="mt-4 space-y-3">
+              <div className="space-y-3 px-5 pb-6 pt-4">
                 <div className="flex items-center gap-2 rounded-xl border border-border bg-card-soft p-3">
                   <Mail className="h-4 w-4 text-secondary" />
                   <p className="text-[11px] text-muted-foreground">
@@ -1200,6 +1295,12 @@ function CommunitiesBlock() {
                 <p className="text-center text-[10px] text-muted-foreground">
                   We never share your email. Membership grants access to community-only filters.
                 </p>
+                <button
+                  onClick={() => setPendingId(null)}
+                  className="w-full text-center text-[11px] font-medium text-muted-foreground"
+                >
+                  ← Pick a different community
+                </button>
               </div>
             )}
           </div>
