@@ -1303,6 +1303,15 @@ function MesitaVisitors({ venue }: { venue: any }) {
         {Array.from({ length: 10 }).map((_, i) => {
           const u = list[i % list.length];
           const ig = `${(126 - i * 9).toString()}.${(i * 3) % 10}k`;
+          const base = u.score as number;
+          const jitter = (n: number) => Math.max(3.5, Math.min(5, +(base + n).toFixed(1)));
+          const subs = [
+            { l: "Food", v: jitter(0) },
+            { l: "Service", v: jitter(-0.2) },
+            { l: "Atm.", v: jitter(0.1) },
+            { l: "Value", v: jitter(-0.3) },
+          ];
+          const showComment = i % 3 !== 2; // optional: hide on some cards
           return (
             <div key={"mv" + i} className="w-[78%] shrink-0 snap-start rounded-2xl border border-border bg-card-soft p-3">
               <div className="flex items-center gap-2.5">
@@ -1363,9 +1372,19 @@ function MesitaVisitors({ venue }: { venue: any }) {
                   </span>
                 </div>
               </div>
-              <p className="mt-2 line-clamp-3 text-[12px] italic leading-snug text-foreground/85">
-                "{u.comment}"
-              </p>
+              {showComment && (
+                <p className="mt-2 line-clamp-2 text-[12px] italic leading-snug text-foreground/85">
+                  "{u.comment}"
+                </p>
+              )}
+              <div className="mt-2 grid grid-cols-4 gap-1">
+                {subs.map((s) => (
+                  <div key={s.l} className="rounded-md bg-background py-1 text-center">
+                    <p className="text-[9px] text-muted-foreground">{s.l}</p>
+                    <p className="text-[11px] font-semibold">{s.v.toFixed(1)}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           );
         })}
