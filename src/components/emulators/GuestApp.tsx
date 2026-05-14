@@ -455,6 +455,12 @@ function VenueDetailSheet({
             </div>
           </div>
 
+          {/* Current activity */}
+          <CurrentActivitySection />
+
+          {/* Offers & cashback */}
+          <OffersSection cashback={venue.cashback} />
+
           {/* About the venue */}
           <div>
             <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -465,10 +471,7 @@ function VenueDetailSheet({
 
           {/* Menu */}
           <div>
-            <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
-              <span>Menu</span>
-              <span className="text-secondary">Tasting · à la carte</span>
-            </p>
+            <MenuTabs />
             <div className="overflow-hidden rounded-2xl border border-border bg-card-soft">
               {[
                 { name: "Burrata & heirloom tomato", price: "$280" },
