@@ -1243,9 +1243,9 @@ function MapMode() {
     }, 900);
   };
   return (
-    <div className="flex flex-1 flex-col gap-3 overflow-hidden">
+    <div className="flex flex-1 flex-col overflow-hidden">
     <div
-      className="relative mx-5 mb-4 flex-1 overflow-hidden rounded-3xl"
+      className="relative flex-1 overflow-hidden"
         style={{
           background:
             "radial-gradient(circle at 30% 40%, oklch(0.30 0.05 200), oklch(0.16 0.02 220))",
