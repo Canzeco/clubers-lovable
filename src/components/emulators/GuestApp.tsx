@@ -483,8 +483,10 @@ const VENUE_QUICKNAV = [
   { id: "vsec-scores", label: "External" },
   { id: "vsec-reviews", label: "Mesita Reviews" },
   { id: "vsec-visitors", label: "Visitors" },
-  { id: "vsec-location", label: "Location" },
+  { id: "vsec-offers", label: "Cashback" },
   { id: "vsec-menu", label: "Menu" },
+  { id: "vsec-location", label: "Location" },
+  { id: "vsec-hours", label: "Hours" },
   { id: "vsec-details", label: "Details" },
 ];
 
@@ -670,6 +672,29 @@ function VenueDetailSheet({
           {/* Mesita Visitors Carousel — sorted by relevance (recency × tier × influence) */}
           <section id="vsec-visitors" className="scroll-mt-16"><MesitaVisitors venue={venue} /></section>
 
+          {/* Cashback — why save */}
+          <section id="vsec-offers" className="scroll-mt-16">
+            <OffersSection cashback={venue.cashback} />
+          </section>
+
+          {/* Menu */}
+          <section id="vsec-menu" className="scroll-mt-16">
+            <SectionLabel>Menu</SectionLabel>
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="group flex w-full items-center gap-3 rounded-2xl border border-border bg-card-soft p-3 text-left transition hover:border-foreground/30"
+            >
+              <div className="flex h-12 w-10 shrink-0 items-center justify-center rounded-md bg-foreground text-background shadow-sm">
+                <FileText className="h-5 w-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold leading-tight">View menu</p>
+                <p className="text-[10px] text-muted-foreground">PDF · 4 pages · updated this week</p>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-foreground" />
+            </button>
+          </section>
+
           {/* Location mini-map */}
           <section id="vsec-location" className="scroll-mt-16">
             <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -707,32 +732,8 @@ function VenueDetailSheet({
             </div>
           </section>
 
-          {/* Menu */}
-          <section id="vsec-menu" className="scroll-mt-16">
-            <SectionLabel>Menu</SectionLabel>
-            <button
-              onClick={() => setMenuOpen(true)}
-              className="group flex w-full items-center gap-3 rounded-2xl border border-border bg-card-soft p-3 text-left transition hover:border-foreground/30"
-            >
-              <div className="flex h-12 w-10 shrink-0 items-center justify-center rounded-md bg-foreground text-background shadow-sm">
-                <FileText className="h-5 w-5" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold leading-tight">View menu</p>
-                <p className="text-[10px] text-muted-foreground">PDF · 4 pages · updated this week</p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-foreground" />
-            </button>
-          </section>
-
-          {/* Details — hours, about, activity, offers, concierge, info */}
-          <section id="vsec-details" className="scroll-mt-16 space-y-4">
-            <SectionLabel>Details</SectionLabel>
-
-            {/* Offers & cashback */}
-            <OffersSection cashback={venue.cashback} />
-
-            {/* Hours */}
+          {/* Hours & popular times */}
+          <section id="vsec-hours" className="scroll-mt-16 space-y-4">
             <div>
               <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
               <span className="flex items-center gap-1.5">
@@ -766,8 +767,10 @@ function VenueDetailSheet({
 
             {/* Popular times */}
             <PopularTimes />
+          </section>
 
-            {/* Other info */}
+          {/* Details */}
+          <section id="vsec-details" className="scroll-mt-16">
             <DetailsSection />
           </section>
 
