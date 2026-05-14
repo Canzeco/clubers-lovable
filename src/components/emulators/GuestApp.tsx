@@ -57,6 +57,7 @@ import {
   GraduationCap,
   Lock,
   ArrowLeft,
+  FileText,
 } from "lucide-react";
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
