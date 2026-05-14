@@ -485,12 +485,14 @@ function VenueDetailSheet({
           </p>
         </div>
 
+        <VenueQuickNav />
+
         <div className="space-y-4 px-5 pt-5">
           {/* Instagram-style 4:3 carousel with dots */}
-          <PhotoCarousel />
+          <section id="vsec-photos" className="scroll-mt-16"><PhotoCarousel /></section>
 
           {/* Scores across platforms */}
-          <div className="grid grid-cols-5 gap-1">
+          <section id="vsec-scores" className="scroll-mt-16 grid grid-cols-5 gap-1">
             <div className="rounded-xl border border-secondary/30 bg-secondary/10 p-2">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-secondary">
                 <Sparkles className="h-2.5 w-2.5" /> Mesita
@@ -528,16 +530,16 @@ function VenueDetailSheet({
               <p className="mt-1 font-display text-base font-semibold leading-none">{venue.igFollowers}</p>
               <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.igMentions} mentions</p>
             </div>
-          </div>
+          </section>
 
           {/* Current activity */}
-          <CurrentActivitySection />
+          <section id="vsec-activity" className="scroll-mt-16"><CurrentActivitySection /></section>
 
           {/* Offers & cashback */}
-          <OffersSection cashback={venue.cashback} />
+          <section id="vsec-offers" className="scroll-mt-16"><OffersSection cashback={venue.cashback} /></section>
 
           {/* About the venue */}
-          <div>
+          <section id="vsec-about" className="scroll-mt-16">
             <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
               About
             </p>
@@ -558,10 +560,10 @@ function VenueDetailSheet({
             ) : (
               <p className="text-sm leading-relaxed text-foreground/85">{venue.info}</p>
             )}
-          </div>
+          </section>
 
           {/* Menu */}
-          <div>
+          <section id="vsec-menu" className="scroll-mt-16">
             <MenuTabs />
             <div className="overflow-hidden rounded-2xl border border-border bg-card-soft">
               {[
@@ -584,10 +586,10 @@ function VenueDetailSheet({
             <button className="mt-2 w-full rounded-full border border-border bg-card px-4 py-2 text-[11px] font-medium text-foreground/80">
               View full menu
             </button>
-          </div>
+          </section>
 
           {/* Schedule */}
-          <div>
+          <section id="vsec-hours" className="scroll-mt-16">
             <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <Clock className="h-3 w-3" /> Hours
@@ -616,10 +618,10 @@ function VenueDetailSheet({
                 );
               })}
             </div>
-          </div>
+          </section>
 
           {/* Location mini-map */}
-          <div>
+          <section id="vsec-location" className="scroll-mt-16">
             <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
               <span>Location</span>
               <span className="flex items-center gap-1 text-secondary">
@@ -653,19 +655,19 @@ function VenueDetailSheet({
                 Open in Maps
               </button>
             </div>
-          </div>
+          </section>
 
           {/* Mesita Visitors — sorted by relevance (recency × tier × influence) */}
-          <MesitaVisitors venue={venue} />
+          <section id="vsec-visitors" className="scroll-mt-16"><MesitaVisitors venue={venue} /></section>
 
           {/* Reviews */}
-          <ReviewsSection />
+          <section id="vsec-reviews" className="scroll-mt-16"><ReviewsSection /></section>
 
           {/* Concierge AI */}
-          <ConciergeSection venueName={venue.name} />
+          <section id="vsec-concierge" className="scroll-mt-16"><ConciergeSection venueName={venue.name} /></section>
 
           {/* Details */}
-          <DetailsSection />
+          <section id="vsec-details" className="scroll-mt-16"><DetailsSection /></section>
 
         </div>
         </div>
