@@ -303,14 +303,18 @@ function VenueDetailSheet({
   venue: typeof venues[number];
   onClose: () => void;
 }) {
-  const [confirm, setConfirm] = useState<null | "save" | "reserve">(null);
+  const [confirm, setConfirm] = useState<null | "save" | "reserve" | "both">(null);
 
   const handleSave = () => {
     setConfirm("save");
     setTimeout(() => onClose(), 1400);
   };
-  const handleSaveReserve = () => {
+  const handleReserve = () => {
     setConfirm("reserve");
+    setTimeout(() => onClose(), 1800);
+  };
+  const handleSaveReserve = () => {
+    setConfirm("both");
     setTimeout(() => onClose(), 1800);
   };
 
