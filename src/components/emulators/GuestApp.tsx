@@ -1496,75 +1496,103 @@ function Discover() {
 }
 
 function SearchConfigBar() {
-  const [open, setOpen] = useState<null | "city" | "date" | "time" | "party">(null);
+  const [open, setOpen] = useState<null | "city" | "when">(null);
   const [city, setCity] = useState("Monterrey");
-  const [date, setDate] = useState("Tonight");
-  const [time, setTime] = useState("8:00 PM");
-  const [party, setParty] = useState(2);
 
   const cities = ["Monterrey", "CDMX", "Guadalajara", "Miami", "New York", "Madrid", "Barcelona", "Tokyo"];
-  const dates = ["Tonight", "Tomorrow", "Thu May 14", "Fri May 15", "Sat May 16", "Sun May 17", "Next Fri May 22", "Next Sat May 23"];
-  const times = ["6:00 PM","6:30 PM","7:00 PM","7:30 PM","8:00 PM","8:30 PM","9:00 PM","9:30 PM","10:00 PM","10:30 PM"];
-  const parties = [1,2,3,4,5,6,7,8];
+  const dates = ["Tonight", "Tomorrow", "Thu May 14", "Fri May 15", "Sat May 16", "Sun May 17"];
+  const times = ["6:00 PM","6:30 PM","7:00 PM","7:30 PM","8:00 PM","8:30 PM","9:00 PM","9:30 PM","10:00 PM"];
+  const [whenDate, setWhenDate] = useState("Tonight");
+  const [whenTime, setWhenTime] = useState("8:00 PM");
 
-  const cell = (id: typeof open, Icon: any, label: string, value: string) => (
-    <button
-      onClick={() => setOpen(open === id ? null : id)}
-      className={`flex flex-1 flex-col items-start gap-0.5 px-2.5 py-1.5 text-left transition ${
-        open === id ? "bg-muted/60" : ""
-      }`}
-    >
-      <span className="flex items-center gap-1 text-[9px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-        <Icon className="h-2.5 w-2.5" /> {label}
-      </span>
-      <span className="truncate text-[12px] font-semibold text-foreground">{value}</span>
-    </button>
-  );
-
-  const options =
-    open === "city" ? cities :
-    open === "date" ? dates :
-    open === "time" ? times :
-    open === "party" ? parties.map((n) => `${n} ${n === 1 ? "guest" : "guests"}`) :
-    [];
-
-  const current =
-    open === "city" ? city :
-    open === "date" ? date :
-    open === "time" ? time :
-    open === "party" ? `${party} ${party === 1 ? "guest" : "guests"}` :
-    "";
-
-  const pick = (v: string) => {
-    if (open === "city") setCity(v);
-    else if (open === "date") setDate(v);
-    else if (open === "time") setTime(v);
-    else if (open === "party") setParty(parseInt(v, 10));
-    setOpen(null);
+  const setWhenCombo = (d: string, t: string) => {
+    setWhenDate(d);
+    setWhenTime(t);
   };
 
   return (
     <div className="mx-3 mb-2">
-      <div className="flex items-stretch divide-x divide-border overflow-hidden rounded-xl border border-border bg-card/60">
-        {cell("city", MapPin, "Where", city)}
-        {cell("date", Calendar, "When", date)}
-        {cell("time", Clock, "Time", time)}
-        {cell("party", Users, "Party", `${party}`)}
+      <div className="flex items-center gap-1.5 rounded-full border border-border bg-card/70 p-1 shadow-sm backdrop-blur">
+        <button
+          onClick={() => setOpen(open === "city" ? null : "city")}
+          className={`group flex flex-1 items-center gap-2 rounded-full px-3 py-1.5 text-left transition ${
+            open === "city" ? "bg-muted" : "hover:bg-muted/50"
+          }`}
+        >
+          <MapPin className="h-3.5 w-3.5 shrink-0 text-secondary" />
+          <div className="min-w-0 flex-1">
+            <div className="text-[8.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80">Where</div>
+            <div className="truncate font-display text-[13px] font-semibold leading-tight text-foreground">{city}</div>
+          </div>
+        </button>
+        <div className="h-7 w-px bg-border/70" />
+        <button
+          onClick={() => setOpen(open === "when" ? null : "when")}
+          className={`group flex flex-1 items-center gap-2 rounded-full px-3 py-1.5 text-left transition ${
+            open === "when" ? "bg-muted" : "hover:bg-muted/50"
+          }`}
+        >
+          <Calendar className="h-3.5 w-3.5 shrink-0 text-secondary" />
+          <div className="min-w-0 flex-1">
+            <div className="text-[8.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80">When</div>
+            <div className="truncate font-display text-[13px] font-semibold leading-tight text-foreground">{whenDate} · {whenTime}</div>
+          </div>
+        </button>
       </div>
-      {open && (
-        <div className="mt-1.5 max-h-44 overflow-y-auto rounded-xl border border-border bg-card p-1 shadow-sm scrollbar-hide">
-          {options.map((opt) => (
+
+      {open === "city" && (
+        <div className="mt-1.5 max-h-44 overflow-y-auto rounded-2xl border border-border bg-card p-1 shadow-md scrollbar-hide">
+          {cities.map((opt) => (
             <button
               key={opt}
-              onClick={() => pick(opt)}
-              className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-[12px] transition hover:bg-muted/60 ${
-                opt === current ? "font-semibold text-foreground" : "text-muted-foreground"
+              onClick={() => { setCity(opt); setOpen(null); }}
+              className={`flex w-full items-center justify-between rounded-xl px-3 py-1.5 text-[12px] transition hover:bg-muted/60 ${
+                opt === city ? "font-semibold text-foreground" : "text-muted-foreground"
               }`}
             >
               <span>{opt}</span>
-              {opt === current && <Check className="h-3 w-3" />}
+              {opt === city && <Check className="h-3 w-3" />}
             </button>
           ))}
+        </div>
+      )}
+
+      {open === "when" && (
+        <div className="mt-1.5 grid grid-cols-2 gap-1.5 rounded-2xl border border-border bg-card p-2 shadow-md">
+          <div>
+            <div className="px-1 pb-1 text-[8.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground">Date</div>
+            <div className="max-h-40 space-y-0.5 overflow-y-auto pr-0.5 scrollbar-hide">
+              {dates.map((d) => (
+                <button
+                  key={d}
+                  onClick={() => setWhenCombo(d, whenTime)}
+                  className={`flex w-full items-center justify-between rounded-lg px-2 py-1 text-[11.5px] transition hover:bg-muted/60 ${
+                    d === whenDate ? "bg-muted/80 font-semibold text-foreground" : "text-muted-foreground"
+                  }`}
+                >
+                  <span className="truncate">{d}</span>
+                  {d === whenDate && <Check className="h-3 w-3" />}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="px-1 pb-1 text-[8.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground">Time</div>
+            <div className="max-h-40 space-y-0.5 overflow-y-auto pr-0.5 scrollbar-hide">
+              {times.map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setWhenCombo(whenDate, t)}
+                  className={`flex w-full items-center justify-between rounded-lg px-2 py-1 text-[11.5px] transition hover:bg-muted/60 ${
+                    t === whenTime ? "bg-muted/80 font-semibold text-foreground" : "text-muted-foreground"
+                  }`}
+                >
+                  <span>{t}</span>
+                  {t === whenTime && <Check className="h-3 w-3" />}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>
