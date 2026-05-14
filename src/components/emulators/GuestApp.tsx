@@ -345,6 +345,69 @@ function WhySaveFaq() {
     </div>
   );
 }
+
+function QrFaqItem({ q, children }: { q: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-xl border border-border bg-background/60">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-[11px] font-semibold text-foreground"
+      >
+        <span className="flex items-center gap-1.5">
+          <HelpCircle className="h-3.5 w-3.5 text-secondary" />
+          {q}
+        </span>
+        <ChevronDown
+          className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <div className="space-y-2 border-t border-border px-3 py-2.5 text-[11px] leading-snug text-muted-foreground">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function QrFaqList() {
+  return (
+    <div className="mt-3 space-y-2">
+      <QrFaqItem q="Why show my QR?">
+        <p>
+          The waiter scans it to{" "}
+          <span className="font-semibold text-foreground">link your visit</span> to your
+          account, even without a saved coupon.
+        </p>
+        <p>
+          Cashback gets credited automatically after the bill is closed.
+        </p>
+      </QrFaqItem>
+      <QrFaqItem q="How much cashback do I earn?">
+        <p>
+          If you saved a coupon, you get the{" "}
+          <span className="font-semibold text-foreground">locked rate</span> (up to 20%).
+        </p>
+        <p>
+          Without a coupon, every Mesita venue gives you a{" "}
+          <span className="font-semibold text-foreground">base 5% back</span> just for
+          showing your QR.
+        </p>
+      </QrFaqItem>
+      <QrFaqItem q="When do I get my cashback?">
+        <p>
+          Cashback is credited to your wallet within{" "}
+          <span className="font-semibold text-foreground">24 hours</span> after the venue
+          confirms the ticket.
+        </p>
+        <p>
+          You'll get a push notification the moment it lands.
+        </p>
+      </QrFaqItem>
+    </div>
+  );
+}
 function StatusBar() {
   return (
     <div className="flex h-9 items-end justify-between px-7 pb-1 pt-2 text-[11px] font-semibold text-foreground">
