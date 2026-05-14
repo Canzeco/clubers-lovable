@@ -1670,39 +1670,6 @@ function ReviewsSectionBody() {
           </div>
         ))}
       </div>
-      <div className="mt-3 rounded-2xl border border-border bg-card-soft p-3">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-[11px] font-semibold">
-            JC
-          </div>
-          <div className="flex-1">
-            <p className="text-[12px] font-semibold leading-tight">Juan Carlos</p>
-            <p className="text-[10px] text-muted-foreground">4 days ago</p>
-          </div>
-          <span className="flex items-center gap-0.5 text-[12px] font-semibold text-secondary">
-            <Star className="h-3 w-3 fill-secondary" /> 5.0
-          </span>
-        </div>
-        <p className="mt-2 text-[12px] leading-snug text-foreground/85">
-          "Excellent venue with music and very delicious food."
-        </p>
-        <div className="mt-2 grid grid-cols-4 gap-1">
-          {[
-            { l: "Food", v: 5 },
-            { l: "Service", v: 5 },
-            { l: "Atm.", v: 5 },
-            { l: "Value", v: 5 },
-          ].map((s) => (
-            <div key={s.l} className="rounded-md bg-background py-1 text-center">
-              <p className="text-[9px] text-muted-foreground">{s.l}</p>
-              <p className="text-[11px] font-semibold">{s.v}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-      <button className="mt-2 w-full rounded-full border border-border bg-card px-4 py-2 text-[11px] font-medium text-foreground/80">
-        View all 129 reviews
-      </button>
     </div>
   );
 }
