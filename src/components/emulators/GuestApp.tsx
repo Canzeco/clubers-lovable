@@ -3333,6 +3333,45 @@ const COMBINED_STEPS: { label: string; Icon: any }[] = [
   { label: "Cashback", Icon: Coins },
 ];
 
+function HorizontalStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: { label: string; Icon: any }[] }) {
+  return (
+    <div className="pointer-events-none mt-0.5 flex w-full items-center">
+      {steps.map((s, i) => {
+        const done = i < step;
+        const current = i === step;
+        const Icon = s.Icon;
+        return (
+          <div key={s.label} className="flex flex-1 items-center last:flex-none">
+            <div
+              title={s.label}
+              className={`flex h-3 w-3 flex-shrink-0 items-center justify-center rounded-full border transition ${
+                done
+                  ? "border-secondary bg-secondary text-secondary-foreground"
+                  : current
+                  ? "border-foreground bg-background text-foreground animate-pulse"
+                  : "border-border bg-background text-muted-foreground/50"
+              }`}
+            >
+              {done ? (
+                <Check className="h-1.5 w-1.5" strokeWidth={3} />
+              ) : (
+                <Icon className="h-1.5 w-1.5" />
+              )}
+            </div>
+            {i < steps.length - 1 && (
+              <span
+                className={`mx-0.5 h-px flex-1 ${
+                  done ? "bg-secondary" : "bg-border"
+                }`}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: { label: string; Icon: any }[] }) {
   // step = number of completed stages (0..5). Current = step (next to complete).
   return (
