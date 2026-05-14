@@ -629,16 +629,7 @@ function VenueDetailSheet({
           {/* External Reviews — scores across platforms */}
           <section id="vsec-scores" className="scroll-mt-16">
             <SectionLabel>External reviews</SectionLabel>
-            <div className="grid grid-cols-5 gap-1">
-            <div className="rounded-xl border border-secondary/30 bg-secondary/10 p-2">
-              <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-secondary">
-                <Sparkles className="h-2.5 w-2.5" /> Mesita
-              </p>
-              <p className="mt-1 font-display text-base font-semibold leading-none text-secondary">
-                {venue.mesita}
-              </p>
-              <p className="mt-0.5 text-[9px] text-muted-foreground">{venue.mesitaCount} reviews</p>
-            </div>
+            <div className="grid grid-cols-4 gap-1.5">
             <div className="rounded-xl bg-card-soft p-2">
               <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
                 <GoogleLogo className="h-3 w-3" /> Google
