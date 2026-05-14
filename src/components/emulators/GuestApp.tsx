@@ -46,9 +46,10 @@ import {
   ChevronDown,
   CalendarCheck,
   SlidersHorizontal,
+  QrCode,
 } from "lucide-react";
 
-type Tab = "discover" | "reservations" | "coupons" | "share" | "profile";
+type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
 
 function GoogleLogo({ className = "" }: { className?: string }) {
