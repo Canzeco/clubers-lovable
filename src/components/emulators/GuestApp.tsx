@@ -478,17 +478,12 @@ function ModeSwitcher({
 }
 
 const VENUE_QUICKNAV = [
-  { id: "vsec-photos", label: "Photos" },
-  { id: "vsec-scores", label: "Scores" },
-  { id: "vsec-activity", label: "Activity" },
-  { id: "vsec-offers", label: "Offers" },
-  { id: "vsec-about", label: "About" },
-  { id: "vsec-menu", label: "Menu" },
-  { id: "vsec-hours", label: "Hours" },
-  { id: "vsec-location", label: "Location" },
+  { id: "vsec-photos", label: "Media" },
+  { id: "vsec-scores", label: "External" },
+  { id: "vsec-reviews", label: "Mesita Reviews" },
   { id: "vsec-visitors", label: "Visitors" },
-  { id: "vsec-reviews", label: "Reviews" },
-  { id: "vsec-concierge", label: "Concierge" },
+  { id: "vsec-location", label: "Location" },
+  { id: "vsec-menu", label: "Menu" },
   { id: "vsec-details", label: "Details" },
 ];
 
