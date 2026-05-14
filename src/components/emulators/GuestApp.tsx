@@ -3296,11 +3296,17 @@ const PIPELINE_STEPS: { label: string; Icon: any }[] = [
   { label: "Story", Icon: Camera },
 ];
 
-function PipelineStepper({ step }: { step: number }) {
+const RESERVATION_STEPS: { label: string; Icon: any }[] = [
+  { label: "Reserved", Icon: Ticket },
+  { label: "Visited", Icon: MapPin },
+  { label: "Story", Icon: Camera },
+];
+
+function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: { label: string; Icon: any }[] }) {
   // step = number of completed stages (0..5). Current = step (next to complete).
   return (
     <div className="pointer-events-none flex flex-col items-center gap-0.5 py-2">
-      {PIPELINE_STEPS.map((s, i) => {
+      {steps.map((s, i) => {
         const done = i < step;
         const current = i === step;
         const Icon = s.Icon;
@@ -3322,7 +3328,7 @@ function PipelineStepper({ step }: { step: number }) {
                 <Icon className="h-1.5 w-1.5" />
               )}
             </div>
-            {i < PIPELINE_STEPS.length - 1 && (
+            {i < steps.length - 1 && (
               <span
                 className={`h-1.5 w-px ${
                   done ? "bg-secondary" : "bg-border"
