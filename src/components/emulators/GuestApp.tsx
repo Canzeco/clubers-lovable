@@ -1094,12 +1094,12 @@ function MesitaVisitors({ venue }: { venue: any }) {
           })}
         </div>
       )}
-      <div className="space-y-2">
+      <div className="-mx-5 flex snap-x snap-mandatory gap-2 overflow-x-auto px-5 pb-1 scrollbar-hide">
         {Array.from({ length: 10 }).map((_, i) => {
           const u = list[i % list.length];
           const ig = `${(126 - i * 9).toString()}.${(i * 3) % 10}k`;
           return (
-            <div key={"mv" + i} className="rounded-2xl border border-border bg-card-soft p-3">
+            <div key={"mv" + i} className="w-[78%] shrink-0 snap-start rounded-2xl border border-border bg-card-soft p-3">
               <div className="flex items-center gap-2.5">
                 <div className="relative">
                   <img
@@ -1158,7 +1158,7 @@ function MesitaVisitors({ venue }: { venue: any }) {
                   </span>
                 </div>
               </div>
-              <p className="mt-2 text-[12px] italic leading-snug text-foreground/85">
+              <p className="mt-2 line-clamp-3 text-[12px] italic leading-snug text-foreground/85">
                 "{u.comment}"
               </p>
             </div>
