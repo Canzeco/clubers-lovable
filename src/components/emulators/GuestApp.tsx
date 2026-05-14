@@ -453,8 +453,8 @@ function ModeSwitcher({
 }) {
   const modes: { id: DiscoverMode; label: string; Icon: any }[] = [
     { id: "tinder", label: "Swipe", Icon: Flame },
-    { id: "map", label: "Map", Icon: MapIcon },
     { id: "catalog", label: "Catalog", Icon: LayoutGrid },
+    { id: "map", label: "Map", Icon: MapIcon },
     { id: "ai", label: "AI", Icon: Sparkles },
   ];
   return (
