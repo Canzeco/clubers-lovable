@@ -3188,16 +3188,13 @@ function CouponTicket({
             </p>
           </div>
           <span
-            className={`inline-flex items-center gap-1 self-start rounded-sm px-1.5 py-0.5 text-[8px] uppercase tracking-[0.18em] ${pill.cls}`}
+            className={`inline-flex items-center gap-1.5 self-start rounded-sm px-1.5 py-0.5 text-[10px] font-medium ${pill.cls}`}
           >
             {isPending && <Phone className="h-2.5 w-2.5 animate-pulse" />}
             {isPending ? (
-              <>
-                <span className="font-bold">AI calling venue</span>
-                <span className="font-normal normal-case tracking-normal opacity-80">· expect a call in ~3 min to confirm</span>
-              </>
+              <span><span className="font-semibold">AI calling venue</span> · expect a call in ~3 min to confirm</span>
             ) : (
-              <span className="font-bold">{pill.label}</span>
+              <span className="font-semibold uppercase tracking-[0.18em] text-[8px]">{pill.label}</span>
             )}
           </span>
           {state === "active" && (
