@@ -1835,17 +1835,29 @@ function CatalogCard({ venue: v, onClick }: { venue: typeof venues[number]; onCl
         >
           <Bookmark className="h-3.5 w-3.5" />
         </button>
-        {v.affiliated && (
-          <span
-            className={`absolute left-2 top-2 rounded-full px-2 py-0.5 text-[9px] font-bold ${
-              v.firstVisit
-                ? "bg-gradient-to-r from-fuchsia-400 to-amber-300 text-black"
-                : "bg-secondary text-secondary-foreground"
-            }`}
-          >
-            {v.cashback}% cashback
-          </span>
-        )}
+        <div className="absolute left-2 top-2 flex items-center gap-1">
+          {v.affiliated ? (
+            <>
+              <span className="flex items-center gap-1 rounded-full bg-background/90 px-1.5 py-0.5 text-[9px] font-bold text-foreground backdrop-blur">
+                <BadgeCheck className="h-3 w-3 text-primary" />
+                Partner
+              </span>
+              <span
+                className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                  v.firstVisit
+                    ? "bg-gradient-to-r from-fuchsia-400 to-amber-300 text-black"
+                    : "bg-secondary text-secondary-foreground"
+                }`}
+              >
+                {v.cashback}% cashback
+              </span>
+            </>
+          ) : (
+            <span className="rounded-full bg-background/90 px-2 py-0.5 text-[9px] font-semibold text-muted-foreground backdrop-blur">
+              Web listing
+            </span>
+          )}
+        </div>
       </div>
       <div className="space-y-1 px-3 py-2.5">
         <p className="truncate font-display text-[15px] font-semibold leading-tight">{v.name}</p>
