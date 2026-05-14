@@ -2746,30 +2746,6 @@ function CouponTicket({
           isExpired ? "ring-dashed grayscale" : ""
         } ${isUsed ? "ring-dashed" : ""} ${isReservation ? "ring-secondary/30" : ""}`}
       >
-        {/* postage-stamp perforations along top & bottom edges */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-[6px] z-20"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 4px 0, oklch(0.97 0.014 20) 2.5px, transparent 3px)",
-            backgroundSize: "8px 6px",
-            backgroundRepeat: "repeat-x",
-            backgroundColor: "transparent",
-          }}
-        />
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[6px] z-20"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 4px 6px, oklch(0.97 0.014 20) 2.5px, transparent 3px)",
-            backgroundSize: "8px 6px",
-            backgroundRepeat: "repeat-x",
-            backgroundColor: "transparent",
-          }}
-        />
-
         {/* LEFT — restaurant image */}
         <div className="relative w-[84px] flex-shrink-0 overflow-hidden bg-muted">
           <img
