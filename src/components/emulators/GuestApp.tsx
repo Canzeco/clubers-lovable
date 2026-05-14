@@ -4184,61 +4184,47 @@ function ShareView() {
 
           {audience === "creators" && (
           <div className="flex flex-1 flex-col">
-            <p className="text-[11px] leading-snug text-muted-foreground">
-              Love Mesita and create content about food, nightlife or travel? We partner with creators who genuinely live the experience — collabs, custom codes, revenue share, and access to private venue events. For long-term partnerships, we also open the door to equity participation.
+            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+              Mesita for creators
+            </p>
+            <p className="mt-1 font-display text-lg font-semibold leading-tight">
+              Let's collaborate
+            </p>
+            <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
+              Custom code, revenue share, private events — and equity for long-term partners.
             </p>
 
-            <div className="mt-5 rounded-2xl border border-border bg-card p-4 shadow-sm">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-                Mesita for creators
-              </p>
-              <p className="mt-2 font-display text-lg font-semibold leading-tight">
-                Let's collaborate
-              </p>
-              <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
-                Tell us a bit about you and where you publish. We review every application personally and reply within a few days.
-              </p>
-              <div className="mt-3 flex flex-col gap-2">
-                <a
-                  href="mailto:creators@mesita.app?subject=Creator%20partnership"
-                  className="flex items-center justify-between gap-2 rounded-xl border border-border bg-card-soft px-3 py-2.5"
-                >
-                  <span className="flex items-center gap-2">
-                    <Mail className="h-3.5 w-3.5 text-secondary" />
-                    <span className="text-[12px] font-medium text-foreground">Email us</span>
-                  </span>
-                  <span className="text-[11px] text-muted-foreground">creators@mesita.app</span>
-                </a>
-                <a
-                  href="https://wa.me/525512345678?text=Hola%20Mesita%2C%20soy%20creador%20y%20quiero%20colaborar"
-                  className="flex items-center justify-between gap-2 rounded-xl border border-border bg-card-soft px-3 py-2.5"
-                >
-                  <span className="flex items-center gap-2">
-                    <MessageCircle className="h-3.5 w-3.5 text-secondary" />
-                    <span className="text-[12px] font-medium text-foreground">WhatsApp</span>
-                  </span>
-                  <span className="text-[11px] text-muted-foreground">+52 55 1234 5678</span>
-                </a>
-              </div>
-            </div>
-
-            <div className="mt-4 space-y-2">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                What partners get
-              </p>
+            <div className="mt-3 grid grid-cols-2 gap-1.5">
               {[
-                { t: "Custom referral code", d: "Your followers get a bigger welcome gift, you get attribution on every signup." },
-                { t: "Revenue share", d: "A cut of cashback redeemed by guests who joined through your code." },
-                { t: "Private venue events", d: "Tastings, openings and chef's tables before they go public." },
-                { t: "Co-created content", d: "We work with you on guides, lists and city editorials inside the app." },
-                { t: "Equity participation", d: "For long-term partners who help shape Mesita, we offer a path to equity — not just a payout." },
+                { t: "Custom code", d: "Bigger welcome gift for your followers." },
+                { t: "Revenue share", d: "Cut of cashback from your signups." },
+                { t: "Private events", d: "Tastings & openings before they go public." },
+                { t: "Equity path", d: "For partners who help shape Mesita." },
               ].map((b) => (
-                <div key={b.t} className="rounded-xl border border-border bg-card-soft p-2.5">
-                  <p className="text-[12px] font-semibold">{b.t}</p>
-                  <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">{b.d}</p>
+                <div key={b.t} className="rounded-xl border border-border bg-card-soft p-2">
+                  <p className="text-[11px] font-semibold leading-tight">{b.t}</p>
+                  <p className="mt-0.5 text-[10px] leading-snug text-muted-foreground">{b.d}</p>
                 </div>
               ))}
             </div>
+
+            <div className="mt-3 flex gap-1.5">
+              <a
+                href="mailto:creators@mesita.app?subject=Creator%20partnership"
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-border bg-card-soft px-2 py-2 text-[11px] font-semibold text-foreground"
+              >
+                <Mail className="h-3.5 w-3.5 text-secondary" /> Email
+              </a>
+              <a
+                href="https://wa.me/525512345678?text=Hola%20Mesita%2C%20soy%20creador%20y%20quiero%20colaborar"
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-border bg-card-soft px-2 py-2 text-[11px] font-semibold text-foreground"
+              >
+                <MessageCircle className="h-3.5 w-3.5 text-secondary" /> WhatsApp
+              </a>
+            </div>
+            <p className="mt-2 text-center text-[10px] text-muted-foreground">
+              We reply personally within a few days.
+            </p>
           </div>
           )}
 
