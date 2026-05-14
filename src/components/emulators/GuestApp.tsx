@@ -3457,7 +3457,7 @@ function ShareView() {
   ];
   const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [audience, setAudience] = useState<"guests" | "venues">("guests");
+  const [audience, setAudience] = useState<"guests" | "creators" | "venues">("guests");
   const [venueCopied, setVenueCopied] = useState(false);
   const venueLink = "mesita.app/v/invite/47847";
   const venueMessage = `¿Conoces a alguien con un restaurante o bar? Mándale esta invitación para que abra su Mesita en la web — sin costo, sin contrato, en 10 minutos: ${venueLink}`;
@@ -3482,23 +3482,27 @@ function ShareView() {
 
         <div className="flex flex-1 flex-col overflow-y-auto scrollbar-hide px-5 pb-3 pt-4">
           {/* Audience tabs */}
-          <div className="mb-4 grid grid-cols-2 gap-1 rounded-full border border-border bg-card-soft p-1">
-            {(["guests", "venues"] as const).map((a) => (
+          <div className="mb-4 grid grid-cols-3 gap-1 rounded-full border border-border bg-card-soft p-1">
+            {([
+              { id: "guests", label: "Guests" },
+              { id: "creators", label: "Creators" },
+              { id: "venues", label: "Venues" },
+            ] as const).map((a) => (
               <button
-                key={a}
-                onClick={() => setAudience(a)}
-                className={`rounded-full px-3 py-1.5 text-xs font-semibold capitalize transition ${
-                  audience === a
+                key={a.id}
+                onClick={() => setAudience(a.id)}
+                className={`rounded-full px-2 py-1.5 text-[11px] font-semibold transition ${
+                  audience === a.id
                     ? "bg-foreground text-background shadow-sm"
                     : "text-muted-foreground"
                 }`}
               >
-                {a === "guests" ? "For guests" : "For venues"}
+                {a.label}
               </button>
             ))}
           </div>
 
-          {audience === "guests" ? (
+          {audience === "guests" && (
           <>
           <p className="text-[11px] leading-snug text-muted-foreground">
             You've got {totalCards} gift cards to hand out. Send your code and the first friends who use it each get $100 MXN — courtesy of you.
@@ -3643,7 +3647,52 @@ function ShareView() {
             Send a gift to a friend <ChevronRight className="h-4 w-4" />
           </button>
           </>
-          ) : (
+          )}
+
+          {audience === "creators" && (
+          <div className="flex flex-1 flex-col">
+            <p className="text-[11px] leading-snug text-muted-foreground">
+              Love Mesita and create content about food, nightlife or travel? We partner with creators who genuinely live the experience — collabs, custom codes, revenue share, and access to private venue events.
+            </p>
+
+            <div className="mt-5 rounded-2xl border border-border bg-card p-4 shadow-sm">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                Mesita for creators
+              </p>
+              <p className="mt-2 font-display text-lg font-semibold leading-tight">
+                Let's collaborate
+              </p>
+              <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
+                Tell us a bit about you and where you publish. We review every application personally and reply within a few days.
+              </p>
+              <a
+                href="mailto:creators@mesita.app?subject=Creator%20partnership"
+                className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-foreground px-3 py-1.5 text-[11px] font-semibold text-background"
+              >
+                creators@mesita.app
+              </a>
+            </div>
+
+            <div className="mt-4 space-y-2">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                What partners get
+              </p>
+              {[
+                { t: "Custom referral code", d: "Your followers get a bigger welcome gift, you get attribution on every signup." },
+                { t: "Revenue share", d: "A cut of cashback redeemed by guests who joined through your code." },
+                { t: "Private venue events", d: "Tastings, openings and chef's tables before they go public." },
+                { t: "Co-created content", d: "We work with you on guides, lists and city editorials inside the app." },
+              ].map((b) => (
+                <div key={b.t} className="rounded-xl border border-border bg-card-soft p-2.5">
+                  <p className="text-[12px] font-semibold">{b.t}</p>
+                  <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">{b.d}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          )}
+
+          {audience === "venues" && (
           <div className="flex flex-1 flex-col">
             <p className="text-[11px] leading-snug text-muted-foreground">
               Know someone who runs a restaurant or bar? This isn't a gift — it's an invitation to set up their Mesita venue on the web. Free, no contract, ready in about 10 minutes.
