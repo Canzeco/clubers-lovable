@@ -3293,7 +3293,16 @@ function CouponTicket({
           {/* vertical pipeline stepper */}
           {state === "active" && (
             <div className="flex w-[24px] flex-shrink-0 items-center justify-center border-l border-dotted border-border/70 bg-card-soft">
-              <PipelineStepper step={c.step ?? 0} steps={isReservation ? RESERVATION_STEPS : PIPELINE_STEPS} />
+              <PipelineStepper
+                step={c.step ?? 0}
+                steps={
+                  isReservation
+                    ? c.reserveOnly || (c.cb ?? 0) === 0
+                      ? RESERVATION_STEPS
+                      : COMBINED_STEPS
+                    : PIPELINE_STEPS
+                }
+              />
             </div>
           )}
         </div>
@@ -3319,16 +3328,28 @@ const VENUE_IMAGES = {
 
 const PIPELINE_STEPS: { label: string; Icon: any }[] = [
   { label: "Saved", Icon: Ticket },
-  { label: "Visited", Icon: MapPin },
-  { label: "Bill", Icon: Banknote },
+  { label: "Bill submitted", Icon: Banknote },
   { label: "Paid", Icon: CreditCard },
+  { label: "Review", Icon: Star },
   { label: "Story", Icon: Camera },
+  { label: "Cashback", Icon: Coins },
 ];
 
 const RESERVATION_STEPS: { label: string; Icon: any }[] = [
-  { label: "Reserved", Icon: Ticket },
+  { label: "Requested", Icon: Ticket },
+  { label: "Secured", Icon: CalendarCheck },
   { label: "Visited", Icon: MapPin },
+];
+
+const COMBINED_STEPS: { label: string; Icon: any }[] = [
+  { label: "Requested", Icon: Ticket },
+  { label: "Secured", Icon: CalendarCheck },
+  { label: "Visited", Icon: MapPin },
+  { label: "Bill submitted", Icon: Banknote },
+  { label: "Paid", Icon: CreditCard },
+  { label: "Review", Icon: Star },
   { label: "Story", Icon: Camera },
+  { label: "Cashback", Icon: Coins },
 ];
 
 function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: { label: string; Icon: any }[] }) {
