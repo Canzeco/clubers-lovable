@@ -1664,7 +1664,7 @@ function DiscoverHeader() {
   );
 }
 
-function WalletView() {
+function WalletView({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   const [seg, setSeg] = useState<"active" | "expired" | "used">("active");
   const [openCoupon, setOpenCoupon] = useState<any | null>(null);
   const active = [
@@ -1686,7 +1686,9 @@ function WalletView() {
   const list = seg === "active" ? active : seg === "expired" ? expired : used;
   return (
     <>
-      <TopBar title="Coupon Wallet" subtitle={`${active.length} active · ${used.length} redeemed · ${expired.length} expired`} />
+      {!hideHeader && (
+        <TopBar title="Coupon Wallet" subtitle={`${active.length} active · ${used.length} redeemed · ${expired.length} expired`} />
+      )}
       {/* segmented control */}
       <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
         {([
@@ -1730,7 +1732,7 @@ function WalletView() {
   );
 }
 
-function ReservationsView() {
+function ReservationsView({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   const [openCoupon, setOpenCoupon] = useState<any | null>(null);
   const upcoming = [
     { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Wed May 14 · 8:00 PM", resParty: 2, expiresIn: "6d 12h", code: "MV-7702", firstVisit: false, step: 1 },
@@ -1746,7 +1748,9 @@ function ReservationsView() {
   const list = seg === "upcoming" ? upcoming : past;
   return (
     <>
-      <TopBar title="Reservations" subtitle={`${upcoming.length} upcoming · ${past.length} past`} />
+      {!hideHeader && (
+        <TopBar title="Reservations" subtitle={`${upcoming.length} upcoming · ${past.length} past`} />
+      )}
       <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
         {([
           { id: "upcoming", label: "Upcoming", count: upcoming.length },
@@ -3391,7 +3395,7 @@ function RewardsView() {
           ))}
         </div>
       </div>
-      {sub === "reservations" ? <ReservationsView /> : <WalletView />}
+      {sub === "reservations" ? <ReservationsView hideHeader /> : <WalletView hideHeader />}
     </div>
   );
 }
