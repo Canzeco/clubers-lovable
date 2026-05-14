@@ -3171,9 +3171,6 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
           <div className="flex justify-between"><span className="text-muted-foreground">Venue</span><span className="font-medium">{coupon.name}</span></div>
           <div className="flex justify-between"><span className="text-muted-foreground">Cashback</span><span className="font-semibold text-secondary">{coupon.cb}%</span></div>
           <div className="flex justify-between"><span className="text-muted-foreground">Cap per visit</span><span>$1,000 MXN</span></div>
-          {coupon.code && (
-            <div className="flex justify-between"><span className="text-muted-foreground">Code</span><span className="font-mono text-xs tracking-widest">{coupon.code}</span></div>
-          )}
           {isReservation ? (
             <>
               <div className="flex justify-between"><span className="text-muted-foreground">When</span><span>{coupon.resWhen || coupon.resRequested || "—"}</span></div>
@@ -3188,7 +3185,44 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
           )}
         </div>
         <p className="mt-3 text-[11px] leading-snug text-muted-foreground">
-          Your cashback activates automatically when you sit down. Cashback always covers up to $1,000 MXN per visit — anything over is paid in full.
+          Cashback covers up to $1,000 MXN per visit. Anything above that is paid in full. Your balance can only be spent at affiliated venues — it pulls you back for the next visit.
+        </p>
+      </div>
+
+      {/* How it works — full Mesita flow */}
+      <div className="rounded-3xl bg-card-soft p-5">
+        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">How it works</p>
+
+        <div className="mt-3">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-secondary">During the meal</p>
+          <ol className="mt-1.5 space-y-1.5 text-[12px] leading-snug text-foreground/80">
+            <li><span className="text-muted-foreground">1.</span> Order and dine normally — Mesita doesn't touch the experience.</li>
+            <li><span className="text-muted-foreground">2.</span> Optional: post an Instagram story tagging the venue to unlock a bonus later.</li>
+          </ol>
+        </div>
+
+        <div className="mt-4">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-secondary">Checkout (card only)</p>
+          <ol className="mt-1.5 space-y-1.5 text-[12px] leading-snug text-foreground/80">
+            <li><span className="text-muted-foreground">3.</span> Ask for the bill and tap <span className="font-semibold">Pay with this coupon</span> — your personal QR opens.</li>
+            <li><span className="text-muted-foreground">4.</span> The waiter scans your QR with their phone; it opens a chat with the Mesita bot on WhatsApp.</li>
+            <li><span className="text-muted-foreground">5.</span> Waiter enters the bill total and tip, and submits.</li>
+            <li><span className="text-muted-foreground">6.</span> You instantly get a Stripe checkout link (in-app + WhatsApp) and pay from your phone.</li>
+            <li><span className="text-muted-foreground">7.</span> Payment clears → waiter gets a WhatsApp confirmation. Done.</li>
+          </ol>
+        </div>
+
+        <div className="mt-4">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-secondary">Rewards</p>
+          <ol className="mt-1.5 space-y-1.5 text-[12px] leading-snug text-foreground/80">
+            <li><span className="text-muted-foreground">8.</span> Cashback is auto-credited to your Mesita balance at the venue's rate.</li>
+            <li><span className="text-muted-foreground">9.</span> Story bonus: an AI bot detects the @venue tag and auto-approves; the waiter is the fallback.</li>
+            <li><span className="text-muted-foreground">10.</span> Next visit: Stripe checkout applies your accumulated balance as a discount.</li>
+          </ol>
+        </div>
+
+        <p className="mt-3 text-[10px] leading-snug text-muted-foreground">
+          Mesita is card-only — built for full-service restaurants, not quick-service.
         </p>
       </div>
 
