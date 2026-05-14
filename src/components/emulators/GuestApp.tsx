@@ -3319,16 +3319,28 @@ const VENUE_IMAGES = {
 
 const PIPELINE_STEPS: { label: string; Icon: any }[] = [
   { label: "Saved", Icon: Ticket },
-  { label: "Visited", Icon: MapPin },
-  { label: "Bill", Icon: Banknote },
+  { label: "Bill submitted", Icon: Banknote },
   { label: "Paid", Icon: CreditCard },
+  { label: "Review", Icon: Star },
   { label: "Story", Icon: Camera },
+  { label: "Cashback", Icon: Coins },
 ];
 
 const RESERVATION_STEPS: { label: string; Icon: any }[] = [
-  { label: "Reserved", Icon: Ticket },
+  { label: "Requested", Icon: Ticket },
+  { label: "Secured", Icon: CalendarCheck },
   { label: "Visited", Icon: MapPin },
+];
+
+const COMBINED_STEPS: { label: string; Icon: any }[] = [
+  { label: "Requested", Icon: Ticket },
+  { label: "Secured", Icon: CalendarCheck },
+  { label: "Visited", Icon: MapPin },
+  { label: "Bill submitted", Icon: Banknote },
+  { label: "Paid", Icon: CreditCard },
+  { label: "Review", Icon: Star },
   { label: "Story", Icon: Camera },
+  { label: "Cashback", Icon: Coins },
 ];
 
 function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: { label: string; Icon: any }[] }) {
