@@ -616,8 +616,6 @@ function VenueDetailSheet({
           </p>
         </div>
 
-        <VenueQuickNav />
-
         <div className="space-y-4 px-5 pt-5">
           {/* Media Carousel — Instagram-style 4:3 with dots */}
           <section id="vsec-photos" className="scroll-mt-16"><PhotoCarousel /></section>
