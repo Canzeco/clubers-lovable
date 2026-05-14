@@ -329,12 +329,21 @@ function VenueDetailSheet({
       >
         <div className="relative flex-1 overflow-y-auto scrollbar-hide pb-24">
         <div className="relative px-5 pt-5">
-          <button
-            onClick={onClose}
-            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-card-soft text-foreground"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          <div className="absolute right-3 top-3 flex items-center gap-1.5">
+            <button
+              aria-label="Share venue"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-card-soft text-foreground transition hover:bg-muted"
+            >
+              <Share2 className="h-4 w-4" />
+            </button>
+            <button
+              onClick={onClose}
+              aria-label="Close"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-card-soft text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
           <div className="flex items-center gap-2">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{venue.type}</p>
             {venue.affiliated && (
