@@ -1119,15 +1119,15 @@ function CurrentActivitySection() {
 function OffersSection({ cashback }: { cashback: number }) {
   return (
     <div>
-      <SectionLabel action="Active">Offer</SectionLabel>
+      <SectionLabel action="Active">Cashback</SectionLabel>
       <div className="flex items-start gap-3 rounded-2xl border border-border bg-card-soft p-3">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-secondary/15 text-secondary">
           <Sparkles className="h-4 w-4" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[13px] font-semibold leading-tight">{cashback}% cashback on your bill</p>
+          <p className="text-[13px] font-semibold leading-tight">{cashback}% flat cashback on your bill</p>
           <p className="mt-0.5 text-[11px] text-muted-foreground">
-            Every day, all the time · Save the coupon to lock the rate
+            Every day, all the time · Covers the first $1,000 of your bill
           </p>
           <span className="mt-1.5 inline-block rounded-md bg-secondary px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-secondary-foreground">
             {cashback}% cashback
