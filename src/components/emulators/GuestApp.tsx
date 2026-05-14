@@ -1125,9 +1125,9 @@ function OffersSection({ cashback }: { cashback: number }) {
           <Sparkles className="h-4 w-4" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[13px] font-semibold leading-tight">{cashback}% flat cashback on your bill</p>
+          <p className="text-[13px] font-semibold leading-tight">{cashback}% welcome cashback on your bill</p>
           <p className="mt-0.5 text-[11px] text-muted-foreground">
-            Every day, all the time · Covers the first $1,000 of your bill
+            Welcome offer · Covers the first $1,000 of your bill
           </p>
           <span className="mt-1.5 inline-block rounded-md bg-secondary px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-secondary-foreground">
             {cashback}% cashback
