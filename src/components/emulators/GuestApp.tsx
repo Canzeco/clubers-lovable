@@ -3596,7 +3596,6 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
       <div className="rounded-3xl bg-card-soft p-5">
         <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Coupon details</p>
         <div className="mt-2 space-y-1.5 text-sm">
-          <div className="flex justify-between"><span className="text-muted-foreground">Code</span><span className="font-mono text-[12px]">{coupon.code || "—"}</span></div>
           <div className="flex justify-between"><span className="text-muted-foreground">Cap per visit</span><span>$1,000 MXN</span></div>
           {isReservation ? (
             <>
