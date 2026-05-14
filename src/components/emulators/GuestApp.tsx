@@ -1824,7 +1824,7 @@ function CatalogCard({ venue: v, onClick }: { venue: typeof venues[number]; onCl
   return (
     <button
       onClick={onClick}
-      className="group relative w-[68%] shrink-0 snap-start overflow-hidden rounded-2xl border border-border bg-card text-left shadow-sm transition active:scale-[0.99]"
+      className="group relative w-[68%] shrink-0 snap-start overflow-hidden rounded-lg border border-border bg-card text-left shadow-sm transition active:scale-[0.99]"
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         <img src={v.img} alt={v.name} className="h-full w-full object-cover" />
