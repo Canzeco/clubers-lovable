@@ -506,10 +506,10 @@ function ModeSwitcher({
 
 const VENUE_QUICKNAV = [
   { id: "vsec-photos", label: "Media" },
+  { id: "vsec-offers", label: "Cashback" },
   { id: "vsec-scores", label: "External" },
   { id: "vsec-reviews", label: "Mesita Reviews" },
   { id: "vsec-visitors", label: "Visitors" },
-  { id: "vsec-offers", label: "Cashback" },
   { id: "vsec-menu", label: "Menu" },
   { id: "vsec-location", label: "Location" },
   { id: "vsec-hours", label: "Hours" },
