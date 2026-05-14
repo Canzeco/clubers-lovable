@@ -3771,6 +3771,32 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
                   {s.detail && (
                     <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">{s.detail}</p>
                   )}
+                  {s.action && !done && (
+                    <button
+                      onClick={s.action.onClick}
+                      disabled={!active}
+                      className={`mt-2 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${
+                        !active
+                          ? "bg-muted text-muted-foreground/60 cursor-not-allowed"
+                          : s.action.tone === "stripe"
+                          ? "bg-[#635BFF] text-white shadow-glow hover:bg-[#5046e5]"
+                          : s.action.tone === "story"
+                          ? "bg-gradient-to-r from-fuchsia-500 to-amber-400 text-white shadow-glow"
+                          : s.action.tone === "neutral"
+                          ? "bg-foreground text-background"
+                          : "bg-gradient-to-r from-primary to-secondary text-white shadow-glow"
+                      }`}
+                    >
+                      {s.action.tone === "stripe" ? (
+                        <CreditCard className="h-3 w-3" />
+                      ) : s.action.tone === "story" ? (
+                        <Instagram className="h-3 w-3" />
+                      ) : s.action.tone === "primary" ? (
+                        <QrCode className="h-3 w-3" />
+                      ) : null}
+                      {s.action.label}
+                    </button>
+                  )}
                 </div>
               </li>
             );
@@ -3778,33 +3804,6 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
         </ol>
       </div>
 
-      {/* SECTION 5 — Primary action button */}
-      <div>
-        {showPay && waiterConfirmed ? (
-          <button
-            onClick={() => setCheckoutOpen(true)}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#635BFF] px-4 py-3 text-sm font-semibold text-white shadow-glow transition hover:bg-[#5046e5]"
-          >
-            <CreditCard className="h-4 w-4" /> Go to pay · Stripe checkout
-          </button>
-        ) : showPay ? (
-          <button
-            onClick={() => setPayOpen(true)}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-3 text-sm font-semibold text-white shadow-glow"
-          >
-            <QrCode className="h-4 w-4" /> Pay with this coupon
-          </button>
-        ) : isReservation ? (
-          <button className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow">
-            <Calendar className="h-4 w-4" />
-            {isPending ? "Edit request" : "Change reservation"}
-          </button>
-        ) : (
-          <button className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow">
-            <Calendar className="h-4 w-4" /> Make a reservation
-          </button>
-        )}
-      </div>
       {payOpen && <PayWithCouponSheet coupon={coupon} onClose={() => setPayOpen(false)} />}
       {checkoutOpen && (
         <StripeCheckoutModal coupon={coupon} onClose={() => setCheckoutOpen(false)} />
