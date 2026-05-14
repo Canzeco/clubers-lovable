@@ -3930,6 +3930,10 @@ function MyQrView() {
           venue's default cashback to the bill instantly.
         </p>
       </div>
+
+      <div className="mt-3">
+        <WhySaveFaq />
+      </div>
     </div>
   );
 }
