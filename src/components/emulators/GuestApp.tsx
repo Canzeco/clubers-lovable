@@ -3518,7 +3518,11 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   const showPay = !coupon.used && !coupon.reserveOnly && (coupon.cb ?? 0) > 0;
 
   // Build the step list dynamically based on coupon state
-  type Step = { label: string; detail?: string };
+  type Step = {
+    label: string;
+    detail?: string;
+    action?: { label: string; onClick: () => void; tone?: "primary" | "stripe" | "story" | "neutral" };
+  };
   const steps: Step[] = [];
   if (isReservation) {
     steps.push({
@@ -3526,19 +3530,31 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
       detail: isPending
         ? `Requesting ${coupon.resRequested || "your time"}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`
         : `${coupon.resWhen || ""}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`,
+      action: isPending
+        ? { label: "Edit request", onClick: () => {}, tone: "neutral" }
+        : { label: "Change reservation", onClick: () => {}, tone: "neutral" },
     });
     steps.push({ label: "Arrive & dine", detail: "Mesita doesn't touch the experience" });
   } else {
     steps.push({ label: "Walk in & dine", detail: "Order normally — no menu changes" });
   }
-  steps.push({ label: "Tap Pay with this coupon", detail: "Your personal QR opens" });
+  steps.push({
+    label: "Tap Pay with this coupon",
+    detail: "Your personal QR opens",
+    action: { label: "Show my QR", onClick: () => setPayOpen(true), tone: "primary" },
+  });
   steps.push({ label: "Waiter scans your QR", detail: "Opens Mesita bot on WhatsApp" });
-  steps.push({ label: "Pay via Stripe link", detail: "Sent to app + WhatsApp" });
+  steps.push({
+    label: "Pay via Stripe link",
+    detail: "Sent to app + WhatsApp",
+    action: { label: "Open Stripe checkout", onClick: () => setCheckoutOpen(true), tone: "stripe" },
+  });
   const requireStory = (coupon.cb ?? 0) >= 15;
   if (requireStory) {
     steps.push({
       label: "Post Instagram story",
       detail: `Tag @${coupon.name?.toLowerCase().replace(/\s+/g, "") || "venue"} — required to unlock cashback`,
+      action: { label: "Attach screenshot", onClick: () => fileRef.current?.click(), tone: "story" },
     });
   }
   steps.push({ label: "Cashback credited", detail: `+${coupon.cb}% to your Mesita balance` });
