@@ -46,7 +46,6 @@ import {
   ChevronDown,
   CalendarCheck,
   SlidersHorizontal,
-  QrCode,
 } from "lucide-react";
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
