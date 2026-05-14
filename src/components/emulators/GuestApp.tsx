@@ -1773,6 +1773,22 @@ function DetailsSection() {
 
 function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => void }) {
   const dollars = (price: string) => price; // already "$$$"
+  const [quick, setQuick] = useState<typeof venues[number] | null>(null);
+  const [quickDone, setQuickDone] = useState<string | null>(null);
+  const [quickBlocked, setQuickBlocked] = useState(false);
+  const closeQuick = () => {
+    setQuick(null);
+    setQuickDone(null);
+    setQuickBlocked(false);
+  };
+  const doQuick = (label: string) => {
+    setQuickDone(label);
+    setTimeout(closeQuick, 1400);
+  };
+  const showQuickBlocked = () => {
+    setQuickBlocked(true);
+    setTimeout(() => setQuickBlocked(false), 2000);
+  };
   const rows: { title: string; subtitle?: string; items: typeof venues }[] = [
     {
       title: "Available now",
@@ -1805,8 +1821,85 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
   return (
     <div className="space-y-5 pb-6">
       {rows.map((row) => (
-        <CatalogRow key={row.title} title={row.title} subtitle={row.subtitle} items={row.items} onSelect={onSelect} />
+        <CatalogRow
+          key={row.title}
+          title={row.title}
+          subtitle={row.subtitle}
+          items={row.items}
+          onSelect={onSelect}
+          onQuickSave={setQuick}
+        />
       ))}
+      {quick && (
+        <div className="absolute inset-0 z-40 flex items-end justify-center bg-black/40 backdrop-blur-sm animate-fade-in" onClick={closeQuick}>
+          <div
+            className="w-full rounded-t-3xl border-t border-border bg-card p-4 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border" />
+            <div className="mb-3 flex items-center gap-3">
+              <img src={quick.img} alt="" className="h-12 w-12 rounded-xl object-cover" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-display text-[15px] font-semibold leading-tight">{quick.name}</p>
+                <p className="truncate text-[11px] text-muted-foreground">{quick.type}</p>
+              </div>
+              {quick.affiliated ? (
+                <span className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-0.5 text-[10px] font-bold text-secondary">
+                  <BadgeCheck className="h-3 w-3" /> Partner
+                </span>
+              ) : (
+                <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">Web listing</span>
+              )}
+            </div>
+            {quickDone ? (
+              <div className="flex items-center justify-center gap-2 rounded-2xl bg-secondary/15 py-4 text-[13px] font-semibold text-secondary">
+                <Sparkles className="h-4 w-4" /> {quickDone}
+              </div>
+            ) : (
+              <div className="flex items-stretch gap-1.5">
+                <button
+                  onClick={quick.affiliated ? () => doQuick("Coupon saved") : showQuickBlocked}
+                  className={`flex flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl border px-2 py-2.5 text-[11px] font-semibold leading-tight shadow-sm transition active:scale-[0.98] ${
+                    quick.affiliated
+                      ? "border-foreground/15 bg-background text-foreground"
+                      : "border-dashed border-foreground/15 bg-muted/40 text-muted-foreground/60"
+                  }`}
+                >
+                  <Ticket className={`h-4 w-4 ${quick.affiliated ? "text-secondary" : "text-muted-foreground/50"}`} />
+                  <span>Save Coupon</span>
+                </button>
+                <button
+                  onClick={quick.affiliated ? () => doQuick("Saved + reserve started") : showQuickBlocked}
+                  className={`flex flex-[1.4] flex-col items-center justify-center gap-0.5 rounded-2xl px-2 py-2.5 text-[11px] font-semibold leading-tight shadow-sm transition active:scale-[0.98] ${
+                    quick.affiliated
+                      ? "bg-secondary text-secondary-foreground"
+                      : "border border-dashed border-foreground/15 bg-muted/40 text-muted-foreground/60"
+                  }`}
+                >
+                  <span className="flex items-center gap-1">
+                    <Ticket className="h-3.5 w-3.5" />
+                    <span className="text-[10px]">+</span>
+                    <Calendar className="h-3.5 w-3.5" />
+                  </span>
+                  <span>Save + Reserve</span>
+                </button>
+                <button
+                  onClick={() => doQuick("Reservation started")}
+                  className="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl border border-foreground/15 bg-background px-2 py-2.5 text-[11px] font-semibold leading-tight text-foreground shadow-sm transition active:scale-[0.98]"
+                >
+                  <Calendar className="h-4 w-4 text-primary" />
+                  <span>Reserve</span>
+                </button>
+              </div>
+            )}
+            {quickBlocked && (
+              <p className="mt-2.5 text-center text-[11px] font-medium text-muted-foreground">
+                Only Partner venues offer cashbacks — always.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1816,11 +1909,13 @@ function CatalogRow({
   subtitle,
   items,
   onSelect,
+  onQuickSave,
 }: {
   title: string;
   subtitle?: string;
   items: typeof venues;
   onSelect: (v: typeof venues[number]) => void;
+  onQuickSave: (v: typeof venues[number]) => void;
 }) {
   return (
     <div>
@@ -1835,14 +1930,19 @@ function CatalogRow({
       </div>
       <div className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 scrollbar-hide">
         {items.map((v, idx) => (
-          <CatalogCard key={v.name + idx} venue={v} onClick={() => onSelect(v)} />
+          <CatalogCard
+            key={v.name + idx}
+            venue={v}
+            onClick={() => onSelect(v)}
+            onQuickSave={() => onQuickSave(v)}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-function CatalogCard({ venue: v, onClick }: { venue: typeof venues[number]; onClick: () => void }) {
+function CatalogCard({ venue: v, onClick, onQuickSave }: { venue: typeof venues[number]; onClick: () => void; onQuickSave: () => void }) {
   return (
     <button
       onClick={onClick}
@@ -1850,13 +1950,18 @@ function CatalogCard({ venue: v, onClick }: { venue: typeof venues[number]; onCl
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         <img src={v.img} alt={v.name} className="h-full w-full object-cover" />
-        <button
+        <span
+          role="button"
           aria-label="Save"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            onQuickSave();
+          }}
           className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-background/85 text-foreground backdrop-blur"
         >
           <Bookmark className="h-3.5 w-3.5" />
-        </button>
+        </span>
         <div className="absolute left-2 top-2 flex items-center gap-1">
           {v.affiliated ? (
             <>
