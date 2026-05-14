@@ -2339,6 +2339,7 @@ function TinderMode() {
             <p className="mt-1 text-xs text-muted-foreground">
               Our AI agent will call the venue for you. The coupon expires 7 days after your booking.
             </p>
+            <IGStoryRequirement handle={`@${askReserve.name.toLowerCase().replace(/\s+/g, "")}`} />
             <WhySaveFaq />
             <div className="mt-4 flex items-center gap-2">
               <button
@@ -2398,6 +2399,7 @@ function TinderMode() {
                 <p className="mt-1 text-[10px] text-muted-foreground">
                   Always covers up to <span className="font-semibold text-foreground">$1,000 MXN</span> per visit — anything over is paid in full.
                 </p>
+                <IGStoryRequirement handle={`@${saved.name.toLowerCase().replace(/\s+/g, "")}`} />
                 <WhySaveFaq />
                 <div className="mt-4 flex gap-2">
                   <button
