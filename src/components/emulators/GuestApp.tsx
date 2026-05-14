@@ -3347,9 +3347,9 @@ function ProfileView() {
           <div className="space-y-2">
             {[
               { t: "Bronze", min: "Everyone", color: "tier-bronze", done: true, perk: "Base cashback" },
-              { t: "Silver", min: "1k+ followers", color: "tier-silver", done: true, perk: "Boosted cashback" },
-              { t: "Gold", min: "5k+ followers", color: "tier-gold", done: true, perk: "VIP perks · top venues", active: true },
-              { t: "Diamond", min: "20k+ followers · invite-only", color: "tier-diamond", done: false, perk: "Comped tables" },
+              { t: "Silver", min: "1k+ followers", color: "tier-silver", done: true, perk: "More cashback" },
+              { t: "Gold", min: "5k+ followers", color: "tier-gold", done: true, perk: "Even more cashback", active: true },
+              { t: "Diamond", min: "20k+ followers · invite-only", color: "tier-diamond", done: false, perk: "Most cashback" },
             ].map((r) => (
               <div
                 key={r.t}
@@ -3377,6 +3377,10 @@ function ProfileView() {
               </div>
             ))}
           </div>
+
+          <p className="mt-2 px-1 text-[10px] leading-relaxed text-muted-foreground">
+            No VIP gimmicks — tiers just unlock a higher cashback %. Linear, honest.
+          </p>
 
           {/* Appeal upgrade — sits right below Diamond row */}
           <button
