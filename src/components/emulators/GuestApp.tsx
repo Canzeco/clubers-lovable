@@ -3754,6 +3754,8 @@ function ShareView() {
                 What they get
               </p>
               {[
+                { t: "More customers, every week", d: "Featured discovery inside the Mesita app puts the venue in front of thousands of guests actively looking for where to go tonight." },
+                { t: "Automated Instagram stories", d: "Every guest who visits is nudged to upload and share one story with their friends — turning each visit into organic reach that compounds week after week." },
                 { t: "Web setup in ~10 min", d: "No app to install. Menu, hours, photos, cashback rules — all from a browser." },
                 { t: "Their own QR & coupons", d: "Guests scan to redeem cashback or save offers for later." },
                 { t: "Experience intelligence", d: "Live activity, repeat-guest insights, and AI summaries of every visit." },
