@@ -3128,16 +3128,56 @@ function CouponTicket({
   const hasCashback = (c.cb ?? 0) > 0;
   const venueImg = VENUE_IMAGES[c.name as keyof typeof VENUE_IMAGES] ?? VENUE_IMAGES._default;
 
-  // status pill content
-  const pill = isExpired
-    ? { label: "Expired", cls: "bg-muted text-muted-foreground" }
-    : isUsed
-    ? { label: "Used", cls: "bg-muted text-muted-foreground" }
-    : isPending
-    ? { label: "Pending", cls: "bg-amber-500/10 text-amber-600 border border-amber-500/20" }
-    : isReservation
-    ? { label: "Reservation", cls: "bg-secondary/10 text-secondary border border-secondary/20" }
-    : { label: "Coupon", cls: "bg-foreground/5 text-foreground/70 border border-foreground/10" };
+  // Workflow status — derived from current step so the pill always reflects
+  // where the guest is in the redemption pipeline, not the coupon "type".
+  const requireStory = (c.cb ?? 0) >= 15;
+  const buildStepLabels = () => {
+    const labels: string[] = [];
+    if (isReservation) {
+      labels.push(isPending ? "AI calling venue" : "Reservation confirmed");
+      labels.push("Arrive & dine");
+    } else {
+      labels.push("Ready to dine");
+    }
+    labels.push("Tap to show QR");
+    labels.push("Waiter scanning");
+    labels.push("Stripe checkout open");
+    if (requireStory) labels.push("Post Instagram story");
+    labels.push("Cashback credited");
+    return labels;
+  };
+  const stepLabels = buildStepLabels();
+  const stepIdx = Math.max(0, Math.min(stepLabels.length - 1, c.step ?? 0));
+
+  let pill: { label: string; cls: string };
+  if (isExpired) {
+    pill = { label: "Expired", cls: "bg-muted text-muted-foreground" };
+  } else if (isUsed) {
+    pill = { label: "Used · cashback credited", cls: "bg-secondary/10 text-secondary border border-secondary/20" };
+  } else if (isPending) {
+    pill = { label: "AI calling venue", cls: "bg-amber-500/10 text-amber-600 border border-amber-500/20" };
+  } else {
+    const current = stepLabels[stepIdx];
+    // Color the pill by phase
+    const isStripe = current === "Stripe checkout open";
+    const isStory = current === "Post Instagram story";
+    const isFinal = current === "Cashback credited";
+    const isWaiter = current === "Waiter scanning";
+    pill = {
+      label: current,
+      cls: isStripe
+        ? "bg-[#635BFF]/10 text-[#635BFF] border border-[#635BFF]/20"
+        : isStory
+        ? "bg-gradient-to-r from-fuchsia-500/10 to-amber-400/10 text-foreground border border-primary/20"
+        : isFinal
+        ? "bg-secondary/10 text-secondary border border-secondary/20"
+        : isWaiter
+        ? "bg-primary/10 text-primary border border-primary/20"
+        : isReservation
+        ? "bg-secondary/10 text-secondary border border-secondary/20"
+        : "bg-foreground/5 text-foreground/70 border border-foreground/10",
+    };
+  }
 
   return (
     <button
@@ -3204,7 +3244,9 @@ function CouponTicket({
             {isPending ? (
               <span><span className="font-semibold">AI calling venue</span> · expect a call in ~3 min to confirm</span>
             ) : (
-              <span className="font-semibold uppercase tracking-[0.18em] text-[8px]">{pill.label}</span>
+              <span className="font-semibold uppercase tracking-[0.14em] text-[9px] leading-tight">
+                {pill.label}
+              </span>
             )}
           </span>
           {state === "active" && (
