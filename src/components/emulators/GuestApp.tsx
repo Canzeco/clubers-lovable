@@ -3597,56 +3597,6 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   const isPending = coupon.res === "pending" || coupon.resStatus === "pending";
   const [payOpen, setPayOpen] = useState(false);
   const showPay = !coupon.used && !coupon.reserveOnly && (coupon.cb ?? 0) > 0;
-
-  // Build the step list dynamically based on coupon state
-  type Step = {
-    label: string;
-    detail?: string;
-    action?: { label: string; onClick: () => void; tone?: "primary" | "stripe" | "story" | "neutral" };
-  };
-  const steps: Step[] = [];
-  if (isReservation) {
-    steps.push({
-      label: isPending ? "AI agent calling venue" : "Reservation confirmed",
-      detail: isPending
-        ? `Requesting ${coupon.resRequested || "your time"}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`
-        : `${coupon.resWhen || ""}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`,
-      action: isPending
-        ? { label: "Edit request", onClick: () => {}, tone: "neutral" }
-        : { label: "Change reservation", onClick: () => {}, tone: "neutral" },
-    });
-    steps.push({ label: "Arrive & dine", detail: "Mesita doesn't touch the experience" });
-  } else {
-    steps.push({ label: "Walk in & dine", detail: "Order normally — no menu changes" });
-  }
-  steps.push({
-    label: "Tap Pay with this coupon",
-    detail: "Your personal QR opens",
-    action: { label: "Show my QR", onClick: () => setPayOpen(true), tone: "primary" },
-  });
-  steps.push({ label: "Waiter scans your QR", detail: "Opens Mesita bot on WhatsApp" });
-  steps.push({
-    label: "Pay via Stripe link",
-    detail: "Sent to app + WhatsApp",
-    action: { label: "Open Stripe checkout", onClick: () => setCheckoutOpen(true), tone: "stripe" },
-  });
-  const requireStory = (coupon.cb ?? 0) >= 15;
-  if (requireStory) {
-    steps.push({
-      label: "Post Instagram story",
-      detail: `Tag @${coupon.name?.toLowerCase().replace(/\s+/g, "") || "venue"} — required to unlock cashback`,
-      action: { label: "Attach screenshot", onClick: () => fileRef.current?.click(), tone: "story" },
-    });
-  }
-  steps.push({ label: "Cashback credited", detail: `+${coupon.cb}% to your Mesita balance` });
-
-  const currentStep = Math.max(0, Math.min(steps.length - 1, coupon.step ?? 0));
-
-  // After the waiter scans + confirms in WhatsApp, the flow advances to the
-  // "Pay via Stripe link" step. From that point on the primary CTA streams
-  // the Stripe checkout into the app instead of showing the QR.
-  const stripeStepIndex = steps.findIndex((s) => s.label === "Pay via Stripe link");
-  const waiterConfirmed = stripeStepIndex >= 0 && currentStep >= stripeStepIndex;
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [storyEvidence, setStoryEvidence] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -3658,6 +3608,46 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
     reader.readAsDataURL(file);
   };
   const igHandle = `@${coupon.name?.toLowerCase().replace(/\s+/g, "") || "venue"}`;
+
+  // Build steps from the coupon's canonical workflow. Actions are attached
+  // per step label so each of the 5 workflows gets the right CTAs.
+  type Step = {
+    label: string;
+    detail?: string;
+    action?: { label: string; onClick: () => void; tone?: "primary" | "stripe" | "story" | "neutral" };
+  };
+  const workflow = getCouponWorkflow(coupon);
+  const requireStory = workflow.some((s) => s.label.startsWith("Post story"));
+  const steps: Step[] = workflow.map((s) => {
+    // Override the reservation step copy with live state when available.
+    if (s.label === "Reserving your spot") {
+      return {
+        label: isPending ? "Reserving your spot" : "Reservation confirmed",
+        detail: isPending
+          ? `Calling ${coupon.name}… requesting ${coupon.resRequested || "your time"}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`
+          : `${coupon.resWhen || "Confirmed"}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`,
+        action: isPending
+          ? { label: "Edit request", onClick: () => {}, tone: "neutral" }
+          : { label: "Change reservation", onClick: () => {}, tone: "neutral" },
+      };
+    }
+    if (s.label === 'Tap "Pay with this coupon"') {
+      return { label: s.label, detail: s.desc, action: { label: "Show my QR", onClick: () => setPayOpen(true), tone: "primary" } };
+    }
+    if (s.label === "Pay from your phone") {
+      return { label: s.label, detail: s.desc, action: { label: "Open Stripe checkout", onClick: () => setCheckoutOpen(true), tone: "stripe" } };
+    }
+    if (s.label === "Post story & submit screenshot") {
+      return { label: s.label, detail: s.desc, action: { label: "Attach screenshot", onClick: () => fileRef.current?.click(), tone: "story" } };
+    }
+    return { label: s.label, detail: s.desc };
+  });
+
+  const currentStep = Math.max(0, Math.min(steps.length - 1, coupon.step ?? 0));
+  // After the waiter scans + confirms, the flow advances to "Pay from your phone".
+  // From that point on the primary CTA streams the Stripe checkout.
+  const stripeStepIndex = steps.findIndex((s) => s.label === "Pay from your phone");
+  const waiterConfirmed = stripeStepIndex >= 0 && currentStep >= stripeStepIndex;
   // Auto-pop the checkout the first time the user opens the coupon after the
   // waiter has confirmed — emulates "waiter scanned, sheet flies up".
   useEffect(() => {
