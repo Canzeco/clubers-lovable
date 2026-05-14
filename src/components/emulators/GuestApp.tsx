@@ -1727,6 +1727,7 @@ function ReservationsView() {
     { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Wed May 14 · 8:00 PM", resParty: 2, expiresIn: "6d 12h", code: "MV-7702", firstVisit: false, step: 1 },
     { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, isReservation: true, resStatus: "pending" as const, resRequested: "Fri May 16 · 9:30 PM", resParty: 4, expiresIn: "—", code: "NB-9914", firstVisit: false, step: 0 },
     { name: "Casa Luminar", cb: 20, color: "tier-gold", category: "Rooftop", distance: "0.4 km", cost: 3, mesita: 4.8, google: 4.6, isReservation: true, resStatus: "confirmed" as const, resWhen: "Sat May 17 · 9:00 PM", resParty: 6, expiresIn: "8d 04h", code: "CL-3320", firstVisit: false, step: 1 },
+    { name: "Atelier Nueve", cb: 0, color: "tier-silver", category: "Tasting menu", distance: "1.8 km", cost: 4, mesita: 4.9, google: 4.8, isReservation: true, reserveOnly: true, resStatus: "confirmed" as const, resWhen: "Thu May 22 · 8:30 PM", resParty: 2, expiresIn: "—", code: "AN-5510", firstVisit: false, step: 0 },
   ];
   const past = [
     { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, isReservation: true, resStatus: "confirmed" as const, resWhen: "Sun May 4 · 11:00 AM", resParty: 3, code: "LC-1101" },
