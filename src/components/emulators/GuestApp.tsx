@@ -3144,9 +3144,9 @@ function CouponTicket({
     const current = stepLabels[stepIdx];
     // Color the pill by phase
     const isStripe = current === "Paid";
-    const isStory = current === "Story";
-    const isFinal = current === "Cashback";
-    const isWaiter = current === "Bill submitted";
+    const isStory = current === "Story posted";
+    const isFinal = current === "Cashback credited";
+    const isWaiter = current === "QR scanned";
     pill = {
       label: current,
       cls: isStripe
