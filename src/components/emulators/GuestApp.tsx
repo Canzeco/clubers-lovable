@@ -1498,7 +1498,6 @@ function Discover() {
 function SearchConfigBar() {
   const [open, setOpen] = useState<null | "city" | "when">(null);
   const [city, setCity] = useState("Monterrey");
-  const [when, setWhen] = useState("Tonight · 8:00 PM");
 
   const cities = ["Monterrey", "CDMX", "Guadalajara", "Miami", "New York", "Madrid", "Barcelona", "Tokyo"];
   const dates = ["Tonight", "Tomorrow", "Thu May 14", "Fri May 15", "Sat May 16", "Sun May 17"];
@@ -1509,7 +1508,6 @@ function SearchConfigBar() {
   const setWhenCombo = (d: string, t: string) => {
     setWhenDate(d);
     setWhenTime(t);
-    setWhen(`${d} · ${t}`);
   };
 
   return (
