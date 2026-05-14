@@ -44,6 +44,7 @@ import {
   Bell,
   Shield,
   ChevronDown,
+  CalendarCheck,
 } from "lucide-react";
 
 type Tab = "discover" | "reservations" | "coupons" | "share" | "profile";
