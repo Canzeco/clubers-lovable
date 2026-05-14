@@ -3208,6 +3208,18 @@ function CouponTicket({
               Expect a call in ~3 min to confirm.
             </p>
           )}
+          {state === "active" && (
+            <HorizontalStepper
+              step={c.step ?? 0}
+              steps={
+                isReservation
+                  ? c.reserveOnly || (c.cb ?? 0) === 0
+                    ? RESERVATION_STEPS
+                    : COMBINED_STEPS
+                  : PIPELINE_STEPS
+              }
+            />
+          )}
         </div>
 
         {/* RIGHT — cashback + stepper */}
@@ -3274,22 +3286,6 @@ function CouponTicket({
               </>
             )}
           </div>
-
-          {/* vertical pipeline stepper */}
-          {state === "active" && (
-            <div className="flex w-[24px] flex-shrink-0 items-center justify-center border-l border-dotted border-border/70 bg-card-soft">
-              <PipelineStepper
-                step={c.step ?? 0}
-                steps={
-                  isReservation
-                    ? c.reserveOnly || (c.cb ?? 0) === 0
-                      ? RESERVATION_STEPS
-                      : COMBINED_STEPS
-                    : PIPELINE_STEPS
-                }
-              />
-            </div>
-          )}
         </div>
       </div>
     </button>
