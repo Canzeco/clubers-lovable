@@ -54,10 +54,25 @@ import {
   Wine,
   Beef,
   GlassWater,
+  GraduationCap,
+  Lock,
 } from "lucide-react";
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
+
+// Community catalog — shared across guest app & manager web. Joining a
+// community requires email-domain verification (e.g. @tec.mx).
+const COMMUNITIES: Record<
+  string,
+  { id: string; label: string; short: string; emailDomain: string; color: string }
+> = {
+  tec: { id: "tec", label: "Tec de Monterrey", short: "Tec", emailDomain: "@tec.mx", color: "bg-[#0033A0] text-white" },
+  udem: { id: "udem", label: "UDEM", short: "UDEM", emailDomain: "@udem.edu", color: "bg-[#003F2D] text-white" },
+  stanford: { id: "stanford", label: "Stanford", short: "Stanford", emailDomain: "@stanford.edu", color: "bg-[#8C1515] text-white" },
+  itam: { id: "itam", label: "ITAM", short: "ITAM", emailDomain: "@itam.mx", color: "bg-[#003366] text-white" },
+  ibero: { id: "ibero", label: "Ibero", short: "Ibero", emailDomain: "@ibero.mx", color: "bg-[#0072CE] text-white" },
+};
 
 function GoogleLogo({ className = "" }: { className?: string }) {
   return (
