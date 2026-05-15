@@ -2190,7 +2190,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
           {slide === 0 && (
             <video
               ref={videoRef}
-              src="https://videos.pexels.com/video-files/3209828/3209828-uhd_2560_1440_25fps.mp4"
+              src="https://videos.pexels.com/video-files/2890200/2890200-hd_1920_1080_30fps.mp4"
               poster={v.img}
               autoPlay
               loop
