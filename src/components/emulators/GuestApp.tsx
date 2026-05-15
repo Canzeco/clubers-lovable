@@ -4474,7 +4474,7 @@ function ProfileView() {
               { t: "Bronze", min: "Everyone", color: "tier-bronze", done: true, perk: "Base cashback", tagline: "Welcome to the club" },
               { t: "Silver", min: "1k followers · or MX$10k spent", color: "tier-silver", done: true, perk: "More cashback", tagline: "Insider perks" },
               { t: "Gold", min: "5k followers · or MX$50k spent", color: "tier-gold", done: true, perk: "Even more cashback", tagline: "Priority access", active: true },
-              { t: "Diamond", min: "20k followers · or MX$200k spent", color: "tier-diamond", done: false, perk: "Most cashback", tagline: "Full VIP treatment" },
+              { t: "Diamond", min: "20k followers · or MX$200k spent", color: "tier-diamond", done: false, perk: "Most cashback", tagline: "VIP · invite-only" },
             ].map((r) => (
               <div
                 key={r.t}
