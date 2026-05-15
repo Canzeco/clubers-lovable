@@ -3470,17 +3470,22 @@ export function getCouponWorkflow(c: any): WorkflowStep[] {
 const PIPELINE_STEPS = WF_PAY_STORY_CB;
 
 function HorizontalStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps?: WorkflowStep[] }) {
+  // Compact: scales down dots/gaps so up to 10 steps fit the middle column.
+  const many = steps.length > 6;
+  const dot = many ? "h-2 w-2" : "h-2.5 w-2.5";
+  const icon = many ? "h-1 w-1" : "h-1.5 w-1.5";
+  const gap = many ? "mx-0" : "mx-0.5";
   return (
-    <div className="pointer-events-none mt-0.5 flex w-full items-center">
+    <div className="pointer-events-none mt-0.5 flex w-full min-w-0 items-center">
       {steps.map((s, i) => {
         const done = i < step;
         const current = i === step;
         const Icon = s.Icon;
         return (
-          <div key={i} className="flex flex-1 items-center last:flex-none">
+          <div key={i} className="flex min-w-0 flex-1 items-center last:flex-none">
             <div
               title={s.label}
-              className={`flex h-3 w-3 flex-shrink-0 items-center justify-center rounded-full border transition ${
+              className={`flex ${dot} flex-shrink-0 items-center justify-center rounded-full border transition ${
                 done
                   ? "border-secondary bg-secondary text-secondary-foreground"
                   : current
@@ -3489,14 +3494,14 @@ function HorizontalStepper({ step, steps = PIPELINE_STEPS }: { step: number; ste
               }`}
             >
               {done ? (
-                <Check className="h-1.5 w-1.5" strokeWidth={3} />
+                <Check className={icon} strokeWidth={3} />
               ) : (
-                <Icon className="h-1.5 w-1.5" />
+                <Icon className={icon} />
               )}
             </div>
             {i < steps.length - 1 && (
               <span
-                className={`mx-0.5 h-px flex-1 ${
+                className={`${gap} h-px min-w-[2px] flex-1 ${
                   done ? "bg-secondary" : "bg-border"
                 }`}
               />
