@@ -2008,7 +2008,7 @@ function CatalogCard({ venue: v, onClick, onQuickSave }: { venue: typeof venues[
   );
 }
 
-function TinderMode() {
+function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => void } = {}) {
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState<"l" | "r" | null>(null);
   const [saved, setSaved] = useState<typeof venues[number] | null>(null);
