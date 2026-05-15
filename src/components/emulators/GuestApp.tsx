@@ -2988,7 +2988,7 @@ function Discover() {
         </div>
       )}
       {mode === "map" && <MapMode />}
-      {mode === "tinder" && <TinderMode />}
+      {mode === "tinder" && <TinderMode onSelect={setSelected} />}
       {mode === "ai" && <AISearchMode onSelect={setSelected} />}
       {selected && (
         <VenueDetailSheet venue={selected} onClose={() => setSelected(null)} />
