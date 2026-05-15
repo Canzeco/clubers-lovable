@@ -4411,7 +4411,7 @@ function ProfileView() {
           <div className="mt-4">
             <div className="relative h-1.5 w-full rounded-full bg-card-soft">
               <div
-                className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-tier-bronze via-tier-gold to-tier-diamond"
+                className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary to-secondary"
                 style={{ width: `${(58400 / 200000) * 100}%` }}
               />
               {/* Milestone dots */}
