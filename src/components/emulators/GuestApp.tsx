@@ -2180,7 +2180,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
           }}
         >
           {/* Square image box */}
-          <div className="relative aspect-square w-full overflow-hidden rounded-3xl shadow-glow bg-muted">
+          <div className="relative aspect-square w-full overflow-hidden rounded-t-3xl shadow-glow bg-muted">
           {slide === 0 && (
             <img
               src={v.img}
@@ -2250,8 +2250,8 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
           )}
           </div>
 
-          {/* Info box (below image, no overlay) */}
-          <div className="mt-4 rounded-2xl border border-border bg-card px-4 py-4 shadow-elev">
+          {/* Info box (joined to image — one component) */}
+          <div className="rounded-b-3xl border border-t-0 border-border bg-card px-4 py-4 shadow-elev">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-[11px] lowercase tracking-wide text-muted-foreground">
