@@ -1533,7 +1533,7 @@ function CommunitiesBlock() {
             {!pendingId ? (
               <>
                 {/* Category chips */}
-                <div className="mt-3 flex gap-1.5 overflow-x-auto px-5 pb-2 scrollbar-hide">
+                <div className="mt-3 flex flex-nowrap gap-1.5 overflow-x-auto overflow-y-hidden px-5 pb-2 scrollbar-hide [-webkit-overflow-scrolling:touch]">
                   {[
                     { id: "colleges", label: "🎓 Colleges", active: true },
                     { id: "companies", label: "🏢 Companies", active: false },
@@ -1544,7 +1544,7 @@ function CommunitiesBlock() {
                       key={cat.id}
                       onClick={() => cat.active && setCategory(cat.id as typeof category)}
                       disabled={!cat.active}
-                      className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-[11px] font-semibold transition ${
+                      className={`shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-[11px] font-semibold transition ${
                         category === cat.id && cat.active
                           ? "bg-foreground text-background"
                           : cat.active
