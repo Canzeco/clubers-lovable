@@ -2019,9 +2019,26 @@ function TinderMode() {
   const [partySize, setPartySize] = useState<number>(2);
   const [prefs, setPrefs] = useState<string[]>([]);
   const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
-  const startRef = useRef<{ x: number; y: number; id: number } | null>(null);
+  const startRef = useRef<{ x: number; y: number; id: number; t: number; w: number; left: number } | null>(null);
+  // Carousel slide: 0 = main video (center). Negative = info panels (left). Positive = extra photos (right).
+  const [slide, setSlide] = useState(0);
   const v = venues[idx % venues.length];
   const next = venues[(idx + 1) % venues.length];
+
+  // Build slides per venue: [-2 hours, -1 reviews, 0 main, +1 photo, +2 photo]
+  const extraPhotos = [
+    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80",
+    "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=900&q=80",
+  ];
+  const leftPanels = [
+    { key: "reviews", label: "Reviews" },
+    { key: "hours", label: "Hours" },
+  ];
+  const minSlide = -leftPanels.length;
+  const maxSlide = extraPhotos.length;
+
+  // Reset slide when card changes
+  useEffect(() => { setSlide(0); }, [idx]);
 
   const fly = (d: "l" | "r") => {
     const current = v;
@@ -2046,7 +2063,15 @@ function TinderMode() {
   const onPointerDown = (e: React.PointerEvent) => {
     if (dir) return;
     (e.target as Element).setPointerCapture?.(e.pointerId);
-    startRef.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    startRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      id: e.pointerId,
+      t: Date.now(),
+      w: rect.width,
+      left: rect.left,
+    };
     setDrag({ x: 0, y: 0 });
   };
   const onPointerMove = (e: React.PointerEvent) => {
@@ -2056,10 +2081,25 @@ function TinderMode() {
       y: e.clientY - startRef.current.y,
     });
   };
-  const onPointerUp = () => {
-    if (!startRef.current || !drag) {
+  const onPointerUp = (e: React.PointerEvent) => {
+    const start = startRef.current;
+    if (!start || !drag) {
       startRef.current = null;
       setDrag(null);
+      return;
+    }
+    const dt = Date.now() - start.t;
+    const dist = Math.hypot(drag.x, drag.y);
+    // Tap: short + small displacement → carousel navigation
+    if (dt < 250 && dist < 8) {
+      const relX = e.clientX - start.left;
+      if (relX < start.w / 2) {
+        setSlide((s) => Math.max(minSlide, s - 1));
+      } else {
+        setSlide((s) => Math.min(maxSlide, s + 1));
+      }
+      setDrag(null);
+      startRef.current = null;
       return;
     }
     const threshold = 90;
@@ -2108,22 +2148,93 @@ function TinderMode() {
             cursor: drag ? "grabbing" : "grab",
           }}
         >
-          <video
-            src="https://videos.pexels.com/video-files/3209828/3209828-uhd_2560_1440_25fps.mp4"
-            poster={v.img}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="h-full w-full object-cover"
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.85))",
-            }}
-          />
+          {/* Carousel slide */}
+          {slide === 0 && (
+            <video
+              src="https://videos.pexels.com/video-files/3209828/3209828-uhd_2560_1440_25fps.mp4"
+              poster={v.img}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-full w-full object-cover"
+            />
+          )}
+          {slide > 0 && (
+            <img
+              src={extraPhotos[slide - 1]}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+          )}
+          {slide < 0 && (
+            <div className="h-full w-full bg-gradient-to-br from-neutral-900 via-neutral-800 to-black p-5 pt-12 text-white overflow-hidden">
+              {leftPanels[-slide - 1].key === "reviews" ? (
+                <div className="flex h-full flex-col">
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-white/60">Reviews</p>
+                  <h4 className="mt-1 font-display text-xl font-semibold">What guests say</h4>
+                  <div className="mt-4 flex-1 space-y-3 overflow-hidden">
+                    {v.visitors.slice(0, 3).map((u) => (
+                      <div key={u.handle} className="flex gap-2.5 rounded-2xl bg-white/5 p-2.5 backdrop-blur">
+                        <img src={u.img} alt="" className="h-9 w-9 rounded-full object-cover" />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="truncate text-[12px] font-semibold">{u.name}</p>
+                            <span className="flex items-center gap-0.5 text-[10px] text-white/80">
+                              <Star className="h-2.5 w-2.5 fill-secondary text-secondary" /> {u.score}
+                            </span>
+                          </div>
+                          <p className="line-clamp-2 text-[11px] text-white/75">{u.comment}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex h-full flex-col">
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-white/60">Hours</p>
+                  <h4 className="mt-1 font-display text-xl font-semibold">{v.status}</h4>
+                  <div className="mt-4 flex-1 overflow-hidden rounded-2xl bg-white/5 backdrop-blur">
+                    {v.schedule.map((s, i) => (
+                      <div
+                        key={s.day}
+                        className={`flex items-center justify-between px-3 py-2 text-[12px] ${
+                          i !== v.schedule.length - 1 ? "border-b border-white/10" : ""
+                        }`}
+                      >
+                        <span className="font-medium text-white/85">{s.day}</span>
+                        <span className="text-white/65">{s.hours}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          {slide >= 0 && (
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.85))",
+              }}
+            />
+          )}
+          {/* Carousel dots */}
+          <div className="pointer-events-none absolute bottom-2 left-0 right-0 z-20 flex items-center justify-center gap-1.5">
+            {Array.from({ length: maxSlide - minSlide + 1 }).map((_, i) => {
+              const s = minSlide + i;
+              const active = s === slide;
+              return (
+                <span
+                  key={s}
+                  className={`h-1.5 rounded-full transition-all ${
+                    active ? "w-4 bg-white" : "w-1.5 bg-white/50"
+                  }`}
+                />
+              );
+            })}
+          </div>
           {/* swipe indicators */}
           <div
             className="pointer-events-none absolute left-5 top-5 rotate-[-12deg] rounded-md border-2 border-secondary px-3 py-1 text-sm font-bold uppercase tracking-widest text-secondary"
@@ -2137,6 +2248,7 @@ function TinderMode() {
           >
             No
           </div>
+          {slide >= 0 && (
           <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
             {v.affiliated ? (
               <span
@@ -2158,7 +2270,9 @@ function TinderMode() {
               {v.rating}
             </span>
           </div>
-          <div className="absolute bottom-5 left-5 right-5 text-white">
+          )}
+          {slide >= 0 && (
+          <div className="absolute bottom-6 left-5 right-5 text-white">
             <p className="text-xs uppercase tracking-widest opacity-80">{v.type}</p>
             <h3 className="font-display text-3xl font-semibold leading-tight">
               {v.name}
@@ -2172,6 +2286,7 @@ function TinderMode() {
               </p>
             )}
           </div>
+          )}
         </div>
       </div>
       <div className="mt-5 flex items-center justify-center gap-4 px-5">
