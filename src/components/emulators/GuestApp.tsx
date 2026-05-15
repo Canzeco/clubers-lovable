@@ -4448,7 +4448,7 @@ function ProfileView() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold leading-none">Connect Instagram</p>
-              <p className="mt-1 text-[11px] text-muted-foreground">Unlock Silver / Gold tier instantly</p>
+              <p className="mt-1 text-[11px] text-muted-foreground">Unlock Silver, Gold, Diamond class instantly</p>
             </div>
             <span className="rounded-full bg-peacock px-3 py-1.5 text-[11px] font-semibold text-white shadow-glow">Connect</span>
           </button>
