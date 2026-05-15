@@ -5441,7 +5441,7 @@ function RewardsView() {
         <div className="flex gap-1 rounded-full bg-muted p-1">
           {[
             { id: "reservations" as const, label: "Reservations", count: 6 },
-            { id: "coupons" as const, label: "Coupons", count: 14 },
+            { id: "coupons" as const, label: "Coupons", count: 35 },
           ].map((s) => (
             <button
               key={s.id}
