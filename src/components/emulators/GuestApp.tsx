@@ -5380,6 +5380,64 @@ function ShareView() {
             </button>
           </div>
           )}
+
+          {audience === "models" && (
+          <div className="flex flex-1 flex-col">
+            <p className="font-display text-2xl font-semibold leading-tight text-foreground">
+              Run a modeling or talent agency?
+            </p>
+            <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
+              Activate the models you manage on Mesita — they unlock Diamond perks, boosted cashback and priority tables at the city's best venues. You earn on every visit.
+            </p>
+
+            <div className="mt-2 grid grid-cols-2 gap-1.5">
+              {[
+                { t: "Diamond by default", d: "Your roster skips tiers — instant VIP." },
+                { t: "Boosted cashback", d: "Up to 2× cashback at partner venues." },
+                { t: "Priority tables", d: "Last-minute access on Fri & Sat nights." },
+                { t: "Story-for-table", d: "Models post · venues comp · everyone wins." },
+                { t: "Agency dashboard", d: "Track bookings, stories & earnings per talent." },
+                { t: "Revenue share", d: "Earn on every visit your talent generates." },
+              ].map((b) => (
+                <div key={b.t} className="rounded-xl border border-border bg-card-soft p-2">
+                  <p className="text-[11px] font-semibold leading-tight">{b.t}</p>
+                  <p className="mt-0.5 text-[10px] leading-snug text-muted-foreground">{b.d}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-dashed border-border bg-card-soft px-3 py-2">
+              <span className="truncate font-mono text-[11px] text-foreground">{modelsLink}</span>
+              <button
+                onClick={() => {
+                  if (typeof navigator !== "undefined" && navigator.clipboard) {
+                    navigator.clipboard.writeText(modelsLink).catch(() => {});
+                  }
+                  setModelsCopied(true);
+                  setTimeout(() => setModelsCopied(false), 1500);
+                }}
+                className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-foreground/50 transition hover:text-foreground"
+              >
+                {modelsCopied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+              </button>
+            </div>
+
+            <button
+              onClick={() => {
+                if (typeof navigator !== "undefined" && (navigator as Navigator & { share?: (data: ShareData) => Promise<void> }).share) {
+                  (navigator as Navigator & { share: (data: ShareData) => Promise<void> }).share({
+                    title: "Mesita for model agencies",
+                    text: modelsMessage,
+                    url: `https://${modelsLink}`,
+                  }).catch(() => {});
+                }
+              }}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 py-3 text-sm font-semibold text-background shadow-lg active:scale-[0.98]"
+            >
+              Activate your roster <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+          )}
         </div>
       </div>
 
