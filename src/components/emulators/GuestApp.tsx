@@ -4578,64 +4578,11 @@ function ProfileView() {
         </div>
         <div className="rounded-2xl border border-border bg-card-soft p-3">
           <div className="grid grid-cols-3 gap-2">
-            {[
-              // Geographic
-              { e: "🇪🇺", n: "European Explorer", d: "5 Mesitas in 5 EU countries", on: true },
-              { e: "🌍", n: "African Explorer", d: "3 Mesitas in 3 African countries", on: false, prog: "1/3" },
-              { e: "🌏", n: "Asian Explorer", d: "5 Mesitas in 5 Asian countries", on: false, prog: "2/5" },
-              { e: "🌎", n: "LATAM Legend", d: "10 Mesitas across LATAM", on: true },
-              { e: "🗽", n: "NYC Local", d: "8 Mesitas in New York", on: false, prog: "5/8" },
-              { e: "🗼", n: "Paris Insider", d: "6 Mesitas in Paris", on: false, prog: "2/6" },
-              { e: "🇲🇽", n: "CDMX Native", d: "25 Mesitas in CDMX", on: true },
-              { e: "🏖️", n: "Tulum Tour", d: "5 Mesitas in Tulum", on: false, prog: "1/5" },
-              { e: "🌴", n: "Miami Heat", d: "6 Mesitas in Miami", on: false, prog: "0/6" },
-              { e: "🇪🇸", n: "Madrileño", d: "6 Mesitas in Madrid", on: false, prog: "3/6" },
-              { e: "🇮🇹", n: "Dolce Vita", d: "5 Mesitas in Italy", on: true },
-              { e: "🌉", n: "Bay Area", d: "6 Mesitas in SF", on: false, prog: "1/6" },
-              { e: "🏝️", n: "Beach Tour", d: "5 coastal Mesitas", on: false, prog: "2/5" },
-              // Cuisine / category
-              { e: "🍷", n: "Sommelier", d: "20 wine bars", on: true },
-              { e: "🥃", n: "Mezcalero", d: "10 mezcal bars", on: true },
-              { e: "🍣", n: "Sushi Snob", d: "10 omakase nights", on: false, prog: "6/10" },
-              { e: "🍕", n: "Pizza Pilgrim", d: "12 pizzerias", on: false, prog: "8/12" },
-              { e: "🍝", n: "Pasta Lover", d: "15 pasta dinners", on: true },
-              { e: "🌮", n: "Taco Royalty", d: "20 taquerías", on: true },
-              { e: "🦞", n: "Seafood King", d: "10 seafood houses", on: false, prog: "4/10" },
-              { e: "🥩", n: "Steakhouse Stan", d: "8 steakhouses", on: false, prog: "5/8" },
-              { e: "🍜", n: "Ramen Runner", d: "10 ramen joints", on: false, prog: "3/10" },
-              { e: "🥐", n: "Pastry Hunter", d: "12 bakeries", on: true },
-              { e: "☕", n: "Café Crawler", d: "20 specialty coffees", on: true },
-              { e: "🍦", n: "Gelato Gang", d: "8 gelaterías", on: false, prog: "5/8" },
-              { e: "🌱", n: "Plant-based", d: "10 vegan dinners", on: false, prog: "2/10" },
-              { e: "🍸", n: "Cocktail Critic", d: "15 cocktail bars", on: true },
-              { e: "🥂", n: "Brunch Club", d: "12 weekend brunches", on: true },
-              // Time-of-day / behavior
-              { e: "🌃", n: "Night Owl", d: "10 dinners after 11pm", on: true },
-              { e: "🌅", n: "Early Bird", d: "8 breakfasts before 9am", on: false, prog: "3/8" },
-              { e: "🌆", n: "Sunset Hunter", d: "10 rooftops at golden hour", on: true },
-              { e: "🔥", n: "Streak Master", d: "10 weeks in a row", on: false, prog: "5/10" },
-              { e: "📅", n: "Weekday Warrior", d: "20 Mon–Thu visits", on: true },
-              { e: "🗓️", n: "Weekend Regular", d: "30 Fri–Sun visits", on: false, prog: "22/30" },
-              { e: "🎉", n: "Party of 8+", d: "5 large group bookings", on: false, prog: "2/5" },
-              { e: "💑", n: "Date Night", d: "20 tables for two", on: true },
-              // Social / influence
-              { e: "📸", n: "Storyteller", d: "Share 15 venues", on: false, prog: "11/15" },
-              { e: "📲", n: "Story Streak", d: "10 stories in a row", on: false, prog: "6/10" },
-              { e: "👯", n: "Connector", d: "Invite 10 friends", on: false, prog: "4/10" },
-              { e: "🌟", n: "Tastemaker", d: "Top 5% in your city", on: true },
-              { e: "🗣️", n: "Reviewer", d: "Leave 25 reviews", on: false, prog: "14/25" },
-              { e: "💬", n: "Conversationalist", d: "20 AI agent bookings", on: true },
-              // Spend / loyalty
-              { e: "👑", n: "Big Spender", d: "MX$100k spent", on: true },
-              { e: "💎", n: "Whale", d: "MX$200k spent", on: false, prog: "MX$141k left" },
-              { e: "💰", n: "Cashback Hunter", d: "MX$1k saved back", on: false, prog: "MX$840 left" },
-              { e: "🎁", n: "Gifting", d: "Gift 5 coupons", on: false, prog: "1/5" },
-              { e: "🏆", n: "Loyalist", d: "Visit one venue 10×", on: false, prog: "7/10" },
-              { e: "🦚", n: "Founder's Club", d: "Mesita member 1+ year", on: true },
-              { e: "🎂", n: "Birthday Mesita", d: "Celebrate yours on Mesita", on: false, prog: "Soon" },
-              { e: "🚀", n: "Trailblazer", d: "First 50 at a venue", on: true },
-              { e: "✨", n: "Discoverer", d: "Visit a brand-new opening", on: false, prog: "0/1" },
-            ].map((b) => (
+            {Array.from({ length: 50 }, (_, i) => ({
+              e: "🏅",
+              n: `Achievement ${i + 1}`,
+              on: i < 18,
+            })).map((b) => (
               <div
                 key={b.n}
                 className={`flex flex-col items-center gap-1 rounded-xl p-2 text-center ${
@@ -4644,10 +4591,6 @@ function ProfileView() {
               >
                 <span className={`text-2xl ${b.on ? "" : "grayscale"}`}>{b.e}</span>
                 <p className="text-[9px] font-semibold leading-tight">{b.n}</p>
-                <p className="text-[8px] leading-tight text-muted-foreground">{b.d}</p>
-                {!b.on && b.prog && (
-                  <p className="text-[8px] font-semibold text-secondary">{b.prog}</p>
-                )}
               </div>
             ))}
           </div>
