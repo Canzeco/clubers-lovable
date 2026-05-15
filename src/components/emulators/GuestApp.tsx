@@ -2251,7 +2251,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
           </div>
 
           {/* Info box (joined to image — one component) */}
-          <div className="flex flex-1 min-h-0 flex-col justify-between gap-4 rounded-b-3xl border border-t-0 border-border bg-card px-5 py-5 shadow-elev">
+          <div className="flex flex-1 min-h-0 flex-col gap-4 overflow-hidden rounded-b-3xl border border-t-0 border-border bg-card px-5 pt-5 pb-6 shadow-elev">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-[11px] lowercase tracking-wide text-muted-foreground">
