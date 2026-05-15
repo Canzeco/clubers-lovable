@@ -2445,36 +2445,54 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
             className="mx-6 w-full max-w-sm rounded-2xl border border-border bg-card p-5 shadow-2xl"
           >
             <div className="flex items-center gap-2 text-secondary">
-              <Check className="h-4 w-4" />
+              <Sparkles className="h-4 w-4" />
               <p className="text-[10px] font-bold uppercase tracking-[0.2em]">
-                Coupon saved
+                Pick what to do
               </p>
             </div>
             <p className="mt-2 font-display text-lg font-semibold leading-tight">
-              Want to reserve a table at {askReserve.name}?
+              {askReserve.name}
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Our AI agent will call the venue for you. The coupon expires 7 days after your booking.
+              Save the cashback coupon for later, reserve a table now, or do both.
             </p>
             <IGStoryRequirement handle={`@${askReserve.name.toLowerCase().replace(/\s+/g, "")}`} />
             <WhySaveFaq />
-            <div className="mt-4 flex items-center gap-2">
+            <div className="mt-4 flex flex-col gap-2">
               <button
-                onClick={() => setAskReserve(null)}
-                className="flex-1 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-semibold text-muted-foreground"
+                onClick={() => {
+                  const venue = askReserve;
+                  setAskReserve(null);
+                  celebrateSave(venue);
+                }}
+                className="flex items-center justify-center gap-1.5 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition hover:bg-muted"
               >
-                No, just save
+                <Ticket className="h-4 w-4 text-secondary" /> Save coupon
               </button>
               <button
                 onClick={() => {
-                  const v = askReserve;
+                  const venue = askReserve;
                   setAskReserve(null);
                   setStep("pick");
-                  setSaved(v);
+                  setSaved(venue);
                 }}
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
+                className="flex items-center justify-center gap-1.5 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition hover:bg-muted"
               >
-                <Calendar className="h-4 w-4" /> Reserve
+                <Calendar className="h-4 w-4 text-secondary" /> Reserve table
+              </button>
+              <button
+                onClick={() => {
+                  const venue = askReserve;
+                  setAskReserve(null);
+                  celebrateSave(venue);
+                  setTimeout(() => {
+                    setStep("pick");
+                    setSaved(venue);
+                  }, 1100);
+                }}
+                className="flex items-center justify-center gap-1.5 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
+              >
+                <Sparkles className="h-4 w-4" /> Save + Reserve
               </button>
             </div>
           </div>
