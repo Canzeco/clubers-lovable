@@ -3083,17 +3083,22 @@ function ReservationsView({ hideHeader = false }: { hideHeader?: boolean } = {})
     { name: "Loto Café", cb: 10, color: "tier-silver", category: "Café", distance: "1.2 km", cost: 2, mesita: 4.6, google: 4.4, isReservation: true, resStatus: "confirmed" as const, resWhen: "Sun May 4 · 11:00 AM", resParty: 3, code: "LC-1101" },
     { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Sat May 3 · 8:30 PM", resParty: 2, code: "MV-2204" },
   ];
-  const [seg, setSeg] = useState<"upcoming" | "past">("upcoming");
-  const list = seg === "upcoming" ? upcoming : past;
+  const cancelled = [
+    { name: "Brasa Norte", cb: 12, color: "tier-silver", category: "Steakhouse", distance: "2.7 km", cost: 4, mesita: 4.7, google: 4.6, isReservation: true, resStatus: "cancelled" as const, resWhen: "Tue May 13 · 9:00 PM", resParty: 4, code: "BN-9001", cancelledReason: "Venue couldn't fit the party" },
+    { name: "Aurora Rooftop", cb: 25, color: "tier-gold", category: "Cocktails", distance: "1.7 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "cancelled" as const, resWhen: "Sun May 11 · 10:30 PM", resParty: 6, code: "AR-9002", cancelledReason: "Cancelled by guest" },
+  ];
+  const [seg, setSeg] = useState<"upcoming" | "past" | "cancelled">("upcoming");
+  const list = seg === "upcoming" ? upcoming : seg === "past" ? past : cancelled;
   return (
     <>
       {!hideHeader && (
-        <TopBar title="Reservations" subtitle={`${upcoming.length} upcoming · ${past.length} past`} />
+        <TopBar title="Reservations" subtitle={`${upcoming.length} upcoming · ${past.length} past · ${cancelled.length} cancelled`} />
       )}
       <div className="mx-5 mb-3 flex items-center gap-1 rounded-full border border-border bg-card/60 p-1">
         {([
           { id: "upcoming", label: "Upcoming", count: upcoming.length },
           { id: "past", label: "Past", count: past.length },
+          { id: "cancelled", label: "Cancelled", count: cancelled.length },
         ] as const).map((s) => (
           <button
             key={s.id}
