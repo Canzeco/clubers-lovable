@@ -5719,7 +5719,7 @@ function GuestAppShell({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) 
   return (
     <div className="flex h-full flex-col bg-background text-foreground">
       <StatusBar />
-      <div className="relative flex flex-1 flex-col overflow-hidden pb-20">
+      <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
         {tab === "discover" && <Discover />}
         {tab === "rewards" && (
           <div className="flex-1 overflow-y-auto scrollbar-hide">
@@ -5742,7 +5742,7 @@ function GuestAppShell({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) 
           </div>
         )}
       </div>
-      <div className="absolute bottom-0 left-0 right-0 border-t border-border bg-card/95 px-4 py-2 backdrop-blur">
+      <div className="relative z-50 shrink-0 border-t border-border bg-card/95 px-4 py-2 backdrop-blur">
         <div className="flex justify-around">
           {[
             { id: "discover", Icon: Compass, label: "Discover" },
