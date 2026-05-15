@@ -2008,7 +2008,7 @@ function CatalogCard({ venue: v, onClick, onQuickSave }: { venue: typeof venues[
   );
 }
 
-function TinderMode() {
+function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => void } = {}) {
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState<"l" | "r" | null>(null);
   const [saved, setSaved] = useState<typeof venues[number] | null>(null);
@@ -2314,7 +2314,7 @@ function TinderMode() {
               ) : <span />}
               <button
                 onPointerDown={(e) => e.stopPropagation()}
-                onClick={(e) => { e.stopPropagation(); setSaved(v); setStep("ask"); }}
+                onClick={(e) => { e.stopPropagation(); onSelect?.(v); }}
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-foreground shadow-lg transition hover:scale-105"
                 aria-label="Open venue page"
               >
@@ -2988,7 +2988,7 @@ function Discover() {
         </div>
       )}
       {mode === "map" && <MapMode />}
-      {mode === "tinder" && <TinderMode />}
+      {mode === "tinder" && <TinderMode onSelect={setSelected} />}
       {mode === "ai" && <AISearchMode onSelect={setSelected} />}
       {selected && (
         <VenueDetailSheet venue={selected} onClose={() => setSelected(null)} />
