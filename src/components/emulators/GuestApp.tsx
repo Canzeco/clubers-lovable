@@ -59,6 +59,9 @@ import {
   ArrowLeft,
   FileText,
   Receipt,
+  Volume2,
+  VolumeX,
+  ArrowUpRight,
 } from "lucide-react";
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
@@ -2022,6 +2025,8 @@ function TinderMode() {
   const startRef = useRef<{ x: number; y: number; id: number; t: number; w: number; left: number } | null>(null);
   // Carousel slide: 0 = main video (center). Negative = info panels (left). Positive = extra photos (right).
   const [slide, setSlide] = useState(0);
+  const [muted, setMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const v = venues[idx % venues.length];
   const next = venues[(idx + 1) % venues.length];
 
@@ -2032,6 +2037,32 @@ function TinderMode() {
   ];
   const minSlide = 0;
   const maxSlide = extraPhotos.length;
+  const totalSlides = maxSlide - minSlide + 1;
+  const isVideoSlide = slide === 0;
+
+  // Closing time today, from venue hours array if present
+  const todayClose = (() => {
+    const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    const today = days[new Date().getDay()];
+    const row = (v as any).hours?.find?.((h: any) => h.day === today);
+    const h: string = row?.hours ?? "";
+    if (!h || h === "Closed") return null;
+    const parts = h.split("–").map((s) => s.trim());
+    return parts[1] ?? null;
+  })();
+
+  // Walk time estimate from distance (≈12 min/km)
+  const walkMin = (() => {
+    const km = parseFloat(String(v.distance));
+    if (!isFinite(km)) return null;
+    return Math.max(1, Math.round(km * 12));
+  })();
+
+  const slots = ["8:00", "9:30", "10:00"];
+
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.muted = muted;
+  }, [muted, slide, idx]);
 
   // Reset slide when card changes
   useEffect(() => { setSlide(0); }, [idx]);
@@ -2147,6 +2178,7 @@ function TinderMode() {
           {/* Carousel slide */}
           {slide === 0 && (
             <video
+              ref={videoRef}
               src="https://videos.pexels.com/video-files/3209828/3209828-uhd_2560_1440_25fps.mp4"
               poster={v.img}
               autoPlay
@@ -2168,22 +2200,29 @@ function TinderMode() {
               className="absolute inset-0"
               style={{
                 background:
-                  "linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.85))",
+                  "linear-gradient(180deg, rgba(0,0,0,0.45) 0%, transparent 18%, transparent 45%, rgba(0,0,0,0.9) 100%)",
               }}
             />
           )}
-          {/* Carousel dots */}
-          <div className="pointer-events-none absolute bottom-2 left-0 right-0 z-20 flex items-center justify-center gap-1.5">
-            {Array.from({ length: maxSlide - minSlide + 1 }).map((_, i) => {
+          {/* Story-style segmented progress bars */}
+          <div className="pointer-events-none absolute left-3 right-3 top-2.5 z-20 flex items-center gap-1">
+            {Array.from({ length: totalSlides }).map((_, i) => {
               const s = minSlide + i;
-              const active = s === slide;
+              const isActive = s === slide;
+              const isPast = s < slide;
               return (
                 <span
                   key={s}
-                  className={`h-1.5 rounded-full transition-all ${
-                    active ? "w-4 bg-white" : "w-1.5 bg-white/50"
-                  }`}
-                />
+                  className="relative h-[3px] flex-1 overflow-hidden rounded-full bg-white/30"
+                >
+                  <span
+                    className="absolute inset-y-0 left-0 bg-white"
+                    style={{
+                      width: isActive || isPast ? "100%" : "0%",
+                      opacity: isActive ? 1 : isPast ? 0.85 : 0,
+                    }}
+                  />
+                </span>
               );
             })}
           </div>
@@ -2201,42 +2240,89 @@ function TinderMode() {
             No
           </div>
           {slide >= 0 && (
-          <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
+          <div className="absolute left-3 right-3 top-7 flex items-start justify-between">
             {v.affiliated ? (
               <span
-                className={`rounded-full px-3 py-1 text-[11px] font-bold ${
+                className={`rounded-full px-3 py-1 text-[11px] font-bold shadow-lg ${
                   v.firstVisit
                     ? "bg-gradient-to-r from-fuchsia-400 to-amber-300 text-black"
                     : "bg-secondary text-secondary-foreground"
                 }`}
               >
-                {v.cashback}% CASHBACK
+                {v.cashback}% cashback
               </span>
             ) : (
               <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-medium text-white backdrop-blur">
                 Discovery · Reserve only
               </span>
             )}
-            <span className="flex items-center gap-1 rounded-full bg-black/40 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur">
-              <Star className="h-3 w-3 fill-secondary text-secondary" />
-              {v.rating}
-            </span>
+            <div className="flex flex-col items-end gap-1.5">
+              <span className="flex items-center gap-1 rounded-full bg-black/45 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur">
+                <Star className="h-3 w-3 fill-secondary text-secondary" />
+                {v.rating}
+              </span>
+              {isVideoSlide && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMuted((m) => !m);
+                  }}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  className="flex h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/60"
+                  aria-label={muted ? "Unmute" : "Mute"}
+                >
+                  {muted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+                </button>
+              )}
+            </div>
           </div>
           )}
           {slide >= 0 && (
-          <div className="absolute bottom-6 left-5 right-5 text-white">
-            <p className="text-xs uppercase tracking-widest opacity-80">{v.type}</p>
+          <div className="absolute bottom-4 left-4 right-4 text-white">
+            <p className="text-[11px] lowercase tracking-wide opacity-85">
+              {v.type.toLowerCase()}
+            </p>
             <h3 className="font-display text-3xl font-semibold leading-tight">
               {v.name}
             </h3>
-            <p className="mt-1 flex items-center gap-1 text-xs opacity-90">
-              <MapPin className="h-3 w-3" /> {v.distance} · {v.price}
+            <p className="mt-1 text-[11px] opacity-90">
+              {v.distance}
+              {walkMin ? ` · ${walkMin} min walk` : ""} · {v.price}
+              {todayClose ? ` · until ${todayClose}` : ""}
             </p>
-            {v.affiliated && (
-              <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-400/90 to-amber-300/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-black">
-                <Sparkles className="h-3 w-3" /> Mesita Partner
-              </p>
-            )}
+            {/* Reservation slot pills */}
+            <div className="mt-3 flex items-center gap-1.5">
+              {slots.map((t) => (
+                <button
+                  key={t}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPickedTime(t);
+                    setSaved(v);
+                    setStep("pick");
+                  }}
+                  className="rounded-full border border-white/40 bg-white/10 px-3 py-1 text-[11px] font-semibold text-white backdrop-blur transition hover:bg-white/25"
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+            <div className="mt-3 flex items-end justify-between">
+              {v.affiliated ? (
+                <p className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-400/90 to-amber-300/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-black">
+                  <Sparkles className="h-3 w-3" /> Mesita Partner
+                </p>
+              ) : <span />}
+              <button
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); setSaved(v); setStep("ask"); }}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-foreground shadow-lg transition hover:scale-105"
+                aria-label="Open venue page"
+              >
+                <ArrowUpRight className="h-4 w-4" />
+              </button>
+            </div>
           </div>
           )}
         </div>
