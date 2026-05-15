@@ -2266,21 +2266,55 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
                   {todayClose ? ` · until ${todayClose}` : ""}
                 </p>
               </div>
-              <div className="flex flex-col items-end gap-1.5 shrink-0">
-                <span className="flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium text-foreground">
-                  <Star className="h-3 w-3 fill-secondary text-secondary" />
-                  {v.rating}
-                </span>
-                <button
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onClick={(e) => { e.stopPropagation(); onSelect?.(v); }}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-foreground transition hover:scale-105"
-                  aria-label="Open venue page"
-                >
-                  <Info className="h-4 w-4" />
-                </button>
+              <button
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); onSelect?.(v); }}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border bg-background text-foreground transition hover:scale-105"
+                aria-label="Open venue page"
+              >
+                <Info className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Ratings — Mesita + 4 external sources */}
+            <div className="grid grid-cols-5 gap-1.5">
+              <div className="rounded-xl bg-gradient-to-br from-fuchsia-400/15 to-amber-300/15 p-2 ring-1 ring-secondary/30">
+                <p className="flex items-center gap-1 text-[8px] font-bold uppercase tracking-widest text-secondary">
+                  <Sparkles className="h-3 w-3" /> Mesita
+                </p>
+                <p className="mt-1 font-display text-base font-semibold leading-none text-foreground">{v.rating}</p>
+                <p className="mt-0.5 text-[9px] text-muted-foreground">overall</p>
+              </div>
+              <div className="rounded-xl bg-card-soft p-2">
+                <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
+                  <GoogleLogo className="h-3 w-3" /> Google
+                </p>
+                <p className="mt-1 font-display text-base font-semibold leading-none">{v.google ?? "—"}</p>
+                <p className="mt-0.5 text-[9px] text-muted-foreground">{v.googleCount ? `${v.googleCount.toLocaleString()} rev` : "—"}</p>
+              </div>
+              <div className="rounded-xl bg-card-soft p-2">
+                <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
+                  <UberEatsLogo className="h-3 w-3" /> Uber
+                </p>
+                <p className="mt-1 font-display text-base font-semibold leading-none">{v.uber ?? "—"}</p>
+                <p className="mt-0.5 text-[9px] text-muted-foreground">{v.uberCount ? `${v.uberCount.toLocaleString()} rev` : "—"}</p>
+              </div>
+              <div className="rounded-xl bg-card-soft p-2">
+                <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
+                  <FacebookLogo className="h-3 w-3" /> FB
+                </p>
+                <p className="mt-1 font-display text-base font-semibold leading-none">{v.fb ?? "—"}</p>
+                <p className="mt-0.5 text-[9px] text-muted-foreground">{v.fbCount ? `${v.fbCount} rev` : "—"}</p>
+              </div>
+              <div className="rounded-xl bg-card-soft p-2">
+                <p className="flex items-center gap-1 text-[8px] uppercase tracking-widest text-muted-foreground">
+                  <InstagramLogo className="h-3 w-3" /> IG
+                </p>
+                <p className="mt-1 font-display text-base font-semibold leading-none">{v.igFollowers ?? "—"}</p>
+                <p className="mt-0.5 text-[9px] text-muted-foreground">{v.igMentions ? `${v.igMentions} ment` : "—"}</p>
               </div>
             </div>
+
             <div className="flex flex-wrap items-center gap-2">
               {v.affiliated ? (
                 <>
