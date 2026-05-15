@@ -2163,22 +2163,15 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
       : null;
 
   return (
-    <div className="relative flex-1">
-      <div className="relative mx-5 h-[420px] select-none">
-        {/* next card peek */}
-        <div className="absolute inset-0 scale-[0.96] overflow-hidden rounded-3xl opacity-70">
-          <img src={next.img} alt="" className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-black/40" />
-        </div>
+    <div className="relative flex-1 overflow-y-auto">
+      <div className="relative mx-5 select-none">
         <div
           key={idx}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
-          className={`absolute inset-0 overflow-hidden rounded-3xl shadow-glow touch-none ${
-            drag ? "" : "transition-transform duration-300"
-          }`}
+          className={`relative touch-none ${drag ? "" : "transition-transform duration-300"}`}
           style={{
             transform:
               flying ?? `translate(${dx}px, ${dy * 0.3}px) rotate(${rot}deg)`,
@@ -2186,7 +2179,8 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
             cursor: drag ? "grabbing" : "grab",
           }}
         >
-          {/* Carousel slide */}
+          {/* Square image box */}
+          <div className="relative aspect-square w-full overflow-hidden rounded-3xl shadow-glow bg-muted">
           {slide === 0 && (
             <img
               src={v.img}
@@ -2209,16 +2203,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
               className="h-full w-full object-cover"
             />
           )}
-          {slide >= 0 && (
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(0,0,0,0.45) 0%, transparent 18%, transparent 45%, rgba(0,0,0,0.9) 100%)",
-              }}
-            />
-          )}
-          {/* Story-style segmented progress bars */}
+          {/* Story-style segmented progress bars (kept on image — minimal) */}
           <div className="pointer-events-none absolute left-3 right-3 top-2.5 z-20 flex items-center gap-1">
             {Array.from({ length: totalSlides }).map((_, i) => {
               const s = minSlide + i;
@@ -2240,7 +2225,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
               );
             })}
           </div>
-          {/* swipe indicators */}
+          {/* swipe drag indicators (only visible while dragging) */}
           <div
             className="pointer-events-none absolute left-5 top-5 rotate-[-12deg] rounded-md border-2 border-secondary px-3 py-1 text-sm font-bold uppercase tracking-widest text-secondary"
             style={{ opacity: likeOp }}
@@ -2253,74 +2238,72 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
           >
             No
           </div>
-          {slide >= 0 && (
-          <div className="absolute left-3 right-3 top-7 flex items-start justify-between">
-            {v.affiliated ? (
-              <span
-                className={`rounded-full px-3 py-1 text-[11px] font-bold shadow-lg ${
-                  v.firstVisit
-                    ? "bg-gradient-to-r from-fuchsia-400 to-amber-300 text-black"
-                    : "bg-secondary text-secondary-foreground"
-                }`}
-              >
-                {v.cashback}% cashback
-              </span>
-            ) : (
-              <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-medium text-white backdrop-blur">
-                Discovery · Reserve only
-              </span>
-            )}
-            <div className="flex flex-col items-end gap-1.5">
-              <span className="flex items-center gap-1 rounded-full bg-black/45 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur">
-                <Star className="h-3 w-3 fill-secondary text-secondary" />
-                {v.rating}
-              </span>
-              {isVideoSlide && (
+          {isVideoSlide && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setMuted((m) => !m); }}
+              onPointerDown={(e) => e.stopPropagation()}
+              className="absolute right-3 bottom-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/60"
+              aria-label={muted ? "Unmute" : "Mute"}
+            >
+              {muted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+            </button>
+          )}
+          </div>
+
+          {/* Info box (below image, no overlay) */}
+          <div className="mt-4 rounded-2xl border border-border bg-card px-4 py-4 shadow-elev">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-[11px] lowercase tracking-wide text-muted-foreground">
+                  {v.type.toLowerCase()}
+                </p>
+                <h3 className="font-display text-2xl font-semibold leading-tight text-foreground">
+                  {v.name}
+                </h3>
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  {v.distance}
+                  {walkMin ? ` · ${walkMin} min walk` : ""} · {v.price}
+                  {todayClose ? ` · until ${todayClose}` : ""}
+                </p>
+              </div>
+              <div className="flex flex-col items-end gap-1.5 shrink-0">
+                <span className="flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium text-foreground">
+                  <Star className="h-3 w-3 fill-secondary text-secondary" />
+                  {v.rating}
+                </span>
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setMuted((m) => !m);
-                  }}
                   onPointerDown={(e) => e.stopPropagation()}
-                  className="flex h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/60"
-                  aria-label={muted ? "Unmute" : "Mute"}
+                  onClick={(e) => { e.stopPropagation(); onSelect?.(v); }}
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-foreground transition hover:scale-105"
+                  aria-label="Open venue page"
                 >
-                  {muted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+                  <Info className="h-4 w-4" />
                 </button>
+              </div>
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              {v.affiliated ? (
+                <>
+                  <span
+                    className={`rounded-full px-3 py-1 text-[11px] font-bold ${
+                      v.firstVisit
+                        ? "bg-gradient-to-r from-fuchsia-400 to-amber-300 text-black"
+                        : "bg-secondary text-secondary-foreground"
+                    }`}
+                  >
+                    {v.cashback}% cashback
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-400/90 to-amber-300/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-black">
+                    <Sparkles className="h-3 w-3" /> Mesita Partner
+                  </span>
+                </>
+              ) : (
+                <span className="rounded-full border border-border bg-muted px-3 py-1 text-[11px] font-medium text-muted-foreground">
+                  Discovery · Reserve only
+                </span>
               )}
             </div>
           </div>
-          )}
-          {slide >= 0 && (
-          <div className="absolute bottom-4 left-4 right-4 text-white">
-            <p className="text-[11px] lowercase tracking-wide opacity-85">
-              {v.type.toLowerCase()}
-            </p>
-            <h3 className="font-display text-3xl font-semibold leading-tight">
-              {v.name}
-            </h3>
-            <p className="mt-1 text-[11px] opacity-90">
-              {v.distance}
-              {walkMin ? ` · ${walkMin} min walk` : ""} · {v.price}
-              {todayClose ? ` · until ${todayClose}` : ""}
-            </p>
-            <div className="mt-3 flex items-end justify-between">
-              {v.affiliated ? (
-                <p className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-400/90 to-amber-300/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-black">
-                  <Sparkles className="h-3 w-3" /> Mesita Partner
-                </p>
-              ) : <span />}
-              <button
-                onPointerDown={(e) => e.stopPropagation()}
-                onClick={(e) => { e.stopPropagation(); onSelect?.(v); }}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-foreground shadow-lg transition hover:scale-105"
-                aria-label="Open venue page"
-              >
-                <Info className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-          )}
         </div>
       </div>
       <div className="mt-5 flex items-center justify-center gap-4 px-5">
