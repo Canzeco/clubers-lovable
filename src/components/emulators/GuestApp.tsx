@@ -2337,7 +2337,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
           onClick={() => fly("r")}
           className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-peacock text-sm font-semibold text-white shadow-glow transition hover:scale-[1.02]"
         >
-          <Ticket className="h-4 w-4" /> Save & reserve
+          <Ticket className="h-4 w-4" /> Save or reserve
         </button>
       </div>
 
