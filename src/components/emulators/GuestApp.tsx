@@ -4726,35 +4726,8 @@ function ProfileView() {
 
         {subTab === "stats" && (
           <>
-        {/* Stats section */}
-        <p className="mt-4 mb-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Stats</p>
-        {/* Stat tiles */}
-        <div className="grid grid-cols-3 gap-2">
-          <div className="rounded-2xl border border-border bg-card-soft p-2.5">
-            <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
-              <TrendingUp className="h-2.5 w-2.5" /> Visits
-            </p>
-            <p className="mt-1 font-display text-xl font-semibold leading-none">42</p>
-            <p className="mt-0.5 text-[9px] text-secondary">+6 this month</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-card-soft p-2.5">
-            <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
-              <Sparkles className="h-2.5 w-2.5" /> New spots
-            </p>
-            <p className="mt-1 font-display text-xl font-semibold leading-none">18</p>
-            <p className="mt-0.5 text-[9px] text-secondary">7 / 10 to badge</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-card-soft p-2.5">
-            <p className="flex items-center gap-1 text-[9px] uppercase tracking-widest text-muted-foreground">
-              <Flame className="h-2.5 w-2.5" /> Streak
-            </p>
-            <p className="mt-1 font-display text-xl font-semibold leading-none">5 wks</p>
-            <p className="mt-0.5 text-[9px] text-tier-gold">Keep it alive 🔥</p>
-          </div>
-        </div>
-
         {/* Achievements section */}
-        <div className="mt-4 mb-2 flex items-center justify-between">
+        <div className="mt-2 mb-2 flex items-center justify-between">
           <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Achievements</p>
           <span className="text-[10px] text-secondary">18 / 50 unlocked</span>
         </div>
