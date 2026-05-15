@@ -58,6 +58,7 @@ import {
   Lock,
   ArrowLeft,
   FileText,
+  Receipt,
 } from "lucide-react";
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
@@ -3146,7 +3147,7 @@ function CouponTicket({
     const isStripe = current === "Pay from your phone";
     const isStory = current === "Post story & submit screenshot";
     const isFinal = current === "Cashback lands";
-    const isWaiter = current === "Waiter scans your QR" || current === "Waiter validates screenshot";
+    const isWaiter = current === "Waiter validates QR" || current === "Waiter validates screenshot";
     pill = {
       label: current,
       cls: isStripe
@@ -3345,69 +3346,74 @@ const VENUE_IMAGES = {
 export type WorkflowStep = { label: string; desc: string; Icon: any };
 
 const S_RESERVE: WorkflowStep = {
-  label: "Reserving your spot",
-  desc: "Calling the venue… → Confirmed · Fri May 16 · 9:30 PM · 4 guests",
+  label: "Booking reservation",
+  desc: "We're calling the venue to lock in your spot. This step updates the moment the venue confirms.",
   Icon: Phone,
 };
 const S_ARRIVE: WorkflowStep = {
   label: "Arrive & enjoy",
-  desc: "Mesita doesn't touch the experience",
+  desc: "Show up at the confirmed time and enjoy your visit as usual. (Shown for clarity, not a real system event.)",
   Icon: MapPin,
 };
-const S_TAP_PAY: WorkflowStep = {
-  label: 'Tap "Pay with this coupon"',
-  desc: "Show your personal QR to the waiter",
+const S_ASK_BILL: WorkflowStep = {
+  label: "Ask for the bill",
+  desc: "When you're ready to leave, ask the waiter for your bill. (Shown so you know when Mesita comes in, not a real system event.)",
+  Icon: Receipt,
+};
+const S_SHOW_QR: WorkflowStep = {
+  label: "Show your QR to waiter",
+  desc: "Open this coupon and show your personal QR code to the waiter.",
   Icon: QrCode,
 };
-const S_WAITER_SCAN: WorkflowStep = {
-  label: "Waiter scans your QR",
-  desc: "They enter your bill in the Mesita bot",
+const S_WAITER_VALIDATE_QR: WorkflowStep = {
+  label: "Waiter validates QR",
+  desc: "The waiter scans your QR and enters your bill total and tip.",
   Icon: QrCode,
 };
 const S_PAY_PHONE: WorkflowStep = {
   label: "Pay from your phone",
-  desc: "Tap the Stripe link we send you",
+  desc: "We send a secure payment link to your phone. Pay in a couple of taps.",
   Icon: CreditCard,
 };
 const S_STORY_BEFORE: WorkflowStep = {
   label: "Post story & submit screenshot",
-  desc: "Tag @venue and upload your screenshot",
+  desc: "Post an Instagram story tagging the venue, then upload a screenshot as proof. Keep it real: show the food, drinks, or the place itself. It's content for the venue, so make it look good.",
   Icon: Camera,
 };
 const S_STORY_AFTER: WorkflowStep = {
   label: "Post story & submit screenshot",
-  desc: "In case you haven't yet",
+  desc: "Haven't posted yet? Post your story tagging the venue and upload the screenshot now.",
   Icon: Camera,
 };
 const S_WAITER_VALIDATE: WorkflowStep = {
   label: "Waiter validates screenshot",
-  desc: "They confirm your @venue tag",
+  desc: "The waiter confirms your story tagged the venue and shows the experience.",
   Icon: Check,
 };
 const S_CASHBACK_PLAIN: WorkflowStep = {
   label: "Cashback lands",
-  desc: "Credited straight to your Mesita balance",
+  desc: "Once your payment clears, your cashback is added to your Mesita balance.",
   Icon: Coins,
 };
 const S_CASHBACK_STORY: WorkflowStep = {
   label: "Cashback lands",
-  desc: "Credited once your story checks out — no story, no cashback",
+  desc: "Your cashback is added once both payment and story are confirmed. No story, no cashback.",
   Icon: Coins,
 };
 
 const WF_RESERVATION: WorkflowStep[] = [S_RESERVE, S_ARRIVE];
 const WF_PAY_CB: WorkflowStep[] = [
-  S_ARRIVE, S_TAP_PAY, S_WAITER_SCAN, S_PAY_PHONE, S_CASHBACK_PLAIN,
+  S_ARRIVE, S_ASK_BILL, S_SHOW_QR, S_WAITER_VALIDATE_QR, S_PAY_PHONE, S_CASHBACK_PLAIN,
 ];
 const WF_RES_PAY_CB: WorkflowStep[] = [
-  S_RESERVE, S_ARRIVE, S_TAP_PAY, S_WAITER_SCAN, S_PAY_PHONE, S_CASHBACK_PLAIN,
+  S_RESERVE, S_ARRIVE, S_ASK_BILL, S_SHOW_QR, S_WAITER_VALIDATE_QR, S_PAY_PHONE, S_CASHBACK_PLAIN,
 ];
 const WF_PAY_STORY_CB: WorkflowStep[] = [
-  S_ARRIVE, S_STORY_BEFORE, S_TAP_PAY, S_WAITER_SCAN, S_PAY_PHONE,
+  S_ARRIVE, S_STORY_BEFORE, S_ASK_BILL, S_SHOW_QR, S_WAITER_VALIDATE_QR, S_PAY_PHONE,
   S_STORY_AFTER, S_WAITER_VALIDATE, S_CASHBACK_STORY,
 ];
 const WF_RES_PAY_STORY_CB: WorkflowStep[] = [
-  S_RESERVE, S_ARRIVE, S_STORY_BEFORE, S_TAP_PAY, S_WAITER_SCAN, S_PAY_PHONE,
+  S_RESERVE, S_ARRIVE, S_STORY_BEFORE, S_ASK_BILL, S_SHOW_QR, S_WAITER_VALIDATE_QR, S_PAY_PHONE,
   S_STORY_AFTER, S_WAITER_VALIDATE, S_CASHBACK_STORY,
 ];
 
@@ -3618,9 +3624,10 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   };
   const workflow = getCouponWorkflow(coupon);
   const requireStory = workflow.some((s) => s.label.startsWith("Post story"));
+  const [stepOverride, setStepOverride] = useState<number | null>(null);
   const steps: Step[] = workflow.map((s) => {
     // Override the reservation step copy with live state when available.
-    if (s.label === "Reserving your spot") {
+    if (s.label === "Booking reservation") {
       return {
         label: isPending ? "Reserving your spot" : "Reservation confirmed",
         detail: isPending
@@ -3631,7 +3638,7 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
           : { label: "Change reservation", onClick: () => {}, tone: "neutral" },
       };
     }
-    if (s.label === 'Tap "Pay with this coupon"') {
+    if (s.label === "Show your QR to waiter") {
       return { label: s.label, detail: s.desc, action: { label: "Show my QR", onClick: () => setPayOpen(true), tone: "primary" } };
     }
     if (s.label === "Pay from your phone") {
@@ -3643,7 +3650,10 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
     return { label: s.label, detail: s.desc };
   });
 
-  const currentStep = Math.max(0, Math.min(steps.length - 1, coupon.step ?? 0));
+  const baseStep = stepOverride ?? coupon.step ?? 0;
+  const currentStep = Math.max(0, Math.min(steps.length - 1, baseStep));
+  const advance = () =>
+    setStepOverride((prev) => Math.min(steps.length - 1, (prev ?? coupon.step ?? 0) + 1));
   // After the waiter scans + confirms, the flow advances to "Pay from your phone".
   // From that point on the primary CTA streams the Stripe checkout.
   const stripeStepIndex = steps.findIndex((s) => s.label === "Pay from your phone");
@@ -3866,6 +3876,15 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
                         <QrCode className="h-3 w-3" />
                       ) : null}
                       {s.action.label}
+                    </button>
+                  )}
+                  {active && i < steps.length - 1 && (
+                    <button
+                      onClick={advance}
+                      className="ml-2 mt-2 inline-flex items-center gap-1 rounded-full border border-border bg-background px-3 py-1.5 text-[11px] font-semibold text-foreground/80 transition hover:bg-card"
+                      title="Mock: advance to next step"
+                    >
+                      <Check className="h-3 w-3" /> Done
                     </button>
                   )}
                 </div>
