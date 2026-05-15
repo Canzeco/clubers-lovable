@@ -4735,7 +4735,7 @@ function ProfileView() {
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
             <p className="font-display text-lg font-semibold leading-tight">Appeal for class upgrade</p>
             <p className="mt-1 text-[11px] text-muted-foreground">
-              Tier is mostly automatic from Instagram. We review manual cases: models, chefs, press, athletes, founders.
+              Pick what describes you best and add a link we can verify.
             </p>
 
             <div className="mt-4 space-y-2">
