@@ -3145,7 +3145,8 @@ function CouponTicket({
 }) {
   const isExpired = state === "expired";
   const isUsed = state === "used";
-  const isInactive = isExpired || isUsed;
+  const isCancelled = !!c.isReservation && c.resStatus === "cancelled";
+  const isInactive = isExpired || isUsed || isCancelled;
   const isReservation = !!c.isReservation && state === "active";
   const isPending = isReservation && c.resStatus === "pending";
   const hasCashback = (c.cb ?? 0) > 0;
@@ -3159,6 +3160,8 @@ function CouponTicket({
   let pill: { label: string; cls: string };
   if (isExpired) {
     pill = { label: "Expired", cls: "bg-muted text-muted-foreground" };
+  } else if (isCancelled) {
+    pill = { label: c.cancelledReason || "Reservation cancelled", cls: "bg-muted text-muted-foreground border border-border" };
   } else if (isUsed) {
     pill = { label: "Used · cashback credited", cls: "bg-secondary/10 text-secondary border border-secondary/20" };
   } else if (isPending) {
@@ -3196,7 +3199,7 @@ function CouponTicket({
       <div
         className={`relative flex items-stretch overflow-hidden rounded-none bg-background shadow-[0_18px_40px_-20px_rgba(0,0,0,0.28),0_4px_12px_-4px_rgba(0,0,0,0.08)] ring-1 ring-border/70 ${
           isExpired ? "ring-dashed grayscale" : ""
-        } ${isUsed ? "ring-dashed" : ""} ${isReservation ? "ring-secondary/30" : ""}`}
+        } ${isUsed ? "ring-dashed" : ""} ${isCancelled ? "ring-dashed grayscale" : ""} ${isReservation ? "ring-secondary/30" : ""}`}
       >
         {/* LEFT — restaurant image */}
         <div className="relative w-[84px] flex-shrink-0 overflow-hidden bg-muted">
@@ -3217,6 +3220,11 @@ function CouponTicket({
           {isExpired && (
             <span className="absolute bottom-2 left-2 -rotate-6 rounded border border-foreground/60 bg-background/90 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-widest text-foreground/70 backdrop-blur-sm">
               Expired
+            </span>
+          )}
+          {isCancelled && (
+            <span className="absolute bottom-2 left-2 -rotate-6 rounded border border-destructive/70 bg-background/90 px-1.5 py-0.5 font-display text-[9px] font-black uppercase tracking-widest text-destructive/80 backdrop-blur-sm">
+              Cancelled
             </span>
           )}
         </div>
@@ -3281,7 +3289,7 @@ function CouponTicket({
               </span>
             )}
           </span>
-          {state === "active" && (
+          {state === "active" && !isCancelled && (
             <HorizontalStepper step={c.step ?? 0} steps={workflow} />
           )}
         </div>
