@@ -5022,13 +5022,16 @@ function ShareView() {
   ];
   const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [audience, setAudience] = useState<"guests" | "creators" | "venues" | "agencies">("guests");
+  const [audience, setAudience] = useState<"guests" | "creators" | "venues" | "agencies" | "models">("guests");
   const [venueCopied, setVenueCopied] = useState(false);
   const [agencyCopied, setAgencyCopied] = useState(false);
+  const [modelsCopied, setModelsCopied] = useState(false);
   const venueLink = "www.mesita.ai";
   const venueMessage = `¿Conoces a alguien con un restaurante o bar? Mándale Mesita — pueden abrir su venue en la web sin costo, sin contrato, en 10 minutos: ${venueLink}`;
   const agencyLink = "mesita.ai/agencies";
   const agencyMessage = `¿Trabajas en una agencia que maneja redes para restaurantes y bares? Suma Mesita a tu stack — más reservas, cashback medible y stories automáticas para tus clientes: ${agencyLink}`;
+  const modelsLink = "mesita.ai/models";
+  const modelsMessage = `¿Manejas una agencia de modelos o talento? Activa a tus modelos en Mesita — Diamond access, cashback boosted y mesas reservadas en los mejores spots de la ciudad: ${modelsLink}`;
 
   const remaining = totalCards - claimed.length;
   const gifted = claimed.length;
@@ -5050,12 +5053,13 @@ function ShareView() {
 
         <div className="flex flex-1 flex-col overflow-y-auto scrollbar-hide px-5 pb-3 pt-4">
           {/* Audience tabs */}
-          <div className="mb-4 grid grid-cols-4 gap-1 rounded-full border border-border bg-card-soft p-1">
+          <div className="mb-4 grid grid-cols-5 gap-1 rounded-full border border-border bg-card-soft p-1">
             {([
               { id: "guests", label: "Guests" },
               { id: "creators", label: "Creators" },
               { id: "venues", label: "Venues" },
               { id: "agencies", label: "Agencies" },
+              { id: "models", label: "Models" },
             ] as const).map((a) => (
               <button
                 key={a.id}
@@ -5373,6 +5377,64 @@ function ShareView() {
               className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 py-3 text-sm font-semibold text-background shadow-lg active:scale-[0.98]"
             >
               Become a partner <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+          )}
+
+          {audience === "models" && (
+          <div className="flex flex-1 flex-col">
+            <p className="font-display text-2xl font-semibold leading-tight text-foreground">
+              Run a modeling or talent agency?
+            </p>
+            <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
+              Activate the models you manage on Mesita — they unlock Diamond perks, boosted cashback and priority tables at the city's best venues. You earn on every visit.
+            </p>
+
+            <div className="mt-2 grid grid-cols-2 gap-1.5">
+              {[
+                { t: "Diamond by default", d: "Your roster skips tiers — instant VIP." },
+                { t: "Boosted cashback", d: "Up to 2× cashback at partner venues." },
+                { t: "Priority tables", d: "Last-minute access on Fri & Sat nights." },
+                { t: "Story-for-table", d: "Models post · venues comp · everyone wins." },
+                { t: "Agency dashboard", d: "Track bookings, stories & earnings per talent." },
+                { t: "Revenue share", d: "Earn on every visit your talent generates." },
+              ].map((b) => (
+                <div key={b.t} className="rounded-xl border border-border bg-card-soft p-2">
+                  <p className="text-[11px] font-semibold leading-tight">{b.t}</p>
+                  <p className="mt-0.5 text-[10px] leading-snug text-muted-foreground">{b.d}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-dashed border-border bg-card-soft px-3 py-2">
+              <span className="truncate font-mono text-[11px] text-foreground">{modelsLink}</span>
+              <button
+                onClick={() => {
+                  if (typeof navigator !== "undefined" && navigator.clipboard) {
+                    navigator.clipboard.writeText(modelsLink).catch(() => {});
+                  }
+                  setModelsCopied(true);
+                  setTimeout(() => setModelsCopied(false), 1500);
+                }}
+                className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-foreground/50 transition hover:text-foreground"
+              >
+                {modelsCopied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+              </button>
+            </div>
+
+            <button
+              onClick={() => {
+                if (typeof navigator !== "undefined" && (navigator as Navigator & { share?: (data: ShareData) => Promise<void> }).share) {
+                  (navigator as Navigator & { share: (data: ShareData) => Promise<void> }).share({
+                    title: "Mesita for model agencies",
+                    text: modelsMessage,
+                    url: `https://${modelsLink}`,
+                  }).catch(() => {});
+                }
+              }}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 py-3 text-sm font-semibold text-background shadow-lg active:scale-[0.98]"
+            >
+              Activate your roster <ChevronRight className="h-4 w-4" />
             </button>
           </div>
           )}
