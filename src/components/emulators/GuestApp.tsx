@@ -2108,7 +2108,15 @@ function TinderMode() {
             cursor: drag ? "grabbing" : "grab",
           }}
         >
-          <img src={v.img} alt={v.name} className="h-full w-full object-cover" />
+          <video
+            src="https://videos.pexels.com/video-files/3209828/3209828-uhd_2560_1440_25fps.mp4"
+            poster={v.img}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="h-full w-full object-cover"
+          />
           <div
             className="absolute inset-0"
             style={{
