@@ -5,7 +5,6 @@ import { GuestApp } from "@/components/emulators/GuestApp";
 import { ValidatorChat } from "@/components/emulators/ValidatorChat";
 import { ManagerWeb } from "@/components/emulators/ManagerWeb";
 import { AdminWeb } from "@/components/emulators/AdminWeb";
-import { LandingWeb } from "@/components/emulators/LandingWeb";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -21,15 +20,9 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Product = "landing" | "admin" | "manager" | "validator" | "guest";
+type Product = "admin" | "manager" | "validator" | "guest";
 
 const products: { id: Product; label: string; tag: string; desc: string }[] = [
-  {
-    id: "landing",
-    label: "🌐 Landing Web",
-    tag: "mesita.app",
-    desc: "Public marketing site — pitch to guests and venues, drive app installs.",
-  },
   {
     id: "admin",
     label: "🛠️ Admin Web",
@@ -57,7 +50,7 @@ const products: { id: Product; label: string; tag: string; desc: string }[] = [
 ];
 
 function Index() {
-  const [active, setActive] = useState<Product>("landing");
+  const [active, setActive] = useState<Product>("guest");
 
   return (
     <div className="flex min-h-screen flex-col bg-hero">
@@ -106,11 +99,6 @@ function Index() {
 
       {/* Emulator stage — fills remaining viewport */}
       <main className="flex flex-1 items-center justify-center px-6 py-6">
-        {active === "landing" && (
-          <LaptopFrame>
-            <LandingWeb />
-          </LaptopFrame>
-        )}
         {active === "admin" && (
           <LaptopFrame>
             <AdminWeb />
