@@ -2188,14 +2188,9 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
         >
           {/* Carousel slide */}
           {slide === 0 && (
-            <video
-              ref={videoRef}
-              src="https://videos.pexels.com/video-files/3209828/3209828-uhd_2560_1440_25fps.mp4"
-              poster={v.img}
-              autoPlay
-              loop
-              muted
-              playsInline
+            <img
+              src={v.img}
+              alt={v.name}
               className="h-full w-full object-cover"
             />
           )}
