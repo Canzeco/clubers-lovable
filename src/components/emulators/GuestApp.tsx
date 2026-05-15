@@ -2058,8 +2058,6 @@ function TinderMode() {
     return Math.max(1, Math.round(km * 12));
   })();
 
-  const slots = ["8:00", "9:30", "10:00"];
-
   useEffect(() => {
     if (videoRef.current) videoRef.current.muted = muted;
   }, [muted, slide, idx]);
@@ -2290,24 +2288,6 @@ function TinderMode() {
               {walkMin ? ` · ${walkMin} min walk` : ""} · {v.price}
               {todayClose ? ` · until ${todayClose}` : ""}
             </p>
-            {/* Reservation slot pills */}
-            <div className="mt-3 flex items-center gap-1.5">
-              {slots.map((t) => (
-                <button
-                  key={t}
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setPickedTime(t);
-                    setSaved(v);
-                    setStep("pick");
-                  }}
-                  className="rounded-full border border-white/40 bg-white/10 px-3 py-1 text-[11px] font-semibold text-white backdrop-blur transition hover:bg-white/25"
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
             <div className="mt-3 flex items-end justify-between">
               {v.affiliated ? (
                 <p className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-400/90 to-amber-300/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-black">
