@@ -2019,9 +2019,26 @@ function TinderMode() {
   const [partySize, setPartySize] = useState<number>(2);
   const [prefs, setPrefs] = useState<string[]>([]);
   const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
-  const startRef = useRef<{ x: number; y: number; id: number } | null>(null);
+  const startRef = useRef<{ x: number; y: number; id: number; t: number; w: number; left: number } | null>(null);
+  // Carousel slide: 0 = main video (center). Negative = info panels (left). Positive = extra photos (right).
+  const [slide, setSlide] = useState(0);
   const v = venues[idx % venues.length];
   const next = venues[(idx + 1) % venues.length];
+
+  // Build slides per venue: [-2 hours, -1 reviews, 0 main, +1 photo, +2 photo]
+  const extraPhotos = [
+    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80",
+    "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=900&q=80",
+  ];
+  const leftPanels = [
+    { key: "reviews", label: "Reviews" },
+    { key: "hours", label: "Hours" },
+  ];
+  const minSlide = -leftPanels.length;
+  const maxSlide = extraPhotos.length;
+
+  // Reset slide when card changes
+  useEffect(() => { setSlide(0); }, [idx]);
 
   const fly = (d: "l" | "r") => {
     const current = v;
@@ -2046,7 +2063,15 @@ function TinderMode() {
   const onPointerDown = (e: React.PointerEvent) => {
     if (dir) return;
     (e.target as Element).setPointerCapture?.(e.pointerId);
-    startRef.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    startRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      id: e.pointerId,
+      t: Date.now(),
+      w: rect.width,
+      left: rect.left,
+    };
     setDrag({ x: 0, y: 0 });
   };
   const onPointerMove = (e: React.PointerEvent) => {
@@ -2056,10 +2081,25 @@ function TinderMode() {
       y: e.clientY - startRef.current.y,
     });
   };
-  const onPointerUp = () => {
-    if (!startRef.current || !drag) {
+  const onPointerUp = (e: React.PointerEvent) => {
+    const start = startRef.current;
+    if (!start || !drag) {
       startRef.current = null;
       setDrag(null);
+      return;
+    }
+    const dt = Date.now() - start.t;
+    const dist = Math.hypot(drag.x, drag.y);
+    // Tap: short + small displacement → carousel navigation
+    if (dt < 250 && dist < 8) {
+      const relX = e.clientX - start.left;
+      if (relX < start.w / 2) {
+        setSlide((s) => Math.max(minSlide, s - 1));
+      } else {
+        setSlide((s) => Math.min(maxSlide, s + 1));
+      }
+      setDrag(null);
+      startRef.current = null;
       return;
     }
     const threshold = 90;
