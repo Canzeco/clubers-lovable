@@ -3289,7 +3289,7 @@ function CouponTicket({
               </span>
             )}
           </span>
-          {state === "active" && (
+          {state === "active" && !isCancelled && (
             <HorizontalStepper step={c.step ?? 0} steps={workflow} />
           )}
         </div>
