@@ -4572,6 +4572,91 @@ function ProfileView() {
 
         {subTab === "general" && (
           <>
+        {/* Spending tracker — total spent on Mesita, drives class upgrades */}
+        <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+          <div className="flex items-center justify-between">
+            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+              <TrendingUp className="h-3 w-3 text-secondary" /> Spent on Mesita
+            </p>
+            <span className="text-[10px] text-muted-foreground">All-time</span>
+          </div>
+
+          {/* Big number */}
+          <div className="mt-2 flex items-end justify-between gap-3">
+            <div>
+              <p className="font-display text-3xl font-semibold leading-none tracking-tight">
+                MX$58,400
+              </p>
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                MX$141,600 to <span className="font-semibold text-tier-diamond">Diamond</span>
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Saved back</p>
+              <p className="font-display text-xl font-semibold leading-none text-secondary">MX$1,840</p>
+            </div>
+          </div>
+
+          {/* Milestone bar */}
+          <div className="mt-4">
+            <div className="relative h-1.5 w-full rounded-full bg-card-soft">
+              <div
+                className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary to-secondary"
+                style={{ width: `${(58400 / 200000) * 100}%` }}
+              />
+              {/* Milestone dots */}
+              {[
+                { v: 0, color: "bg-tier-bronze" },
+                { v: 10000, color: "bg-tier-silver" },
+                { v: 50000, color: "bg-tier-gold" },
+                { v: 200000, color: "bg-tier-diamond" },
+              ].map((m) => (
+                <span
+                  key={m.v}
+                  className={`absolute top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-card ${m.color}`}
+                  style={{ left: `${(m.v / 200000) * 100}%` }}
+                />
+              ))}
+            </div>
+            <div className="mt-2 flex justify-between text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
+              <span>Bronze</span>
+              <span>Silver</span>
+              <span>Gold</span>
+              <span>Diamond</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Instagram connect — primary CTA when not connected */}
+        {!igConnected ? (
+          <button
+            onClick={() => setShowConnect(true)}
+            className="mt-4 flex w-full items-center gap-3 rounded-2xl bg-gradient-to-r from-pink-500/10 to-yellow-400/10 border border-pink-500/30 p-4 text-left transition hover:border-pink-500/60"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-yellow-400 text-white">
+              <Instagram className="h-5 w-5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold leading-none">Connect Instagram</p>
+              <p className="mt-1 text-[11px] text-muted-foreground">Unlock Silver, Gold, Diamond class instantly</p>
+            </div>
+            <span className="rounded-full bg-peacock px-3 py-1.5 text-[11px] font-semibold text-white shadow-glow">Connect</span>
+          </button>
+        ) : (
+          <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-yellow-400 text-white">
+              <Instagram className="h-4 w-4" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold leading-none">@valenrose</p>
+              <p className="mt-0.5 text-[11px] text-muted-foreground">126k followers · verified</p>
+            </div>
+            <span className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1 text-[10px] font-semibold text-secondary">
+              <BadgeCheck className="h-3 w-3" /> Verified
+            </span>
+          </div>
+        )}
+
         {/* Class ladder */}
         <div className="mt-4 rounded-2xl border border-border bg-card p-4">
           <div className="mb-3 flex items-center justify-between">
@@ -4634,91 +4719,6 @@ function ProfileView() {
             </div>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </button>
-        </div>
-
-        {/* Instagram connect — primary CTA when not connected */}
-        {!igConnected ? (
-          <button
-            onClick={() => setShowConnect(true)}
-            className="mt-4 flex w-full items-center gap-3 rounded-2xl bg-gradient-to-r from-pink-500/10 to-yellow-400/10 border border-pink-500/30 p-4 text-left transition hover:border-pink-500/60"
-          >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-yellow-400 text-white">
-              <Instagram className="h-5 w-5" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold leading-none">Connect Instagram</p>
-              <p className="mt-1 text-[11px] text-muted-foreground">Unlock Silver, Gold, Diamond class instantly</p>
-            </div>
-            <span className="rounded-full bg-peacock px-3 py-1.5 text-[11px] font-semibold text-white shadow-glow">Connect</span>
-          </button>
-        ) : (
-          <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border bg-card-soft p-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-yellow-400 text-white">
-              <Instagram className="h-4 w-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold leading-none">@valenrose</p>
-              <p className="mt-0.5 text-[11px] text-muted-foreground">126k followers · verified</p>
-            </div>
-            <span className="flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-1 text-[10px] font-semibold text-secondary">
-              <BadgeCheck className="h-3 w-3" /> Verified
-            </span>
-          </div>
-        )}
-
-        {/* Spending tracker — total spent on Mesita, drives class upgrades */}
-        <div className="mt-4 rounded-2xl border border-border bg-card p-4">
-          <div className="flex items-center justify-between">
-            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-              <TrendingUp className="h-3 w-3 text-secondary" /> Spent on Mesita
-            </p>
-            <span className="text-[10px] text-muted-foreground">All-time</span>
-          </div>
-
-          {/* Big number */}
-          <div className="mt-2 flex items-end justify-between gap-3">
-            <div>
-              <p className="font-display text-3xl font-semibold leading-none tracking-tight">
-                MX$58,400
-              </p>
-              <p className="mt-1 text-[11px] text-muted-foreground">
-                MX$141,600 to <span className="font-semibold text-tier-diamond">Diamond</span>
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Saved back</p>
-              <p className="font-display text-xl font-semibold leading-none text-secondary">MX$1,840</p>
-            </div>
-          </div>
-
-          {/* Milestone bar */}
-          <div className="mt-4">
-            <div className="relative h-1.5 w-full rounded-full bg-card-soft">
-              <div
-                className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary to-secondary"
-                style={{ width: `${(58400 / 200000) * 100}%` }}
-              />
-              {/* Milestone dots */}
-              {[
-                { v: 0, color: "bg-tier-bronze" },
-                { v: 10000, color: "bg-tier-silver" },
-                { v: 50000, color: "bg-tier-gold" },
-                { v: 200000, color: "bg-tier-diamond" },
-              ].map((m) => (
-                <span
-                  key={m.v}
-                  className={`absolute top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-card ${m.color}`}
-                  style={{ left: `${(m.v / 200000) * 100}%` }}
-                />
-              ))}
-            </div>
-            <div className="mt-2 flex justify-between text-[9px] font-medium uppercase tracking-wider text-muted-foreground">
-              <span>Bronze</span>
-              <span>Silver</span>
-              <span>Gold</span>
-              <span>Diamond</span>
-            </div>
-          </div>
         </div>
 
         <CommunitiesBlock />
