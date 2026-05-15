@@ -3633,9 +3633,6 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
         detail: isPending
           ? `Calling ${coupon.name}… requesting ${coupon.resRequested || "your time"}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`
           : `${coupon.resWhen || "Confirmed"}${coupon.resParty ? ` · ${coupon.resParty} guests` : ""}`,
-        action: isPending
-          ? { label: "Edit request", onClick: () => {}, tone: "neutral" }
-          : { label: "Change reservation", onClick: () => {}, tone: "neutral" },
       };
     }
     if (s.label === "Show your QR to waiter") {
