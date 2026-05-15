@@ -4979,10 +4979,13 @@ function ShareView() {
   ];
   const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [audience, setAudience] = useState<"guests" | "creators" | "venues">("guests");
+  const [audience, setAudience] = useState<"guests" | "creators" | "venues" | "agencies">("guests");
   const [venueCopied, setVenueCopied] = useState(false);
+  const [agencyCopied, setAgencyCopied] = useState(false);
   const venueLink = "www.mesita.ai";
   const venueMessage = `¿Conoces a alguien con un restaurante o bar? Mándale Mesita — pueden abrir su venue en la web sin costo, sin contrato, en 10 minutos: ${venueLink}`;
+  const agencyLink = "mesita.ai/agencies";
+  const agencyMessage = `¿Trabajas en una agencia que maneja redes para restaurantes y bares? Suma Mesita a tu stack — más reservas, cashback medible y stories automáticas para tus clientes: ${agencyLink}`;
 
   const remaining = totalCards - claimed.length;
   const gifted = claimed.length;
@@ -5004,11 +5007,12 @@ function ShareView() {
 
         <div className="flex flex-1 flex-col overflow-y-auto scrollbar-hide px-5 pb-3 pt-4">
           {/* Audience tabs */}
-          <div className="mb-4 grid grid-cols-3 gap-1 rounded-full border border-border bg-card-soft p-1">
+          <div className="mb-4 grid grid-cols-4 gap-1 rounded-full border border-border bg-card-soft p-1">
             {([
               { id: "guests", label: "Guests" },
               { id: "creators", label: "Creators" },
               { id: "venues", label: "Venues" },
+              { id: "agencies", label: "Agencies" },
             ] as const).map((a) => (
               <button
                 key={a.id}
