@@ -59,6 +59,9 @@ import {
   ArrowLeft,
   FileText,
   Receipt,
+  Volume2,
+  VolumeX,
+  ArrowUpRight,
 } from "lucide-react";
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
