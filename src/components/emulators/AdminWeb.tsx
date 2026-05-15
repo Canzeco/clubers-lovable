@@ -141,19 +141,12 @@ function FitChip({ fit }: { fit: Lead["fit"] }) {
 }
 
 export function AdminWeb() {
-  const [tab, setTab] = useState<Tab>("pipeline");
+  const [tab, setTab] = useState<Tab>("stage-sourced");
 
-  const pipelineNav: { id: Tab; label: string; Icon: any; count?: number; tone?: string }[] = [
-    { id: "pipeline", label: "Kanban · todo", Icon: LayoutGrid },
-    { id: "stage-sourced", label: "1 · Sourced", Icon: MapPin, count: 84, tone: "text-muted-foreground" },
-    { id: "stage-enriching", label: "2 · Super-sourcing", Icon: Sparkles, count: 26, tone: "text-accent" },
-    { id: "stage-review", label: "3 · Review & approve", Icon: CheckCircle2, count: 14, tone: "text-secondary" },
-    { id: "stage-sales", label: "4 · Sales · partner", Icon: Crown, count: 9, tone: "text-primary" },
-  ];
-
-  const adminNav: { id: Tab; label: string; Icon: any }[] = [
-    { id: "editor", label: "Venues (super-admin)", Icon: Building2 },
-    { id: "bots", label: "Bot fleet", Icon: Bot },
+  const mainNav: { id: Tab; label: string; Icon: any; hint: string }[] = [
+    { id: "stage-sourced", label: "Venues Sourcing", Icon: MapPin, hint: "Get the list of venues" },
+    { id: "pipeline", label: "Venues Enriching", Icon: Sparkles, hint: "Build rich profiles" },
+    { id: "editor", label: "Venues Manager", Icon: Building2, hint: "Boring manual edits" },
   ];
 
   return (
@@ -168,66 +161,27 @@ export function AdminWeb() {
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Operations</p>
           </div>
         </div>
-        <nav className="flex-1 space-y-4 overflow-y-auto">
-          <div>
-            <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-              Sourcing pipeline
-            </p>
-            <div className="space-y-0.5">
-              {pipelineNav.map((n, i) => {
-                const isStage = n.id !== "pipeline";
-                const active = tab === n.id;
-                return (
-                  <button
-                    key={n.id}
-                    onClick={() => setTab(n.id)}
-                    className={`relative flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition ${
-                      active
-                        ? "bg-sidebar-accent text-sidebar-primary"
-                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50"
-                    } ${isStage ? "pl-7" : ""}`}
-                  >
-                    {isStage && (
-                      <span
-                        className={`absolute left-3 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full ${
-                          i === 1 ? "bg-muted-foreground/40" : i === 2 ? "bg-accent" : i === 3 ? "bg-secondary" : "bg-primary"
-                        }`}
-                      />
-                    )}
-                    {!isStage && <n.Icon className="h-4 w-4" />}
-                    <span className={`flex-1 text-left text-[13px] ${isStage ? n.tone : ""}`}>{n.label}</span>
-                    {n.count !== undefined && (
-                      <span className="rounded-full bg-card px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
-                        {n.count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-              Catálogo activo
-            </p>
-            <div className="space-y-0.5">
-              {adminNav.map((n) => (
-                <button
-                  key={n.id}
-                  onClick={() => setTab(n.id)}
-                  className={`flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-[13px] transition ${
-                    tab === n.id
-                      ? "bg-sidebar-accent text-sidebar-primary"
-                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50"
-                  }`}
-                >
-                  <n.Icon className="h-4 w-4" />
-                  {n.label}
-                </button>
-              ))}
-            </div>
-          </div>
+        <nav className="flex-1 space-y-1 overflow-y-auto">
+          {mainNav.map((n) => {
+            const active = tab === n.id;
+            return (
+              <button
+                key={n.id}
+                onClick={() => setTab(n.id)}
+                className={`flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left transition ${
+                  active
+                    ? "bg-sidebar-accent text-sidebar-primary"
+                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50"
+                }`}
+              >
+                <n.Icon className="mt-0.5 h-4 w-4 shrink-0" />
+                <span className="flex-1">
+                  <span className="block text-[13px] font-medium">{n.label}</span>
+                  <span className="block text-[10.5px] text-muted-foreground">{n.hint}</span>
+                </span>
+              </button>
+            );
+          })}
         </nav>
         <div className="rounded-xl border border-dashed border-border/60 bg-card/50 p-3">
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">MVP build</p>
