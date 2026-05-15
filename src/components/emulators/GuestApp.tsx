@@ -4396,6 +4396,47 @@ function ProfileView() {
 
         {subTab === "general" && (
           <>
+        {/* Spending tracker — total spent on Mesita, drives class upgrades */}
+        <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+          <div className="flex items-center justify-between">
+            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+              <TrendingUp className="h-3 w-3 text-secondary" /> Spent on Mesita
+            </p>
+            <span className="text-[10px] text-muted-foreground">All-time</span>
+          </div>
+          <div className="mt-1 flex items-end justify-between">
+            <p className="font-display text-3xl font-semibold leading-none">$58,400</p>
+            <p className="text-[10px] text-muted-foreground">
+              $141,600 to <span className="font-semibold text-tier-diamond">Diamond</span>
+            </p>
+          </div>
+          {/* Milestone bar */}
+          <div className="mt-3">
+            <div className="relative h-2 w-full overflow-hidden rounded-full bg-card-soft">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-tier-bronze via-tier-gold to-tier-diamond"
+                style={{ width: `${(58400 / 200000) * 100}%` }}
+              />
+              {[10000, 50000, 200000].map((m) => (
+                <span
+                  key={m}
+                  className="absolute top-1/2 h-2 w-px -translate-y-1/2 bg-background/70"
+                  style={{ left: `${(m / 200000) * 100}%` }}
+                />
+              ))}
+            </div>
+            <div className="mt-1.5 flex justify-between text-[9px] text-muted-foreground">
+              <span>$0 · Bronze</span>
+              <span>$10k · Silver</span>
+              <span>$50k · Gold</span>
+              <span>$200k · Diamond</span>
+            </div>
+          </div>
+          <p className="mt-2 text-[10px] text-muted-foreground">
+            Upgrade by spending more — or by growing your Instagram following.
+          </p>
+        </div>
+
         {/* Instagram connect — primary CTA when not connected */}
         {!igConnected ? (
           <button
@@ -4437,9 +4478,9 @@ function ProfileView() {
           <div className="space-y-2">
             {[
               { t: "Bronze", min: "Everyone", color: "tier-bronze", done: true, perk: "Base cashback", tagline: "Welcome to the club" },
-              { t: "Silver", min: "1k+ followers", color: "tier-silver", done: true, perk: "More cashback", tagline: "Insider perks" },
-              { t: "Gold", min: "5k+ followers", color: "tier-gold", done: true, perk: "Even more cashback", tagline: "Priority access", active: true },
-              { t: "Diamond", min: "20k+ followers · invite-only", color: "tier-diamond", done: false, perk: "Most cashback", tagline: "Full VIP treatment" },
+              { t: "Silver", min: "1k followers · or $10k spent", color: "tier-silver", done: true, perk: "More cashback", tagline: "Insider perks" },
+              { t: "Gold", min: "5k followers · or $50k spent", color: "tier-gold", done: true, perk: "Even more cashback", tagline: "Priority access", active: true },
+              { t: "Diamond", min: "20k followers · or $200k spent", color: "tier-diamond", done: false, perk: "Most cashback", tagline: "Full VIP treatment" },
             ].map((r) => (
               <div
                 key={r.t}
