@@ -2163,15 +2163,15 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
       : null;
 
   return (
-    <div className="relative flex-1 overflow-y-auto">
-      <div className="relative mx-5 select-none">
+    <div className="relative flex flex-1 flex-col min-h-0">
+      <div className="relative mx-5 flex flex-1 min-h-0 select-none">
         <div
           key={idx}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
-          className={`relative touch-none ${drag ? "" : "transition-transform duration-300"}`}
+          className={`relative flex flex-1 min-h-0 flex-col touch-none ${drag ? "" : "transition-transform duration-300"}`}
           style={{
             transform:
               flying ?? `translate(${dx}px, ${dy * 0.3}px) rotate(${rot}deg)`,
@@ -2180,7 +2180,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
           }}
         >
           {/* Square image box */}
-          <div className="relative aspect-square w-full overflow-hidden rounded-t-3xl shadow-glow bg-muted">
+          <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-t-3xl shadow-glow bg-muted">
           {slide === 0 && (
             <img
               src={v.img}
@@ -2251,7 +2251,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
           </div>
 
           {/* Info box (joined to image — one component) */}
-          <div className="rounded-b-3xl border border-t-0 border-border bg-card px-4 py-4 shadow-elev">
+          <div className="flex flex-1 min-h-0 flex-col rounded-b-3xl border border-t-0 border-border bg-card px-4 py-4 shadow-elev">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-[11px] lowercase tracking-wide text-muted-foreground">
