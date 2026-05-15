@@ -4475,6 +4475,9 @@ function ProfileView() {
             </p>
             <span className="text-[10px] text-muted-foreground">Followers or spend</span>
           </div>
+          <p className="-mt-1 mb-3 text-[10px] leading-snug text-muted-foreground">
+            Your Class is how the city sees you — earned by being <span className="font-semibold text-foreground">popular</span> on Instagram or <span className="font-semibold text-foreground">spending</span> on Mesita. Higher Class · more cashback.
+          </p>
           <div className="space-y-2">
             {[
               { t: "Bronze", min: "Everyone", color: "tier-bronze", done: true, perk: "Base cashback", tagline: "Welcome to the club" },
