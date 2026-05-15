@@ -4347,7 +4347,7 @@ function ProfileView() {
   const [igConnected, setIgConnected] = useState(false);
   const [showConnect, setShowConnect] = useState(false);
   const [showAppeal, setShowAppeal] = useState(false);
-  const [subTab, setSubTab] = useState<"general" | "community" | "stats" | "wallet" | "settings">("general");
+  const [subTab, setSubTab] = useState<"general" | "stats" | "wallet" | "settings">("general");
   return (
     <>
       <TopBar title="Profile" />
@@ -4373,10 +4373,9 @@ function ProfileView() {
         </div>
 
         {/* Sub-tabs */}
-        <div className="mt-5 grid grid-cols-5 gap-1 rounded-full border border-border bg-card-soft p-1">
+        <div className="mt-5 grid grid-cols-4 gap-1 rounded-full border border-border bg-card-soft p-1">
           {([
             { id: "general", label: "Class" },
-            { id: "community", label: "Community" },
             { id: "wallet", label: "Balance" },
             { id: "stats", label: "Game" },
             { id: "settings", label: "Settings" },
@@ -4528,11 +4527,8 @@ function ProfileView() {
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </button>
         </div>
+        <CommunitiesBlock />
           </>
-        )}
-
-        {subTab === "community" && (
-          <CommunitiesBlock />
         )}
 
         {subTab === "stats" && (
