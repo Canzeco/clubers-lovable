@@ -4473,7 +4473,7 @@ function ProfileView() {
             <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
               <Crown className="h-3 w-3 text-tier-gold" /> Class ladder
             </p>
-            <span className="text-[10px] text-muted-foreground">Auto from Instagram</span>
+            <span className="text-[10px] text-muted-foreground">Followers or spend</span>
           </div>
           <div className="space-y-2">
             {[
