@@ -62,6 +62,7 @@ import {
   Volume2,
   VolumeX,
   ArrowUpRight,
+  Info,
 } from "lucide-react";
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
@@ -2318,7 +2319,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-foreground shadow-lg transition hover:scale-105"
                 aria-label="Open venue page"
               >
-                <ArrowUpRight className="h-4 w-4" />
+                <Info className="h-4 w-4" />
               </button>
             </div>
           </div>
