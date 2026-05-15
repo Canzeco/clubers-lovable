@@ -62,6 +62,7 @@ import {
   Volume2,
   VolumeX,
   ArrowUpRight,
+  Info,
 } from "lucide-react";
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
