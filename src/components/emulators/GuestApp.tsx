@@ -2163,7 +2163,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
       : null;
 
   return (
-    <div className="relative flex flex-1 flex-col min-h-0">
+    <div className="relative flex flex-1 flex-col min-h-0 pb-5">
       <div className="relative mx-5 flex flex-1 min-h-0 select-none">
         <div
           key={idx}
@@ -2251,7 +2251,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
           </div>
 
           {/* Info box (joined to image — one component) */}
-          <div className="flex flex-1 min-h-0 flex-col rounded-b-3xl border border-t-0 border-border bg-card px-4 py-4 shadow-elev">
+          <div className="flex flex-1 min-h-0 flex-col justify-between gap-4 rounded-b-3xl border border-t-0 border-border bg-card px-5 py-5 shadow-elev">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-[11px] lowercase tracking-wide text-muted-foreground">
@@ -2281,7 +2281,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
                 </button>
               </div>
             </div>
-            <div className="mt-3 flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {v.affiliated ? (
                 <>
                   <span
@@ -2306,7 +2306,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
           </div>
         </div>
       </div>
-      <div className="mt-5 flex items-center justify-center gap-4 px-5">
+      <div className="mt-4 flex items-center justify-center gap-3 px-5">
         <button
           onClick={() => fly("l")}
           className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full border border-border bg-card text-sm font-semibold text-muted-foreground transition hover:scale-[1.02]"
