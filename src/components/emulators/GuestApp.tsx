@@ -3690,12 +3690,7 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   // From that point on the primary CTA streams the Stripe checkout.
   const stripeStepIndex = steps.findIndex((s) => s.label === "Pay from your phone");
   const waiterConfirmed = stripeStepIndex >= 0 && currentStep >= stripeStepIndex;
-  // Auto-pop the checkout the first time the user opens the coupon after the
-  // waiter has confirmed — emulates "waiter scanned, sheet flies up".
-  useEffect(() => {
-    if (waiterConfirmed && showPay) setCheckoutOpen(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Stripe checkout opens only when the user taps the "Pay from your phone" CTA.
 
   return (
     <div className="mt-5 space-y-4">
