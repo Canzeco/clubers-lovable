@@ -1,62 +1,88 @@
 ## Goal
 
-Simplify the coupon cards in the **Coupon Wallet** (the list preview in `WalletView`) so each card only shows, in small, pretty type:
+Make Web-Listed venues sourcing functional in AdminWeb, backed by a real database. Mesita team logs in, runs a sourcing job for a city, and the catalog fills with auto-enriched venue profiles pulled from Google Places + Firecrawl + AI.
 
-`Name · Category · Distance · Cost ($ signs) · Mesita reviews · Google reviews · Cashback`
+## Scope (v1)
 
-Strip out: the "Rooftop · weekends · …" note line, the AI-calling / Reserved pills, expiry text, and the QR thumbnail box. Same theme colors (tier-gold/silver/bronze stub, secondary teal accents, muted-foreground for meta).
+- Backend: Lovable Cloud (Supabase) — `venues`, `cities`, `sourcing_jobs`, `user_roles` tables with RLS.
+- Auth: email/password for Mesita admins, gated by an `admin` role.
+- AdminWeb venues section becomes functional: list, filter by city/status/type, view detail, edit, delete, manual add.
+- Sourcing pipeline: pick a city → Google Places nearby search seeds rows as `web_listed` → background enrichment via Firecrawl + Lovable AI fills socials, vibe tags, hours, photos, mentions.
+- Sourcing jobs visible in admin with status (queued / running / done / failed), counts, and per-venue logs.
+- GuestApp / ManagerWeb stay on mock data for now.
 
-## Data shape
+## Stack pieces
 
-Extend the `unused` and `used` arrays in `WalletView` with the missing fields:
+- Lovable Cloud for DB, auth, and storage.
+- Firecrawl connector (search + scrape) for venue websites, IG/FB/TikTok pages, press, Reddit threads.
+- Google Places API (Places API New) — requires `GOOGLE_PLACES_API_KEY` secret from you.
+- Lovable AI Gateway (`google/gemini-2.5-flash`) to turn raw scraped content into a structured venue profile.
 
+## Schema
+
+```text
+cities
+  id uuid pk, name text, country text, lat numeric, lng numeric,
+  is_live boolean default false, created_at
+
+venues
+  id uuid pk
+  city_id uuid fk → cities
+  name text, slug text unique
+  type text  -- restaurant | cafe | bar | nightlife | other
+  status text  -- web_listed | verified_partner
+  google_place_id text unique
+  address text, lat numeric, lng numeric, neighborhood text
+  phone text, website text
+  instagram text, facebook text, tiktok text
+  cuisine text[], price_tier int, vibe_tags text[]
+  hours jsonb, photos text[], cover_image text
+  rating_google numeric, rating_count int
+  mentions jsonb  -- press / reddit / blogs
+  enrichment jsonb  -- raw signals, last sources, scores
+  enriched_at timestamptz, created_at, updated_at
+
+sourcing_jobs
+  id uuid pk, city_id uuid fk, kind text, status text,
+  stats jsonb  -- {seeded, enriched, failed}
+  error text, created_by uuid, created_at, finished_at
+
+user_roles  (separate table per security rule)
+  id uuid pk, user_id uuid fk → auth.users, role app_role
 ```
-{ name: "Casa Luminar", category: "Rooftop", distance: "0.4 km",
-  cost: 3,                 // 1–4 → renders as $, $$, $$$, $$$$
-  mesita: 4.8,             // Mesita rating
-  google: 4.6,             // Google rating
-  cb: 20, color: "tier-gold", ... }
-```
 
-Pick sensible categories/costs/ratings per venue (Casa Luminar = Rooftop $$$, Loto Café = Café $$, Neón Bar = Cocktails $$$, Mar Verde = Seafood $$$$).
+RLS: only users with `has_role(auth.uid(), 'admin')` can read/write `venues`, `cities`, `sourcing_jobs`. `user_roles` self-readable; admin-only writable.
 
-## Card layout (both unused and used)
+## Server functions (TanStack `createServerFn`)
 
-```
-┌────┬─────────────────────────────────────┐
-│20% │ Casa Luminar                        │
-│ CB │ Rooftop · 0.4 km · $$$              │
-│    │ ★ 4.8 Mesita   G 4.6 Google         │
-└────┴─────────────────────────────────────┘
-```
+- `listVenues({ cityId?, status?, type?, q?, page })` — admin-gated.
+- `getVenue({ id })`, `updateVenue({ id, patch })`, `deleteVenue({ id })`, `createVenue(...)`.
+- `listCities()`, `createCity({ name, country, lat, lng })`.
+- `runSourcingJob({ cityId, radiusMeters, types })` — creates job row, calls Google Places nearby search via REST, upserts venues with status `web_listed`, then kicks enrichment loop (sequential, capped) using Firecrawl + Lovable AI; updates `stats` as it goes.
+- `enrichVenue({ id })` — manual re-enrich for a single venue.
+- `listSourcingJobs()` / `getSourcingJob({ id })`.
 
-- Left tier stub: unchanged (cashback % on gold/silver/bronze).
-- Right side, three lines, all small:
-  1. **Name** — `font-display text-sm font-semibold`.
-  2. **Meta row** — `text-[10px] text-muted-foreground`, dot-separated: category · distance · cost.
-  3. **Ratings row** — `text-[10px]`: `★ {mesita} Mesita` in `text-secondary` (peacock), then `text-muted-foreground` divider, then a small "G" mark + `{google} Google` in `text-muted-foreground`.
-- Cashback amount: keep the big % on the left stub; remove the duplicate text elsewhere.
+All gated by `requireSupabaseAuth` + admin role check inside handler.
 
-## What gets removed
+## AdminWeb UI
 
-- Pending / Reserved / "AI calling…" pills.
-- Expiry / "Expires tomorrow" / "+Story bonus" text.
-- QR thumbnail square on the right.
-- For used cards: replace the "Redeemed · date / Saved $X" block with the same name + meta + ratings, dimmed (keep the grayscale stub + check overlay so used state is still readable). The detail sheet (`CouponDetailSheet`) is unchanged and still owns the redeem flow, savings, dates, etc.
+- New `/admin/login` route (email/password); protected layout for the rest of admin.
+- Replace existing static "Venues" tab in `AdminWeb.tsx` with:
+  - city selector + filters + search
+  - paginated venues table (name, status, type, IG, rating, last enriched)
+  - row → venue detail drawer with all enriched fields, edit + re-enrich buttons
+  - "Source venues" button → modal to pick city + radius → fires `runSourcingJob`
+  - Sourcing jobs panel showing recent jobs and live progress
 
-## Styling
+## Secrets needed
 
-- Reuse existing tokens only: `text-muted-foreground`, `text-secondary`, `text-foreground`, `border-border`, `bg-card-soft`, `bg-tier-*`. No new colors.
-- Star icon: existing lucide `Star` (already imported) for Mesita rating.
-- Google: a small `G` glyph in a rounded `bg-muted` chip, or the existing `BadgeCheck` icon — go with a tiny `G` letterform in a circle to keep it neutral.
-- Tighten vertical padding to keep cards compact.
+- Lovable Cloud — enabled by me.
+- Firecrawl — connected via connector picker.
+- `GOOGLE_PLACES_API_KEY` — added via secrets prompt; you create it in Google Cloud Console (enable "Places API (New)").
 
-## Files
+## Out of scope (next iterations)
 
-- `src/components/emulators/GuestApp.tsx` — only `WalletView` (lines ~1179–1300). No other components touched.
-
-## Out of scope
-
-- Discover/swipe card.
-- `CouponDetailSheet` and `RedeemFlow`.
-- Any backend / data layer.
+- Verified Partner conversion flow + ManagerWeb rewiring.
+- GuestApp reading real venues.
+- Cron-based recurring re-enrichment.
+- Per-source quality scoring / dedupe across sources beyond `google_place_id`.
