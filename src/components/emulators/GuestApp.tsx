@@ -2158,9 +2158,11 @@ function TinderMode() {
             <p className="mt-1 flex items-center gap-1 text-xs opacity-90">
               <MapPin className="h-3 w-3" /> {v.distance} · {v.price}
             </p>
-            <p className="mt-2 flex items-center gap-1 text-xs text-secondary">
-              <Sparkles className="h-3 w-3" /> {v.vibe}
-            </p>
+            {v.affiliated && (
+              <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-400/90 to-amber-300/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-black">
+                <Sparkles className="h-3 w-3" /> Mesita Partner · {v.cashback}% cashback
+              </p>
+            )}
           </div>
         </div>
       </div>
