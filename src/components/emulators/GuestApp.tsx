@@ -3878,6 +3878,15 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
                       {s.action.label}
                     </button>
                   )}
+                  {active && i < steps.length - 1 && (
+                    <button
+                      onClick={advance}
+                      className="ml-2 mt-2 inline-flex items-center gap-1 rounded-full border border-border bg-background px-3 py-1.5 text-[11px] font-semibold text-foreground/80 transition hover:bg-card"
+                      title="Mock: advance to next step"
+                    >
+                      <Check className="h-3 w-3" /> Done
+                    </button>
+                  )}
                 </div>
               </li>
             );
