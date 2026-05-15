@@ -1479,13 +1479,7 @@ function CommunitiesBlock() {
           <ChevronRight className="h-4 w-4 text-muted-foreground" />
         </button>
         <p className="mt-2 text-[10px] text-muted-foreground">
-          You can be in many communities — but only one Class.
-        </p>
-        <p className="mt-1 text-[10px] text-muted-foreground">
-          Some venues boost cashback for verified members of certain communities.
-        </p>
-        <p className="mt-1 text-[10px] text-muted-foreground">
-          E.g. Tec students fill rooftops in San Pedro on Thursdays · Stanford alumni gather at wine bars in Polanco · ITAM crowds the brunch spots in Condesa on Sundays.
+          You can be in many communities — but only one Class. Some venues boost cashback for verified members of certain communities — e.g. Tec students fill rooftops in San Pedro on Thursdays, Stanford alumni gather at wine bars in Polanco, ITAM crowds the brunch spots in Condesa on Sundays.
         </p>
       </div>
 
