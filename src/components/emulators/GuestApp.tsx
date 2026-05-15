@@ -2027,6 +2027,7 @@ function TinderMode() {
   const [slide, setSlide] = useState(0);
   const [muted, setMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const v = venues[idx % venues.length];
   const next = venues[(idx + 1) % venues.length];
 
@@ -2060,6 +2061,15 @@ function TinderMode() {
 
   useEffect(() => {
     if (videoRef.current) videoRef.current.muted = muted;
+    const a = audioRef.current;
+    if (a) {
+      a.muted = muted;
+      if (isVideoSlide && !muted) {
+        a.play().catch(() => {});
+      } else {
+        a.pause();
+      }
+    }
   }, [muted, slide, idx]);
 
   // Reset slide when card changes
@@ -2184,6 +2194,14 @@ function TinderMode() {
               muted
               playsInline
               className="h-full w-full object-cover"
+            />
+          )}
+          {slide === 0 && (
+            <audio
+              ref={audioRef}
+              src="https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3"
+              loop
+              preload="auto"
             />
           )}
           {slide > 0 && (
