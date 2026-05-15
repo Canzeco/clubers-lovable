@@ -2085,15 +2085,17 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
       setIdx((i) => i + 1);
       setDir(null);
       if (d === "r") {
-        setStreak((s) => s + 1);
-        setSavedTotal((s) => s + 1);
-        setCelebrate({ v: current, reserve: false });
-        setTimeout(() => {
-          setCelebrate(null);
-          setAskReserve(current);
-        }, 1100);
+        setAskReserve(current);
       }
     }, 260);
+  };
+
+  // Trigger the "coupon saved" celebration burst for the given venue
+  const celebrateSave = (venue: typeof venues[number]) => {
+    setStreak((s) => s + 1);
+    setSavedTotal((s) => s + 1);
+    setCelebrate({ v: venue, reserve: false });
+    setTimeout(() => setCelebrate(null), 1100);
   };
 
   const onPointerDown = (e: React.PointerEvent) => {
