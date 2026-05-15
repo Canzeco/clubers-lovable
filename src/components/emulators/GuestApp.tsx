@@ -4400,12 +4400,20 @@ function ProfileView() {
           </div>
 
           {/* Big number */}
-          <p className="mt-2 font-display text-3xl font-semibold leading-none tracking-tight">
-            MX$58,400
-          </p>
-          <p className="mt-1 text-[11px] text-muted-foreground">
-            MX$141,600 to <span className="font-semibold text-tier-diamond">Diamond</span>
-          </p>
+          <div className="mt-2 flex items-end justify-between gap-3">
+            <div>
+              <p className="font-display text-3xl font-semibold leading-none tracking-tight">
+                MX$58,400
+              </p>
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                MX$141,600 to <span className="font-semibold text-tier-diamond">Diamond</span>
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-[9px] uppercase tracking-widest text-muted-foreground">Saved back</p>
+              <p className="font-display text-xl font-semibold leading-none text-secondary">MX$1,840</p>
+            </div>
+          </div>
 
           {/* Milestone bar */}
           <div className="mt-4">
@@ -4536,34 +4544,6 @@ function ProfileView() {
 
         {subTab === "stats" && (
           <>
-        {/* Level section */}
-        <p className="mt-4 mb-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Level</p>
-        {/* Gamified rank + XP */}
-        <div className="relative overflow-hidden rounded-2xl bg-peacock p-4 text-primary-foreground shadow-glow">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest opacity-80">
-                <Crown className="h-3 w-3" /> Gold · Lv. 7
-              </p>
-              <p className="font-display text-3xl font-semibold leading-tight">Tastemaker</p>
-              <p className="mt-0.5 text-[11px] opacity-80">Top 4% in CDMX this month</p>
-            </div>
-            <div className="text-right">
-              <p className="text-[10px] uppercase tracking-widest opacity-80">Saved</p>
-              <p className="font-display text-2xl font-semibold leading-none">$1,840</p>
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="flex items-center justify-between text-[10px] opacity-90">
-              <span>620 XP</span>
-              <span>180 XP to Lv. 8 · Connoisseur</span>
-            </div>
-            <div className="mt-1 h-2 overflow-hidden rounded-full bg-black/25">
-              <div className="h-full rounded-full bg-tier-gold" style={{ width: "78%" }} />
-            </div>
-          </div>
-        </div>
-
         {/* Stats section */}
         <p className="mt-4 mb-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Stats</p>
         {/* Stat tiles */}
