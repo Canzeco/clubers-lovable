@@ -4405,9 +4405,9 @@ function ProfileView() {
             <span className="text-[10px] text-muted-foreground">All-time</span>
           </div>
           <div className="mt-1 flex items-end justify-between">
-            <p className="font-display text-3xl font-semibold leading-none">$58,400</p>
+            <p className="font-display text-3xl font-semibold leading-none">MX$58,400</p>
             <p className="text-[10px] text-muted-foreground">
-              $141,600 to <span className="font-semibold text-tier-diamond">Diamond</span>
+              MX$141,600 to <span className="font-semibold text-tier-diamond">Diamond</span>
             </p>
           </div>
           {/* Milestone bar */}
@@ -4426,10 +4426,10 @@ function ProfileView() {
               ))}
             </div>
             <div className="mt-1.5 flex justify-between text-[9px] text-muted-foreground">
-              <span>$0 · Bronze</span>
-              <span>$10k · Silver</span>
-              <span>$50k · Gold</span>
-              <span>$200k · Diamond</span>
+              <span>MX$0 · Bronze</span>
+              <span>MX$10k · Silver</span>
+              <span>MX$50k · Gold</span>
+              <span>MX$200k · Diamond</span>
             </div>
           </div>
           <p className="mt-2 text-[10px] text-muted-foreground">
@@ -4478,9 +4478,9 @@ function ProfileView() {
           <div className="space-y-2">
             {[
               { t: "Bronze", min: "Everyone", color: "tier-bronze", done: true, perk: "Base cashback", tagline: "Welcome to the club" },
-              { t: "Silver", min: "1k followers · or $10k spent", color: "tier-silver", done: true, perk: "More cashback", tagline: "Insider perks" },
-              { t: "Gold", min: "5k followers · or $50k spent", color: "tier-gold", done: true, perk: "Even more cashback", tagline: "Priority access", active: true },
-              { t: "Diamond", min: "20k followers · or $200k spent", color: "tier-diamond", done: false, perk: "Most cashback", tagline: "Full VIP treatment" },
+              { t: "Silver", min: "1k followers · or MX$10k spent", color: "tier-silver", done: true, perk: "More cashback", tagline: "Insider perks" },
+              { t: "Gold", min: "5k followers · or MX$50k spent", color: "tier-gold", done: true, perk: "Even more cashback", tagline: "Priority access", active: true },
+              { t: "Diamond", min: "20k followers · or MX$200k spent", color: "tier-diamond", done: false, perk: "Most cashback", tagline: "Full VIP treatment" },
             ].map((r) => (
               <div
                 key={r.t}
