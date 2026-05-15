@@ -4476,7 +4476,7 @@ function ProfileView() {
             <span className="text-[10px] text-muted-foreground">Followers or spend</span>
           </div>
           <p className="-mt-1 mb-3 text-[10px] leading-snug text-muted-foreground">
-            Your Class is how the city sees you — earned by being <span className="font-semibold text-foreground">popular</span> on Instagram or <span className="font-semibold text-foreground">spending</span> on Mesita. Higher Class · more cashback. Celebrities, chefs &amp; press can also get <span className="font-semibold text-tier-diamond">Diamond</span> by invite or appeal.
+            Your Class is how the city sees you — earned by being <span className="font-semibold text-foreground">popular</span> on Instagram or <span className="font-semibold text-foreground">spending</span> on Mesita. Higher Class · more cashback. Models, chefs &amp; elites can also get <span className="font-semibold text-tier-diamond">Diamond</span> by invite or appeal.
           </p>
           <div className="space-y-2">
             {[
