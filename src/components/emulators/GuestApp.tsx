@@ -2221,15 +2221,15 @@ function TinderMode() {
             />
           )}
           {/* Carousel dots */}
-          <div className="pointer-events-none absolute left-0 right-0 top-2 z-10 flex items-center justify-center gap-1 px-4">
+          <div className="pointer-events-none absolute bottom-2 left-0 right-0 z-20 flex items-center justify-center gap-1.5">
             {Array.from({ length: maxSlide - minSlide + 1 }).map((_, i) => {
               const s = minSlide + i;
               const active = s === slide;
               return (
                 <span
                   key={s}
-                  className={`h-1 flex-1 max-w-[28px] rounded-full transition-all ${
-                    active ? "bg-white" : "bg-white/35"
+                  className={`h-1.5 rounded-full transition-all ${
+                    active ? "w-4 bg-white" : "w-1.5 bg-white/50"
                   }`}
                 />
               );
@@ -2248,6 +2248,7 @@ function TinderMode() {
           >
             No
           </div>
+          {slide >= 0 && (
           <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
             {v.affiliated ? (
               <span
@@ -2269,7 +2270,9 @@ function TinderMode() {
               {v.rating}
             </span>
           </div>
-          <div className="absolute bottom-5 left-5 right-5 text-white">
+          )}
+          {slide >= 0 && (
+          <div className="absolute bottom-6 left-5 right-5 text-white">
             <p className="text-xs uppercase tracking-widest opacity-80">{v.type}</p>
             <h3 className="font-display text-3xl font-semibold leading-tight">
               {v.name}
@@ -2283,6 +2286,7 @@ function TinderMode() {
               </p>
             )}
           </div>
+          )}
         </div>
       </div>
       <div className="mt-5 flex items-center justify-center gap-4 px-5">
