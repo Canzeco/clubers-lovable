@@ -2148,22 +2148,93 @@ function TinderMode() {
             cursor: drag ? "grabbing" : "grab",
           }}
         >
-          <video
-            src="https://videos.pexels.com/video-files/3209828/3209828-uhd_2560_1440_25fps.mp4"
-            poster={v.img}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="h-full w-full object-cover"
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.85))",
-            }}
-          />
+          {/* Carousel slide */}
+          {slide === 0 && (
+            <video
+              src="https://videos.pexels.com/video-files/3209828/3209828-uhd_2560_1440_25fps.mp4"
+              poster={v.img}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-full w-full object-cover"
+            />
+          )}
+          {slide > 0 && (
+            <img
+              src={extraPhotos[slide - 1]}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+          )}
+          {slide < 0 && (
+            <div className="h-full w-full bg-gradient-to-br from-neutral-900 via-neutral-800 to-black p-5 pt-12 text-white overflow-hidden">
+              {leftPanels[-slide - 1].key === "reviews" ? (
+                <div className="flex h-full flex-col">
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-white/60">Reviews</p>
+                  <h4 className="mt-1 font-display text-xl font-semibold">What guests say</h4>
+                  <div className="mt-4 flex-1 space-y-3 overflow-hidden">
+                    {v.visitors.slice(0, 3).map((u) => (
+                      <div key={u.handle} className="flex gap-2.5 rounded-2xl bg-white/5 p-2.5 backdrop-blur">
+                        <img src={u.img} alt="" className="h-9 w-9 rounded-full object-cover" />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="truncate text-[12px] font-semibold">{u.name}</p>
+                            <span className="flex items-center gap-0.5 text-[10px] text-white/80">
+                              <Star className="h-2.5 w-2.5 fill-secondary text-secondary" /> {u.score}
+                            </span>
+                          </div>
+                          <p className="line-clamp-2 text-[11px] text-white/75">{u.comment}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex h-full flex-col">
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-white/60">Hours</p>
+                  <h4 className="mt-1 font-display text-xl font-semibold">{v.status}</h4>
+                  <div className="mt-4 flex-1 overflow-hidden rounded-2xl bg-white/5 backdrop-blur">
+                    {v.schedule.map((s, i) => (
+                      <div
+                        key={s.day}
+                        className={`flex items-center justify-between px-3 py-2 text-[12px] ${
+                          i !== v.schedule.length - 1 ? "border-b border-white/10" : ""
+                        }`}
+                      >
+                        <span className="font-medium text-white/85">{s.day}</span>
+                        <span className="text-white/65">{s.hours}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          {slide >= 0 && (
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.85))",
+              }}
+            />
+          )}
+          {/* Carousel dots */}
+          <div className="pointer-events-none absolute left-0 right-0 top-2 z-10 flex items-center justify-center gap-1 px-4">
+            {Array.from({ length: maxSlide - minSlide + 1 }).map((_, i) => {
+              const s = minSlide + i;
+              const active = s === slide;
+              return (
+                <span
+                  key={s}
+                  className={`h-1 flex-1 max-w-[28px] rounded-full transition-all ${
+                    active ? "bg-white" : "bg-white/35"
+                  }`}
+                />
+              );
+            })}
+          </div>
           {/* swipe indicators */}
           <div
             className="pointer-events-none absolute left-5 top-5 rotate-[-12deg] rounded-md border-2 border-secondary px-3 py-1 text-sm font-bold uppercase tracking-widest text-secondary"
