@@ -1560,27 +1560,6 @@ function CommunitiesBlock() {
                   ))}
                 </div>
 
-                {/* Search */}
-                <div className="px-5 pb-3">
-                  <div className="flex items-center gap-2 rounded-xl border border-border bg-card-soft px-3 py-2.5">
-                    <Search className="h-4 w-4 text-muted-foreground" />
-                    <input
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      placeholder="Search college, city, domain…"
-                      className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-                    />
-                    {query && (
-                      <button
-                        onClick={() => setQuery("")}
-                        className="text-muted-foreground"
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    )}
-                  </div>
-                </div>
-
                 {/* List */}
                 <div className="flex-1 overflow-y-auto px-5 pb-6 scrollbar-hide">
                   <p className="mb-2 text-[9px] uppercase tracking-widest text-muted-foreground">
