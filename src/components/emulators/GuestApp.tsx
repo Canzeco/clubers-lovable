@@ -3828,7 +3828,7 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: Coupon; onClose: () =>
     "El Tope": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&q=80",
     "Forno": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80",
   };
-  const photo = photoMap[coupon.name] || "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80";
+  const photo = photoMap[coupon.name ?? ""] || "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80";
   return (
     <div className="absolute inset-0 z-30 flex items-end bg-black/50" onClick={onClose}>
       <div
@@ -4419,7 +4419,7 @@ function RedeemFlow({ coupon }: { coupon: Coupon }) {
 
   const billNum = parseFloat(bill) || 0;
   const tipNum = parseFloat(tip) || 0;
-  const rawCashback = Math.round(billNum * (coupon.cb / 100));
+  const rawCashback = Math.round(billNum * ((coupon.cb ?? 0) / 100));
   const cashback = Math.min(rawCashback, 1000);
   const capped = rawCashback > 1000;
   const total = billNum + tipNum;
