@@ -1170,97 +1170,43 @@ type BotDef = {
   lastEvent: string;
 };
 
-const BOTS: BotDef[] = [
-  {
-    name: "Scout-01",
-    role: "Discovery",
-    Icon: MapIcon,
-    status: "running",
-    region: "CDMX · Roma / Condesa",
-    found: 312,
-    goal: 400,
-    uses: ["Google Places", "Foursquare", "Instagram Graph"],
-    lastEvent: "Added Bar Próximo to qualification queue",
-  },
-  {
-    name: "Scout-02",
-    role: "Discovery",
-    Icon: MapIcon,
-    status: "running",
-    region: "GDL · Chapultepec",
-    found: 84,
-    goal: 150,
-    uses: ["TripAdvisor", "Yelp Fusion"],
-    lastEvent: "Scanned 412 IG locations · 19 candidates",
-  },
-  {
-    name: "Enricher-Alpha",
-    role: "Enrichment",
-    Icon: Sparkles,
-    status: "running",
-    region: "Global queue",
-    found: 1284,
-    goal: 2000,
-    uses: ["Facebook Graph", "Instagram", "Firecrawl", "Apollo"],
-    lastEvent: "Filled owner email for 7 venues via Hunter.io",
-  },
-  {
-    name: "Qualifier",
-    role: "Qualification",
-    Icon: ShieldCheck,
-    status: "idle",
-    region: "Awaiting batch",
-    found: 642,
-    goal: 1000,
-    uses: ["OpenAI", "Mesita scorer v3"],
-    lastEvent: "Scored 38 venues · 11 marked Hot",
-  },
-  {
-    name: "Outreach-WA",
-    role: "Outreach",
-    Icon: Send,
-    status: "running",
-    region: "Hot leads · CDMX",
-    found: 42,
-    goal: 60,
-    uses: ["Twilio WA", "Resend", "GPT drafter"],
-    lastEvent: "Sent 12 personalized intros · 4 replies",
-  },
-  {
-    name: "Voice-Caller",
-    role: "Outreach",
-    Icon: Mic,
-    status: "error",
-    region: "Reservations queue",
-    found: 18,
-    goal: 25,
-    uses: ["ElevenLabs", "Twilio Voice"],
-    lastEvent: "Rate-limited by Twilio · retry in 4m",
-  },
-  {
-    name: "Monitor",
-    role: "Monitoring",
-    Icon: Activity,
-    status: "running",
-    region: "Affiliated venues",
-    found: 96,
-    goal: 96,
-    uses: ["Perplexity", "Firecrawl"],
-    lastEvent: "Detected new IG promo at Casa Luminar",
-  },
-];
+const BOT_ICONS: Record<string, IconType> = {
+  MapIcon, Sparkles, ShieldCheck, Send, Mic, Activity,
+};
 
-const FEED = [
-  { t: "2s", b: "Scout-01", msg: "Discovered Mezcalería La Niña · Roma Nte", kind: "found" },
-  { t: "11s", b: "Enricher-Alpha", msg: "Pulled IG followers (12.4k) + last 30 posts", kind: "info" },
-  { t: "34s", b: "Qualifier", msg: "Bar Próximo scored 87 / 100 → Hot", kind: "hot" },
-  { t: "1m", b: "Outreach-WA", msg: "Drafted WA intro for owner Ana M.", kind: "info" },
-  { t: "1m", b: "Voice-Caller", msg: "Twilio rate limit hit — paused", kind: "error" },
-  { t: "2m", b: "Monitor", msg: "Loto Café changed hours · synced", kind: "info" },
-  { t: "3m", b: "Scout-02", msg: "Found 19 new candidates in Chapultepec", kind: "found" },
-];
+function useBots(): BotDef[] {
+  const { data } = useQuery({
+    queryKey: ["bots"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("bots").select("*").order("position");
+      if (error) throw error;
+      return data ?? [];
+    },
+    staleTime: 60_000,
+  });
+  return (data ?? []).map((r: any) => ({
+    name: r.name, role: r.role, Icon: BOT_ICONS[r.icon] ?? Activity,
+    status: r.status as BotStatus, region: r.region, found: r.found, goal: r.goal,
+    uses: r.uses ?? [], lastEvent: r.last_event ?? "",
+  }));
+}
+
+function useFeed() {
+  const { data } = useQuery({
+    queryKey: ["sourcing_feed"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("sourcing_feed").select("*").order("position");
+      if (error) throw error;
+      return data ?? [];
+    },
+    staleTime: 60_000,
+  });
+  return (data ?? []).map((r: any) => ({ t: r.t, b: r.bot, msg: r.msg, kind: r.kind }));
+}
 
 function BotFleet() {
+  const BOTS = useBots();
+  const FEED = useFeed();
   return (
     <div className="space-y-6 p-6">
       {/* header */}
