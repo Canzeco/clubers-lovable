@@ -2609,7 +2609,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
                   setTimeout(() => {
                     setStep("pick");
                     setSaved(venue);
-                  }, 1100);
+                  }, CELEBRATE_MS);
                 }}
                 className="flex items-center justify-center gap-1.5 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
               >
