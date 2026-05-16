@@ -3,6 +3,30 @@ import { Loader2, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { COUNTRIES } from "@/lib/countries";
 
+// Shared field chrome (label + matching input/select sizing).
+const INPUT_CLASS =
+  "h-11 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none focus:border-foreground/40";
+
+function Field({
+  label,
+  optional,
+  children,
+}: {
+  label: string;
+  optional?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="mb-1 block text-xs font-medium text-muted-foreground">
+        {label}
+        {optional && <span className="text-muted-foreground/70"> (optional)</span>}
+      </label>
+      {children}
+    </div>
+  );
+}
+
 export function GuestOnboardingScreen({ userId, onDone }: { userId: string; onDone: () => void }) {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
@@ -46,9 +70,6 @@ export function GuestOnboardingScreen({ userId, onDone }: { userId: string; onDo
     }
   };
 
-  const inputCls =
-    "h-11 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none focus:border-foreground/40";
-
   return (
     <div className="flex h-full flex-col overflow-y-auto bg-background text-foreground">
       <div className="flex flex-1 flex-col px-6 pb-8 pt-10">
@@ -58,36 +79,32 @@ export function GuestOnboardingScreen({ userId, onDone }: { userId: string; onDo
         </div>
 
         <form onSubmit={submit} className="space-y-3">
-          <div>
-            <label className="mb-1 block text-xs font-medium text-muted-foreground">Name</label>
-            <input className={inputCls} value={name} onChange={(e) => setName(e.target.value)} maxLength={80} required />
-          </div>
+          <Field label="Name">
+            <input className={INPUT_CLASS} value={name} onChange={(e) => setName(e.target.value)} maxLength={80} required />
+          </Field>
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="mb-1 block text-xs font-medium text-muted-foreground">Age</label>
+            <Field label="Age">
               <input
                 type="number"
                 min={13}
                 max={120}
-                className={inputCls}
+                className={INPUT_CLASS}
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
                 required
               />
-            </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-muted-foreground">Sex</label>
-              <select className={inputCls} value={sex} onChange={(e) => setSex(e.target.value)} required>
+            </Field>
+            <Field label="Sex">
+              <select className={INPUT_CLASS} value={sex} onChange={(e) => setSex(e.target.value)} required>
                 <option value="">Select</option>
                 <option value="female">Female</option>
                 <option value="male">Male</option>
               </select>
-            </div>
+            </Field>
           </div>
-          <div>
-            <label className="mb-1 block text-xs font-medium text-muted-foreground">Country</label>
+          <Field label="Country">
             <select
-              className={inputCls}
+              className={INPUT_CLASS}
               value={country}
               onChange={(e) => setCountry(e.target.value)}
               required
@@ -99,31 +116,27 @@ export function GuestOnboardingScreen({ userId, onDone }: { userId: string; onDo
                 </option>
               ))}
             </select>
-          </div>
-          <div>
-            <label className="mb-1 block text-xs font-medium text-muted-foreground">
-              Instagram <span className="text-muted-foreground/70">(optional)</span>
-            </label>
+          </Field>
+          <Field label="Instagram" optional>
             <input
-              className={inputCls}
+              className={INPUT_CLASS}
               value={instagram}
               onChange={(e) => setInstagram(e.target.value)}
               placeholder="@yourhandle"
               maxLength={60}
             />
-          </div>
-          <div>
-            <label className="mb-1 block text-xs font-medium text-muted-foreground">Phone number</label>
+          </Field>
+          <Field label="Phone number">
             <input
               type="tel"
-              className={inputCls}
+              className={INPUT_CLASS}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+5215512345678"
               maxLength={30}
               required
             />
-          </div>
+          </Field>
 
           {error && (
             <p className="rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive">{error}</p>
