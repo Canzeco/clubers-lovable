@@ -691,10 +691,19 @@ const VENUE_QUICKNAV_FALLBACK = [
   { id: "vsec-details", label: "Details" },
 ];
 
+function useGuestCommunities() {
+  const communitiesList = useAppContent(
+    "guest_communities",
+    Object.values(COMMUNITIES_FALLBACK),
+  );
+
+  return Object.fromEntries(communitiesList.map((community) => [community.id, community]));
+}
+
 function VenueQuickNav() {
   const venueQuicknav = useAppContent("guest_venue_quicknav", VENUE_QUICKNAV_FALLBACK);
   const firstQuicknavId = venueQuicknav[0]?.id ?? VENUE_QUICKNAV_FALLBACK[0].id;
-  const [active, setActive] = useState(VENUE_QUICKNAV[0].id);
+  const [active, setActive] = useState(firstQuicknavId);
   const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -1404,6 +1413,7 @@ function ReviewsSection() {
 }
 
 function MesitaVisitors({ venue }: { venue: Venue }) {
+  const communities = useGuestCommunities();
   const allCommunities = Array.from(
     new Set<string>((venue.visitors ?? []).flatMap((v: Visitor) => v.communities ?? [])),
   );
@@ -1457,7 +1467,7 @@ function MesitaVisitors({ venue }: { venue: Venue }) {
               All
             </button>
             {allCommunities.map((cid) => {
-              const c = COMMUNITIES[cid];
+              const c = communities[cid];
               if (!c) return null;
               return (
                 <button
@@ -1516,7 +1526,7 @@ function MesitaVisitors({ venue }: { venue: Venue }) {
                   {(u.communities ?? []).length > 0 && (
                     <div className="mt-1 flex flex-wrap gap-1">
                       {(u.communities as string[]).map((cid) => {
-                        const c = COMMUNITIES[cid];
+                        const c = communities[cid];
                         if (!c) return null;
                         return (
                           <span
@@ -1557,11 +1567,7 @@ function ReviewsSectionInner() {
 }
 
 function CommunitiesBlock() {
-  const communitiesList = useAppContent(
-    "guest_communities",
-    Object.values(COMMUNITIES_FALLBACK),
-  );
-  const communities = Object.fromEntries(communitiesList.map((community) => [community.id, community]));
+  const communities = useGuestCommunities();
   const [joined, setJoined] = useState<string[]>(["tec"]);
   const [showJoin, setShowJoin] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
