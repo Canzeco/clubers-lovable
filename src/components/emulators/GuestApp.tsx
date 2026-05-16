@@ -148,6 +148,13 @@ function walkMinutes(distance: string | number | undefined): number | null {
   return Math.max(1, Math.round(km * WALK_MIN_PER_KM));
 }
 
+// Clamp `n` to the inclusive range [min, max]. Replaces the verbose
+// Math.min(max, Math.max(min, n)) pattern that recurs across sliders,
+// step indicators, swipe-deck opacity, and bounded indexes.
+function clamp(n: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, n));
+}
+
 // How long a "Copied!" pill stays on screen after a copy action.
 const COPIED_FEEDBACK_MS = 1500;
 
