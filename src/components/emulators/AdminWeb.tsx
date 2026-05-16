@@ -1,4 +1,6 @@
 import { useState, type ComponentType, type SVGProps } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Building2,
   Search,
@@ -70,36 +72,13 @@ type Tab =
   | "metrics"
   | "trust";
 
-const stages = [
-  {
-    id: "sourced",
-    label: "1 · Sourced",
-    hint: "Google Business · manual",
-    color: "bg-muted-foreground/30",
-    count: 84,
-  },
-  {
-    id: "enriching",
-    label: "2 · Super-sourcing",
-    hint: "AI agent enriching",
-    color: "bg-accent",
-    count: 26,
-  },
-  {
-    id: "review",
-    label: "3 · Review & approve",
-    hint: "Manual QA",
-    color: "bg-secondary",
-    count: 14,
-  },
-  {
-    id: "sales",
-    label: "4 · Sales · partner",
-    hint: "Contact & sign",
-    color: "bg-primary",
-    count: 9,
-  },
-] as const;
+type Stage = {
+  id: string;
+  label: string;
+  hint: string;
+  color: string;
+  count: number;
+};
 
 type Lead = {
   id: string;
@@ -110,22 +89,57 @@ type Lead = {
   rating: number;
   ticket: string;
   fit: "Hot" | "Warm" | "Cold";
-  stage: (typeof stages)[number]["id"];
+  stage: string;
   owner: string;
   lastTouch: string;
 };
 
-const leads: Lead[] = [
-  { id: "1", name: "Bocanada", type: "Rooftop · Mediterranean", area: "Roma Nte.", ig: "—", rating: 4.7, ticket: "$720", fit: "Hot", stage: "sourced", owner: "DM", lastTouch: "today" },
-  { id: "2", name: "Patio Verde", type: "Brunch · Café", area: "Condesa", ig: "—", rating: 4.5, ticket: "$380", fit: "Hot", stage: "sourced", owner: "AL", lastTouch: "1d" },
-  { id: "3", name: "Sal de Mar", type: "Seafood", area: "Polanco", ig: "—", rating: 4.4, ticket: "$640", fit: "Warm", stage: "sourced", owner: "DM", lastTouch: "2d" },
-  { id: "4", name: "El Hueco", type: "Mezcal · Bar", area: "Juárez", ig: "9k", rating: 4.6, ticket: "$420", fit: "Warm", stage: "enriching", owner: "AI", lastTouch: "now" },
-  { id: "5", name: "Galápago", type: "Wine bar", area: "Roma Sur", ig: "14k", rating: 4.8, ticket: "$580", fit: "Hot", stage: "enriching", owner: "AI", lastTouch: "now" },
-  { id: "6", name: "Tropikalia", type: "Club · Nightlife", area: "Cuauhtémoc", ig: "120k", rating: 4.3, ticket: "$1.2k", fit: "Hot", stage: "review", owner: "RC", lastTouch: "today" },
-  { id: "7", name: "Loto Café", type: "Specialty coffee", area: "Chapultepec", ig: "22k", rating: 4.6, ticket: "$220", fit: "Warm", stage: "review", owner: "AL", lastTouch: "1d" },
-  { id: "8", name: "Costa Azul", type: "Beach club", area: "Tulum", ig: "54k", rating: 4.5, ticket: "$1.8k", fit: "Hot", stage: "sales", owner: "DM", lastTouch: "today" },
-  { id: "9", name: "Mar Verde", type: "Seafood", area: "Tulum", ig: "11k", rating: 4.4, ticket: "$900", fit: "Cold", stage: "sales", owner: "RC", lastTouch: "3d" },
-];
+function useStages() {
+  return useQuery<Stage[]>({
+    queryKey: ["pipeline_stages"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("pipeline_stages")
+        .select("stage_id, label, hint, color, count, position")
+        .order("position", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map((s) => ({
+        id: s.stage_id,
+        label: s.label,
+        hint: s.hint ?? "",
+        color: s.color ?? "bg-muted",
+        count: s.count ?? 0,
+      }));
+    },
+  });
+}
+
+function useLeads() {
+  return useQuery<Lead[]>({
+    queryKey: ["venues", "leads"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("venues")
+        .select("id, name, type, area, instagram, rating, ticket, fit, stage, owner, last_touch, position")
+        .eq("status", "lead")
+        .order("position", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map((v) => ({
+        id: v.id,
+        name: v.name,
+        type: v.type ?? "",
+        area: v.area ?? "",
+        ig: v.instagram ?? "—",
+        rating: Number(v.rating ?? 0),
+        ticket: v.ticket ?? "",
+        fit: (v.fit as Lead["fit"]) ?? "Warm",
+        stage: v.stage ?? "sourced",
+        owner: v.owner ?? "",
+        lastTouch: v.last_touch ?? "",
+      }));
+    },
+  });
+}
 
 function FitChip({ fit }: { fit: Lead["fit"] }) {
   const map = {
@@ -228,9 +242,14 @@ function Pipeline() {
   return <PipelineBoard />;
 }
 
-function StageView({ stageId }: { stageId: (typeof stages)[number]["id"] }) {
-  const s = stages.find((x) => x.id === stageId)!;
+function StageView({ stageId }: { stageId: string }) {
+  const { data: stages = [] } = useStages();
+  const { data: leads = [] } = useLeads();
+  const s = stages.find((x) => x.id === stageId);
   const items = leads.filter((l) => l.stage === stageId);
+  if (!s) {
+    return <div className="p-6 text-xs text-muted-foreground">Loading stage…</div>;
+  }
   const descriptions: Record<string, string> = {
     sourced: "Lista manual desde Google Business Profile. Selecciona un venue y lanza Super-sourcing.",
     enriching: "Agente AI buscando IG, FB, web, reseñas y posts. Consulta la base para evitar duplicados.",
@@ -266,6 +285,8 @@ function StageView({ stageId }: { stageId: (typeof stages)[number]["id"] }) {
 }
 
 function PipelineBoard() {
+  const { data: stages = [], isLoading: stagesLoading } = useStages();
+  const { data: leads = [] } = useLeads();
   return (
     <div className="space-y-4 p-6">
       <div className="flex items-end justify-between">
@@ -280,6 +301,9 @@ function PipelineBoard() {
         </button>
       </div>
 
+      {stagesLoading ? (
+        <div className="text-xs text-muted-foreground">Loading pipeline…</div>
+      ) : (
       <div className="grid grid-cols-4 gap-3">
         {stages.map((s) => {
           const items = leads.filter((l) => l.stage === s.id);
@@ -314,11 +338,12 @@ function PipelineBoard() {
           );
         })}
       </div>
+      )}
     </div>
   );
 }
 
-function LeadCard({ l, stage }: { l: Lead; stage: (typeof stages)[number]["id"] }) {
+function LeadCard({ l, stage }: { l: Lead; stage: string }) {
   if (stage === "enriching") {
     return (
       <div className="space-y-2 rounded-lg border border-accent/40 bg-accent/5 p-2.5 text-xs shadow-elev">
