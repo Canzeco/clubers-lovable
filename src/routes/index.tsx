@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { useAppContent } from "@/lib/app-content";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -10,7 +12,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const products = [
+const productsFallback = [
   { to: "/landing", label: "Landing", tag: "Marketing site", desc: "Public website explaining Mesita to venues and guests." },
   { to: "/admin", label: "Admin", tag: "Mesita HQ", desc: "Operate the network: venues, tier curation, revenue, trust & safety." },
   { to: "/manager", label: "Manager", tag: "Venue portal", desc: "Launch cashback campaigns, segment guests, see revenue lift." },
@@ -19,6 +21,8 @@ const products = [
 ] as const;
 
 function Index() {
+  const products = useAppContent("index_products", productsFallback as unknown as typeof productsFallback);
+
   return (
     <div className="min-h-screen bg-hero">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">

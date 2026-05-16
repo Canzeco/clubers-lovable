@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { useAppContent } from "@/lib/app-content";
 import {
   BarChart3,
   ChevronDown,
@@ -329,21 +330,41 @@ function Dashboard({ unit }: { unit: { name: string } }) {
 /* ============== PLACE ============== */
 
 function Place({ unit }: { unit: { name: string; city: string } }) {
-  const photos = [
-    "from-amber-400/50 to-rose-500/50",
-    "from-emerald-400/50 to-teal-500/50",
-    "from-violet-400/50 to-fuchsia-500/50",
-    "from-sky-400/50 to-indigo-500/50",
-    "from-orange-400/50 to-pink-500/50",
-    "from-lime-400/50 to-emerald-500/50",
-  ];
-  const menu = [
-    { n: "Burrata & heirloom tomato", p: 280 },
-    { n: "Octopus, smoked paprika", p: 420 },
-    { n: "Wagyu tagliata, truffle", p: 680 },
-    { n: "Saffron risotto", p: 340 },
-    { n: "Mezcal sour", p: 190 },
-  ];
+  const placeContent = useAppContent("manager_place_content", {
+    photos: [
+      "from-amber-400/50 to-rose-500/50",
+      "from-emerald-400/50 to-teal-500/50",
+      "from-violet-400/50 to-fuchsia-500/50",
+      "from-sky-400/50 to-indigo-500/50",
+      "from-orange-400/50 to-pink-500/50",
+      "from-lime-400/50 to-emerald-500/50",
+    ],
+    menu: [
+      { n: "Burrata & heirloom tomato", p: 280 },
+      { n: "Octopus, smoked paprika", p: 420 },
+      { n: "Wagyu tagliata, truffle", p: 680 },
+      { n: "Saffron risotto", p: 340 },
+      { n: "Mezcal sour", p: 190 },
+    ],
+    identity: {
+      category: "Rooftop · Cocktails",
+      priceRange: "$$$",
+      hours: "Tue–Sun · 5pm – 1am",
+      bio: "Rooftop garden in Roma Nte. with peacock-blue tiles, a wood-fired kitchen and golden-hour cocktails. Reservations recommended on weekends.",
+      addressLine1: "Av. Álvaro Obregón 185",
+      addressLine2: "Roma Nte., 06700 CDMX",
+      socials: [
+        { icon: "IG", handle: "@casaluminar" },
+        { icon: "TT", handle: "@casaluminar" },
+        { icon: "G", handle: "Casa Luminar · 4.6 ★" },
+        { icon: "UE", handle: "Uber Eats · 4.8 ★" },
+        { icon: "W", handle: "casaluminar.mx" },
+      ],
+    },
+  });
+  const photos = placeContent.photos;
+  const menu = placeContent.menu;
+  const identity = placeContent.identity;
   return (
     <div className="space-y-5 p-6">
       <div className="flex items-end justify-between">
@@ -367,18 +388,16 @@ function Place({ unit }: { unit: { name: string; city: string } }) {
             </p>
             <div className="grid grid-cols-2 gap-3">
               <Field label="Name" value={unit.name} />
-              <Field label="Category" value="Rooftop · Cocktails" />
-              <Field label="Price range" value="$$$" />
-              <Field label="Hours" value="Tue–Sun · 5pm – 1am" />
+              <Field label="Category" value={identity.category} />
+              <Field label="Price range" value={identity.priceRange} />
+              <Field label="Hours" value={identity.hours} />
             </div>
             <div className="mt-3">
               <label className="eyebrow">
                 Bio
               </label>
               <div className="mt-1 rounded-lg border border-border bg-input px-3 py-2 text-xs leading-relaxed">
-                Rooftop garden in Roma Nte. with peacock-blue tiles, a wood-fired
-                kitchen and golden-hour cocktails. Reservations recommended on
-                weekends.
+                {identity.bio}
               </div>
             </div>
           </div>
@@ -445,21 +464,17 @@ function Place({ unit }: { unit: { name: string; city: string } }) {
                 <MapPin className="h-6 w-6 text-secondary" />
               </div>
             </div>
-            <p className="mt-2 text-xs">Av. Álvaro Obregón 185</p>
-            <p className="text-[11px] text-muted-foreground">
-              Roma Nte., 06700 CDMX
-            </p>
+            <p className="mt-2 text-xs">{identity.addressLine1}</p>
+            <p className="text-[11px] text-muted-foreground">{identity.addressLine2}</p>
           </div>
 
           <div className="rounded-xl border border-border bg-card-soft p-4">
             <p className="mb-3 eyebrow">
               Social & links
             </p>
-            <SocialRow icon="IG" handle="@casaluminar" />
-            <SocialRow icon="TT" handle="@casaluminar" />
-            <SocialRow icon="G" handle="Casa Luminar · 4.6 ★" />
-            <SocialRow icon="UE" handle="Uber Eats · 4.8 ★" />
-            <SocialRow icon="W" handle="casaluminar.mx" />
+            {identity.socials.map((social) => (
+              <SocialRow key={`${social.icon}-${social.handle}`} icon={social.icon} handle={social.handle} />
+            ))}
           </div>
 
           <div className="rounded-xl border border-border bg-card-soft p-4">
@@ -1022,21 +1037,25 @@ function Promos() {
 /* ============== ANALYTICS ============== */
 
 function Analytics() {
-  const funnel = [
-    { label: "Profile views", v: 12480, pct: 100 },
-    { label: "Swipes right", v: 4320, pct: 35 },
-    { label: "Coupons claimed", v: 1860, pct: 15 },
-    { label: "Visits", v: 612, pct: 5 },
-    { label: "Stories shared", v: 146, pct: 1.2 },
-  ];
-  const stories = [
-    { h: "@valenrose", t: "Gold", ago: "2h" },
-    { h: "@matgg", t: "Gold", ago: "5h" },
-    { h: "@sof.ah", t: "Silver", ago: "1d" },
-    { h: "@luispb", t: "Silver", ago: "1d" },
-    { h: "@anita", t: "Bronze", ago: "2d" },
-    { h: "@noctura", t: "Gold", ago: "3d" },
-  ];
+  const analyticsContent = useAppContent("manager_analytics_content", {
+    funnel: [
+      { label: "Profile views", v: 12480, pct: 100 },
+      { label: "Swipes right", v: 4320, pct: 35 },
+      { label: "Coupons claimed", v: 1860, pct: 15 },
+      { label: "Visits", v: 612, pct: 5 },
+      { label: "Stories shared", v: 146, pct: 1.2 },
+    ],
+    stories: [
+      { h: "@valenrose", t: "Gold", ago: "2h" },
+      { h: "@matgg", t: "Gold", ago: "5h" },
+      { h: "@sof.ah", t: "Silver", ago: "1d" },
+      { h: "@luispb", t: "Silver", ago: "1d" },
+      { h: "@anita", t: "Bronze", ago: "2d" },
+      { h: "@noctura", t: "Gold", ago: "3d" },
+    ],
+  });
+  const funnel = analyticsContent.funnel;
+  const stories = analyticsContent.stories;
   return (
     <div className="space-y-5 p-6">
       <div>
@@ -1140,7 +1159,7 @@ function Analytics() {
 /* ============== WALLET ============== */
 
 function ValidatorActivity() {
-  const validators = [
+  const validators = useAppContent("manager_validator_activity", [
     {
       n: "Carlos",
       role: "Bar lead",
@@ -1194,7 +1213,7 @@ function ValidatorActivity() {
         { who: "bot", t: "Story verificada · @camivb · +10%", at: "19:48" },
       ],
     },
-  ];
+  ]);
   const [active, setActive] = useState(0);
   const v = validators[active];
 
@@ -1297,13 +1316,13 @@ function ValidatorActivity() {
 /* ============== WALLET ============== */
 
 function Wallet() {
-  const tx = [
+  const tx = useAppContent("manager_wallet_activity", [
     { d: "May 11", k: "Payout", a: "+$12,400", c: "text-emerald-400" },
     { d: "May 10", k: "Cashback paid · 18 redeems", a: "-$1,820", c: "text-rose-400" },
     { d: "May 9", k: "Mesita fee · 21 coupons redeemed", a: "-$420", c: "text-muted-foreground" },
     { d: "May 8", k: "Spend influenced", a: "+$14,200", c: "text-emerald-400" },
     { d: "May 7", k: "Story bonus paid · 6", a: "-$340", c: "text-rose-400" },
-  ];
+  ]);
   return (
     <div className="space-y-5 p-6">
       <div>
