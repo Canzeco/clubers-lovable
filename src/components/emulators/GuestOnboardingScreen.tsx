@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2, ArrowRight, Check, ShieldCheck } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { COUNTRIES } from "@/lib/countries";
 
@@ -10,55 +10,10 @@ export function GuestOnboardingScreen({ userId, onDone }: { userId: string; onDo
   const [country, setCountry] = useState("");
   const [instagram, setInstagram] = useState("");
   const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [phoneVerified, setPhoneVerified] = useState(false);
-  const [sendingOtp, setSendingOtp] = useState(false);
-  const [verifyingOtp, setVerifyingOtp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const normalizedPhone = phone.trim().replace(/\s+/g, "");
-
-  const sendOtp = async () => {
-    setError(null);
-    if (!/^\+[1-9]\d{6,14}$/.test(normalizedPhone)) {
-      setError("Enter phone in international format, e.g. +5215512345678");
-      return;
-    }
-    setSendingOtp(true);
-    try {
-      const { error } = await supabase.auth.updateUser({ phone: normalizedPhone });
-      if (error) throw error;
-      setOtpSent(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not send code");
-    } finally {
-      setSendingOtp(false);
-    }
-  };
-
-  const verifyOtp = async () => {
-    setError(null);
-    if (otp.trim().length < 4) {
-      setError("Enter the code we sent you");
-      return;
-    }
-    setVerifyingOtp(true);
-    try {
-      const { error } = await supabase.auth.verifyOtp({
-        phone: normalizedPhone,
-        token: otp.trim(),
-        type: "phone_change",
-      });
-      if (error) throw error;
-      setPhoneVerified(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Invalid code");
-    } finally {
-      setVerifyingOtp(false);
-    }
-  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,10 +21,6 @@ export function GuestOnboardingScreen({ userId, onDone }: { userId: string; onDo
     const ageNum = parseInt(age, 10);
     if (!name.trim() || !ageNum || !sex || !country.trim() || !phone.trim()) {
       setError("Please complete all required fields");
-      return;
-    }
-    if (!phoneVerified) {
-      setError("Please verify your phone number");
       return;
     }
     setLoading(true);
