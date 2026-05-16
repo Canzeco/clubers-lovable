@@ -72,20 +72,6 @@ export type IconType = ComponentType<SVGProps<SVGSVGElement> & { className?: str
 
 export type Hours = { day: string; hours: string };
 
-export interface Venue {
-  name?: string;
-  category?: string;
-  distance?: string;
-  cost?: number;
-  mesita?: number;
-  google?: number;
-  cb?: number;
-  hours?: Hours[];
-  visitors?: Visitor[];
-  // Escape hatch — the static catalog carries many one-off fields.
-  [key: string]: unknown;
-}
-
 export interface Visitor {
   name?: string;
   handle?: string;
