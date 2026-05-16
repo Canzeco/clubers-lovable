@@ -207,6 +207,11 @@
     letter-spacing: 0.1em;
     color: var(--muted-foreground);
   }
+  /* Tiny muted caption (helper text under inputs, secondary metadata). */
+  .caption {
+    font-size: 10px;
+    color: var(--muted-foreground);
+  }
 }
 
 @keyframes confetti-0 {
