@@ -5876,12 +5876,22 @@ export function GuestApp() {
   const [onboarded, setOnboarded] = useState<boolean | null>(null);
 
   useEffect(() => {
+    let currentUserId: string | undefined;
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
-      setSession(s as { user: { id: string } } | null);
-      setOnboarded(null);
+      const next = s as { user: { id: string } } | null;
+      setSession(next);
+      // Only reset onboarded when the signed-in user actually changes —
+      // token refreshes shouldn't flash a blank screen.
+      const nextId = next?.user?.id;
+      if (nextId !== currentUserId) {
+        currentUserId = nextId;
+        setOnboarded(null);
+      }
     });
     supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session as { user: { id: string } } | null);
+      const s = data.session as { user: { id: string } } | null;
+      currentUserId = s?.user?.id;
+      setSession(s);
       setAuthReady(true);
     });
     return () => subscription.unsubscribe();
@@ -5895,8 +5905,16 @@ export function GuestApp() {
       .select("onboarded")
       .eq("user_id", session.user.id)
       .maybeSingle()
-      .then(({ data }) => {
-        if (!cancelled) setOnboarded(Boolean(data?.onboarded));
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          // Network/RLS hiccup shouldn't trap the user on a blank screen —
+          // fall through to onboarding so they can recover.
+          console.error("[guest] profile fetch failed", error);
+          setOnboarded(false);
+          return;
+        }
+        setOnboarded(Boolean(data?.onboarded));
       });
     return () => {
       cancelled = true;
