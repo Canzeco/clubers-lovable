@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_content: {
+        Row: {
+          content_key: string
+          created_at: string
+          description: string | null
+          payload: Json
+          updated_at: string
+        }
+        Insert: {
+          content_key: string
+          created_at?: string
+          description?: string | null
+          payload?: Json
+          updated_at?: string
+        }
+        Update: {
+          content_key?: string
+          created_at?: string
+          description?: string | null
+          payload?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bots: {
         Row: {
           created_at: string
