@@ -1170,97 +1170,43 @@ type BotDef = {
   lastEvent: string;
 };
 
-const BOTS: BotDef[] = [
-  {
-    name: "Scout-01",
-    role: "Discovery",
-    Icon: MapIcon,
-    status: "running",
-    region: "CDMX · Roma / Condesa",
-    found: 312,
-    goal: 400,
-    uses: ["Google Places", "Foursquare", "Instagram Graph"],
-    lastEvent: "Added Bar Próximo to qualification queue",
-  },
-  {
-    name: "Scout-02",
-    role: "Discovery",
-    Icon: MapIcon,
-    status: "running",
-    region: "GDL · Chapultepec",
-    found: 84,
-    goal: 150,
-    uses: ["TripAdvisor", "Yelp Fusion"],
-    lastEvent: "Scanned 412 IG locations · 19 candidates",
-  },
-  {
-    name: "Enricher-Alpha",
-    role: "Enrichment",
-    Icon: Sparkles,
-    status: "running",
-    region: "Global queue",
-    found: 1284,
-    goal: 2000,
-    uses: ["Facebook Graph", "Instagram", "Firecrawl", "Apollo"],
-    lastEvent: "Filled owner email for 7 venues via Hunter.io",
-  },
-  {
-    name: "Qualifier",
-    role: "Qualification",
-    Icon: ShieldCheck,
-    status: "idle",
-    region: "Awaiting batch",
-    found: 642,
-    goal: 1000,
-    uses: ["OpenAI", "Mesita scorer v3"],
-    lastEvent: "Scored 38 venues · 11 marked Hot",
-  },
-  {
-    name: "Outreach-WA",
-    role: "Outreach",
-    Icon: Send,
-    status: "running",
-    region: "Hot leads · CDMX",
-    found: 42,
-    goal: 60,
-    uses: ["Twilio WA", "Resend", "GPT drafter"],
-    lastEvent: "Sent 12 personalized intros · 4 replies",
-  },
-  {
-    name: "Voice-Caller",
-    role: "Outreach",
-    Icon: Mic,
-    status: "error",
-    region: "Reservations queue",
-    found: 18,
-    goal: 25,
-    uses: ["ElevenLabs", "Twilio Voice"],
-    lastEvent: "Rate-limited by Twilio · retry in 4m",
-  },
-  {
-    name: "Monitor",
-    role: "Monitoring",
-    Icon: Activity,
-    status: "running",
-    region: "Affiliated venues",
-    found: 96,
-    goal: 96,
-    uses: ["Perplexity", "Firecrawl"],
-    lastEvent: "Detected new IG promo at Casa Luminar",
-  },
-];
+const BOT_ICONS: Record<string, IconType> = {
+  MapIcon, Sparkles, ShieldCheck, Send, Mic, Activity,
+};
 
-const FEED = [
-  { t: "2s", b: "Scout-01", msg: "Discovered Mezcalería La Niña · Roma Nte", kind: "found" },
-  { t: "11s", b: "Enricher-Alpha", msg: "Pulled IG followers (12.4k) + last 30 posts", kind: "info" },
-  { t: "34s", b: "Qualifier", msg: "Bar Próximo scored 87 / 100 → Hot", kind: "hot" },
-  { t: "1m", b: "Outreach-WA", msg: "Drafted WA intro for owner Ana M.", kind: "info" },
-  { t: "1m", b: "Voice-Caller", msg: "Twilio rate limit hit — paused", kind: "error" },
-  { t: "2m", b: "Monitor", msg: "Loto Café changed hours · synced", kind: "info" },
-  { t: "3m", b: "Scout-02", msg: "Found 19 new candidates in Chapultepec", kind: "found" },
-];
+function useBots(): BotDef[] {
+  const { data } = useQuery({
+    queryKey: ["bots"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("bots").select("*").order("position");
+      if (error) throw error;
+      return data ?? [];
+    },
+    staleTime: 60_000,
+  });
+  return (data ?? []).map((r: any) => ({
+    name: r.name, role: r.role, Icon: BOT_ICONS[r.icon] ?? Activity,
+    status: r.status as BotStatus, region: r.region, found: r.found, goal: r.goal,
+    uses: r.uses ?? [], lastEvent: r.last_event ?? "",
+  }));
+}
+
+function useFeed() {
+  const { data } = useQuery({
+    queryKey: ["sourcing_feed"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("sourcing_feed").select("*").order("position");
+      if (error) throw error;
+      return data ?? [];
+    },
+    staleTime: 60_000,
+  });
+  return (data ?? []).map((r: any) => ({ t: r.t, b: r.bot, msg: r.msg, kind: r.kind }));
+}
 
 function BotFleet() {
+  const BOTS = useBots();
+  const FEED = useFeed();
   return (
     <div className="space-y-6 p-6">
       {/* header */}
@@ -1434,48 +1380,29 @@ type Integration = {
   link?: string;
 };
 
-const STACK: { group: string; items: Integration[] }[] = [
-  {
-    group: "Discovery & enrichment",
-    items: [
-      { name: "Google Places API", category: "Maps", purpose: "Venue discovery + base profile", status: "connected", monthly: "$ 320", usage: "78% of quota" },
-      { name: "Foursquare Places", category: "Maps", purpose: "Secondary discovery + categories", status: "connected", monthly: "$ 90", usage: "31%" },
-      { name: "Yelp Fusion", category: "Reviews", purpose: "Ratings + review enrichment", status: "low_credits", monthly: "$ 40", usage: "94%" },
-      { name: "TripAdvisor Content", category: "Reviews", purpose: "Tourist venue scoring", status: "missing", monthly: "—", usage: "—" },
-      { name: "Firecrawl", category: "Scraping", purpose: "Menu + hours scraping", status: "connected", monthly: "$ 49", usage: "62%" },
-      { name: "Apify", category: "Scraping", purpose: "IG / FB scraper actors", status: "connected", monthly: "$ 120", usage: "44%" },
-    ],
-  },
-  {
-    group: "Social & owner data",
-    items: [
-      { name: "Instagram Graph API", category: "Social", purpose: "Follower count, posts, reels", status: "connected", monthly: "—", usage: "Free tier" },
-      { name: "Facebook Graph API", category: "Social", purpose: "Page reviews + events", status: "expired", monthly: "—", usage: "Token expired" },
-      { name: "Apollo.io", category: "B2B", purpose: "Owner email + role", status: "connected", monthly: "$ 99", usage: "57%" },
-      { name: "Hunter.io", category: "B2B", purpose: "Email finder fallback", status: "connected", monthly: "$ 49", usage: "23%" },
-      { name: "Clearbit", category: "B2B", purpose: "Domain → company info", status: "missing", monthly: "—", usage: "—" },
-    ],
-  },
-  {
-    group: "AI agents & reasoning",
-    items: [
-      { name: "OpenAI", category: "LLM", purpose: "Scorer + draft outreach", status: "connected", monthly: "$ 412", usage: "68%" },
-      { name: "Anthropic", category: "LLM", purpose: "Long-context enrichment", status: "connected", monthly: "$ 188", usage: "29%" },
-      { name: "Perplexity", category: "Research", purpose: "Owner background research", status: "connected", monthly: "$ 20", usage: "11%" },
-      { name: "ElevenLabs", category: "Voice", purpose: "Reservation calls (es-MX)", status: "connected", monthly: "$ 99", usage: "84%" },
-    ],
-  },
-  {
-    group: "Outreach & ops",
-    items: [
-      { name: "Twilio (WA + SMS)", category: "Messaging", purpose: "WhatsApp validator + outreach", status: "connected", monthly: "$ 240", usage: "high" },
-      { name: "Twilio Voice", category: "Messaging", purpose: "Outbound AI calls", status: "low_credits", monthly: "$ 60", usage: "97%" },
-      { name: "Resend", category: "Email", purpose: "Transactional + drips", status: "connected", monthly: "$ 35", usage: "47%" },
-      { name: "Slack", category: "Ops", purpose: "Alerts + bot escalations", status: "connected", monthly: "—", usage: "Free" },
-      { name: "Stripe", category: "Payments", purpose: "Cashback payouts + Connect", status: "connected", monthly: "%", usage: "—" },
-    ],
-  },
-];
+function useStack(): { group: string; items: Integration[] }[] {
+  const { data } = useQuery({
+    queryKey: ["integrations"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("integrations").select("*").order("position");
+      if (error) throw error;
+      return data ?? [];
+    },
+    staleTime: 60_000,
+  });
+  const rows = data ?? [];
+  const groups = new Map<string, Integration[]>();
+  for (const r of rows as any[]) {
+    const item: Integration = {
+      name: r.name, category: r.category, purpose: r.purpose,
+      status: r.status as StackStatus, monthly: r.monthly ?? "—",
+      usage: r.usage ?? "—", link: r.link ?? undefined,
+    };
+    if (!groups.has(r.group_name)) groups.set(r.group_name, []);
+    groups.get(r.group_name)!.push(item);
+  }
+  return Array.from(groups, ([group, items]) => ({ group, items }));
+}
 
 function statusMeta(s: StackStatus) {
   switch (s) {
@@ -1491,6 +1418,7 @@ function statusMeta(s: StackStatus) {
 }
 
 function SaasStack() {
+  const STACK = useStack();
   const all = STACK.flatMap((g) => g.items);
   const counts = {
     total: all.length,
