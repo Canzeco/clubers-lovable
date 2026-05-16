@@ -1,12 +1,28 @@
 import { useState } from "react";
 import { ArrowLeft, Camera, Check, CheckCheck, Mic, Paperclip, Plus, Video, Phone } from "lucide-react";
 
+// Payload shape for the chat card/success bubbles. Loose on purpose so
+// new bubble variants can add fields without breaking existing renders.
+type MsgPayload = {
+  name?: string;
+  tier?: string;
+  coupon?: string;
+  bill?: string;
+  tip?: string;
+  total?: string;
+  waiter?: string;
+  story?: boolean;
+  amount?: string;
+  saved?: string;
+  [key: string]: unknown;
+};
+
 type Msg = {
   id: number;
   from: "me" | "bot";
   text?: string;
   type?: "qr" | "card" | "buttons" | "success";
-  payload?: any;
+  payload?: MsgPayload;
   time: string;
 };
 
