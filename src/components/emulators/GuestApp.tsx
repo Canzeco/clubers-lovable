@@ -1403,22 +1403,10 @@ function MesitaVisitors({ venue }: { venue: Venue }) {
                   <img
                     src={u.img}
                     alt={u.name}
-                    className={`h-10 w-10 rounded-full object-cover ring-2 ${
-                      u.tier === "gold"
-                        ? "ring-tier-gold"
-                        : u.tier === "silver"
-                        ? "ring-tier-silver"
-                        : "ring-tier-bronze"
-                    }`}
+                    className={`h-10 w-10 rounded-full object-cover ring-2 ${tierClass("ring", u.tier)}`}
                   />
                   <span
-                    className={`absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px text-[8px] font-bold uppercase text-black ${
-                      u.tier === "gold"
-                        ? "bg-tier-gold"
-                        : u.tier === "silver"
-                        ? "bg-tier-silver"
-                        : "bg-tier-bronze"
-                    }`}
+                    className={`absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px text-[8px] font-bold uppercase text-black ${tierClass("bg", u.tier)}`}
                   >
                     {u.tier}
                   </span>
