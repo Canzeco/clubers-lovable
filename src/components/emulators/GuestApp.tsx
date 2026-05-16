@@ -534,7 +534,7 @@ function ModeSwitcher({
   mode: DiscoverMode;
   setMode: (m: DiscoverMode) => void;
 }) {
-  const modes: { id: DiscoverMode; label: string; Icon: any }[] = [
+  const modes: { id: DiscoverMode; label: string; Icon: IconType }[] = [
     { id: "tinder", label: "Swipe", Icon: Flame },
     { id: "catalog", label: "Catalog", Icon: LayoutGrid },
     { id: "map", label: "Map", Icon: MapIcon },
@@ -1282,9 +1282,9 @@ function ReviewsSection() {
   );
 }
 
-function MesitaVisitors({ venue }: { venue: any }) {
+function MesitaVisitors({ venue }: { venue: Venue }) {
   const allCommunities = Array.from(
-    new Set<string>(venue.visitors.flatMap((v: any) => v.communities ?? [])),
+    new Set<string>((venue.visitors ?? []).flatMap((v: Visitor) => v.communities ?? [])),
   );
   const [filter, setFilter] = useState<string>("all");
   const sorts = [
@@ -1298,7 +1298,7 @@ function MesitaVisitors({ venue }: { venue: any }) {
   const filtered =
     filter === "all"
       ? venue.visitors
-      : venue.visitors.filter((v: any) => (v.communities ?? []).includes(filter));
+      : (venue.visitors ?? []).filter((v: Visitor) => (v.communities ?? []).includes(filter));
   const list = filtered.length ? filtered : venue.visitors;
   return (
     <div>
@@ -1768,7 +1768,7 @@ function ConciergeSection({ venueName }: { venueName: string }) {
 }
 
 function DetailsSection() {
-  const rows: { Icon: any; label: string; val: React.ReactNode }[] = [
+  const rows: { Icon: IconType; label: string; val: React.ReactNode }[] = [
     { Icon: Phone, label: "Contact", val: <a className="text-secondary" href="#">444 714 0346</a> },
     { Icon: Globe, label: "Website", val: <a className="text-secondary" href="#">@casaluminar</a> },
     { Icon: Banknote, label: "Price range", val: "MXN 310 – 500" },
@@ -2097,7 +2097,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
   const todayClose = (() => {
     const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
     const today = days[new Date().getDay()];
-    const row = (v as any).hours?.find?.((h: any) => h.day === today);
+    const row = (v as Venue).hours?.find?.((h: Hours) => h.day === today);
     const h: string = row?.hours ?? "";
     if (!h || h === "Closed") return null;
     const parts = h.split("–").map((s) => s.trim());
