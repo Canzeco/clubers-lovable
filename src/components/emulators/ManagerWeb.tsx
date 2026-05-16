@@ -187,7 +187,7 @@ function Stat({
 }) {
   return (
     <div className="rounded-xl border border-border bg-card-soft p-4">
-      <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+      <p className="eyebrow">
         {label}
       </p>
       <p className="mt-1 font-display text-2xl font-semibold">{value}</p>
@@ -310,7 +310,7 @@ function Place({ unit }: { unit: { name: string; city: string } }) {
         {/* Identity */}
         <div className="col-span-2 space-y-4">
           <div className="rounded-xl border border-border bg-card-soft p-4">
-            <p className="mb-3 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="mb-3 eyebrow">
               Identity
             </p>
             <div className="grid grid-cols-2 gap-3">
@@ -320,7 +320,7 @@ function Place({ unit }: { unit: { name: string; city: string } }) {
               <Field label="Hours" value="Tue–Sun · 5pm – 1am" />
             </div>
             <div className="mt-3">
-              <label className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              <label className="eyebrow">
                 Bio
               </label>
               <div className="mt-1 rounded-lg border border-border bg-input px-3 py-2 text-xs leading-relaxed">
@@ -334,7 +334,7 @@ function Place({ unit }: { unit: { name: string; city: string } }) {
           {/* Photos */}
           <div className="rounded-xl border border-border bg-card-soft p-4">
             <div className="mb-3 flex items-center justify-between">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              <p className="eyebrow">
                 Photos
               </p>
               <button className="text-[10px] text-secondary">
@@ -363,7 +363,7 @@ function Place({ unit }: { unit: { name: string; city: string } }) {
           {/* Menu */}
           <div className="rounded-xl border border-border bg-card-soft p-4">
             <div className="mb-3 flex items-center justify-between">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              <p className="eyebrow">
                 Menu
               </p>
               <button className="text-[10px] text-secondary">+ Add item</button>
@@ -385,7 +385,7 @@ function Place({ unit }: { unit: { name: string; city: string } }) {
         {/* Right column */}
         <div className="space-y-4">
           <div className="rounded-xl border border-border bg-card-soft p-4">
-            <p className="mb-3 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="mb-3 eyebrow">
               Location
             </p>
             <div className="relative aspect-video overflow-hidden rounded-lg bg-gradient-to-br from-peacock/40 to-secondary/30">
@@ -400,7 +400,7 @@ function Place({ unit }: { unit: { name: string; city: string } }) {
           </div>
 
           <div className="rounded-xl border border-border bg-card-soft p-4">
-            <p className="mb-3 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="mb-3 eyebrow">
               Social & links
             </p>
             <SocialRow icon="IG" handle="@casaluminar" />
@@ -411,7 +411,7 @@ function Place({ unit }: { unit: { name: string; city: string } }) {
           </div>
 
           <div className="rounded-xl border border-border bg-card-soft p-4">
-            <p className="mb-3 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="mb-3 eyebrow">
               Ratings
             </p>
             <div className="space-y-1.5 text-xs">
@@ -430,7 +430,7 @@ function Place({ unit }: { unit: { name: string; city: string } }) {
 function Field({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <label className="text-[10px] uppercase tracking-widest text-muted-foreground">
+      <label className="eyebrow">
         {label}
       </label>
       <div className="mt-1 rounded-lg border border-border bg-input px-3 py-2 text-xs">
@@ -558,7 +558,7 @@ function Promos() {
       </div>
 
       <div>
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <p className="mb-2 eyebrow text-[11px] font-semibold">
           First-time visitors
         </p>
         <div className="rounded-xl border border-border bg-card-soft p-4">
@@ -578,7 +578,7 @@ function Promos() {
               {values.Welcome}
             </span>
             <span className="mb-1 text-xl text-secondary">%</span>
-            <span className="mb-2 ml-1 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <span className="mb-2 ml-1 eyebrow">
               cashback
             </span>
           </div>
@@ -613,7 +613,7 @@ function Promos() {
         </div>
       </div>
 
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+      <p className="eyebrow text-[11px] font-semibold">
         Returning visitors · by tier
       </p>
       <div className="grid grid-cols-4 gap-3">
@@ -637,7 +637,7 @@ function Promos() {
                 {values[t.name]}
               </span>
               <span className="mb-1 text-xl text-secondary">%</span>
-              <span className="mb-2 ml-1 text-[10px] uppercase tracking-widest text-muted-foreground">
+              <span className="mb-2 ml-1 eyebrow">
                 cashback
               </span>
             </div>
@@ -699,7 +699,7 @@ function Promos() {
         ))}
       </div>
 
-      <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+      <p className="flex items-center gap-2 eyebrow text-[11px] font-semibold">
         Communities · email-verified audiences
         <span className="rounded-full bg-tier-gold/20 px-2 py-0.5 text-[9px] font-bold text-tier-gold">Coming soon</span>
       </p>
@@ -795,7 +795,7 @@ function Promos() {
         </div>
       </div>
 
-      <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+      <p className="flex items-center gap-2 eyebrow text-[11px] font-semibold">
         Audience filters · soft targeting
         <span className="rounded-full bg-tier-gold/20 px-2 py-0.5 text-[9px] font-bold text-tier-gold">Coming soon</span>
       </p>
@@ -830,7 +830,7 @@ function Promos() {
 
         <div className={`grid gap-3 lg:grid-cols-3 ${audience.on ? "" : "opacity-50 pointer-events-none"}`}>
           <div className="rounded-lg border border-border bg-card p-3">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <p className="mb-2 eyebrow font-semibold">
               Countries
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -858,7 +858,7 @@ function Promos() {
           </div>
 
           <div className="rounded-lg border border-border bg-card p-3">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <p className="mb-2 eyebrow font-semibold">
               Age range
             </p>
             <div className="flex items-end gap-1">
@@ -869,7 +869,7 @@ function Promos() {
             </div>
             <div className="mt-2 space-y-2">
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-muted-foreground">Min</label>
+                <label className="eyebrow">Min</label>
                 <input
                   type="range"
                   min={18}
@@ -882,7 +882,7 @@ function Promos() {
                 />
               </div>
               <div>
-                <label className="text-[10px] uppercase tracking-widest text-muted-foreground">Max</label>
+                <label className="eyebrow">Max</label>
                 <input
                   type="range"
                   min={18}
@@ -898,7 +898,7 @@ function Promos() {
           </div>
 
           <div className="rounded-lg border border-border bg-card p-3">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <p className="mb-2 eyebrow font-semibold">
               Sex
             </p>
             <div className="grid grid-cols-3 gap-1.5">
@@ -1058,21 +1058,21 @@ function Analytics() {
 
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-xl border border-border bg-card-soft p-4">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+          <p className="eyebrow">
             Average ticket
           </p>
           <p className="mt-1 font-display text-xl font-semibold">$642</p>
           <p className="text-[10px] text-emerald-400">+9% vs last 30d</p>
         </div>
         <div className="rounded-xl border border-border bg-card-soft p-4">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+          <p className="eyebrow">
             Repeat rate
           </p>
           <p className="mt-1 font-display text-xl font-semibold">38%</p>
           <p className="text-[10px] text-emerald-400">+6 pts</p>
         </div>
         <div className="rounded-xl border border-border bg-card-soft p-4">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+          <p className="eyebrow">
             ROAS
           </p>
           <p className="mt-1 font-display text-xl font-semibold">7.1×</p>
@@ -1263,7 +1263,7 @@ function Wallet() {
 
       <div className="grid grid-cols-3 gap-3">
         <div className="col-span-1 rounded-2xl border border-border bg-gradient-to-br from-peacock/30 to-secondary/20 p-5">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+          <p className="eyebrow">
             Available balance
           </p>
           <p className="mt-2 font-display text-4xl font-semibold">$24,180</p>
@@ -1297,7 +1297,7 @@ function Wallet() {
 
       {/* Billing & legal */}
       <div className="rounded-xl border border-border bg-card-soft p-4">
-        <p className="mb-3 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+        <p className="mb-3 flex items-center gap-1.5 eyebrow">
           <CreditCard className="h-3 w-3" /> Billing & legal
         </p>
         <div className="grid grid-cols-2 gap-3">
@@ -1502,7 +1502,7 @@ function AccountView() {
       <div className="grid grid-cols-3 gap-4">
         {/* Account */}
         <div className="rounded-xl border border-border bg-card-soft p-4">
-          <p className="mb-3 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <p className="mb-3 flex items-center gap-1.5 eyebrow">
             <Lock className="h-3 w-3" /> Account
           </p>
           <SettingRow label="Email" value="diego@luminar.mx" />
@@ -1513,7 +1513,7 @@ function AccountView() {
 
         {/* Preferences */}
         <div className="rounded-xl border border-border bg-card-soft p-4">
-          <p className="mb-3 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <p className="mb-3 flex items-center gap-1.5 eyebrow">
             <Globe className="h-3 w-3" /> Preferences
           </p>
           <div className="mb-3">
@@ -1558,7 +1558,7 @@ function AccountView() {
 
         {/* Notifications */}
         <div className="rounded-xl border border-border bg-card-soft p-4">
-          <p className="mb-3 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <p className="mb-3 flex items-center gap-1.5 eyebrow">
             <Bell className="h-3 w-3" /> Notifications
           </p>
           {[
@@ -1596,7 +1596,7 @@ function AccountView() {
       {/* Help & FAQ */}
       <div className="rounded-xl border border-border bg-card-soft p-4">
         <div className="mb-3 flex items-center justify-between">
-          <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <p className="flex items-center gap-1.5 eyebrow">
             <LifeBuoy className="h-3 w-3" /> Help & FAQ
           </p>
           <div className="flex gap-2">

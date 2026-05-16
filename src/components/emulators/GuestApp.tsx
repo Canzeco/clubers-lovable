@@ -783,7 +783,7 @@ function VenueDetailSheet({
             </button>
           </div>
           <div className="flex items-center gap-2">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{venue.type}</p>
+            <p className="eyebrow">{venue.type}</p>
             {venue.affiliated && (
               <span
                 className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
@@ -876,7 +876,7 @@ function VenueDetailSheet({
 
           {/* Location mini-map */}
           <section id="vsec-location" className="scroll-mt-16">
-            <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="mb-2 flex items-center justify-between eyebrow">
               <span>Location</span>
               <span className="flex items-center gap-1 text-secondary">
                 <MapPin className="h-3 w-3" /> {venue.distance}
@@ -914,7 +914,7 @@ function VenueDetailSheet({
           {/* Hours & popular times */}
           <section id="vsec-hours" className="scroll-mt-16 space-y-4">
             <div>
-              <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+              <p className="mb-2 flex items-center justify-between eyebrow">
               <span className="flex items-center gap-1.5">
                 <Clock className="h-3 w-3" /> Hours
               </span>
@@ -955,7 +955,7 @@ function VenueDetailSheet({
 
           {/* About — long-form copy, sits below details, above the action bar */}
           <section className="pb-2">
-            <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">The Story</p>
+            <p className="mb-2 eyebrow">The Story</p>
             {venue.about ? (
               <div className="space-y-4">
                 <p className="font-display text-base leading-snug text-foreground">
@@ -1129,7 +1129,7 @@ function SectionLabel({
   action?: React.ReactNode;
 }) {
   return (
-    <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+    <p className="mb-2 flex items-center justify-between eyebrow">
       <span>{children}</span>
       {action ? <span className="normal-case tracking-normal text-secondary">{action}</span> : null}
     </p>
@@ -1341,7 +1341,7 @@ function MenuTabs() {
   return (
     <>
       <div className="mb-2 flex items-center justify-between">
-        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Menu</span>
+        <span className="eyebrow">Menu</span>
         <div className="flex gap-1">
           {([
             { id: "tasting" as const, label: "Tasting" },
@@ -1404,7 +1404,7 @@ function MesitaVisitors({ venue }: { venue: Venue }) {
   const list = (filtered?.length ? filtered : venue.visitors) ?? [];
   return (
     <div>
-      <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
+      <p className="mb-2 flex items-center justify-between eyebrow">
         <span>Mesita Visitors</span>
         <span className="flex items-center gap-1 text-secondary">
           <Flame className="h-3 w-3" /> Top 10
@@ -1576,7 +1576,7 @@ function CommunitiesBlock() {
     <>
       <div className="mt-4 rounded-2xl border border-border bg-card p-4">
         <div className="mb-3 flex items-center justify-between">
-          <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <p className="flex items-center gap-1.5 eyebrow">
             <GraduationCap className="h-3 w-3 text-secondary" /> Communities
           </p>
           <span className="text-[10px] text-muted-foreground">Email-verified</span>
@@ -1658,7 +1658,7 @@ function CommunitiesBlock() {
               >
                 <X className="h-4 w-4" />
               </button>
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              <p className="eyebrow">
                 {pendingId ? "Verify membership" : "Join a community"}
               </p>
               <p className="mt-1 font-display text-xl font-semibold leading-tight">
@@ -2734,7 +2734,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
                     <span className="rounded-full bg-tier-gold px-2.5 py-1 text-[10px] font-bold text-black">GO</span>
                   </button>
 
-                  <p className="mt-4 mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+                  <p className="mt-4 mb-2 eyebrow">
                     or pick a day
                   </p>
                   <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
@@ -2754,7 +2754,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
                     ))}
                   </div>
 
-                  <p className="mt-4 mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+                  <p className="mt-4 mb-2 eyebrow">
                     Time · every 30 min
                   </p>
                   <div className="grid max-h-40 grid-cols-3 gap-1.5 overflow-y-auto scrollbar-hide pr-1">
@@ -2774,7 +2774,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
                   </div>
 
                   <div className="mt-4 flex items-center justify-between">
-                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                    <p className="eyebrow">
                       Party size
                     </p>
                     <div className="flex items-center gap-2">
@@ -2796,7 +2796,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
                     </div>
                   </div>
 
-                  <p className="mt-4 mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+                  <p className="mt-4 mb-2 eyebrow">
                     Preferences <span className="normal-case tracking-normal opacity-60">· optional</span>
                   </p>
                   <div className="flex flex-wrap gap-1.5">
@@ -2854,7 +2854,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
                     )}
                   </p>
                   <div className="mt-4 w-full space-y-2 rounded-2xl border border-border bg-card/60 p-3 text-left">
-                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                    <p className="eyebrow">
                       You'll hear back in ~3 min
                     </p>
                     <div className="flex items-center gap-2 text-xs">
@@ -3940,7 +3940,7 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: Coupon; onClose: () =>
         ) : (
           <>
             <div className="mt-5 rounded-3xl bg-card-soft p-5">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Receipt</p>
+              <p className="eyebrow">Receipt</p>
               <div className="mt-2 space-y-1.5 text-sm">
                 <div className="flex justify-between"><span className="text-muted-foreground">Venue</span><span>{coupon.name}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Date</span><span>{coupon.when}</span></div>
@@ -4031,7 +4031,7 @@ function CouponDetails({ coupon, onClose }: { coupon: Coupon; onClose: () => voi
       {/* SECTION 2 — Cashback amount + QR */}
       <div className="flex items-stretch gap-3 rounded-3xl bg-card-soft p-4">
         <div className="flex flex-1 flex-col justify-center">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Cashback</p>
+          <p className="eyebrow">Cashback</p>
           <p className="font-display text-4xl font-semibold leading-none text-secondary">{coupon.cb}%</p>
           <p className="mt-1 text-[11px] text-muted-foreground">on every visit · up to $1,000 MXN</p>
         </div>
@@ -4052,7 +4052,7 @@ function CouponDetails({ coupon, onClose }: { coupon: Coupon; onClose: () => voi
 
       {/* SECTION 3 — Coupon details */}
       <div className="rounded-3xl bg-card-soft p-5">
-        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Coupon details</p>
+        <p className="eyebrow">Coupon details</p>
         <div className="mt-2 space-y-1.5 text-sm">
           <div className="flex justify-between"><span className="text-muted-foreground">Cap per visit</span><span>$1,000 MXN</span></div>
           {isReservation ? (
@@ -4081,7 +4081,7 @@ function CouponDetails({ coupon, onClose }: { coupon: Coupon; onClose: () => voi
       {requireStory && (
         <div className="rounded-3xl bg-card-soft p-5">
           <div className="flex items-center justify-between">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="eyebrow">
               Story evidence
             </p>
             {storyEvidence ? (
@@ -4167,7 +4167,7 @@ function CouponDetails({ coupon, onClose }: { coupon: Coupon; onClose: () => voi
 
       {/* SECTION 4 — Current steps (vertical) */}
       <div className="rounded-3xl bg-card-soft p-5">
-        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Your progress</p>
+        <p className="eyebrow">Your progress</p>
         <ol className="mt-3 space-y-0">
           {steps.map((s, i) => {
             const done = i < currentStep;
@@ -4282,7 +4282,7 @@ function StripeCheckoutModal({ coupon, onClose }: { coupon: Coupon; onClose: () 
             <CreditCard className="h-4 w-4" />
           </div>
           <div>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Stripe Checkout</p>
+            <p className="eyebrow">Stripe Checkout</p>
             <p className="text-[12px] font-semibold leading-tight">{coupon.name}</p>
           </div>
         </div>
@@ -4302,7 +4302,7 @@ function StripeCheckoutModal({ coupon, onClose }: { coupon: Coupon; onClose: () 
               ${total.toLocaleString()} MXN charged · Receipt sent
             </p>
             <div className="mt-5 w-full rounded-2xl bg-card-soft p-4 text-left">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Cashback credited</p>
+              <p className="eyebrow">Cashback credited</p>
               <p className="mt-1 font-display text-2xl font-semibold text-secondary">
                 +${cashbackEarned.toLocaleString()} MXN
               </p>
@@ -4313,7 +4313,7 @@ function StripeCheckoutModal({ coupon, onClose }: { coupon: Coupon; onClose: () 
           <>
             {/* Amount headline */}
             <div className="rounded-3xl bg-card-soft p-5 text-center">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Total to pay</p>
+              <p className="eyebrow">Total to pay</p>
               <p className="mt-1 font-display text-5xl font-semibold leading-none">
                 ${total.toLocaleString()}
                 <span className="ml-1 text-base font-medium text-muted-foreground">MXN</span>
@@ -4326,7 +4326,7 @@ function StripeCheckoutModal({ coupon, onClose }: { coupon: Coupon; onClose: () 
             {/* Bill */}
             <div className="rounded-3xl bg-card-soft p-5">
               <div className="flex items-baseline justify-between">
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Final bill</p>
+                <p className="eyebrow">Final bill</p>
                 <p className="text-[10px] text-muted-foreground">Sent by waiter</p>
               </div>
               <p className="mt-1 font-display text-3xl font-semibold leading-none">
@@ -4336,7 +4336,7 @@ function StripeCheckoutModal({ coupon, onClose }: { coupon: Coupon; onClose: () 
 
               {/* Tip */}
               <div className="mt-4">
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Tip</p>
+                <p className="eyebrow">Tip</p>
                 <div className="mt-2 flex gap-1.5">
                   {tipOptions.map((p) => (
                     <button
@@ -4382,7 +4382,7 @@ function StripeCheckoutModal({ coupon, onClose }: { coupon: Coupon; onClose: () 
 
             {/* Payment method */}
             <div className="rounded-3xl bg-card-soft p-5">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Pay with</p>
+              <p className="eyebrow">Pay with</p>
               <div className="mt-2 flex items-center justify-between rounded-2xl border border-border bg-background p-3">
                 <div className="flex items-center gap-3">
                   <div className="flex h-8 w-12 items-center justify-center rounded-md bg-foreground text-[10px] font-bold text-background">VISA</div>
@@ -4532,7 +4532,7 @@ function RedeemFlow({ coupon }: { coupon: Coupon }) {
               <Coins className="h-5 w-5" />
             </div>
             <div className="flex-1">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              <p className="eyebrow">
                 Cashback earned
               </p>
               <p className="text-lg font-semibold text-secondary">
@@ -4596,7 +4596,7 @@ function RedeemFlow({ coupon }: { coupon: Coupon }) {
       </div>
 
       <div>
-        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Bill amount</p>
+        <p className="eyebrow">Bill amount</p>
         <div className="mt-1 flex items-center gap-2 rounded-2xl border border-border bg-card-soft px-4 py-3">
           <span className="text-lg font-semibold text-muted-foreground">$</span>
           <input
@@ -4610,7 +4610,7 @@ function RedeemFlow({ coupon }: { coupon: Coupon }) {
       </div>
 
       <div>
-        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Tip</p>
+        <p className="eyebrow">Tip</p>
         <div className="mt-1 grid grid-cols-4 gap-1.5">
           {[10, 15, 20].map((pct) => {
             const v = Math.round(billNum * (pct / 100));
@@ -4640,7 +4640,7 @@ function RedeemFlow({ coupon }: { coupon: Coupon }) {
       </div>
 
       <div>
-        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Waiter name (for the tip)</p>
+        <p className="eyebrow">Waiter name (for the tip)</p>
         <input
           value={waiter}
           onChange={(e) => setWaiter(e.target.value)}
@@ -4754,7 +4754,7 @@ function ProfileView() {
         {/* Spending tracker — total spent on Mesita, drives class upgrades */}
         <div className="mt-4 rounded-2xl border border-border bg-card p-4">
           <div className="flex items-center justify-between">
-            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="flex items-center gap-1.5 eyebrow">
               <TrendingUp className="h-3 w-3 text-secondary" /> Spent on Mesita
             </p>
             <span className="text-[10px] text-muted-foreground">All-time</span>
@@ -4839,7 +4839,7 @@ function ProfileView() {
         {/* Class ladder */}
         <div className="mt-4 rounded-2xl border border-border bg-card p-4">
           <div className="mb-3 flex items-center justify-between">
-            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="flex items-center gap-1.5 eyebrow">
               <Crown className="h-3 w-3 text-tier-gold" /> Class ladder
             </p>
             <span className="text-[10px] text-muted-foreground">Followers or spend</span>
@@ -5332,7 +5332,7 @@ function ShareView() {
           {/* Friends you've treated */}
           <div className="mt-5">
             <div className="mb-2 flex items-end justify-between">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              <p className="eyebrow font-semibold">
                 Friends you've treated
               </p>
               <p className="text-[10px] font-medium text-secondary">
@@ -5642,7 +5642,7 @@ function ShareView() {
             </div>
 
             {/* 8-character code */}
-            <p className="mt-5 mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="mt-5 mb-2 eyebrow">
               Or share the code
             </p>
             <div className="flex items-center gap-2 rounded-2xl border border-border bg-card-soft px-3 py-2.5">
@@ -5745,7 +5745,7 @@ function AddCreditsSheet({
                         Best
                       </span>
                     )}
-                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                    <p className="eyebrow">
                       {p.label}
                     </p>
                     <p className="mt-1 font-display text-xl font-semibold leading-none">
@@ -5767,7 +5767,7 @@ function AddCreditsSheet({
             </div>
 
             {/* Payment method */}
-            <p className="mt-5 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <p className="mt-5 eyebrow">
               Pay with
             </p>
             <div className="mt-2 space-y-2">
