@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { GuestAuthScreen } from "./GuestAuthScreen";
 import {
   Compass,
   Map as MapIcon,
@@ -4802,7 +4804,10 @@ function ProfileView() {
               ))}
             </div>
 
-            <button className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card-soft px-4 py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground">
+            <button
+              onClick={() => { void supabase.auth.signOut(); }}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card-soft px-4 py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+            >
               <LogOut className="h-4 w-4" /> Sign out
             </button>
             <p className="mt-3 text-center text-[10px] text-muted-foreground">Mesita · v2.4.1</p>
@@ -5710,6 +5715,27 @@ function AddCreditsSheet({
 
 export function GuestApp() {
   const [tab, setTab] = useState<Tab>("discover");
+  const [session, setSession] = useState<unknown | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
+      setSession(s);
+    });
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setAuthReady(true);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (!authReady) {
+    return <div className="flex h-full items-center justify-center bg-background" />;
+  }
+
+  if (!session) {
+    return <GuestAuthScreen />;
+  }
 
   return (
     <GuestAppShell tab={tab} setTab={setTab} />
