@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ComponentType, type SVGProps } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { GuestAuthScreen } from "./GuestAuthScreen";
 import { GuestOnboardingScreen } from "./GuestOnboardingScreen";
@@ -70,6 +70,54 @@ import {
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
+
+// Shared loose shapes — kept intentionally permissive so the static
+// emulator data can keep evolving without ceremony. The known fields are
+// documented for autocomplete; the index signature is the escape hatch.
+export type IconType = ComponentType<SVGProps<SVGSVGElement> & { className?: string }>;
+
+export type Hours = { day: string; hours: string };
+
+export interface Venue {
+  name?: string;
+  category?: string;
+  distance?: string;
+  cost?: number;
+  mesita?: number;
+  google?: number;
+  cb?: number;
+  hours?: Hours[];
+  visitors?: Visitor[];
+  // Escape hatch — the static catalog carries many one-off fields.
+  [key: string]: unknown;
+}
+
+export interface Visitor {
+  communities?: string[];
+  [key: string]: unknown;
+}
+
+export interface Coupon {
+  name?: string;
+  cb?: number;
+  color?: string;
+  category?: string;
+  distance?: string;
+  cost?: number;
+  mesita?: number;
+  google?: number;
+  isReservation?: boolean;
+  resStatus?: "confirmed" | "pending" | "cancelled";
+  resWhen?: string;
+  resRequested?: string;
+  resParty?: number;
+  expiresIn?: string;
+  code?: string;
+  firstVisit?: boolean;
+  step?: number;
+  used?: boolean;
+  [key: string]: unknown;
+}
 
 // Community catalog — shared across guest app & manager web. Joining a
 // community requires email-domain verification (e.g. @tec.mx).
