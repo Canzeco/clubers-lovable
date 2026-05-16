@@ -93,8 +93,15 @@ export interface Venue {
 }
 
 export interface Visitor {
+  name?: string;
+  handle?: string;
+  img?: string;
+  tier?: "gold" | "silver" | "bronze";
+  score?: number;
+  comment?: string;
   communities?: string[];
-  [key: string]: unknown;
+  // Escape hatch — visitor records carry many ad-hoc fields.
+  [key: string]: any;
 }
 
 export interface Coupon {
@@ -1299,7 +1306,7 @@ function MesitaVisitors({ venue }: { venue: Venue }) {
     filter === "all"
       ? venue.visitors
       : (venue.visitors ?? []).filter((v: Visitor) => (v.communities ?? []).includes(filter));
-  const list = filtered.length ? filtered : venue.visitors;
+  const list = (filtered?.length ? filtered : venue.visitors) ?? [];
   return (
     <div>
       <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
