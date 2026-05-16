@@ -96,7 +96,7 @@ export interface Visitor {
   name?: string;
   handle?: string;
   img?: string;
-  tier?: "gold" | "silver" | "bronze";
+  tier?: string;
   score?: number;
   comment?: string;
   communities?: string[];
