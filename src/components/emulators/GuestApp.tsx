@@ -72,20 +72,6 @@ export type IconType = ComponentType<SVGProps<SVGSVGElement> & { className?: str
 
 export type Hours = { day: string; hours: string };
 
-export interface Venue {
-  name?: string;
-  category?: string;
-  distance?: string;
-  cost?: number;
-  mesita?: number;
-  google?: number;
-  cb?: number;
-  hours?: Hours[];
-  visitors?: Visitor[];
-  // Escape hatch — the static catalog carries many one-off fields.
-  [key: string]: unknown;
-}
-
 export interface Visitor {
   name?: string;
   handle?: string;
@@ -293,7 +279,8 @@ function UberEatsLogo({ className = "" }: { className?: string }) {
 }
 
 
-const venues = [
+// TYPE-SHAPE SEED ONLY — runtime data is fetched from Supabase via useVenues()
+const _venueSchema = [
   {
     name: "Casa Luminar",
     type: "Rooftop · Mediterranean",
@@ -468,6 +455,35 @@ const venues = [
     ],
   },
 ];
+
+export type Venue = typeof _venueSchema[number];
+
+import { createContext as _createCtx, useContext as _useCtx } from "react";
+import { useQuery as _useQuery } from "@tanstack/react-query";
+
+const VenuesContext = _createCtx<Venue[]>([]);
+export function useVenues(): Venue[] {
+  return _useCtx(VenuesContext);
+}
+
+export function VenuesProvider({ children }: { children: React.ReactNode }) {
+  const { data } = _useQuery({
+    queryKey: ["guest-venues"],
+    queryFn: async (): Promise<Venue[]> => {
+      const { data, error } = await supabase
+        .from("venues")
+        .select("details")
+        .not("details", "is", null);
+      if (error) throw error;
+      return (data ?? [])
+        .map((r) => r.details as unknown as Venue)
+        .filter((v) => v && (v as { name?: string }).name);
+    },
+    staleTime: 60_000,
+  });
+  return <VenuesContext.Provider value={data ?? []}>{children}</VenuesContext.Provider>;
+}
+
 
 function WhySaveFaq() {
   const [open, setOpen] = useState(false);
@@ -737,7 +753,7 @@ function VenueDetailSheet({
   venue,
   onClose,
 }: {
-  venue: typeof venues[number];
+  venue: Venue;
   onClose: () => void;
 }) {
   const [confirm, setConfirm] = useState<null | "save" | "reserve" | "both">(null);
@@ -1912,9 +1928,10 @@ function DetailsSection() {
   );
 }
 
-function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => void }) {
+function CatalogMode({ onSelect }: { onSelect: (v: Venue) => void }) {
+  const venues = useVenues();
   const dollars = (price: string) => price; // already "$$$"
-  const [quick, setQuick] = useState<typeof venues[number] | null>(null);
+  const [quick, setQuick] = useState<Venue | null>(null);
   const [quickDone, setQuickDone] = useState<string | null>(null);
   const [quickBlocked, setQuickBlocked] = useState(false);
   const closeQuick = () => {
@@ -1930,7 +1947,7 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
     setQuickBlocked(true);
     setTimeout(() => setQuickBlocked(false), BLOCKED_TOAST_SHORT_MS);
   };
-  const rows: { title: string; subtitle?: string; items: typeof venues }[] = [
+  const rows: { title: string; subtitle?: string; items: Venue[] }[] = [
     {
       title: "Available now",
       subtitle: "Tables open in the next hour",
@@ -2054,9 +2071,9 @@ function CatalogRow({
 }: {
   title: string;
   subtitle?: string;
-  items: typeof venues;
-  onSelect: (v: typeof venues[number]) => void;
-  onQuickSave: (v: typeof venues[number]) => void;
+  items: Venue[];
+  onSelect: (v: Venue) => void;
+  onQuickSave: (v: Venue) => void;
 }) {
   return (
     <div>
@@ -2082,7 +2099,7 @@ function CatalogRow({
   );
 }
 
-function CatalogCard({ venue: v, onClick, onQuickSave }: { venue: typeof venues[number]; onClick: () => void; onQuickSave: () => void }) {
+function CatalogCard({ venue: v, onClick, onQuickSave }: { venue: Venue; onClick: () => void; onQuickSave: () => void }) {
   return (
     <button
       onClick={onClick}
@@ -2150,12 +2167,13 @@ function CatalogCard({ venue: v, onClick, onQuickSave }: { venue: typeof venues[
   );
 }
 
-function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => void } = {}) {
+function TinderMode({ onSelect }: { onSelect?: (v: Venue) => void } = {}) {
+  const venues = useVenues();
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState<"l" | "r" | null>(null);
-  const [saved, setSaved] = useState<typeof venues[number] | null>(null);
-  const [celebrate, setCelebrate] = useState<{ v: typeof venues[number]; reserve: boolean } | null>(null);
-  const [askReserve, setAskReserve] = useState<typeof venues[number] | null>(null);
+  const [saved, setSaved] = useState<Venue | null>(null);
+  const [celebrate, setCelebrate] = useState<{ v: Venue; reserve: boolean } | null>(null);
+  const [askReserve, setAskReserve] = useState<Venue | null>(null);
   const [streak, setStreak] = useState(0);
   const [savedTotal, setSavedTotal] = useState(0);
   const [step, setStep] = useState<"ask" | "pick" | "done">("ask");
@@ -2186,7 +2204,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
   // Closing time today, from venue hours array if present
   const todayClose = (() => {
     const today = WEEKDAYS[new Date().getDay()];
-    const row = (v as Venue).hours?.find?.((h: Hours) => h.day === today);
+    const row = v.schedule?.find?.((h: Hours) => h.day === today);
     const h: string = row?.hours ?? "";
     if (!h || h === "Closed") return null;
     const parts = h.split("–").map((s) => s.trim());
@@ -2227,7 +2245,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
   };
 
   // Trigger the "coupon saved" celebration burst for the given venue
-  const celebrateSave = (venue: typeof venues[number]) => {
+  const celebrateSave = (venue: Venue) => {
     setStreak((s) => s + 1);
     setSavedTotal((s) => s + 1);
     setCelebrate({ v: venue, reserve: false });
@@ -2983,14 +3001,15 @@ function MapMode() {
   );
 }
 
-function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => void }) {
+function AISearchMode({ onSelect }: { onSelect: (v: Venue) => void }) {
+  const venues = useVenues();
   type Msg =
     | { from: "user"; text: string }
     | {
         from: "ai";
         text: string;
         sources?: string[];
-        picks?: { venue: typeof venues[number]; reason: string }[];
+        picks?: { venue: Venue; reason: string }[];
       };
   const suggestions = [
     "Rooftop with a sunset view",
@@ -3146,7 +3165,7 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
 
 function Discover() {
   const [mode, setMode] = useState<DiscoverMode>("catalog");
-  const [selected, setSelected] = useState<typeof venues[number] | null>(null);
+  const [selected, setSelected] = useState<Venue | null>(null);
   return (
     <div className="relative flex h-full flex-col overflow-hidden">
       <DiscoverHeader />
@@ -5938,7 +5957,9 @@ export function GuestApp() {
   }
 
   return (
-    <GuestAppShell tab={tab} setTab={setTab} />
+    <VenuesProvider>
+      <GuestAppShell tab={tab} setTab={setTab} />
+    </VenuesProvider>
   );
 }
 
