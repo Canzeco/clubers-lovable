@@ -148,6 +148,16 @@ function walkMinutes(distance: string | number | undefined): number | null {
   return Math.max(1, Math.round(km * WALK_MIN_PER_KM));
 }
 
+// How long a "Copied!" pill stays on screen after a copy action.
+const COPIED_FEEDBACK_MS = 1500;
+
+// Flip a boolean setter to true for COPIED_FEEDBACK_MS, then back to false.
+// Standard "copied to clipboard" feedback — keeps the call sites a one-liner.
+function flashCopied(setter: (v: boolean) => void): void {
+  setter(true);
+  setTimeout(() => setter(false), COPIED_FEEDBACK_MS);
+}
+
 // Tier → Tailwind class lookup. Falls back to bronze for unknown tiers so
 // new tiers don't crash the UI; extend by adding entries below.
 const TIER_CLASSES = {
