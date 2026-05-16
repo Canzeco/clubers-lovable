@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ComponentType, type SVGProps } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAppContent } from "@/lib/app-content";
 import { GuestAuthScreen } from "./GuestAuthScreen";
 import { GuestOnboardingScreen } from "./GuestOnboardingScreen";
 import {
@@ -209,7 +210,7 @@ export function tierClass(prop: keyof typeof TIER_CLASSES, tier?: string): strin
 
 // Community catalog — shared across guest app & manager web. Joining a
 // community requires email-domain verification (e.g. @tec.mx).
-const COMMUNITIES: Record<
+const COMMUNITIES_FALLBACK: Record<
   string,
   { id: string; label: string; short: string; emailDomain: string; color: string; city: string }
 > = {
@@ -678,7 +679,7 @@ function ModeSwitcher({
   );
 }
 
-const VENUE_QUICKNAV = [
+const VENUE_QUICKNAV_FALLBACK = [
   { id: "vsec-photos", label: "Media" },
   { id: "vsec-offers", label: "Cashback" },
   { id: "vsec-scores", label: "External" },
@@ -691,11 +692,13 @@ const VENUE_QUICKNAV = [
 ];
 
 function VenueQuickNav() {
+  const venueQuicknav = useAppContent("guest_venue_quicknav", VENUE_QUICKNAV_FALLBACK);
+  const firstQuicknavId = venueQuicknav[0]?.id ?? VENUE_QUICKNAV_FALLBACK[0].id;
   const [active, setActive] = useState(VENUE_QUICKNAV[0].id);
   const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const first = document.getElementById(VENUE_QUICKNAV[0].id);
+    const first = document.getElementById(firstQuicknavId);
     let scroller: HTMLElement | null = first?.parentElement ?? null;
     while (scroller && getComputedStyle(scroller).overflowY !== "auto" && getComputedStyle(scroller).overflowY !== "scroll") {
       scroller = scroller.parentElement;
@@ -703,8 +706,8 @@ function VenueQuickNav() {
     if (!scroller) return;
     const onScroll = () => {
       const top = scroller!.getBoundingClientRect().top + 80;
-      let current = VENUE_QUICKNAV[0].id;
-      for (const s of VENUE_QUICKNAV) {
+      let current = firstQuicknavId;
+      for (const s of venueQuicknav) {
         const el = document.getElementById(s.id);
         if (el && el.getBoundingClientRect().top <= top) current = s.id;
       }
@@ -713,7 +716,7 @@ function VenueQuickNav() {
     onScroll();
     scroller.addEventListener("scroll", onScroll, { passive: true });
     return () => scroller!.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [firstQuicknavId, venueQuicknav]);
 
   useEffect(() => {
     const btn = navRef.current?.querySelector<HTMLButtonElement>(`[data-qid="${active}"]`);
@@ -727,7 +730,7 @@ function VenueQuickNav() {
   return (
     <div className="sticky top-0 z-20 -mx-px border-b border-border/60 bg-card/90 backdrop-blur-xl">
       <div ref={navRef} className="scrollbar-hide flex gap-1 overflow-x-auto px-4 py-2">
-        {VENUE_QUICKNAV.map((s) => {
+        {venueQuicknav.map((s) => {
           const isActive = active === s.id;
           return (
             <button
@@ -1554,6 +1557,11 @@ function ReviewsSectionInner() {
 }
 
 function CommunitiesBlock() {
+  const communitiesList = useAppContent(
+    "guest_communities",
+    Object.values(COMMUNITIES_FALLBACK),
+  );
+  const communities = Object.fromEntries(communitiesList.map((community) => [community.id, community]));
   const [joined, setJoined] = useState<string[]>(["tec"]);
   const [showJoin, setShowJoin] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
@@ -1562,7 +1570,7 @@ function CommunitiesBlock() {
   const [category, setCategory] = useState<"colleges" | "companies" | "sports" | "alumni">("colleges");
   const [query, setQuery] = useState("");
 
-  const remaining = Object.values(COMMUNITIES).filter((c) => !joined.includes(c.id));
+  const remaining = Object.values(communities).filter((c) => !joined.includes(c.id));
   const filtered = remaining.filter((c) => {
     if (!query.trim()) return true;
     const q = query.toLowerCase();
@@ -1599,7 +1607,7 @@ function CommunitiesBlock() {
         </div>
         <div className="space-y-2">
           {joined.map((cid) => {
-            const c = COMMUNITIES[cid];
+            const c = communities[cid];
             if (!c) return null;
             return (
               <div
@@ -1678,7 +1686,7 @@ function CommunitiesBlock() {
                 {pendingId ? "Verify membership" : "Join a community"}
               </p>
               <p className="mt-1 font-display text-xl font-semibold leading-tight">
-                {pendingId ? COMMUNITIES[pendingId].label : "Find your tribe"}
+                {pendingId ? communities[pendingId]?.label : "Find your tribe"}
               </p>
               {!pendingId && (
                 <p className="mt-1 text-[11px] text-muted-foreground">
@@ -1758,18 +1766,18 @@ function CommunitiesBlock() {
                 <div className="flex items-center gap-2 rounded-xl border border-border bg-card-soft p-3">
                   <Mail className="h-4 w-4 text-secondary" />
                   <p className="text-[11px] text-muted-foreground">
-                    Enter your <span className="font-semibold text-foreground">{COMMUNITIES[pendingId].emailDomain}</span> email — we'll send a verification link.
+                    Enter your <span className="font-semibold text-foreground">{communities[pendingId]?.emailDomain}</span> email — we'll send a verification link.
                   </p>
                 </div>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={`yourname${COMMUNITIES[pendingId].emailDomain}`}
+                  placeholder={`yourname${communities[pendingId]?.emailDomain ?? ""}`}
                   className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-secondary focus:outline-none"
                 />
                 <button
-                  disabled={!email.includes(COMMUNITIES[pendingId].emailDomain) || sent}
+                  disabled={!email.includes(communities[pendingId]?.emailDomain ?? "") || sent}
                   onClick={sendVerification}
                   className="flex w-full items-center justify-center gap-2 rounded-full bg-peacock px-4 py-3 text-sm font-semibold text-white shadow-glow disabled:opacity-40"
                 >
