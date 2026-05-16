@@ -54,6 +54,10 @@ import {
   PauseCircle,
 } from "lucide-react";
 
+// Lucide / SVG icon component shape. Permissive on purpose so any icon
+// (lucide, custom SVG wrapper, etc.) can be slotted in without ceremony.
+export type IconType = ComponentType<SVGProps<SVGSVGElement> & { className?: string }>;
+
 type Tab =
   | "pipeline"
   | "stage-sourced"
