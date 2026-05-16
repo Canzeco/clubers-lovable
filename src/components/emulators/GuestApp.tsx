@@ -3077,7 +3077,11 @@ function DiscoverHeader() {
             <Calendar className="h-3 w-3 shrink-0 text-secondary" />
             <div className="min-w-0 flex-1">
               <div className="text-[7.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80 leading-none">When</div>
-              <div className="mt-0.5 truncate font-display text-[12px] font-semibold leading-none text-foreground">{whenDate} · {whenTime}</div>
+              <div className="mt-0.5 truncate font-display text-[12px] font-semibold leading-none text-foreground">
+                <span>{whenDate}</span>
+                <span className="text-muted-foreground/70"> · </span>
+                <span>{whenTime}</span>
+              </div>
             </div>
           </button>
         </div>
