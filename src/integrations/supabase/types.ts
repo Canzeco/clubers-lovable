@@ -140,6 +140,7 @@ export type Database = {
           city: string | null
           country: string | null
           created_at: string
+          details: Json | null
           emoji: string | null
           fit: string | null
           gmv_month: string | null
@@ -167,6 +168,7 @@ export type Database = {
           city?: string | null
           country?: string | null
           created_at?: string
+          details?: Json | null
           emoji?: string | null
           fit?: string | null
           gmv_month?: string | null
@@ -194,6 +196,7 @@ export type Database = {
           city?: string | null
           country?: string | null
           created_at?: string
+          details?: Json | null
           emoji?: string | null
           fit?: string | null
           gmv_month?: string | null
