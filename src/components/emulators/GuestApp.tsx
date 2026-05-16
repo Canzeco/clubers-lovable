@@ -5714,12 +5714,12 @@ function AddCreditsSheet({
   onClose: () => void;
   onConfirm: (amount: number) => void;
 }) {
-  const products = [
+  const products = useAppContent("guest_credit_products", [
     { id: "starter", price: 500, bonus: 0, label: "Starter", note: "One drink at any Mesita venue" },
     { id: "regular", price: 1000, bonus: 50, label: "Regular", note: "+$50 bonus credits" },
     { id: "popular", price: 2000, bonus: 150, label: "Popular", note: "+$150 bonus · best value", featured: true },
     { id: "vip", price: 5000, bonus: 500, label: "VIP", note: "+$500 bonus credits" },
-  ];
+  ]);
   const [productId, setProductId] = useState("regular");
   const [method, setMethod] = useState<"card" | "apple" | "link">("card");
   const [step, setStep] = useState<"choose" | "processing" | "done">("choose");
