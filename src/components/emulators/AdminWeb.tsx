@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ComponentType, type SVGProps } from "react";
 import {
   Building2,
   Search,
