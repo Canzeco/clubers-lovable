@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Loader2, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { COUNTRIES } from "@/lib/countries";
 
 export function GuestOnboardingScreen({ userId, onDone }: { userId: string; onDone: () => void }) {
   const [name, setName] = useState("");
@@ -85,7 +86,19 @@ export function GuestOnboardingScreen({ userId, onDone }: { userId: string; onDo
           </div>
           <div>
             <label className="mb-1 block text-xs font-medium text-muted-foreground">Country</label>
-            <input className={inputCls} value={country} onChange={(e) => setCountry(e.target.value)} maxLength={80} required />
+            <select
+              className={inputCls}
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              required
+            >
+              <option value="">Select your country</option>
+              {COUNTRIES.map((c) => (
+                <option key={c.code} value={c.name}>
+                  {c.flag}  {c.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <label className="mb-1 block text-xs font-medium text-muted-foreground">
