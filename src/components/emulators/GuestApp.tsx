@@ -5712,6 +5712,27 @@ function AddCreditsSheet({
 
 export function GuestApp() {
   const [tab, setTab] = useState<Tab>("discover");
+  const [session, setSession] = useState<unknown | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
+      setSession(s);
+    });
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setAuthReady(true);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (!authReady) {
+    return <div className="flex h-full items-center justify-center bg-background" />;
+  }
+
+  if (!session) {
+    return <GuestAuthScreen />;
+  }
 
   return (
     <GuestAppShell tab={tab} setTab={setTab} />
