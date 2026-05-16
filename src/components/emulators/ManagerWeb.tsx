@@ -11,7 +11,6 @@ import {
   MessageCircle,
   Phone,
   Plus,
-  Search,
   Settings,
   Sparkles,
   Star,
