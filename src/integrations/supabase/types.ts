@@ -145,6 +145,7 @@ export type Database = {
           gmv_month: string | null
           health: number | null
           id: string
+          image_url: string | null
           instagram: string | null
           is_unit: boolean
           last_touch: string | null
@@ -171,6 +172,7 @@ export type Database = {
           gmv_month?: string | null
           health?: number | null
           id?: string
+          image_url?: string | null
           instagram?: string | null
           is_unit?: boolean
           last_touch?: string | null
@@ -197,6 +199,7 @@ export type Database = {
           gmv_month?: string | null
           health?: number | null
           id?: string
+          image_url?: string | null
           instagram?: string | null
           is_unit?: boolean
           last_touch?: string | null
