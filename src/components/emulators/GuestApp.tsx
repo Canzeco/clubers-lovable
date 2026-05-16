@@ -523,7 +523,7 @@ function IGStoryRequirement({ handle = "@casaluminar" }: { venue?: string; handl
           Upload an <span className="font-semibold text-foreground">Instagram story</span> mentioning{" "}
           <span className="font-semibold text-foreground">{handle}</span> during your visit.
         </p>
-        <p className="text-[10px] text-muted-foreground">
+        <p className="caption">
           Required for Silver, Gold &amp; Diamond members with Instagram. No story · no cashback.
         </p>
       </div>
@@ -868,7 +868,7 @@ function VenueDetailSheet({
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold leading-tight">View menu</p>
-                <p className="text-[10px] text-muted-foreground">PDF · 4 pages · updated this week</p>
+                <p className="caption">PDF · 4 pages · updated this week</p>
               </div>
               <ChevronRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-foreground" />
             </button>
@@ -1579,7 +1579,7 @@ function CommunitiesBlock() {
           <p className="flex items-center gap-1.5 eyebrow">
             <GraduationCap className="h-3 w-3 text-secondary" /> Communities
           </p>
-          <span className="text-[10px] text-muted-foreground">Email-verified</span>
+          <span className="caption">Email-verified</span>
         </div>
         <div className="space-y-2">
           {joined.map((cid) => {
@@ -1826,7 +1826,7 @@ function ConciergeSection({ venueName }: { venueName: string }) {
           </div>
           <div className="min-w-0">
             <p className="text-[12px] font-semibold leading-tight">Ask about this venue</p>
-            <p className="text-[10px] text-muted-foreground">Powered by Mesita AI</p>
+            <p className="caption">Powered by Mesita AI</p>
           </div>
         </div>
         <div className="mt-3 space-y-1.5">
@@ -2064,7 +2064,7 @@ function CatalogRow({
         <div>
           <p className="font-display text-base font-semibold leading-tight">{title}</p>
           {subtitle && (
-            <p className="text-[10px] text-muted-foreground">{subtitle}</p>
+            <p className="caption">{subtitle}</p>
           )}
         </div>
       </div>
@@ -4157,7 +4157,7 @@ function CouponDetails({ coupon, onClose }: { coupon: Coupon; onClose: () => voi
               <p className="text-[12px] font-semibold text-foreground">
                 Attach story screenshot
               </p>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="caption">
                 PNG or JPG · must show the {igHandle} tag
               </p>
             </button>
@@ -4327,7 +4327,7 @@ function StripeCheckoutModal({ coupon, onClose }: { coupon: Coupon; onClose: () 
             <div className="rounded-3xl bg-card-soft p-5">
               <div className="flex items-baseline justify-between">
                 <p className="eyebrow">Final bill</p>
-                <p className="text-[10px] text-muted-foreground">Sent by waiter</p>
+                <p className="caption">Sent by waiter</p>
               </div>
               <p className="mt-1 font-display text-3xl font-semibold leading-none">
                 ${billTotal.toLocaleString()}
@@ -4388,7 +4388,7 @@ function StripeCheckoutModal({ coupon, onClose }: { coupon: Coupon; onClose: () 
                   <div className="flex h-8 w-12 items-center justify-center rounded-md bg-foreground text-[10px] font-bold text-background">VISA</div>
                   <div>
                     <p className="text-sm font-medium">•••• 4242</p>
-                    <p className="text-[10px] text-muted-foreground">Default · expires 09/28</p>
+                    <p className="caption">Default · expires 09/28</p>
                   </div>
                 </div>
                 <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -4757,7 +4757,7 @@ function ProfileView() {
             <p className="flex items-center gap-1.5 eyebrow">
               <TrendingUp className="h-3 w-3 text-secondary" /> Spent on Mesita
             </p>
-            <span className="text-[10px] text-muted-foreground">All-time</span>
+            <span className="caption">All-time</span>
           </div>
 
           {/* Big number */}
@@ -4842,7 +4842,7 @@ function ProfileView() {
             <p className="flex items-center gap-1.5 eyebrow">
               <Crown className="h-3 w-3 text-tier-gold" /> Class ladder
             </p>
-            <span className="text-[10px] text-muted-foreground">Followers or spend</span>
+            <span className="caption">Followers or spend</span>
           </div>
           <p className="-mt-1 mb-3 text-[10px] leading-snug text-muted-foreground">
             Your Class is how the city sees you — earned by being <span className="font-semibold text-foreground">popular</span> on Instagram or <span className="font-semibold text-foreground">spending</span> on Mesita. Higher Class · more cashback. Models, talents, elites, chefs &amp; press can also get <span className="font-semibold text-tier-diamond">Diamond</span> by invite or appeal.
@@ -5076,7 +5076,7 @@ function ProfileView() {
                   className="flex w-full items-center justify-between rounded-xl border border-border bg-card-soft px-3 py-2.5 text-left text-sm"
                 >
                   <span>{o}</span>
-                  <span className="text-[10px] text-muted-foreground">Select</span>
+                  <span className="caption">Select</span>
                 </button>
               ))}
             </div>
