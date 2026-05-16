@@ -1182,15 +1182,15 @@ function VenueEditorImpl() {
         </div>
 
         <div className="flex gap-1 border-b border-border text-xs">
-          {[
+          {([
             { id: "profile", l: "Info" },
             { id: "media", l: "Fotos (IG)" },
             { id: "social", l: "Social proof" },
             { id: "ai", l: "AI assist" },
-          ].map((t) => (
+          ] as const).map((t) => (
             <button
               key={t.id}
-              onClick={() => setTab(t.id as any)}
+              onClick={() => setTab(t.id)}
               className={`-mb-px border-b-2 px-3 py-2 ${tab === t.id ? "border-secondary text-foreground" : "border-transparent text-muted-foreground"}`}
             >
               {t.l}
