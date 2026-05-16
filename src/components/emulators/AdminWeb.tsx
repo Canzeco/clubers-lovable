@@ -159,7 +159,7 @@ export function AdminWeb() {
           </div>
           <div>
             <p className="font-display text-base font-semibold leading-none">Mesita HQ</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Operations</p>
+            <p className="eyebrow">Operations</p>
           </div>
         </div>
         <nav className="flex-1 space-y-1 overflow-y-auto">
@@ -185,7 +185,7 @@ export function AdminWeb() {
           })}
         </nav>
         <div className="rounded-xl border border-dashed border-border/60 bg-card/50 p-3">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">MVP build</p>
+          <p className="eyebrow">MVP build</p>
           <p className="mt-1 text-xs text-foreground/80">Provisional console — more tools land as we scale.</p>
         </div>
       </aside>
@@ -241,7 +241,7 @@ function StageView({ stageId }: { stageId: (typeof stages)[number]["id"] }) {
     <div className="space-y-4 p-6">
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Etapa {s.label}</p>
+          <p className="eyebrow text-[11px] font-semibold">Etapa {s.label}</p>
           <h1 className="font-display text-3xl font-semibold">{s.hint}</h1>
           <p className="mt-1 max-w-xl text-sm text-muted-foreground">{descriptions[stageId]}</p>
         </div>
@@ -442,7 +442,7 @@ function Portfolio() {
         </div>
       </div>
       <div className="overflow-hidden rounded-xl border border-border bg-card-soft">
-        <div className="grid grid-cols-12 border-b border-border bg-card px-4 py-2 text-[10px] uppercase tracking-widest text-muted-foreground">
+        <div className="grid grid-cols-12 border-b border-border bg-card px-4 py-2 eyebrow">
           <span className="col-span-3">Venue</span>
           <span className="col-span-2">Ciudad</span>
           <span className="col-span-2">GMV mes</span>
@@ -779,7 +779,7 @@ function PromoCard({
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Confianza</p>
+              <p className="eyebrow">Confianza</p>
               <p
                 className={`font-display text-lg font-semibold ${
                   f.confidence >= 85
@@ -912,7 +912,7 @@ function Stat({
   return (
     <div className="rounded-xl border border-border bg-card-soft p-4">
       <div className="flex items-center justify-between">
-        <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
+        <p className="eyebrow">{label}</p>
         <Icon className="h-3.5 w-3.5 text-muted-foreground" />
       </div>
       <p className="mt-1 font-display text-2xl font-semibold">{value}</p>
@@ -1211,7 +1211,7 @@ function VenueEditorImpl() {
               <Field label="Web" value="bit.ly/3CmHYRh" Icon={Globe} />
             </div>
             <div>
-              <p className="mb-1 text-[10px] uppercase tracking-widest text-muted-foreground">Tags</p>
+              <p className="mb-1 eyebrow">Tags</p>
               <div className="flex flex-wrap gap-1.5">
                 {["familiar", "carnes", "kids friendly", "música en vivo", "estacionamiento", "eventos privados"].map((t) => (
                   <span key={t} className="flex items-center gap-1 rounded-full bg-card-soft px-2 py-1 text-[11px]">
@@ -1228,7 +1228,7 @@ function VenueEditorImpl() {
         {tab === "media" && (
           <div className="space-y-3">
             <div className="rounded-xl border border-border bg-card-soft p-3">
-              <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">Fuente Instagram</p>
+              <p className="mb-2 eyebrow">Fuente Instagram</p>
               <div className="flex items-center gap-2">
                 <div className="flex flex-1 items-center gap-2 rounded-lg border border-border bg-card px-2.5 py-1.5">
                   <Instagram className="h-3.5 w-3.5 text-pink-400" />
@@ -1284,7 +1284,7 @@ function VenueEditorImpl() {
             <ScoreRow Icon={Instagram} label="Instagram" hint="@lacabanadepecos" value="9,866 followers · 1,016 posts" />
             <ScoreRow Icon={Globe} label="Facebook" hint="facebook.com/lacabanadepecos" value="12,340 followers · 4.6 ★" />
             <div className="rounded-xl border border-border bg-card-soft p-3">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Mesita visitors (auto)</p>
+              <p className="eyebrow">Mesita visitors (auto)</p>
               <div className="mt-2 grid grid-cols-3 gap-2 text-center text-xs">
                 <div className="rounded-lg bg-tier-gold/10 p-2"><p className="font-display text-lg text-tier-gold">142</p><p className="text-[10px] text-muted-foreground">Gold · 90d</p></div>
                 <div className="rounded-lg bg-tier-silver/10 p-2"><p className="font-display text-lg text-tier-silver">318</p><p className="text-[10px] text-muted-foreground">Silver</p></div>
@@ -1371,7 +1371,7 @@ function VenueEditorImpl() {
 function Field({ label, value, textarea, Icon }: { label: string; value: string; textarea?: boolean; Icon?: IconType }) {
   return (
     <label className="block">
-      <span className="mb-1 flex items-center gap-1 text-[10px] uppercase tracking-widest text-muted-foreground">
+      <span className="mb-1 flex items-center gap-1 eyebrow">
         {Icon && <Icon className="h-2.5 w-2.5" />} {label}
       </span>
       {textarea ? (
@@ -1542,7 +1542,7 @@ function BotFleet() {
               <span className="text-[10px] font-semibold uppercase tracking-widest">{s.delta}</span>
             </div>
             <p className="mt-1 font-display text-xl">{s.value}</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.label}</p>
+            <p className="eyebrow">{s.label}</p>
           </div>
         ))}
       </div>
@@ -1778,7 +1778,7 @@ function SaasStack() {
               <span className="text-[10px] font-semibold uppercase tracking-widest">{s.delta}</span>
             </div>
             <p className="mt-1 font-display text-xl">{s.value}</p>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.label}</p>
+            <p className="eyebrow">{s.label}</p>
           </div>
         ))}
       </div>
@@ -1789,7 +1789,7 @@ function SaasStack() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{group.group}</p>
           <div className="overflow-hidden rounded-xl border border-border bg-card">
             <table className="w-full text-sm">
-              <thead className="bg-card-soft text-[10px] uppercase tracking-widest text-muted-foreground">
+              <thead className="bg-card-soft eyebrow">
                 <tr>
                   <th className="px-3 py-2 text-left font-semibold">Tool</th>
                   <th className="px-3 py-2 text-left font-semibold">Purpose</th>
@@ -1811,7 +1811,7 @@ function SaasStack() {
                           </div>
                           <div>
                             <p className="text-sm font-semibold leading-none">{i.name}</p>
-                            <p className="mt-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">{i.category}</p>
+                            <p className="mt-0.5 eyebrow">{i.category}</p>
                           </div>
                         </div>
                       </td>
