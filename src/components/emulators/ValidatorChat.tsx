@@ -1,14 +1,39 @@
 import { useState } from "react";
 import { ArrowLeft, Camera, Check, CheckCheck, Mic, Paperclip, Plus, Video, Phone } from "lucide-react";
 
+// Card/success payloads carry restaurant + bill metadata. Buttons payload
+// is just the labels to render. Kept loose so new fields can land without
+// updating every site.
+type CardPayload = {
+  name?: string;
+  tier?: string;
+  coupon?: string;
+  bill?: string;
+  tip?: string;
+  total?: string;
+  waiter?: string;
+  story?: boolean;
+  amount?: string;
+  saved?: string;
+  [key: string]: unknown;
+};
+type ButtonsPayload = readonly string[];
+type MsgPayload = CardPayload | ButtonsPayload;
+
 type Msg = {
   id: number;
   from: "me" | "bot";
   text?: string;
   type?: "qr" | "card" | "buttons" | "success";
-  payload?: any;
+  payload?: MsgPayload;
   time: string;
 };
+
+// Narrowing helpers — keep call sites tidy and avoid `as` casts.
+const asCard = (p: MsgPayload | undefined): CardPayload =>
+  (p && !Array.isArray(p) ? p : {}) as CardPayload;
+const asButtons = (p: MsgPayload | undefined): ButtonsPayload =>
+  (Array.isArray(p) ? p : []) as ButtonsPayload;
 
 const initial: Msg[] = [
   {
@@ -131,7 +156,7 @@ export function ValidatorChat() {
 
               {m.type === "buttons" && (
                 <div className="mt-2 flex flex-col gap-1">
-                  {(m.payload as string[]).map((b) => (
+                  {asButtons(m.payload).map((b) => (
                     <button
                       key={b}
                       onClick={() => handleButton(b)}
@@ -143,37 +168,39 @@ export function ValidatorChat() {
                 </div>
               )}
 
-              {m.type === "card" && (
+              {m.type === "card" && (() => {
+                const p = asCard(m.payload);
+                return (
                 <div className="-mx-1 mt-1 rounded-md bg-black/25 p-2.5">
                   <div className="mb-2 flex items-center justify-between">
                     <div>
                       <p className="text-[13px] font-semibold">
-                        {m.payload.name}
+                        {p.name}
                       </p>
                       <p className="text-[11px] text-white/60">Mesa 12 · 2 pax</p>
                     </div>
                     <span className="rounded-full bg-tier-gold px-2 py-0.5 text-[10px] font-bold text-black">
-                      {m.payload.tier}
+                      {p.tier}
                     </span>
                   </div>
                   <div className="space-y-1 text-[12px] text-white/80">
                     <div className="flex justify-between">
                       <span>Cuenta</span>
-                      <span className="font-semibold">{m.payload.bill}</span>
+                      <span className="font-semibold">{p.bill}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Propina · {m.payload.waiter}</span>
-                      <span>{m.payload.tip}</span>
+                      <span>Propina · {p.waiter}</span>
+                      <span>{p.tip}</span>
                     </div>
                     <div className="flex justify-between border-t border-white/10 pt-1">
                       <span className="font-semibold">Total</span>
-                      <span className="font-semibold text-emerald-300">{m.payload.total}</span>
+                      <span className="font-semibold text-emerald-300">{p.total}</span>
                     </div>
                     <div className="flex justify-between text-[11px] text-white/60">
                       <span>Cupón</span>
-                      <span>{m.payload.coupon}</span>
+                      <span>{p.coupon}</span>
                     </div>
-                    {m.payload.story && (
+                    {p.story && (
                       <div className="flex justify-between text-[11px] text-sky-300">
                         <span>📸 Story IG</span>
                         <span>verificada</span>
@@ -181,21 +208,25 @@ export function ValidatorChat() {
                     )}
                   </div>
                 </div>
-              )}
+                );
+              })()}
 
-              {m.type === "success" && (
+              {m.type === "success" && (() => {
+                const p = asCard(m.payload);
+                return (
                 <div className="-mx-1 mt-1 rounded-md bg-emerald-500/15 p-3 text-center">
                   <div className="mx-auto mb-1 flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500 text-black">
                     <Check className="h-5 w-5" strokeWidth={3} />
                   </div>
                   <p className="text-[13px] font-semibold text-emerald-200">
-                    Validado · {m.payload.amount}
+                    Validado · {p.amount}
                   </p>
                   <p className="text-[11px] text-white/60">
-                    abonado {m.payload.saved}
+                    abonado {p.saved}
                   </p>
                 </div>
-              )}
+                );
+              })()}
 
               <div className="mt-1 flex items-center justify-end gap-1 text-[10px] text-white/50">
                 {m.time}
