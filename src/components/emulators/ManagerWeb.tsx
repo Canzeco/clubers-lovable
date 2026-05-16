@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   BarChart3,
-  Calendar,
   ChevronDown,
   Coins,
   Image as ImageIcon,
@@ -12,7 +11,6 @@ import {
   MessageCircle,
   Phone,
   Plus,
-  Search,
   Settings,
   Sparkles,
   Star,

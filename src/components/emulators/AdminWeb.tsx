@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ComponentType, type SVGProps } from "react";
 import {
   Building2,
   Search,
@@ -17,9 +17,7 @@ import {
   Clock,
   Flame,
   Sparkles,
-  LayoutGrid,
   Map as MapIcon,
-  BarChart3,
   ShieldCheck,
   Crown,
   PencilLine,
@@ -45,7 +43,6 @@ import {
   Workflow,
   Zap,
   Activity,
-  Database,
   Mic,
   Send,
   AlertTriangle,
@@ -53,6 +50,10 @@ import {
   PlayCircle,
   PauseCircle,
 } from "lucide-react";
+
+// Lucide / SVG icon component shape. Permissive on purpose so any icon
+// (lucide, custom SVG wrapper, etc.) can be slotted in without ceremony.
+export type IconType = ComponentType<SVGProps<SVGSVGElement> & { className?: string }>;
 
 type Tab =
   | "pipeline"
@@ -143,7 +144,7 @@ function FitChip({ fit }: { fit: Lead["fit"] }) {
 export function AdminWeb() {
   const [tab, setTab] = useState<Tab>("stage-sourced");
 
-  const mainNav: { id: Tab; label: string; Icon: any; hint: string }[] = [
+  const mainNav: { id: Tab; label: string; Icon: IconType; hint: string }[] = [
     { id: "stage-sourced", label: "Venues Sourcing", Icon: MapPin, hint: "Get the list of venues" },
     { id: "pipeline", label: "Venues Enriching", Icon: Sparkles, hint: "Build rich profiles" },
     { id: "editor", label: "Venues Manager", Icon: Building2, hint: "Boring manual edits" },
@@ -897,7 +898,17 @@ function MetricsImpl() {
   );
 }
 
-function Stat({ label, value, delta, Icon }: any) {
+function Stat({
+  label,
+  value,
+  delta,
+  Icon,
+}: {
+  label: string;
+  value: React.ReactNode;
+  delta: React.ReactNode;
+  Icon: IconType;
+}) {
   return (
     <div className="rounded-xl border border-border bg-card-soft p-4">
       <div className="flex items-center justify-between">
@@ -953,7 +964,7 @@ function TrustTier() {
   );
 }
 function VenueEditor() {
-  return null as any;
+  return null;
 }
 
 type VenueCard = {
@@ -1168,15 +1179,15 @@ function VenueEditorImpl() {
         </div>
 
         <div className="flex gap-1 border-b border-border text-xs">
-          {[
+          {([
             { id: "profile", l: "Info" },
             { id: "media", l: "Fotos (IG)" },
             { id: "social", l: "Social proof" },
             { id: "ai", l: "AI assist" },
-          ].map((t) => (
+          ] as const).map((t) => (
             <button
               key={t.id}
-              onClick={() => setTab(t.id as any)}
+              onClick={() => setTab(t.id)}
               className={`-mb-px border-b-2 px-3 py-2 ${tab === t.id ? "border-secondary text-foreground" : "border-transparent text-muted-foreground"}`}
             >
               {t.l}
@@ -1357,7 +1368,7 @@ function VenueEditorImpl() {
   );
 }
 
-function Field({ label, value, textarea, Icon }: { label: string; value: string; textarea?: boolean; Icon?: any }) {
+function Field({ label, value, textarea, Icon }: { label: string; value: string; textarea?: boolean; Icon?: IconType }) {
   return (
     <label className="block">
       <span className="mb-1 flex items-center gap-1 text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -1372,7 +1383,7 @@ function Field({ label, value, textarea, Icon }: { label: string; value: string;
   );
 }
 
-function ScoreRow({ Icon, label, hint, value, locked }: { Icon: any; label: string; hint: string; value: string; locked?: boolean }) {
+function ScoreRow({ Icon, label, hint, value, locked }: { Icon: IconType; label: string; hint: string; value: string; locked?: boolean }) {
   return (
     <div className="flex items-center gap-3 rounded-xl border border-border bg-card-soft p-3">
       <Icon className="h-4 w-4 text-secondary" />
@@ -1395,7 +1406,7 @@ type BotStatus = "running" | "idle" | "error";
 type BotDef = {
   name: string;
   role: string;
-  Icon: any;
+  Icon: IconType;
   status: BotStatus;
   region: string;
   found: number;

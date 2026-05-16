@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Camera, Check, CheckCheck, Mic, Paperclip, Plus, Send, Video, Phone } from "lucide-react";
+import { ArrowLeft, Camera, Check, CheckCheck, Mic, Paperclip, Plus, Video, Phone } from "lucide-react";
 
 type Msg = {
   id: number;
