@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { ArrowLeft, Camera, Check, CheckCheck, Mic, Paperclip, Plus, Video, Phone } from "lucide-react";
 
-// Payload shape for the chat card/success bubbles. Loose on purpose so
-// new bubble variants can add fields without breaking existing renders.
-type MsgPayload = {
+// Card/success payloads carry restaurant + bill metadata. Buttons payload
+// is just the labels to render. Kept loose so new fields can land without
+// updating every site.
+type CardPayload = {
   name?: string;
   tier?: string;
   coupon?: string;
@@ -16,6 +17,8 @@ type MsgPayload = {
   saved?: string;
   [key: string]: unknown;
 };
+type ButtonsPayload = readonly string[];
+type MsgPayload = CardPayload | ButtonsPayload;
 
 type Msg = {
   id: number;
@@ -25,6 +28,12 @@ type Msg = {
   payload?: MsgPayload;
   time: string;
 };
+
+// Narrowing helpers — keep call sites tidy and avoid `as` casts.
+const asCard = (p: MsgPayload | undefined): CardPayload =>
+  (p && !Array.isArray(p) ? p : {}) as CardPayload;
+const asButtons = (p: MsgPayload | undefined): ButtonsPayload =>
+  (Array.isArray(p) ? p : []) as ButtonsPayload;
 
 const initial: Msg[] = [
   {
