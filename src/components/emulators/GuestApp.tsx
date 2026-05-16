@@ -4808,11 +4808,7 @@ function ProfileView() {
                 }`}
               >
                 <span
-                  className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold text-black ${
-                    r.color === "tier-gold" ? "bg-tier-gold" :
-                    r.color === "tier-silver" ? "bg-tier-silver" :
-                    r.color === "tier-diamond" ? "bg-tier-diamond" : "bg-tier-bronze"
-                  }`}
+                  className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold text-black ${tierClass("bg", r.color)}`}
                 >
                   {r.done ? <Check className="h-3.5 w-3.5" /> : r.t[0]}
                 </span>
