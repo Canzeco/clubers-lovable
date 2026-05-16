@@ -730,20 +730,20 @@ function VenueDetailSheet({
   const isPartner = venue.affiliated;
   const showBlocked = () => {
     setBlockedMsg(true);
-    setTimeout(() => setBlockedMsg(false), 2200);
+    setTimeout(() => setBlockedMsg(false), BLOCKED_TOAST_MS);
   };
 
   const handleSave = () => {
     setConfirm("save");
-    setTimeout(() => onClose(), 1400);
+    setTimeout(() => onClose(), CONFIRM_AUTOCLOSE_SHORT_MS);
   };
   const handleReserve = () => {
     setConfirm("reserve");
-    setTimeout(() => onClose(), 1800);
+    setTimeout(() => onClose(), CONFIRM_AUTOCLOSE_LONG_MS);
   };
   const handleSaveReserve = () => {
     setConfirm("both");
-    setTimeout(() => onClose(), 1800);
+    setTimeout(() => onClose(), CONFIRM_AUTOCLOSE_LONG_MS);
   };
 
   return (
@@ -1908,11 +1908,11 @@ function CatalogMode({ onSelect }: { onSelect: (v: typeof venues[number]) => voi
   };
   const doQuick = (label: string) => {
     setQuickDone(label);
-    setTimeout(closeQuick, 1400);
+    setTimeout(closeQuick, CONFIRM_AUTOCLOSE_SHORT_MS);
   };
   const showQuickBlocked = () => {
     setQuickBlocked(true);
-    setTimeout(() => setQuickBlocked(false), 2000);
+    setTimeout(() => setQuickBlocked(false), BLOCKED_TOAST_SHORT_MS);
   };
   const rows: { title: string; subtitle?: string; items: typeof venues }[] = [
     {
