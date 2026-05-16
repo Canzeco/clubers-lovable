@@ -4804,7 +4804,10 @@ function ProfileView() {
               ))}
             </div>
 
-            <button className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card-soft px-4 py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground">
+            <button
+              onClick={() => { void supabase.auth.signOut(); }}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card-soft px-4 py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+            >
               <LogOut className="h-4 w-4" /> Sign out
             </button>
             <p className="mt-3 text-center text-[10px] text-muted-foreground">Mesita · v2.4.1</p>
