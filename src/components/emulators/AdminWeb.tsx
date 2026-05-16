@@ -1,6 +1,7 @@
 import { useState, type ComponentType, type SVGProps } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAppContent } from "@/lib/app-content";
 import {
   Building2,
   Search,
@@ -444,13 +445,13 @@ function LeadCard({ l, stage }: { l: Lead; stage: string }) {
 }
 
 function Portfolio() {
-  const venues = [
+  const venues = useAppContent("admin_portfolio_venues", [
     { n: "Casa Luminar", c: "CDMX · Roma", gmv: "$84.2k", redeems: 312, plan: "Premium", st: "Activo", health: 96 },
     { n: "Neón Bar", c: "CDMX · Condesa", gmv: "$62.1k", redeems: 248, plan: "Premium", st: "Activo", health: 88 },
     { n: "Loto Café", c: "GDL · Chapalita", gmv: "$22.4k", redeems: 142, plan: "Standard", st: "Activo", health: 71 },
     { n: "Costa Azul", c: "MTY · San Pedro", gmv: "$41.7k", redeems: 168, plan: "Standard", st: "Onboarding", health: 42 },
     { n: "Bocanada", c: "CDMX · Roma", gmv: "$8.1k", redeems: 24, plan: "Trial", st: "Activo", health: 28 },
-  ];
+  ]);
   return (
     <div className="space-y-4 p-6">
       <div className="flex items-center justify-between">
@@ -511,12 +512,12 @@ function Portfolio() {
 }
 
 function DiscoverVenues() {
-  const targets = [
+  const targets = useAppContent("admin_discovery_targets", [
     { n: "Galápago", area: "Roma Sur", ig: "14k", rating: 4.8, signals: ["3 Gold guests visitaron", "12 stories tagged"], fit: 92 },
     { n: "Patio Verde", area: "Condesa", ig: "31k", rating: 4.5, signals: ["Trending IG · 7d", "Ticket alto"], fit: 88 },
     { n: "Tropikalia", area: "Cuauhtémoc", ig: "120k", rating: 4.3, signals: ["High footfall", "Late night"], fit: 84 },
     { n: "El Hueco", area: "Juárez", ig: "9k", rating: 4.6, signals: ["Vibe match · mezcal"], fit: 78 },
-  ];
+  ]);
   return (
     <div className="space-y-4 p-6">
       <div className="flex items-center justify-between">
@@ -677,8 +678,13 @@ const findsSeed: PromoFind[] = [
 ];
 
 function PromoRadar() {
-  const [finds, setFinds] = useState<PromoFind[]>(findsSeed);
+  const seedFinds = useAppContent<PromoFind[]>("admin_promo_finds", findsSeed);
+  const [finds, setFinds] = useState<PromoFind[]>(seedFinds);
   const [filter, setFilter] = useState<"all" | "new" | "approved" | "rejected">("new");
+
+  if (finds !== seedFinds && finds.length === 0) {
+    setFinds(seedFinds);
+  }
 
   const visible = finds.filter((f) => (filter === "all" ? true : f.status === filter));
   const counts = {
