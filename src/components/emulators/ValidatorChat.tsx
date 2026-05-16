@@ -35,18 +35,26 @@ const asCard = (p: MsgPayload | undefined): CardPayload =>
 const asButtons = (p: MsgPayload | undefined): ButtonsPayload =>
   (Array.isArray(p) ? p : []) as ButtonsPayload;
 
+// Simulated "bot is typing" beat before the validator's confirmation arrives.
+// Short enough to feel snappy but long enough to read as a real exchange.
+const BOT_REPLY_DELAY_MS = 700;
+
+// Mock chat timestamps — fixed strings so the demo doesn't drift.
+const TIME_INCOMING = "9:32 PM";
+const TIME_REPLY = "9:33 PM";
+
 const initial: Msg[] = [
   {
     id: 1,
     from: "bot",
     text: "Hola Carlos 👋 Soy Mesita. Aquí te llegan los tickets de tus clientes en *Casa Luminar*.",
-    time: "9:32 PM",
+    time: TIME_INCOMING,
   },
   {
     id: 2,
     from: "bot",
     text: "📩 *Nuevo ticket entrante* — Valentina R. está pidiendo tu validación.",
-    time: "9:32 PM",
+    time: TIME_INCOMING,
   },
   {
     id: 3,
@@ -62,7 +70,7 @@ const initial: Msg[] = [
       waiter: "Carlos",
       story: true,
     },
-    time: "9:32 PM",
+    time: TIME_INCOMING,
   },
   {
     id: 4,
@@ -70,7 +78,7 @@ const initial: Msg[] = [
     text: "¿Confirmas que el ticket es correcto? Se cobrará en Balance de la clienta.",
     type: "buttons",
     payload: ["✅ Confirmar", "❌ Rechazar"],
-    time: "9:32 PM",
+    time: TIME_INCOMING,
   },
 ];
 
@@ -81,7 +89,7 @@ export function ValidatorChat() {
   const push = (m: Omit<Msg, "id" | "time"> & { time?: string }) =>
     setMsgs((prev) => [
       ...prev,
-      { ...m, id: Date.now() + Math.random(), time: m.time ?? "9:33 PM" },
+      { ...m, id: Date.now() + Math.random(), time: m.time ?? TIME_REPLY },
     ]);
 
   const confirm = () => {
@@ -99,7 +107,7 @@ export function ValidatorChat() {
         payload: ["📊 Cierre del turno"],
       });
       setStep("validated");
-    }, 700);
+    }, BOT_REPLY_DELAY_MS);
   };
 
   const handleButton = (label: string) => {
