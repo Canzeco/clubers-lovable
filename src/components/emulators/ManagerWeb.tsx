@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   BarChart3,
   ChevronDown,
@@ -52,6 +53,28 @@ export function ManagerWeb() {
   const [unitId, setUnitId] = useState(UNITS[0].id);
   const [unitOpen, setUnitOpen] = useState(false);
   const unit = UNITS.find((u) => u.id === unitId)!;
+
+  const [session, setSession] = useState<{ user: { id: string; email?: string } } | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
+      setSession(s as { user: { id: string; email?: string } } | null);
+    });
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session as { user: { id: string; email?: string } } | null);
+      setAuthReady(true);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (!authReady) {
+    return <div className="flex h-full items-center justify-center bg-background text-xs text-muted-foreground">Loading…</div>;
+  }
+
+  if (!session) {
+    return <ManagerAuthScreen />;
+  }
 
   const nav: { id: TabId; label: string; Icon: typeof LayoutDashboard }[] = [
     { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
@@ -146,14 +169,14 @@ export function ManagerWeb() {
           className="mt-3 flex w-full items-center gap-2 rounded-xl border border-border bg-card p-2 text-left hover:bg-card-soft"
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-peacock to-secondary text-xs font-bold text-primary-foreground">
-            DS
+            {(session.user.email?.[0] ?? "M").toUpperCase()}
           </div>
           <div className="flex-1 overflow-hidden">
             <p className="truncate text-xs font-semibold leading-none">
-              Diego Salas
+              {session.user.email?.split("@")[0] ?? "Manager"}
             </p>
             <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
-              Owner · diego@luminar.mx
+              Owner · {session.user.email ?? ""}
             </p>
           </div>
           <ChevronDown className="h-3 w-3 -rotate-90 text-muted-foreground" />
@@ -1635,9 +1658,129 @@ function AccountView() {
         </div>
       </div>
 
-      <button className="flex items-center gap-2 rounded-lg border border-border bg-card-soft px-3 py-2 text-xs text-rose-400">
+      <button
+        onClick={() => { void supabase.auth.signOut(); }}
+        className="flex items-center gap-2 rounded-lg border border-border bg-card-soft px-3 py-2 text-xs text-rose-400 hover:bg-card"
+      >
         <LogOut className="h-3.5 w-3.5" /> Sign out
       </button>
+    </div>
+  );
+}
+
+/* ============== AUTH SCREEN ============== */
+
+function ManagerAuthScreen() {
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [venueName, setVenueName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setBusy(true);
+    try {
+      if (mode === "signup") {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/manager`,
+            data: { venue_name: venueName },
+          },
+        });
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="flex h-full items-center justify-center bg-background p-6">
+      <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-elev">
+        <div className="mb-5">
+          <p className="eyebrow text-secondary">Mesita · Manager</p>
+          <h1 className="mt-1 font-display text-2xl font-semibold">
+            {mode === "login" ? "Sign in to your venue" : "Create your venue account"}
+          </h1>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {mode === "login"
+              ? "Manage promos, cashback, and revenue from one place."
+              : "Start running cashback campaigns in minutes."}
+          </p>
+        </div>
+
+        <form onSubmit={submit} className="space-y-3">
+          {mode === "signup" && (
+            <div>
+              <label className="text-[11px] uppercase tracking-widest text-muted-foreground">Venue name</label>
+              <input
+                value={venueName}
+                onChange={(e) => setVenueName(e.target.value)}
+                required
+                placeholder="Casa Luminar"
+                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-secondary"
+              />
+            </div>
+          )}
+          <div>
+            <label className="text-[11px] uppercase tracking-widest text-muted-foreground">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="you@venue.com"
+              className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-secondary"
+            />
+          </div>
+          <div>
+            <label className="text-[11px] uppercase tracking-widest text-muted-foreground">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              placeholder="••••••••"
+              className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-secondary"
+            />
+          </div>
+
+          {error && (
+            <p className="rounded-md bg-rose-500/10 px-2 py-1.5 text-[11px] text-rose-400">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={busy}
+            className="mt-2 w-full rounded-lg bg-gradient-to-r from-peacock to-secondary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow disabled:opacity-60"
+          >
+            {busy ? "Please wait…" : mode === "login" ? "Sign in" : "Create account"}
+          </button>
+        </form>
+
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          {mode === "login" ? "New to Mesita?" : "Already have an account?"}{" "}
+          <button
+            onClick={() => { setError(null); setMode(mode === "login" ? "signup" : "login"); }}
+            className="font-semibold text-secondary hover:underline"
+          >
+            {mode === "login" ? "Create venue account" : "Sign in"}
+          </button>
+        </p>
+      </div>
     </div>
   );
 }
