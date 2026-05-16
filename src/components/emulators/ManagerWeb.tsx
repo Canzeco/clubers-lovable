@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import {
   BarChart3,
   ChevronDown,
@@ -42,17 +43,37 @@ type TabId =
   | "team"
   | "account";
 
-const UNITS = [
-  { id: "luminar", name: "Casa Luminar", city: "CDMX · Roma Nte.", emoji: "🦚" },
-  { id: "loto", name: "Loto Café", city: "CDMX · Condesa", emoji: "🌿" },
-  { id: "mar", name: "Mar Verde", city: "Tulum · Centro", emoji: "🌊" },
-];
+type Unit = { id: string; name: string; city: string; emoji: string };
+
+function useUnits() {
+  return useQuery<Unit[]>({
+    queryKey: ["venues", "units"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("venues")
+        .select("id, slug, name, city, area, emoji")
+        .eq("is_unit", true)
+        .order("position", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map((v) => ({
+        id: v.slug ?? v.id,
+        name: v.name,
+        city: `${v.city ?? ""}${v.area ? ` · ${v.area}` : ""}`.trim(),
+        emoji: v.emoji ?? "🍽️",
+      }));
+    },
+  });
+}
 
 export function ManagerWeb() {
   const [tab, setTab] = useState<TabId>("dashboard");
-  const [unitId, setUnitId] = useState(UNITS[0].id);
+  const [unitId, setUnitId] = useState<string | null>(null);
   const [unitOpen, setUnitOpen] = useState(false);
-  const unit = UNITS.find((u) => u.id === unitId)!;
+  const { data: units = [], isLoading: unitsLoading } = useUnits();
+  useEffect(() => {
+    if (!unitId && units.length > 0) setUnitId(units[0].id);
+  }, [unitId, units]);
+  const unit = units.find((u) => u.id === unitId) ?? units[0];
 
   const [session, setSession] = useState<{ user: { id: string; email?: string } } | null>(null);
   const [authReady, setAuthReady] = useState(false);
@@ -74,6 +95,14 @@ export function ManagerWeb() {
 
   if (!session) {
     return <ManagerAuthScreen />;
+  }
+
+  if (unitsLoading || !unit) {
+    return (
+      <div className="flex h-full items-center justify-center bg-background text-xs text-muted-foreground">
+        Loading venues…
+      </div>
+    );
   }
 
   const nav: { id: TabId; label: string; Icon: typeof LayoutDashboard }[] = [
@@ -110,7 +139,7 @@ export function ManagerWeb() {
           </button>
           {unitOpen && (
             <div className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-xl border border-border bg-card shadow-elev">
-              {UNITS.map((u) => (
+              {units.map((u) => (
                 <button
                   key={u.id}
                   onClick={() => {
