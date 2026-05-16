@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import {
   BarChart3,
   ChevronDown,
@@ -42,17 +43,37 @@ type TabId =
   | "team"
   | "account";
 
-const UNITS = [
-  { id: "luminar", name: "Casa Luminar", city: "CDMX · Roma Nte.", emoji: "🦚" },
-  { id: "loto", name: "Loto Café", city: "CDMX · Condesa", emoji: "🌿" },
-  { id: "mar", name: "Mar Verde", city: "Tulum · Centro", emoji: "🌊" },
-];
+type Unit = { id: string; name: string; city: string; emoji: string };
+
+function useUnits() {
+  return useQuery<Unit[]>({
+    queryKey: ["venues", "units"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("venues")
+        .select("id, slug, name, city, area, emoji")
+        .eq("is_unit", true)
+        .order("position", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map((v) => ({
+        id: v.slug ?? v.id,
+        name: v.name,
+        city: `${v.city ?? ""}${v.area ? ` · ${v.area}` : ""}`.trim(),
+        emoji: v.emoji ?? "🍽️",
+      }));
+    },
+  });
+}
 
 export function ManagerWeb() {
   const [tab, setTab] = useState<TabId>("dashboard");
-  const [unitId, setUnitId] = useState(UNITS[0].id);
+  const [unitId, setUnitId] = useState<string | null>(null);
   const [unitOpen, setUnitOpen] = useState(false);
-  const unit = UNITS.find((u) => u.id === unitId)!;
+  const { data: units = [], isLoading: unitsLoading } = useUnits();
+  useEffect(() => {
+    if (!unitId && units.length > 0) setUnitId(units[0].id);
+  }, [unitId, units]);
+  const unit = units.find((u) => u.id === unitId) ?? units[0];
 
   const [session, setSession] = useState<{ user: { id: string; email?: string } } | null>(null);
   const [authReady, setAuthReady] = useState(false);
@@ -74,6 +95,14 @@ export function ManagerWeb() {
 
   if (!session) {
     return <ManagerAuthScreen />;
+  }
+
+  if (unitsLoading || !unit) {
+    return (
+      <div className="flex h-full items-center justify-center bg-background text-xs text-muted-foreground">
+        Loading venues…
+      </div>
+    );
   }
 
   const nav: { id: TabId; label: string; Icon: typeof LayoutDashboard }[] = [
@@ -110,7 +139,7 @@ export function ManagerWeb() {
           </button>
           {unitOpen && (
             <div className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-xl border border-border bg-card shadow-elev">
-              {UNITS.map((u) => (
+              {units.map((u) => (
                 <button
                   key={u.id}
                   onClick={() => {
@@ -1458,32 +1487,17 @@ function AccountView() {
   });
   const [lang, setLang] = useState("EN");
   const [currency, setCurrency] = useState("MXN");
-  const faqs = [
-    {
-      q: "How does Mesita cashback work?",
-      a: "Guests earn a % of their bill back as Mesita credit. Credits always apply automatically on their next visit at any Mesita venue.",
+  const { data: faqs = [] } = useQuery({
+    queryKey: ["faqs"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("faqs")
+        .select("question, answer, position")
+        .order("position", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map((f) => ({ q: f.question, a: f.answer }));
     },
-    {
-      q: "When do I receive payouts?",
-      a: "Payouts run weekly, every Monday. Funds settle 1–2 business days later in your registered bank account.",
-    },
-    {
-      q: "What is the Mesita fee?",
-      a: "Mesita charges $20 MXN per coupon redeemed — you only pay for guests who actually show up. No setup fees, no monthly fees, no minimums.",
-    },
-    {
-      q: "Can a guest abuse cashback?",
-      a: "No — cashback is always capped at $1,000 MXN per visit, and validators approve each redemption from WhatsApp.",
-    },
-    {
-      q: "How do I add another unit?",
-      a: "Open the unit switcher in the sidebar and tap “Add new unit”. Each unit has its own promos, team, and wallet.",
-    },
-    {
-      q: "Who can change cashback %?",
-      a: "Only members with the Owner or Manager role. Marketing role is read-only on Wallet.",
-    },
-  ];
+  });
   const [open, setOpen] = useState<number | null>(0);
   return (
     <div className="space-y-5 p-6">

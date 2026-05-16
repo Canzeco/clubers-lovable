@@ -1,88 +1,66 @@
 ## Goal
 
-Make Web-Listed venues sourcing functional in AdminWeb, backed by a real database. Mesita team logs in, runs a sourcing job for a city, and the catalog fills with auto-enriched venue profiles pulled from Google Places + Firecrawl + AI.
+No hardcoded business data in the client. Every list (venues, promos, units, sourcing pipeline, dashboard stats, etc.) is stored in Supabase and read at runtime, even when the rows are seed/fake data for the demo.
 
-## Scope (v1)
+## Scope
 
-- Backend: Lovable Cloud (Supabase) — `venues`, `cities`, `sourcing_jobs`, `user_roles` tables with RLS.
-- Auth: email/password for Mesita admins, gated by an `admin` role.
-- AdminWeb venues section becomes functional: list, filter by city/status/type, view detail, edit, delete, manual add.
-- Sourcing pipeline: pick a city → Google Places nearby search seeds rows as `web_listed` → background enrichment via Firecrawl + Lovable AI fills socials, vibe tags, hours, photos, mentions.
-- Sourcing jobs visible in admin with status (queued / running / done / failed), counts, and per-venue logs.
-- GuestApp / ManagerWeb stay on mock data for now.
+Three emulators currently ship inline arrays:
 
-## Stack pieces
+- `ManagerWeb.tsx` — `UNITS`, dashboard stats, promos, analytics, wallet, team, FAQs.
+- `AdminWeb.tsx` — sourcing stages, pipeline venues, bots, stack, portfolio, discover, promos, metrics, trust signals.
+- `GuestApp.tsx` — discover venues, coupons, reservations, friends, transactions.
 
-- Lovable Cloud for DB, auth, and storage.
-- Firecrawl connector (search + scrape) for venue websites, IG/FB/TikTok pages, press, Reddit threads.
-- Google Places API (Places API New) — requires `GOOGLE_PLACES_API_KEY` secret from you.
-- Lovable AI Gateway (`google/gemini-2.5-flash`) to turn raw scraped content into a structured venue profile.
+All of it goes into Supabase.
 
-## Schema
+## Tables (new, all public-readable for the demo, write-gated)
 
 ```text
-cities
-  id uuid pk, name text, country text, lat numeric, lng numeric,
-  is_live boolean default false, created_at
-
-venues
-  id uuid pk
-  city_id uuid fk → cities
-  name text, slug text unique
-  type text  -- restaurant | cafe | bar | nightlife | other
-  status text  -- web_listed | verified_partner
-  google_place_id text unique
-  address text, lat numeric, lng numeric, neighborhood text
-  phone text, website text
-  instagram text, facebook text, tiktok text
-  cuisine text[], price_tier int, vibe_tags text[]
-  hours jsonb, photos text[], cover_image text
-  rating_google numeric, rating_count int
-  mentions jsonb  -- press / reddit / blogs
-  enrichment jsonb  -- raw signals, last sources, scores
-  enriched_at timestamptz, created_at, updated_at
-
-sourcing_jobs
-  id uuid pk, city_id uuid fk, kind text, status text,
-  stats jsonb  -- {seeded, enriched, failed}
-  error text, created_by uuid, created_at, finished_at
-
-user_roles  (separate table per security rule)
-  id uuid pk, user_id uuid fk → auth.users, role app_role
+venues          one row per place (admin + guest + manager all read this)
+venue_units     manager-side units (the dropdown in ManagerWeb)
+promos          cashback campaigns (manager + guest)
+coupons         per-user coupons (guest)
+reservations    guest reservations
+pipeline_stages admin sourcing pipeline columns
+pipeline_items  rows inside each stage
+bots            admin bots tab
+stack_services  admin stack tab
+metrics_kpis    admin metrics + manager dashboard stats
+trust_flags     admin trust & safety
+faqs            manager help center
 ```
 
-RLS: only users with `has_role(auth.uid(), 'admin')` can read/write `venues`, `cities`, `sourcing_jobs`. `user_roles` self-readable; admin-only writable.
+Each table: `id uuid pk`, domain columns, `created_at`. RLS on; SELECT open to `anon`+`authenticated` for the demo, INSERT/UPDATE/DELETE only for users with the `admin` role (via `user_roles` + `has_role`).
 
-## Server functions (TanStack `createServerFn`)
+`user_roles` + `app_role` enum + `has_role()` SECURITY DEFINER function go in this migration too (per the user-roles rule). Admin role gets seeded manually later via the SQL editor; not part of this pass.
 
-- `listVenues({ cityId?, status?, type?, q?, page })` — admin-gated.
-- `getVenue({ id })`, `updateVenue({ id, patch })`, `deleteVenue({ id })`, `createVenue(...)`.
-- `listCities()`, `createCity({ name, country, lat, lng })`.
-- `runSourcingJob({ cityId, radiusMeters, types })` — creates job row, calls Google Places nearby search via REST, upserts venues with status `web_listed`, then kicks enrichment loop (sequential, capped) using Firecrawl + Lovable AI; updates `stats` as it goes.
-- `enrichVenue({ id })` — manual re-enrich for a single venue.
-- `listSourcingJobs()` / `getSourcingJob({ id })`.
+## Seed
 
-All gated by `requireSupabaseAuth` + admin role check inside handler.
+The migration seeds every table from the current hardcoded arrays so the UI looks identical on first load. No client-side fallback arrays remain.
 
-## AdminWeb UI
+## Server access
 
-- New `/admin/login` route (email/password); protected layout for the rest of admin.
-- Replace existing static "Venues" tab in `AdminWeb.tsx` with:
-  - city selector + filters + search
-  - paginated venues table (name, status, type, IG, rating, last enriched)
-  - row → venue detail drawer with all enriched fields, edit + re-enrich buttons
-  - "Source venues" button → modal to pick city + radius → fires `runSourcingJob`
-  - Sourcing jobs panel showing recent jobs and live progress
+- Public reads use the browser supabase client directly (RLS-open SELECT). Simple, no server fn needed.
+- Admin writes (later) will go through `createServerFn` + `requireSupabaseAuth` + admin role check.
 
-## Secrets needed
+## Client changes
 
-- Lovable Cloud — enabled by me.
-- Firecrawl — connected via connector picker.
-- `GOOGLE_PLACES_API_KEY` — added via secrets prompt; you create it in Google Cloud Console (enable "Places API (New)").
+For each emulator:
 
-## Out of scope (next iterations)
+1. Replace inline `const UNITS = [...]` / `const stages = [...]` / etc. with a `useQuery` (react-query) hook that calls `supabase.from('<table>').select()`.
+2. Render skeletons while loading.
+3. Delete every hardcoded array and helper that fed those arrays.
 
-- Verified Partner conversion flow + ManagerWeb rewiring.
-- GuestApp reading real venues.
-- Cron-based recurring re-enrichment.
-- Per-source quality scoring / dedupe across sources beyond `google_place_id`.
+The previously-added `venue_create` button in AdminWeb stays as a no-op for now; wiring it to an insert is a follow-up.
+
+## What I'm doing now
+
+1. Write one big migration: tables + RLS + `user_roles` + `has_role` + seeds.
+2. After you approve, rewrite `ManagerWeb`, `AdminWeb`, and `GuestApp` to read from Supabase using react-query + the browser client.
+3. Show skeletons during load and an inline error state on failure.
+
+## Out of scope (next round)
+
+- Admin auth gate + role assignment UI.
+- Mutations (create/edit/delete venues, promos, etc.) — only reads in this pass.
+- Real sourcing pipeline (Firecrawl / Places) — separate task.
+- Per-user guest coupons writing back to DB on redeem.

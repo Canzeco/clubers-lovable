@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      faqs: {
+        Row: {
+          answer: string
+          created_at: string
+          id: string
+          position: number
+          question: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string
+          id?: string
+          position?: number
+          question: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          id?: string
+          position?: number
+          question?: string
+        }
+        Relationships: []
+      }
+      pipeline_stages: {
+        Row: {
+          color: string | null
+          count: number
+          created_at: string
+          hint: string | null
+          id: string
+          label: string
+          position: number
+          stage_id: string
+        }
+        Insert: {
+          color?: string | null
+          count?: number
+          created_at?: string
+          hint?: string | null
+          id?: string
+          label: string
+          position?: number
+          stage_id: string
+        }
+        Update: {
+          color?: string | null
+          count?: number
+          created_at?: string
+          hint?: string | null
+          id?: string
+          label?: string
+          position?: number
+          stage_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age: number | null
@@ -56,15 +113,123 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      venues: {
+        Row: {
+          area: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          emoji: string | null
+          fit: string | null
+          gmv_month: string | null
+          health: number | null
+          id: string
+          instagram: string | null
+          is_unit: boolean
+          last_touch: string | null
+          name: string
+          owner: string | null
+          plan: string | null
+          position: number | null
+          rating: number | null
+          redeems: number | null
+          signals: string[] | null
+          slug: string | null
+          stage: string | null
+          status: string | null
+          ticket: string | null
+          type: string | null
+        }
+        Insert: {
+          area?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          emoji?: string | null
+          fit?: string | null
+          gmv_month?: string | null
+          health?: number | null
+          id?: string
+          instagram?: string | null
+          is_unit?: boolean
+          last_touch?: string | null
+          name: string
+          owner?: string | null
+          plan?: string | null
+          position?: number | null
+          rating?: number | null
+          redeems?: number | null
+          signals?: string[] | null
+          slug?: string | null
+          stage?: string | null
+          status?: string | null
+          ticket?: string | null
+          type?: string | null
+        }
+        Update: {
+          area?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          emoji?: string | null
+          fit?: string | null
+          gmv_month?: string | null
+          health?: number | null
+          id?: string
+          instagram?: string | null
+          is_unit?: boolean
+          last_touch?: string | null
+          name?: string
+          owner?: string | null
+          plan?: string | null
+          position?: number | null
+          rating?: number | null
+          redeems?: number | null
+          signals?: string[] | null
+          slug?: string | null
+          stage?: string | null
+          status?: string | null
+          ticket?: string | null
+          type?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -191,6 +356,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
