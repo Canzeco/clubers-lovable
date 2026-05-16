@@ -3513,7 +3513,21 @@ function CouponTicket({
                 </div>
               </>
             ) : (
-              <div className="relative z-[1] flex flex-1 items-center justify-center px-1 py-2" />
+              <>
+                <div className="relative z-[1] flex flex-1 items-center justify-center border-b border-current/20 px-1 py-2">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-background/95 text-foreground/70 shadow-md ring-1 ring-black/5">
+                    <Calendar className="h-4 w-4" strokeWidth={2.25} />
+                  </span>
+                </div>
+                <div className="relative z-[1] flex flex-1 flex-col items-center justify-center px-1 py-2">
+                  <p className="font-display text-[14px] font-bold leading-none tracking-tight">
+                    Booked
+                  </p>
+                  <p className="mt-1 text-[6px] font-black uppercase tracking-[0.18em] opacity-90">
+                    no cashback
+                  </p>
+                </div>
+              </>
             )}
           </div>
         </div>
