@@ -1487,32 +1487,17 @@ function AccountView() {
   });
   const [lang, setLang] = useState("EN");
   const [currency, setCurrency] = useState("MXN");
-  const faqs = [
-    {
-      q: "How does Mesita cashback work?",
-      a: "Guests earn a % of their bill back as Mesita credit. Credits always apply automatically on their next visit at any Mesita venue.",
+  const { data: faqs = [] } = useQuery({
+    queryKey: ["faqs"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("faqs")
+        .select("question, answer, position")
+        .order("position", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map((f) => ({ q: f.question, a: f.answer }));
     },
-    {
-      q: "When do I receive payouts?",
-      a: "Payouts run weekly, every Monday. Funds settle 1–2 business days later in your registered bank account.",
-    },
-    {
-      q: "What is the Mesita fee?",
-      a: "Mesita charges $20 MXN per coupon redeemed — you only pay for guests who actually show up. No setup fees, no monthly fees, no minimums.",
-    },
-    {
-      q: "Can a guest abuse cashback?",
-      a: "No — cashback is always capped at $1,000 MXN per visit, and validators approve each redemption from WhatsApp.",
-    },
-    {
-      q: "How do I add another unit?",
-      a: "Open the unit switcher in the sidebar and tap “Add new unit”. Each unit has its own promos, team, and wallet.",
-    },
-    {
-      q: "Who can change cashback %?",
-      a: "Only members with the Owner or Manager role. Marketing role is read-only on Wallet.",
-    },
-  ];
+  });
   const [open, setOpen] = useState<number | null>(0);
   return (
     <div className="space-y-5 p-6">
