@@ -127,6 +127,26 @@ export interface Coupon {
   [key: string]: any;
 }
 
+// Short weekday labels indexed by Date.getDay() — used to match Hours rows.
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
+
+// Default cover photo when a coupon/venue doesn't map to a known image.
+const DEFAULT_VENUE_PHOTO =
+  "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80";
+
+// Tier → Tailwind class lookup. Falls back to bronze for unknown tiers so
+// new tiers don't crash the UI; callers can extend the map as needed.
+const TIER_CLASSES = {
+  ring: { gold: "ring-tier-gold", silver: "ring-tier-silver", bronze: "ring-tier-bronze" },
+  bg: { gold: "bg-tier-gold", silver: "bg-tier-silver", bronze: "bg-tier-bronze" },
+  text: { gold: "text-tier-gold", silver: "text-tier-silver", bronze: "text-tier-bronze" },
+} as const;
+
+export function tierClass(prop: keyof typeof TIER_CLASSES, tier?: string): string {
+  const map = TIER_CLASSES[prop];
+  return (map as Record<string, string>)[tier ?? ""] ?? map.bronze;
+}
+
 // Community catalog — shared across guest app & manager web. Joining a
 // community requires email-domain verification (e.g. @tec.mx).
 const COMMUNITIES: Record<
