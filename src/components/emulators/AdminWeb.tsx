@@ -991,29 +991,19 @@ const VENUE_CARDS: VenueCard[] = [
 
 function Venues() {
   const [selected, setSelected] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"all" | "partner" | "admin" | "inactive">("all");
-  const [cards, setCards] = useState(VENUE_CARDS);
-
-  const visible = cards.filter((v) =>
-    filter === "all" ? true : filter === "inactive" ? !v.active : v.managed === filter,
-  );
-
-  const toggleActive = (name: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCards((cs) => cs.map((c) => (c.name === name ? { ...c, active: !c.active } : c)));
-  };
+  const [cards] = useState(VENUE_CARDS);
 
   if (selected) {
     return (
-      <div>
-        <div className="flex items-center gap-3 px-6 pt-4">
-          <button
+      <div className="p-6">
+        <div className="flex items-center gap-3">
+          <span
             onClick={() => setSelected(null)}
-            className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground"
+            className="cursor-pointer text-xs text-muted-foreground hover:text-foreground"
           >
-            ← Volver al catálogo
-          </button>
-          <p className="text-xs text-muted-foreground">Editando · <span className="font-semibold text-foreground">{selected}</span></p>
+            ← Back
+          </span>
+          <p className="text-sm font-medium">{selected}</p>
         </div>
         <VenueEditorImpl />
       </div>
@@ -1022,53 +1012,19 @@ function Venues() {
 
   return (
     <div className="p-6">
-      <div className="mb-4 flex items-end justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-semibold">Catálogo de venues</h1>
-          <p className="text-xs text-muted-foreground">
-            Super-admin · editar cualquier venue, partner o no · activar / desactivar en la plataforma
-          </p>
-        </div>
-        <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-secondary" /> Partner-managed</span>
-          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-accent" /> Admin-managed</span>
-        </div>
-      </div>
-
-      <div className="mb-4 flex flex-wrap gap-1.5 text-xs">
-        {([
-          ["all", `Todos · ${cards.length}`],
-          ["partner", `Partner · ${cards.filter((c) => c.managed === "partner").length}`],
-          ["admin", `Admin · ${cards.filter((c) => c.managed === "admin").length}`],
-          ["inactive", `Inactivos · ${cards.filter((c) => !c.active).length}`],
-        ] as const).map(([k, label]) => (
-          <button
-            key={k}
-            onClick={() => setFilter(k)}
-            className={`rounded-full px-3 py-1 ${
-              filter === k ? "bg-foreground text-background" : "border border-border text-muted-foreground"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="font-display text-2xl font-semibold">Venue Catalog</h1>
+        <button className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-accent to-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-glow">
+          <Plus className="h-3.5 w-3.5" /> Create Venue
+        </button>
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
-        {/* Add new venue tile */}
-        <button className="group flex aspect-[4/5] flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border bg-card-soft/50 text-muted-foreground hover:border-secondary hover:text-secondary">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-current">
-            <Plus className="h-6 w-6" />
-          </div>
-          <p className="text-sm font-semibold">Añadir venue</p>
-          <p className="text-[10px]">Manual o desde sourcing</p>
-        </button>
-
-        {visible.map((v) => (
-          <button
+        {cards.map((v) => (
+          <div
             key={v.name}
             onClick={() => setSelected(v.name)}
-            className={`group relative flex aspect-[4/5] flex-col overflow-hidden rounded-2xl border bg-card text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-elev ${
+            className={`group relative flex aspect-[4/5] cursor-pointer flex-col overflow-hidden rounded-2xl border bg-card text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-elev ${
               v.active ? "border-border" : "border-destructive/30 opacity-70"
             }`}
           >
@@ -1091,7 +1047,7 @@ function Venues() {
               </span>
               {!v.active && (
                 <span className="absolute right-2 top-2 rounded-full bg-destructive/90 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white backdrop-blur">
-                  Inactivo
+                  Inactive
                 </span>
               )}
               {v.active && (
@@ -1114,34 +1070,20 @@ function Venues() {
                 <p className="line-clamp-1 text-[11px] text-muted-foreground">{v.category}</p>
                 <p className="mt-0.5 text-[10px] text-muted-foreground">{v.city}</p>
               </div>
-              <div className="space-y-2">
-                <div>
-                  <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                    <span>Perfil</span>
-                    <span className="font-semibold text-foreground">{v.completeness}%</span>
-                  </div>
-                  <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
-                    <div
-                      className={`h-full ${v.completeness >= 90 ? "bg-emerald-500" : v.completeness >= 60 ? "bg-secondary" : "bg-amber-500"}`}
-                      style={{ width: `${v.completeness}%` }}
-                    />
-                  </div>
+              <div>
+                <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                  <span>Profile</span>
+                  <span className="font-semibold text-foreground">{v.completeness}%</span>
                 </div>
-                <div
-                  role="button"
-                  tabIndex={0}
-                  onClick={(e) => toggleActive(v.name, e)}
-                  className={`flex items-center justify-center gap-1 rounded-md py-1 text-[10px] font-semibold transition ${
-                    v.active
-                      ? "bg-emerald-500/10 text-emerald-600 hover:bg-destructive/10 hover:text-destructive"
-                      : "bg-destructive/10 text-destructive hover:bg-emerald-500/10 hover:text-emerald-600"
-                  }`}
-                >
-                  {v.active ? <><PauseCircle className="h-3 w-3" /> Desactivar</> : <><PlayCircle className="h-3 w-3" /> Reactivar</>}
+                <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className={`h-full ${v.completeness >= 90 ? "bg-emerald-500" : v.completeness >= 60 ? "bg-secondary" : "bg-amber-500"}`}
+                    style={{ width: `${v.completeness}%` }}
+                  />
                 </div>
               </div>
             </div>
-          </button>
+          </div>
         ))}
       </div>
     </div>
