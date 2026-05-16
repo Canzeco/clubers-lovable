@@ -59,6 +59,39 @@ export type Database = {
         }
         Relationships: []
       }
+      communities: {
+        Row: {
+          city: string
+          color: string
+          created_at: string
+          email_domain: string
+          id: string
+          label: string
+          position: number
+          short: string
+        }
+        Insert: {
+          city: string
+          color: string
+          created_at?: string
+          email_domain: string
+          id: string
+          label: string
+          position?: number
+          short: string
+        }
+        Update: {
+          city?: string
+          color?: string
+          created_at?: string
+          email_domain?: string
+          id?: string
+          label?: string
+          position?: number
+          short?: string
+        }
+        Relationships: []
+      }
       faqs: {
         Row: {
           answer: string
