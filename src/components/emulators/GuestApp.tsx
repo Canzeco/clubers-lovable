@@ -5285,8 +5285,7 @@ function ShareView() {
                       if (typeof navigator !== "undefined" && navigator.clipboard) {
                         navigator.clipboard.writeText(code).catch(() => {});
                       }
-                      setCopied(true);
-                      setTimeout(() => setCopied(false), 1500);
+                      flashCopied(setCopied);
                     }}
                     className="flex h-4 w-4 items-center justify-center rounded text-foreground/40 transition hover:text-foreground"
                   >
@@ -5430,8 +5429,7 @@ function ShareView() {
                   if (typeof navigator !== "undefined" && navigator.clipboard) {
                     navigator.clipboard.writeText(venueLink).catch(() => {});
                   }
-                  setVenueCopied(true);
-                  setTimeout(() => setVenueCopied(false), 1500);
+                  flashCopied(setVenueCopied);
                 }}
                 className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-foreground/50 transition hover:text-foreground"
               >
@@ -5488,8 +5486,7 @@ function ShareView() {
                   if (typeof navigator !== "undefined" && navigator.clipboard) {
                     navigator.clipboard.writeText(agencyLink).catch(() => {});
                   }
-                  setAgencyCopied(true);
-                  setTimeout(() => setAgencyCopied(false), 1500);
+                  flashCopied(setAgencyCopied);
                 }}
                 className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-foreground/50 transition hover:text-foreground"
               >
@@ -5546,8 +5543,7 @@ function ShareView() {
                   if (typeof navigator !== "undefined" && navigator.clipboard) {
                     navigator.clipboard.writeText(modelsLink).catch(() => {});
                   }
-                  setModelsCopied(true);
-                  setTimeout(() => setModelsCopied(false), 1500);
+                  flashCopied(setModelsCopied);
                 }}
                 className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-foreground/50 transition hover:text-foreground"
               >
@@ -5623,8 +5619,7 @@ function ShareView() {
                   if (typeof navigator !== "undefined" && navigator.clipboard) {
                     navigator.clipboard.writeText(code).catch(() => {});
                   }
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 1500);
+                  flashCopied(setCopied);
                 }}
                 className="flex items-center gap-1 rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold text-background"
               >
