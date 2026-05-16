@@ -151,6 +151,12 @@ function walkMinutes(distance: string | number | undefined): number | null {
 // How long a "Copied!" pill stays on screen after a copy action.
 const COPIED_FEEDBACK_MS = 1500;
 
+// Card fly-out duration on a swipe-deck pass (must match the CSS transition).
+const SWIPE_ANIM_MS = 260;
+
+// How long the "coupon saved" burst stays on screen after a save.
+const CELEBRATE_MS = 1100;
+
 // Flip a boolean setter to true for COPIED_FEEDBACK_MS, then back to false.
 // Standard "copied to clipboard" feedback — keeps the call sites a one-liner.
 function flashCopied(setter: (v: boolean) => void): void {
