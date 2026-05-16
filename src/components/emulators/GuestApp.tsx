@@ -3048,6 +3048,16 @@ function DiscoverHeader() {
     setWhenTime(t);
   };
 
+  // Compact form for the header pill: "8:00 PM" → "8PM", "8:30 PM" → "8:30PM".
+  // Drops the ":00" minutes and the space before the meridiem. Falls back to
+  // the raw value if the input doesn't match the expected shape.
+  const formatTimeShort = (t: string) => {
+    const m = t.match(/^(\d{1,2})(?::(\d{2}))?\s*([AP]M)$/i);
+    if (!m) return t;
+    const [, h, mm, mer] = m;
+    return mm && mm !== "00" ? `${h}:${mm}${mer}` : `${h}${mer}`;
+  };
+
   return (
     <div className="border-b border-border/60 px-3 pb-2.5 pt-1">
       <div className="flex items-center gap-2">
@@ -3079,7 +3089,7 @@ function DiscoverHeader() {
               <div className="flex items-baseline gap-1">
                 <span className="text-[7.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80 leading-none">When</span>
                 <span className="truncate font-display text-[10px] font-semibold leading-none text-muted-foreground/70">
-                  {whenTime.replace(":00 ", "").replace(" ", "")}
+                  {formatTimeShort(whenTime)}
                 </span>
               </div>
               <div className="mt-0.5 truncate font-display text-[12px] font-semibold leading-none text-foreground">
