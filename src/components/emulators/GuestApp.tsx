@@ -2860,12 +2860,12 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
         picks?: { venue: typeof venues[number]; reason: string }[];
       };
   const suggestions = [
-    "Rooftop con vista al atardecer",
-    "Cena romántica en Polanco",
-    "Brunch dominical familiar",
-    "Mezcal y vinilo después de medianoche",
-    "El antro más fresa de San Pedro",
-    "Lugar famoso de Luis Miguel en Acapulco",
+    "Rooftop with a sunset view",
+    "Romantic dinner in Polanco",
+    "Sunday family brunch",
+    "Mezcal and vinyl after midnight",
+    "Most fashionable club in San Pedro",
+    "Famous Luis Miguel spot in Acapulco",
   ];
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
@@ -2911,10 +2911,10 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
               🦚
             </div>
             <h3 className="mt-4 font-display text-2xl font-semibold leading-tight">
-              ¿Qué se te antoja?
+              What are you in the mood for?
             </h3>
             <p className="mt-1.5 max-w-[260px] text-[13px] text-muted-foreground">
-              Cuéntame el plan — vibra, zona, presupuesto — y te encuentro el lugar.
+              Tell me the plan — vibe, area, budget — and I'll find the spot.
             </p>
             <div className="mt-6 flex w-full flex-col gap-2">
               {suggestions.map((s) => (
@@ -2943,7 +2943,7 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
                   {m.sources && (
                     <div>
                       <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                        Fuentes
+                        Sources
                       </p>
                       <div className="flex flex-wrap gap-1.5">
                         {m.sources.map((s) => (
@@ -2984,7 +2984,7 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
               ),
             )}
             {thinking && (
-              <p className="text-[13px] italic text-muted-foreground">Pensando…</p>
+              <p className="text-[13px] italic text-muted-foreground">Thinking…</p>
             )}
           </div>
         )}
@@ -2995,7 +2995,7 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && ask(input)}
-            placeholder="Pregunta lo que sea…"
+            placeholder="Ask anything…"
             className="flex-1 bg-transparent py-1 text-[13px] text-foreground outline-none placeholder:text-muted-foreground"
           />
           <button
@@ -3076,8 +3076,15 @@ function DiscoverHeader() {
           >
             <Calendar className="h-3 w-3 shrink-0 text-secondary" />
             <div className="min-w-0 flex-1">
-              <div className="text-[7.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80 leading-none">When</div>
-              <div className="mt-0.5 truncate font-display text-[12px] font-semibold leading-none text-foreground">{whenDate} · {whenTime}</div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-[7.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80 leading-none">When</span>
+                <span className="truncate font-display text-[10px] font-semibold leading-none text-muted-foreground/70">
+                  {whenTime.replace(":00 ", "").replace(" ", "")}
+                </span>
+              </div>
+              <div className="mt-0.5 truncate font-display text-[12px] font-semibold leading-none text-foreground">
+                {whenDate}
+              </div>
             </div>
           </button>
         </div>
@@ -3511,7 +3518,21 @@ function CouponTicket({
                 </div>
               </>
             ) : (
-              <div className="relative z-[1] flex flex-1 items-center justify-center px-1 py-2" />
+              <>
+                <div className="relative z-[1] flex flex-1 items-center justify-center border-b border-current/20 px-1 py-2">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-background/95 text-foreground/70 shadow-md ring-1 ring-black/5">
+                    <Calendar className="h-4 w-4" strokeWidth={2.25} />
+                  </span>
+                </div>
+                <div className="relative z-[1] flex flex-1 flex-col items-center justify-center px-1 py-2">
+                  <p className="font-display text-[14px] font-bold leading-none tracking-tight">
+                    Booked
+                  </p>
+                  <p className="mt-1 text-[6px] font-black uppercase tracking-[0.18em] opacity-90">
+                    no cashback
+                  </p>
+                </div>
+              </>
             )}
           </div>
         </div>
