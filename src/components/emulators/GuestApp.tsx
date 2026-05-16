@@ -127,6 +127,26 @@ export interface Coupon {
   [key: string]: any;
 }
 
+// Short weekday labels indexed by Date.getDay() — used to match Hours rows.
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
+
+// Default cover photo when a coupon/venue doesn't map to a known image.
+const DEFAULT_VENUE_PHOTO =
+  "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80";
+
+// Tier → Tailwind class lookup. Falls back to bronze for unknown tiers so
+// new tiers don't crash the UI; callers can extend the map as needed.
+const TIER_CLASSES = {
+  ring: { gold: "ring-tier-gold", silver: "ring-tier-silver", bronze: "ring-tier-bronze" },
+  bg: { gold: "bg-tier-gold", silver: "bg-tier-silver", bronze: "bg-tier-bronze" },
+  text: { gold: "text-tier-gold", silver: "text-tier-silver", bronze: "text-tier-bronze" },
+} as const;
+
+export function tierClass(prop: keyof typeof TIER_CLASSES, tier?: string): string {
+  const map = TIER_CLASSES[prop];
+  return (map as Record<string, string>)[tier ?? ""] ?? map.bronze;
+}
+
 // Community catalog — shared across guest app & manager web. Joining a
 // community requires email-domain verification (e.g. @tec.mx).
 const COMMUNITIES: Record<
@@ -1383,22 +1403,10 @@ function MesitaVisitors({ venue }: { venue: Venue }) {
                   <img
                     src={u.img}
                     alt={u.name}
-                    className={`h-10 w-10 rounded-full object-cover ring-2 ${
-                      u.tier === "gold"
-                        ? "ring-tier-gold"
-                        : u.tier === "silver"
-                        ? "ring-tier-silver"
-                        : "ring-tier-bronze"
-                    }`}
+                    className={`h-10 w-10 rounded-full object-cover ring-2 ${tierClass("ring", u.tier)}`}
                   />
                   <span
-                    className={`absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px text-[8px] font-bold uppercase text-black ${
-                      u.tier === "gold"
-                        ? "bg-tier-gold"
-                        : u.tier === "silver"
-                        ? "bg-tier-silver"
-                        : "bg-tier-bronze"
-                    }`}
+                    className={`absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px text-[8px] font-bold uppercase text-black ${tierClass("bg", u.tier)}`}
                   >
                     {u.tier}
                   </span>
@@ -2103,8 +2111,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
 
   // Closing time today, from venue hours array if present
   const todayClose = (() => {
-    const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-    const today = days[new Date().getDay()];
+    const today = WEEKDAYS[new Date().getDay()];
     const row = (v as Venue).hours?.find?.((h: Hours) => h.day === today);
     const h: string = row?.hours ?? "";
     if (!h || h === "Closed") return null;
@@ -3822,13 +3829,13 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: Coupon; onClose: () =>
   const photoMap: Record<string, string> = {
     "Casa Luminar": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
     "Neón Bar": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80",
-    "Mar Verde": "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80",
+    "Mar Verde": DEFAULT_VENUE_PHOTO,
     "Loto Café": "https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=800&q=80",
     "Atelier Nueve": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80",
     "El Tope": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&q=80",
     "Forno": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80",
   };
-  const photo = photoMap[coupon.name ?? ""] || "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80";
+  const photo = photoMap[coupon.name ?? ""] || DEFAULT_VENUE_PHOTO;
   return (
     <div className="absolute inset-0 z-30 flex items-end bg-black/50" onClick={onClose}>
       <div
