@@ -168,6 +168,15 @@ const CONFIRM_AUTOCLOSE_LONG_MS = 1800;
 const BLOCKED_TOAST_MS = 2200;
 const BLOCKED_TOAST_SHORT_MS = 2000;
 
+// Bill-approval flow steps. "Sending" → "waiting on staff" → "approved":
+// the gap between WAITING and APPROVED is intentionally long so the user
+// feels the validator actually reviewing the ticket.
+const BILL_SENDING_TO_WAITING_MS = 800;
+const BILL_WAITING_TO_APPROVED_MS = 2600;
+
+// Mock payment "processing" spinner duration before showing the receipt.
+const PAYMENT_PROCESSING_MS = 1400;
+
 // Flip a boolean setter to true for COPIED_FEEDBACK_MS, then back to false.
 // Standard "copied to clipboard" feedback — keeps the call sites a one-liner.
 function flashCopied(setter: (v: boolean) => void): void {
@@ -4490,8 +4499,8 @@ function RedeemFlow({ coupon }: { coupon: Coupon }) {
 
   const send = () => {
     setStep("sending");
-    setTimeout(() => setStep("waiting"), 800);
-    setTimeout(() => setStep("approved"), 2600);
+    setTimeout(() => setStep("waiting"), BILL_SENDING_TO_WAITING_MS);
+    setTimeout(() => setStep("approved"), BILL_WAITING_TO_APPROVED_MS);
   };
 
   if (step === "approved") {
@@ -5680,7 +5689,7 @@ function AddCreditsSheet({
 
   const pay = () => {
     setStep("processing");
-    setTimeout(() => setStep("done"), 1400);
+    setTimeout(() => setStep("done"), PAYMENT_PROCESSING_MS);
   };
 
   return (
