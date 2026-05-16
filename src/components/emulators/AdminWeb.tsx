@@ -991,29 +991,19 @@ const VENUE_CARDS: VenueCard[] = [
 
 function Venues() {
   const [selected, setSelected] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"all" | "partner" | "admin" | "inactive">("all");
-  const [cards, setCards] = useState(VENUE_CARDS);
-
-  const visible = cards.filter((v) =>
-    filter === "all" ? true : filter === "inactive" ? !v.active : v.managed === filter,
-  );
-
-  const toggleActive = (name: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCards((cs) => cs.map((c) => (c.name === name ? { ...c, active: !c.active } : c)));
-  };
+  const [cards] = useState(VENUE_CARDS);
 
   if (selected) {
     return (
-      <div>
-        <div className="flex items-center gap-3 px-6 pt-4">
-          <button
+      <div className="p-6">
+        <div className="flex items-center gap-3">
+          <span
             onClick={() => setSelected(null)}
-            className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground"
+            className="cursor-pointer text-xs text-muted-foreground hover:text-foreground"
           >
-            ← Volver al catálogo
-          </button>
-          <p className="text-xs text-muted-foreground">Editando · <span className="font-semibold text-foreground">{selected}</span></p>
+            ← Back
+          </span>
+          <p className="text-sm font-medium">{selected}</p>
         </div>
         <VenueEditorImpl />
       </div>
@@ -1022,53 +1012,19 @@ function Venues() {
 
   return (
     <div className="p-6">
-      <div className="mb-4 flex items-end justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-semibold">Catálogo de venues</h1>
-          <p className="text-xs text-muted-foreground">
-            Super-admin · editar cualquier venue, partner o no · activar / desactivar en la plataforma
-          </p>
-        </div>
-        <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-secondary" /> Partner-managed</span>
-          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-accent" /> Admin-managed</span>
-        </div>
-      </div>
-
-      <div className="mb-4 flex flex-wrap gap-1.5 text-xs">
-        {([
-          ["all", `Todos · ${cards.length}`],
-          ["partner", `Partner · ${cards.filter((c) => c.managed === "partner").length}`],
-          ["admin", `Admin · ${cards.filter((c) => c.managed === "admin").length}`],
-          ["inactive", `Inactivos · ${cards.filter((c) => !c.active).length}`],
-        ] as const).map(([k, label]) => (
-          <button
-            key={k}
-            onClick={() => setFilter(k)}
-            className={`rounded-full px-3 py-1 ${
-              filter === k ? "bg-foreground text-background" : "border border-border text-muted-foreground"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="font-display text-2xl font-semibold">Venue Catalog</h1>
+        <button className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-accent to-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-glow">
+          <Plus className="h-3.5 w-3.5" /> Create Venue
+        </button>
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
-        {/* Add new venue tile */}
-        <button className="group flex aspect-[4/5] flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border bg-card-soft/50 text-muted-foreground hover:border-secondary hover:text-secondary">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-current">
-            <Plus className="h-6 w-6" />
-          </div>
-          <p className="text-sm font-semibold">Añadir venue</p>
-          <p className="text-[10px]">Manual o desde sourcing</p>
-        </button>
-
-        {visible.map((v) => (
-          <button
+        {cards.map((v) => (
+          <div
             key={v.name}
             onClick={() => setSelected(v.name)}
-            className={`group relative flex aspect-[4/5] flex-col overflow-hidden rounded-2xl border bg-card text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-elev ${
+            className={`group relative flex aspect-[4/5] cursor-pointer flex-col overflow-hidden rounded-2xl border bg-card text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-elev ${
               v.active ? "border-border" : "border-destructive/30 opacity-70"
             }`}
           >
@@ -1091,7 +1047,7 @@ function Venues() {
               </span>
               {!v.active && (
                 <span className="absolute right-2 top-2 rounded-full bg-destructive/90 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white backdrop-blur">
-                  Inactivo
+                  Inactive
                 </span>
               )}
               {v.active && (
@@ -1114,34 +1070,20 @@ function Venues() {
                 <p className="line-clamp-1 text-[11px] text-muted-foreground">{v.category}</p>
                 <p className="mt-0.5 text-[10px] text-muted-foreground">{v.city}</p>
               </div>
-              <div className="space-y-2">
-                <div>
-                  <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                    <span>Perfil</span>
-                    <span className="font-semibold text-foreground">{v.completeness}%</span>
-                  </div>
-                  <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
-                    <div
-                      className={`h-full ${v.completeness >= 90 ? "bg-emerald-500" : v.completeness >= 60 ? "bg-secondary" : "bg-amber-500"}`}
-                      style={{ width: `${v.completeness}%` }}
-                    />
-                  </div>
+              <div>
+                <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                  <span>Profile</span>
+                  <span className="font-semibold text-foreground">{v.completeness}%</span>
                 </div>
-                <div
-                  role="button"
-                  tabIndex={0}
-                  onClick={(e) => toggleActive(v.name, e)}
-                  className={`flex items-center justify-center gap-1 rounded-md py-1 text-[10px] font-semibold transition ${
-                    v.active
-                      ? "bg-emerald-500/10 text-emerald-600 hover:bg-destructive/10 hover:text-destructive"
-                      : "bg-destructive/10 text-destructive hover:bg-emerald-500/10 hover:text-emerald-600"
-                  }`}
-                >
-                  {v.active ? <><PauseCircle className="h-3 w-3" /> Desactivar</> : <><PlayCircle className="h-3 w-3" /> Reactivar</>}
+                <div className="mt-1 h-1 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className={`h-full ${v.completeness >= 90 ? "bg-emerald-500" : v.completeness >= 60 ? "bg-secondary" : "bg-amber-500"}`}
+                    style={{ width: `${v.completeness}%` }}
+                  />
                 </div>
               </div>
             </div>
-          </button>
+          </div>
         ))}
       </div>
     </div>
@@ -1149,221 +1091,9 @@ function Venues() {
 }
 
 function VenueEditorImpl() {
-  const [igUrl, setIgUrl] = useState("https://instagram.com/lacabanadepecos");
-  const [tab, setTab] = useState<"profile" | "media" | "social" | "ai">("profile");
-
-  const sourcedPosts = [
-    { id: 1, img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400", likes: "2.4k", caption: "Cortes premium, brasa de mezquite 🔥", picked: true },
-    { id: 2, img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400", likes: "1.8k", caption: "Mixología de autor", picked: true },
-    { id: 3, img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=400", likes: "3.1k", caption: "Domingos familiares", picked: true },
-    { id: 4, img: "https://images.unsplash.com/photo-1592861956120-e524fc739696?w=400", likes: "920", caption: "Carta de vinos", picked: false },
-    { id: 5, img: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=400", likes: "1.2k", caption: "Postres de la casa", picked: false },
-    { id: 6, img: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=400", likes: "780", caption: "Eventos privados", picked: false },
-    { id: 7, img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400", likes: "640", caption: "Brunch dominical", picked: false },
-    { id: 8, img: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=400", likes: "1.1k", caption: "Música en vivo", picked: false },
-  ];
-
   return (
-    <div className="grid grid-cols-1 gap-4 p-6 xl:grid-cols-[minmax(0,1fr)_340px]">
-      {/* Editor */}
-      <div className="min-w-0 space-y-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="font-display text-2xl font-semibold">Perfil de venue</h1>
-            <p className="text-xs text-muted-foreground">Construye el perfil que verán los guests · cambios en vivo a la derecha</p>
-          </div>
-          <div className="flex gap-2">
-            <button className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs"><Eye className="h-3 w-3" /> Preview</button>
-            <button className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground"><Save className="h-3 w-3" /> Publicar</button>
-          </div>
-        </div>
-
-        <div className="flex gap-1 border-b border-border text-xs">
-          {([
-            { id: "profile", l: "Info" },
-            { id: "media", l: "Fotos (IG)" },
-            { id: "social", l: "Social proof" },
-            { id: "ai", l: "AI assist" },
-          ] as const).map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={`-mb-px border-b-2 px-3 py-2 ${tab === t.id ? "border-secondary text-foreground" : "border-transparent text-muted-foreground"}`}
-            >
-              {t.l}
-            </button>
-          ))}
-        </div>
-
-        {tab === "profile" && (
-          <div className="space-y-3">
-            <Field label="Nombre" value="La Cabaña de Pecos" />
-            <div className="grid grid-cols-2 gap-3">
-              <Field label="Categoría" value="Steakhouse · Premium" />
-              <Field label="Ticket promedio" value="$780 MXN" />
-              <Field label="Ciudad" value="San Luis Potosí" />
-              <Field label="Zona" value="Lomas 4ta sección" />
-            </div>
-            <Field label="Bio (un párrafo)" textarea value="Desde 1982 servimos cortes a la brasa de mezquite. Cocina familiar potosina con alma de cantina. Reservas vía WhatsApp." />
-            <div className="grid grid-cols-3 gap-3">
-              <Field label="Teléfono" value="444 813 9252" Icon={Phone} />
-              <Field label="WhatsApp" value="444 189 4681" Icon={Phone} />
-              <Field label="Web" value="bit.ly/3CmHYRh" Icon={Globe} />
-            </div>
-            <div>
-              <p className="mb-1 eyebrow">Tags</p>
-              <div className="flex flex-wrap gap-1.5">
-                {["familiar", "carnes", "kids friendly", "música en vivo", "estacionamiento", "eventos privados"].map((t) => (
-                  <span key={t} className="flex items-center gap-1 rounded-full bg-card-soft px-2 py-1 text-[11px]">
-                    <Tag className="h-2.5 w-2.5 text-secondary" /> {t}
-                    <button className="text-muted-foreground hover:text-destructive">×</button>
-                  </span>
-                ))}
-                <button className="rounded-full border border-dashed border-border px-2 py-1 text-[11px] text-muted-foreground">+ tag</button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {tab === "media" && (
-          <div className="space-y-3">
-            <div className="rounded-xl border border-border bg-card-soft p-3">
-              <p className="mb-2 eyebrow">Fuente Instagram</p>
-              <div className="flex items-center gap-2">
-                <div className="flex flex-1 items-center gap-2 rounded-lg border border-border bg-card px-2.5 py-1.5">
-                  <Instagram className="h-3.5 w-3.5 text-pink-400" />
-                  <input
-                    value={igUrl}
-                    onChange={(e) => setIgUrl(e.target.value)}
-                    className="flex-1 bg-transparent text-xs outline-none"
-                  />
-                </div>
-                <button className="flex items-center gap-1 rounded-lg bg-gradient-to-r from-accent to-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground">
-                  <Download className="h-3 w-3" /> Importar feed
-                </button>
-              </div>
-              <p className="mt-2 text-[10px] text-muted-foreground">Último scrape: hace 2 h · 1,016 posts · 9,866 followers</p>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-muted-foreground">Selecciona hasta 10 fotos · arrastra para ordenar</p>
-              <span className="rounded-full bg-secondary/20 px-2 py-0.5 text-[10px] font-semibold text-secondary">3 / 10 seleccionadas</span>
-            </div>
-
-            <div className="grid grid-cols-4 gap-2">
-              {sourcedPosts.map((p, i) => (
-                <div key={p.id} className={`group relative overflow-hidden rounded-lg border-2 ${p.picked ? "border-secondary" : "border-border"}`}>
-                  <img src={p.img} alt="" className="aspect-square w-full object-cover" />
-                  {p.picked && (
-                    <span className="absolute left-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-[10px] font-bold text-secondary-foreground">
-                      {i + 1}
-                    </span>
-                  )}
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-1.5">
-                    <p className="line-clamp-1 text-[9px] text-white">{p.caption}</p>
-                    <p className="text-[9px] text-white/70">♥ {p.likes}</p>
-                  </div>
-                  <div className="absolute right-1 top-1 flex gap-1 opacity-0 transition group-hover:opacity-100">
-                    <button className="rounded bg-black/60 p-1 text-white"><GripVertical className="h-2.5 w-2.5" /></button>
-                    <button className="rounded bg-black/60 p-1 text-white"><Trash2 className="h-2.5 w-2.5" /></button>
-                  </div>
-                </div>
-              ))}
-              <button className="flex aspect-square items-center justify-center rounded-lg border-2 border-dashed border-border text-muted-foreground hover:text-foreground">
-                <ImagePlus className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {tab === "social" && (
-          <div className="space-y-3">
-            <p className="text-xs text-muted-foreground">Conecta cuentas y rellena scores manualmente si el scrape no está disponible.</p>
-            <ScoreRow Icon={Sparkles} label="Mesita score" hint="auto · de canjeos verificados" value="4.9 · 312 reviews" locked />
-            <ScoreRow Icon={Star} label="Google" hint="Google Place ID" value="4.7 · 2,418 reviews" />
-            <ScoreRow Icon={Instagram} label="Instagram" hint="@lacabanadepecos" value="9,866 followers · 1,016 posts" />
-            <ScoreRow Icon={Globe} label="Facebook" hint="facebook.com/lacabanadepecos" value="12,340 followers · 4.6 ★" />
-            <div className="rounded-xl border border-border bg-card-soft p-3">
-              <p className="eyebrow">Mesita visitors (auto)</p>
-              <div className="mt-2 grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="rounded-lg bg-tier-gold/10 p-2"><p className="font-display text-lg text-tier-gold">142</p><p className="caption">Gold · 90d</p></div>
-                <div className="rounded-lg bg-tier-silver/10 p-2"><p className="font-display text-lg text-tier-silver">318</p><p className="caption">Silver</p></div>
-                <div className="rounded-lg bg-tier-bronze/10 p-2"><p className="font-display text-lg text-tier-bronze">604</p><p className="caption">Bronze</p></div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {tab === "ai" && (
-          <div className="space-y-3">
-            <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-accent/10 to-primary/10 p-4">
-              <p className="flex items-center gap-2 text-sm font-semibold"><Wand2 className="h-4 w-4 text-accent" /> AI assist</p>
-              <p className="mt-1 text-xs text-muted-foreground">Mesita AI lee Instagram, Google y reviews para autocompletar el perfil. Revisa siempre antes de publicar.</p>
-              <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-                {[
-                  "Generar bio desde IG",
-                  "Detectar categoría y tags",
-                  "Sugerir 10 mejores fotos",
-                  "Resumir reviews de Google",
-                ].map((a) => (
-                  <button key={a} className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-left hover:border-accent/50">
-                    <Sparkles className="h-3 w-3 text-secondary" /> {a}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="rounded-xl border border-border bg-card-soft p-3 text-xs">
-              <p className="mb-2 font-semibold">Sugerencias pendientes (3)</p>
-              {[
-                "Tag faltante: ‘familiar’ — detectado en 14 reviews",
-                "Foto #4 baja resolución — reemplazar por IG post del 8/may",
-                "Ticket promedio podría ser $820 según Google",
-              ].map((s) => (
-                <div key={s} className="flex items-center justify-between gap-2 border-t border-border/50 py-1.5 first:border-0">
-                  <span className="text-muted-foreground">{s}</span>
-                  <div className="flex gap-1">
-                    <button className="rounded bg-secondary px-2 py-0.5 text-[10px] font-bold text-secondary-foreground">Aplicar</button>
-                    <button className="rounded border border-border px-2 py-0.5 text-[10px]">Ignorar</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Right: live preview */}
-      <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Preview guest</p>
-        <div className="overflow-hidden rounded-2xl border border-border bg-background shadow-elev">
-          <div className="relative h-32 bg-gradient-to-br from-tier-gold via-secondary to-accent">
-            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600" className="h-full w-full object-cover opacity-70" alt="" />
-            <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold text-tier-gold">★ TOP 1% · SLP</span>
-          </div>
-          <div className="space-y-2 p-3">
-            <div>
-              <p className="font-display text-lg font-semibold">La Cabaña de Pecos</p>
-              <p className="caption">Steakhouse · SLP · desde 1982</p>
-            </div>
-            <div className="grid grid-cols-4 gap-1 text-center text-[10px]">
-              <div className="rounded bg-secondary/10 p-1"><p className="font-bold text-secondary">4.9</p><p className="text-muted-foreground">Mesita</p></div>
-              <div className="rounded bg-card-soft p-1"><p className="font-bold">4.7</p><p className="text-muted-foreground">Google</p></div>
-              <div className="rounded bg-card-soft p-1"><p className="font-bold">4.6</p><p className="text-muted-foreground">FB</p></div>
-              <div className="rounded bg-card-soft p-1"><p className="font-bold">9.8k</p><p className="text-muted-foreground">IG</p></div>
-            </div>
-            <div className="flex gap-1 overflow-x-auto">
-              {sourcedPosts.filter((p) => p.picked).map((p) => (
-                <img key={p.id} src={p.img} className="h-14 w-12 flex-shrink-0 rounded object-cover" alt="" />
-              ))}
-            </div>
-            <p className="caption">Desde 1982 servimos cortes a la brasa de mezquite…</p>
-          </div>
-        </div>
-        <div className="rounded-lg border border-border bg-card-soft p-2 text-[10px] text-muted-foreground">
-          <p className="flex items-center gap-1"><Link2 className="h-3 w-3" /> URL pública</p>
-          <p className="mt-0.5 truncate font-mono text-foreground">mesita.app/v/la-cabana-de-pecos</p>
-        </div>
-      </div>
+    <div className="mt-6 rounded-2xl border border-border bg-card-soft p-6">
+      <p className="text-sm text-muted-foreground">Venue detail view coming soon.</p>
     </div>
   );
 }
