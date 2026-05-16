@@ -4499,8 +4499,8 @@ function RedeemFlow({ coupon }: { coupon: Coupon }) {
 
   const send = () => {
     setStep("sending");
-    setTimeout(() => setStep("waiting"), 800);
-    setTimeout(() => setStep("approved"), 2600);
+    setTimeout(() => setStep("waiting"), BILL_SENDING_TO_WAITING_MS);
+    setTimeout(() => setStep("approved"), BILL_WAITING_TO_APPROVED_MS);
   };
 
   if (step === "approved") {
@@ -5689,7 +5689,7 @@ function AddCreditsSheet({
 
   const pay = () => {
     setStep("processing");
-    setTimeout(() => setStep("done"), 1400);
+    setTimeout(() => setStep("done"), PAYMENT_PROCESSING_MS);
   };
 
   return (
