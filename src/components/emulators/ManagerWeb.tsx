@@ -571,7 +571,7 @@ function Promos() {
                 One-time discount to convert a new guest into a regular.
               </p>
             </div>
-            <span className="text-[10px] text-muted-foreground">First visit only</span>
+            <span className="caption">First visit only</span>
           </div>
           <div className="mt-3 flex items-end gap-1">
             <span className="font-display text-5xl font-semibold text-secondary">
@@ -628,7 +628,7 @@ function Promos() {
               >
                 {t.name.toUpperCase()}
               </span>
-              <span className="text-[10px] text-muted-foreground">
+              <span className="caption">
                 {t.visits}
               </span>
             </div>
@@ -938,7 +938,7 @@ function Promos() {
             >
               <div>
                 <p className="text-xs font-medium">{e.name}</p>
-                <p className="text-[10px] text-muted-foreground">{e.desc}</p>
+                <p className="caption">{e.desc}</p>
               </div>
               <div
                 className={`flex h-5 w-9 items-center rounded-full px-0.5 ${
@@ -957,7 +957,7 @@ function Promos() {
           <div className="flex items-center justify-between rounded-lg border border-dashed border-border bg-muted/30 px-3 py-2">
             <div>
               <p className="text-xs font-medium text-muted-foreground">Discount limit per visit</p>
-              <p className="text-[10px] text-muted-foreground">Cashback capped at $1,000 MXN · set by Mesita</p>
+              <p className="caption">Cashback capped at $1,000 MXN · set by Mesita</p>
             </div>
             <p className="text-xs font-semibold text-muted-foreground">$1,000</p>
           </div>
@@ -1011,7 +1011,7 @@ function Analytics() {
                   <span className="text-muted-foreground">{f.label}</span>
                   <span className="font-semibold">
                     {f.v.toLocaleString()}{" "}
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="caption">
                       · {f.pct}%
                     </span>
                   </span>
@@ -1151,7 +1151,7 @@ function ValidatorActivity() {
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div>
           <p className="text-sm font-medium">Validator activity</p>
-          <p className="text-[10px] text-muted-foreground">
+          <p className="caption">
             Read-only monitor of every WhatsApp validation from your team.
           </p>
         </div>
@@ -1213,7 +1213,7 @@ function ValidatorActivity() {
                 {v.online ? "online" : `last seen ${v.lastAgo} ago`}
               </p>
             </div>
-            <p className="text-[10px] text-muted-foreground">
+            <p className="caption">
               Today · {v.validated} validated · {v.flagged} flagged
             </p>
           </div>
@@ -1288,7 +1288,7 @@ function Wallet() {
           >
             <div>
               <p className="font-medium">{t.k}</p>
-              <p className="text-[10px] text-muted-foreground">{t.d}</p>
+              <p className="caption">{t.d}</p>
             </div>
             <span className={`font-semibold ${t.c}`}>{t.a}</span>
           </div>
@@ -1343,7 +1343,7 @@ function Team() {
       <div className="rounded-xl border border-border bg-card-soft">
         <div className="border-b border-border px-4 py-3">
           <p className="text-sm font-medium">Managers</p>
-          <p className="text-[10px] text-muted-foreground">
+          <p className="caption">
             Full access to dashboard, promos, wallet.
           </p>
         </div>
@@ -1370,7 +1370,7 @@ function Team() {
                   m.on ? "bg-emerald-400" : "bg-muted-foreground"
                 }`}
               />
-              <button className="text-[10px] text-muted-foreground">···</button>
+              <button className="caption">···</button>
             </div>
           </div>
         ))}
@@ -1381,7 +1381,7 @@ function Team() {
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <div>
             <p className="text-sm font-medium">WhatsApp validators</p>
-            <p className="text-[10px] text-muted-foreground">
+            <p className="caption">
               Waiters & hosts who scan QR coupons from their own WhatsApp.
             </p>
           </div>
@@ -1415,7 +1415,7 @@ function Team() {
               >
                 {v.on ? "Active" : "Paused"}
               </span>
-              <button className="text-[10px] text-muted-foreground">···</button>
+              <button className="caption">···</button>
             </div>
           </div>
         ))}

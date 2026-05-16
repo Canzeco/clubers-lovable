@@ -325,7 +325,7 @@ function LeadCard({ l, stage }: { l: Lead; stage: (typeof stages)[number]["id"] 
         <div className="flex items-start justify-between gap-2">
           <div>
             <p className="font-semibold leading-tight">{l.name}</p>
-            <p className="text-[10px] text-muted-foreground">{l.type}</p>
+            <p className="caption">{l.type}</p>
           </div>
           <span className="flex items-center gap-1 rounded-full bg-accent/20 px-1.5 py-0.5 text-[9px] font-semibold text-accent">
             <Sparkles className="h-2.5 w-2.5" /> AI
@@ -356,7 +356,7 @@ function LeadCard({ l, stage }: { l: Lead; stage: (typeof stages)[number]["id"] 
         <div className="flex items-start justify-between gap-2">
           <div>
             <p className="font-semibold leading-tight">{l.name}</p>
-            <p className="text-[10px] text-muted-foreground">{l.type}</p>
+            <p className="caption">{l.type}</p>
           </div>
           <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] font-semibold text-muted-foreground">GBP</span>
         </div>
@@ -376,7 +376,7 @@ function LeadCard({ l, stage }: { l: Lead; stage: (typeof stages)[number]["id"] 
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="font-semibold leading-tight">{l.name}</p>
-          <p className="text-[10px] text-muted-foreground">{l.type}</p>
+          <p className="caption">{l.type}</p>
         </div>
         <FitChip fit={l.fit} />
       </div>
@@ -409,7 +409,7 @@ function LeadCard({ l, stage }: { l: Lead; stage: (typeof stages)[number]["id"] 
         <div className="flex h-5 w-5 items-center justify-center rounded-full bg-peacock text-[9px] font-bold text-primary-foreground">
           {l.owner}
         </div>
-        <span className="text-[10px] text-muted-foreground">ticket {l.ticket}</span>
+        <span className="caption">ticket {l.ticket}</span>
         <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
           <Clock className="h-2.5 w-2.5" />{l.lastTouch}
         </span>
@@ -1286,9 +1286,9 @@ function VenueEditorImpl() {
             <div className="rounded-xl border border-border bg-card-soft p-3">
               <p className="eyebrow">Mesita visitors (auto)</p>
               <div className="mt-2 grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="rounded-lg bg-tier-gold/10 p-2"><p className="font-display text-lg text-tier-gold">142</p><p className="text-[10px] text-muted-foreground">Gold · 90d</p></div>
-                <div className="rounded-lg bg-tier-silver/10 p-2"><p className="font-display text-lg text-tier-silver">318</p><p className="text-[10px] text-muted-foreground">Silver</p></div>
-                <div className="rounded-lg bg-tier-bronze/10 p-2"><p className="font-display text-lg text-tier-bronze">604</p><p className="text-[10px] text-muted-foreground">Bronze</p></div>
+                <div className="rounded-lg bg-tier-gold/10 p-2"><p className="font-display text-lg text-tier-gold">142</p><p className="caption">Gold · 90d</p></div>
+                <div className="rounded-lg bg-tier-silver/10 p-2"><p className="font-display text-lg text-tier-silver">318</p><p className="caption">Silver</p></div>
+                <div className="rounded-lg bg-tier-bronze/10 p-2"><p className="font-display text-lg text-tier-bronze">604</p><p className="caption">Bronze</p></div>
               </div>
             </div>
           </div>
@@ -1343,7 +1343,7 @@ function VenueEditorImpl() {
           <div className="space-y-2 p-3">
             <div>
               <p className="font-display text-lg font-semibold">La Cabaña de Pecos</p>
-              <p className="text-[10px] text-muted-foreground">Steakhouse · SLP · desde 1982</p>
+              <p className="caption">Steakhouse · SLP · desde 1982</p>
             </div>
             <div className="grid grid-cols-4 gap-1 text-center text-[10px]">
               <div className="rounded bg-secondary/10 p-1"><p className="font-bold text-secondary">4.9</p><p className="text-muted-foreground">Mesita</p></div>
@@ -1356,7 +1356,7 @@ function VenueEditorImpl() {
                 <img key={p.id} src={p.img} className="h-14 w-12 flex-shrink-0 rounded object-cover" alt="" />
               ))}
             </div>
-            <p className="text-[10px] text-muted-foreground">Desde 1982 servimos cortes a la brasa de mezquite…</p>
+            <p className="caption">Desde 1982 servimos cortes a la brasa de mezquite…</p>
           </div>
         </div>
         <div className="rounded-lg border border-border bg-card-soft p-2 text-[10px] text-muted-foreground">
@@ -1392,7 +1392,7 @@ function ScoreRow({ Icon, label, hint, value, locked }: { Icon: IconType; label:
           <p className="text-sm font-semibold">{label}</p>
           {locked && <span className="rounded bg-secondary/20 px-1.5 py-0.5 text-[9px] font-bold text-secondary">AUTO</span>}
         </div>
-        <p className="text-[10px] text-muted-foreground">{hint}</p>
+        <p className="caption">{hint}</p>
       </div>
       <input defaultValue={value} disabled={locked} className="w-56 rounded-md border border-border bg-card px-2 py-1 text-xs outline-none disabled:opacity-60" />
     </div>
