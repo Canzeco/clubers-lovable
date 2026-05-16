@@ -151,6 +151,12 @@ function walkMinutes(distance: string | number | undefined): number | null {
 // How long a "Copied!" pill stays on screen after a copy action.
 const COPIED_FEEDBACK_MS = 1500;
 
+// Card fly-out duration on a swipe-deck pass (must match the CSS transition).
+const SWIPE_ANIM_MS = 260;
+
+// How long the "coupon saved" burst stays on screen after a save.
+const CELEBRATE_MS = 1100;
+
 // Flip a boolean setter to true for COPIED_FEEDBACK_MS, then back to false.
 // Standard "copied to clipboard" feedback — keeps the call sites a one-liner.
 function flashCopied(setter: (v: boolean) => void): void {
@@ -2190,7 +2196,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
       if (d === "r") {
         setAskReserve(current);
       }
-    }, 260);
+    }, SWIPE_ANIM_MS);
   };
 
   // Trigger the "coupon saved" celebration burst for the given venue
@@ -2198,7 +2204,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
     setStreak((s) => s + 1);
     setSavedTotal((s) => s + 1);
     setCelebrate({ v: venue, reserve: false });
-    setTimeout(() => setCelebrate(null), 1100);
+    setTimeout(() => setCelebrate(null), CELEBRATE_MS);
   };
 
   const onPointerDown = (e: React.PointerEvent) => {
@@ -2603,7 +2609,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
                   setTimeout(() => {
                     setStep("pick");
                     setSaved(venue);
-                  }, 1100);
+                  }, CELEBRATE_MS);
                 }}
                 className="flex items-center justify-center gap-1.5 rounded-full bg-peacock px-4 py-2.5 text-sm font-semibold text-white shadow-glow"
               >
