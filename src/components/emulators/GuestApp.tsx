@@ -2182,6 +2182,7 @@ function CatalogCard({ venue: v, onClick, onQuickSave }: { venue: Venue; onClick
 }
 
 function TinderMode({ onSelect }: { onSelect?: (v: Venue) => void } = {}) {
+  const venues = useVenues();
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState<"l" | "r" | null>(null);
   const [saved, setSaved] = useState<Venue | null>(null);
