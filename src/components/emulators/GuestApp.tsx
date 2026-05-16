@@ -157,6 +157,17 @@ const SWIPE_ANIM_MS = 260;
 // How long the "coupon saved" burst stays on screen after a save.
 const CELEBRATE_MS = 1100;
 
+// Auto-close confirm dialogs after the success state has been read.
+// Short = single-action confirms (save, quick action). Long = multi-step
+// confirms (reserve, save+reserve) where the user needs to read more text.
+const CONFIRM_AUTOCLOSE_SHORT_MS = 1400;
+const CONFIRM_AUTOCLOSE_LONG_MS = 1800;
+
+// Transient "this action is blocked" toast — long enough to read, short
+// enough to dismiss on its own without feeling sticky.
+const BLOCKED_TOAST_MS = 2200;
+const BLOCKED_TOAST_SHORT_MS = 2000;
+
 // Flip a boolean setter to true for COPIED_FEEDBACK_MS, then back to false.
 // Standard "copied to clipboard" feedback — keeps the call sites a one-liner.
 function flashCopied(setter: (v: boolean) => void): void {
