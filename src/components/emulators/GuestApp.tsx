@@ -5716,19 +5716,37 @@ function AddCreditsSheet({
 
 export function GuestApp() {
   const [tab, setTab] = useState<Tab>("discover");
-  const [session, setSession] = useState<unknown | null>(null);
+  const [session, setSession] = useState<{ user: { id: string } } | null>(null);
   const [authReady, setAuthReady] = useState(false);
+  const [onboarded, setOnboarded] = useState<boolean | null>(null);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
-      setSession(s);
+      setSession(s as { user: { id: string } } | null);
+      setOnboarded(null);
     });
     supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
+      setSession(data.session as { user: { id: string } } | null);
       setAuthReady(true);
     });
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (!session?.user?.id) return;
+    let cancelled = false;
+    supabase
+      .from("profiles")
+      .select("onboarded")
+      .eq("user_id", session.user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!cancelled) setOnboarded(Boolean(data?.onboarded));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [session?.user?.id]);
 
   if (!authReady) {
     return <div className="flex h-full items-center justify-center bg-background" />;
@@ -5736,6 +5754,14 @@ export function GuestApp() {
 
   if (!session) {
     return <GuestAuthScreen />;
+  }
+
+  if (onboarded === null) {
+    return <div className="flex h-full items-center justify-center bg-background" />;
+  }
+
+  if (!onboarded) {
+    return <GuestOnboardingScreen userId={session.user.id} onDone={() => setOnboarded(true)} />;
   }
 
   return (
