@@ -3076,9 +3076,14 @@ function DiscoverHeader() {
           >
             <Calendar className="h-3 w-3 shrink-0 text-secondary" />
             <div className="min-w-0 flex-1">
-              <div className="text-[7.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80 leading-none">When</div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-[7.5px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80 leading-none">When</span>
+                <span className="truncate font-display text-[10px] font-semibold leading-none text-muted-foreground/70">
+                  {whenTime.replace(":00 ", "").replace(" ", "")}
+                </span>
+              </div>
               <div className="mt-0.5 truncate font-display text-[12px] font-semibold leading-none text-foreground">
-                {whenDate} · {whenTime.replace(":00 ", "").replace(":30 ", ":30").replace(" ", "")}
+                {whenDate}
               </div>
             </div>
           </button>
