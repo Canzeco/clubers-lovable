@@ -3219,7 +3219,7 @@ function DiscoverHeader() {
 
 function WalletView({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   const [seg, setSeg] = useState<"active" | "expired" | "used">("active");
-  const [openCoupon, setOpenCoupon] = useState<any | null>(null);
+  const [openCoupon, setOpenCoupon] = useState<Coupon | null>(null);
   const active = [
     { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Wed May 14 · 8:00 PM", resParty: 2, expiresIn: "6d 12h", code: "MV-7702", firstVisit: false, step: 1 },
     { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, isReservation: true, resStatus: "pending" as const, resRequested: "Fri May 16 · 9:30 PM", resParty: 4, expiresIn: "—", code: "NB-9914", firstVisit: false, step: 0 },
@@ -3293,7 +3293,7 @@ function WalletView({ hideHeader = false }: { hideHeader?: boolean } = {}) {
       </div>
 
       <div className="space-y-4 px-5 pb-24">
-        {list.map((c: any, idx: number) => (
+        {list.map((c: Coupon, idx: number) => (
           <CouponTicket
             key={(c.name || "") + (c.code || c.when || idx)}
             c={c}
@@ -3314,7 +3314,7 @@ function WalletView({ hideHeader = false }: { hideHeader?: boolean } = {}) {
 }
 
 function ReservationsView({ hideHeader = false }: { hideHeader?: boolean } = {}) {
-  const [openCoupon, setOpenCoupon] = useState<any | null>(null);
+  const [openCoupon, setOpenCoupon] = useState<Coupon | null>(null);
   const upcoming = [
     { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Wed May 14 · 8:00 PM", resParty: 2, expiresIn: "6d 12h", code: "MV-7702", firstVisit: false, step: 1 },
     { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, isReservation: true, resStatus: "pending" as const, resRequested: "Fri May 16 · 9:30 PM", resParty: 4, expiresIn: "—", code: "NB-9914", firstVisit: false, step: 0 },
@@ -3357,7 +3357,7 @@ function ReservationsView({ hideHeader = false }: { hideHeader?: boolean } = {})
         ))}
       </div>
       <div className="space-y-4 px-5 pb-24">
-        {list.map((c: any, idx: number) => (
+        {list.map((c: Coupon, idx: number) => (
           <CouponTicket
             key={(c.name || "") + (c.code || idx)}
             c={c}
