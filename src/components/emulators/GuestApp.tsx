@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { GuestAuthScreen } from "./GuestAuthScreen";
+import { GuestOnboardingScreen } from "./GuestOnboardingScreen";
 import {
   Compass,
   Map as MapIcon,
