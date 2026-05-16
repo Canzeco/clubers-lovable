@@ -2204,7 +2204,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: Venue) => void } = {}) {
   // Closing time today, from venue hours array if present
   const todayClose = (() => {
     const today = WEEKDAYS[new Date().getDay()];
-    const row = (v as Venue).hours?.find?.((h: Hours) => h.day === today);
+    const row = v.schedule?.find?.((h: Hours) => h.day === today);
     const h: string = row?.hours ?? "";
     if (!h || h === "Closed") return null;
     const parts = h.split("–").map((s) => s.trim());
