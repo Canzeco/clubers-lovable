@@ -3381,7 +3381,7 @@ function CouponTicket({
   state,
   onClick,
 }: {
-  c: any;
+  c: Coupon;
   state: "active" | "expired" | "used";
   onClick: () => void;
 }) {
@@ -3629,7 +3629,7 @@ const VENUE_IMAGES = {
 // PSC  — Payment + Story + Cashback
 // Each workflow step has a short `label` (used by the pill/stepper) and a
 // longer `desc` (shown in the detail sheet under the label).
-export type WorkflowStep = { label: string; desc: string; Icon: any };
+export type WorkflowStep = { label: string; desc: string; Icon: IconType };
 
 const S_RESERVE: WorkflowStep = {
   label: "Booking reservation",
@@ -3710,7 +3710,7 @@ export type CouponType =
   | "pay_cashback"
   | "pay_story_cashback";
 
-export function getCouponType(c: any): CouponType {
+export function getCouponType(c: Coupon): CouponType {
   const isRes = !!c.isReservation;
   const cb = c.cb ?? 0;
   const reserveOnly = isRes && (c.reserveOnly || cb === 0);
@@ -3720,7 +3720,7 @@ export function getCouponType(c: any): CouponType {
   return story ? "pay_story_cashback" : "pay_cashback";
 }
 
-export function getCouponWorkflow(c: any): WorkflowStep[] {
+export function getCouponWorkflow(c: Coupon): WorkflowStep[] {
   switch (getCouponType(c)) {
     case "reservation": return WF_RESERVATION;
     case "reservation_pay_cashback": return WF_RES_PAY_CB;
@@ -3817,7 +3817,7 @@ function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps
   );
 }
 
-function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+function CouponDetailSheet({ coupon, onClose }: { coupon: Coupon; onClose: () => void }) {
   const photoMap: Record<string, string> = {
     "Casa Luminar": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
     "Neón Bar": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80",
@@ -3884,7 +3884,7 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
   );
 }
 
-function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+function CouponDetails({ coupon, onClose }: { coupon: Coupon; onClose: () => void }) {
   const isReservation =
     !!coupon.isReservation ||
     coupon.res === "pending" ||
@@ -4174,7 +4174,7 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   );
 }
 
-function StripeCheckoutModal({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+function StripeCheckoutModal({ coupon, onClose }: { coupon: Coupon; onClose: () => void }) {
   // The waiter only types in the final bill amount on their phone.
   const billTotal: number = coupon.bill?.total ?? 1340;
   const balanceAvailable = Math.min(coupon.balance ?? 180, Math.floor(billTotal * 0.4));
@@ -4352,7 +4352,7 @@ function StripeCheckoutModal({ coupon, onClose }: { coupon: any; onClose: () => 
   );
 }
 
-function PayWithCouponSheet({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+function PayWithCouponSheet({ coupon, onClose }: { coupon: Coupon; onClose: () => void }) {
   return (
     <div className="absolute inset-0 z-40 flex items-end justify-center bg-black/60 p-4" onClick={onClose}>
       <div
@@ -4408,7 +4408,7 @@ function PayWithCouponSheet({ coupon, onClose }: { coupon: any; onClose: () => v
   );
 }
 
-function RedeemFlow({ coupon }: { coupon: any }) {
+function RedeemFlow({ coupon }: { coupon: Coupon }) {
   const requireStory = (coupon.cb ?? 0) >= 15;
   const [step, setStep] = useState<"form" | "sending" | "waiting" | "approved">("form");
   const [bill, setBill] = useState("");
