@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      bots: {
+        Row: {
+          created_at: string
+          found: number
+          goal: number
+          icon: string
+          id: string
+          last_event: string | null
+          name: string
+          position: number
+          region: string
+          role: string
+          status: string
+          uses: string[]
+        }
+        Insert: {
+          created_at?: string
+          found?: number
+          goal?: number
+          icon: string
+          id?: string
+          last_event?: string | null
+          name: string
+          position?: number
+          region: string
+          role: string
+          status: string
+          uses?: string[]
+        }
+        Update: {
+          created_at?: string
+          found?: number
+          goal?: number
+          icon?: string
+          id?: string
+          last_event?: string | null
+          name?: string
+          position?: number
+          region?: string
+          role?: string
+          status?: string
+          uses?: string[]
+        }
+        Relationships: []
+      }
       faqs: {
         Row: {
           answer: string
@@ -35,6 +80,48 @@ export type Database = {
           id?: string
           position?: number
           question?: string
+        }
+        Relationships: []
+      }
+      integrations: {
+        Row: {
+          category: string
+          created_at: string
+          group_name: string
+          id: string
+          link: string | null
+          monthly: string | null
+          name: string
+          position: number
+          purpose: string
+          status: string
+          usage: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          group_name: string
+          id?: string
+          link?: string | null
+          monthly?: string | null
+          name: string
+          position?: number
+          purpose: string
+          status: string
+          usage?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          group_name?: string
+          id?: string
+          link?: string | null
+          monthly?: string | null
+          name?: string
+          position?: number
+          purpose?: string
+          status?: string
+          usage?: string | null
         }
         Relationships: []
       }
@@ -110,6 +197,36 @@ export type Database = {
           sex?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      sourcing_feed: {
+        Row: {
+          bot: string
+          created_at: string
+          id: string
+          kind: string
+          msg: string
+          position: number
+          t: string
+        }
+        Insert: {
+          bot: string
+          created_at?: string
+          id?: string
+          kind: string
+          msg: string
+          position?: number
+          t: string
+        }
+        Update: {
+          bot?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          msg?: string
+          position?: number
+          t?: string
         }
         Relationships: []
       }
