@@ -2860,12 +2860,12 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
         picks?: { venue: typeof venues[number]; reason: string }[];
       };
   const suggestions = [
-    "Rooftop con vista al atardecer",
-    "Cena romántica en Polanco",
-    "Brunch dominical familiar",
-    "Mezcal y vinilo después de medianoche",
-    "El antro más fresa de San Pedro",
-    "Lugar famoso de Luis Miguel en Acapulco",
+    "Rooftop with a sunset view",
+    "Romantic dinner in Polanco",
+    "Sunday family brunch",
+    "Mezcal and vinyl after midnight",
+    "Most fashionable club in San Pedro",
+    "Famous Luis Miguel spot in Acapulco",
   ];
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
@@ -2911,10 +2911,10 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
               🦚
             </div>
             <h3 className="mt-4 font-display text-2xl font-semibold leading-tight">
-              ¿Qué se te antoja?
+              What are you in the mood for?
             </h3>
             <p className="mt-1.5 max-w-[260px] text-[13px] text-muted-foreground">
-              Cuéntame el plan — vibra, zona, presupuesto — y te encuentro el lugar.
+              Tell me the plan — vibe, area, budget — and I'll find the spot.
             </p>
             <div className="mt-6 flex w-full flex-col gap-2">
               {suggestions.map((s) => (
@@ -2943,7 +2943,7 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
                   {m.sources && (
                     <div>
                       <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                        Fuentes
+                        Sources
                       </p>
                       <div className="flex flex-wrap gap-1.5">
                         {m.sources.map((s) => (
@@ -2984,7 +2984,7 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
               ),
             )}
             {thinking && (
-              <p className="text-[13px] italic text-muted-foreground">Pensando…</p>
+              <p className="text-[13px] italic text-muted-foreground">Thinking…</p>
             )}
           </div>
         )}
@@ -2995,7 +2995,7 @@ function AISearchMode({ onSelect }: { onSelect: (v: typeof venues[number]) => vo
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && ask(input)}
-            placeholder="Pregunta lo que sea…"
+            placeholder="Ask anything…"
             className="flex-1 bg-transparent py-1 text-[13px] text-foreground outline-none placeholder:text-muted-foreground"
           />
           <button
