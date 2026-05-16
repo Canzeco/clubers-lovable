@@ -92,6 +92,30 @@ export type Database = {
         }
         Relationships: []
       }
+      coupon_workflow_steps: {
+        Row: {
+          created_at: string
+          description: string
+          icon: string
+          label: string
+          step_key: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          icon: string
+          label: string
+          step_key: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon?: string
+          label?: string
+          step_key?: string
+        }
+        Relationships: []
+      }
       faqs: {
         Row: {
           answer: string
@@ -281,6 +305,27 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      venue_quicknav_sections: {
+        Row: {
+          created_at: string
+          id: string
+          label: string
+          position: number
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          label: string
+          position?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string
+          position?: number
         }
         Relationships: []
       }
