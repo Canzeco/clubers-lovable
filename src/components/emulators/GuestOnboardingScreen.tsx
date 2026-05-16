@@ -130,8 +130,6 @@ export function GuestOnboardingScreen({ userId, onDone }: { userId: string; onDo
                 <option value="">Select</option>
                 <option value="female">Female</option>
                 <option value="male">Male</option>
-                <option value="other">Other</option>
-                <option value="prefer_not">Prefer not to say</option>
               </select>
             </div>
           </div>
