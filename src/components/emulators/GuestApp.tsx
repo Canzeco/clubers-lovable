@@ -3829,13 +3829,13 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: Coupon; onClose: () =>
   const photoMap: Record<string, string> = {
     "Casa Luminar": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
     "Neón Bar": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80",
-    "Mar Verde": "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80",
+    "Mar Verde": DEFAULT_VENUE_PHOTO,
     "Loto Café": "https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=800&q=80",
     "Atelier Nueve": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80",
     "El Tope": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&q=80",
     "Forno": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80",
   };
-  const photo = photoMap[coupon.name ?? ""] || "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80";
+  const photo = photoMap[coupon.name ?? ""] || DEFAULT_VENUE_PHOTO;
   return (
     <div className="absolute inset-0 z-30 flex items-end bg-black/50" onClick={onClose}>
       <div
