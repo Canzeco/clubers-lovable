@@ -114,57 +114,15 @@ export function GuestOnboardingScreen({ userId, onDone }: { userId: string; onDo
           </div>
           <div>
             <label className="mb-1 block text-xs font-medium text-muted-foreground">Phone number</label>
-            <div className="flex gap-2">
-              <input
-                type="tel"
-                className={inputCls + " flex-1"}
-                value={phone}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                  setPhoneVerified(false);
-                  setOtpSent(false);
-                  setOtp("");
-                }}
-                placeholder="+5215512345678"
-                maxLength={30}
-                disabled={phoneVerified}
-                required
-              />
-              {phoneVerified ? (
-                <span className="flex h-11 items-center gap-1 rounded-xl bg-emerald-500/10 px-3 text-xs font-medium text-emerald-600">
-                  <Check className="h-4 w-4" /> Verified
-                </span>
-              ) : (
-                <button
-                  type="button"
-                  onClick={sendOtp}
-                  disabled={sendingOtp || !phone.trim()}
-                  className="h-11 rounded-xl border border-border px-3 text-xs font-medium disabled:opacity-60"
-                >
-                  {sendingOtp ? <Loader2 className="h-4 w-4 animate-spin" /> : otpSent ? "Resend" : "Send code"}
-                </button>
-              )}
-            </div>
-            {otpSent && !phoneVerified && (
-              <div className="mt-2 flex gap-2">
-                <input
-                  inputMode="numeric"
-                  className={inputCls + " flex-1 tracking-widest"}
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-                  placeholder="6-digit code"
-                  maxLength={6}
-                />
-                <button
-                  type="button"
-                  onClick={verifyOtp}
-                  disabled={verifyingOtp}
-                  className="flex h-11 items-center gap-1 rounded-xl bg-foreground px-3 text-xs font-medium text-background disabled:opacity-60"
-                >
-                  {verifyingOtp ? <Loader2 className="h-4 w-4 animate-spin" /> : <><ShieldCheck className="h-4 w-4" /> Verify</>}
-                </button>
-              </div>
-            )}
+            <input
+              type="tel"
+              className={inputCls}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+5215512345678"
+              maxLength={30}
+              required
+            />
           </div>
 
           {error && (
