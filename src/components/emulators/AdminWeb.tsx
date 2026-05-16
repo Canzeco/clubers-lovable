@@ -147,7 +147,7 @@ function FitChip({ fit }: { fit: Lead["fit"] }) {
 export function AdminWeb() {
   const [tab, setTab] = useState<Tab>("stage-sourced");
 
-  const mainNav: { id: Tab; label: string; Icon: any; hint: string }[] = [
+  const mainNav: { id: Tab; label: string; Icon: IconType; hint: string }[] = [
     { id: "stage-sourced", label: "Venues Sourcing", Icon: MapPin, hint: "Get the list of venues" },
     { id: "pipeline", label: "Venues Enriching", Icon: Sparkles, hint: "Build rich profiles" },
     { id: "editor", label: "Venues Manager", Icon: Building2, hint: "Boring manual edits" },
@@ -901,7 +901,17 @@ function MetricsImpl() {
   );
 }
 
-function Stat({ label, value, delta, Icon }: any) {
+function Stat({
+  label,
+  value,
+  delta,
+  Icon,
+}: {
+  label: string;
+  value: React.ReactNode;
+  delta: React.ReactNode;
+  Icon: IconType;
+}) {
   return (
     <div className="rounded-xl border border-border bg-card-soft p-4">
       <div className="flex items-center justify-between">
@@ -957,7 +967,7 @@ function TrustTier() {
   );
 }
 function VenueEditor() {
-  return null as any;
+  return null;
 }
 
 type VenueCard = {
@@ -1361,7 +1371,7 @@ function VenueEditorImpl() {
   );
 }
 
-function Field({ label, value, textarea, Icon }: { label: string; value: string; textarea?: boolean; Icon?: any }) {
+function Field({ label, value, textarea, Icon }: { label: string; value: string; textarea?: boolean; Icon?: IconType }) {
   return (
     <label className="block">
       <span className="mb-1 flex items-center gap-1 text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -1376,7 +1386,7 @@ function Field({ label, value, textarea, Icon }: { label: string; value: string;
   );
 }
 
-function ScoreRow({ Icon, label, hint, value, locked }: { Icon: any; label: string; hint: string; value: string; locked?: boolean }) {
+function ScoreRow({ Icon, label, hint, value, locked }: { Icon: IconType; label: string; hint: string; value: string; locked?: boolean }) {
   return (
     <div className="flex items-center gap-3 rounded-xl border border-border bg-card-soft p-3">
       <Icon className="h-4 w-4 text-secondary" />
@@ -1399,7 +1409,7 @@ type BotStatus = "running" | "idle" | "error";
 type BotDef = {
   name: string;
   role: string;
-  Icon: any;
+  Icon: IconType;
   status: BotStatus;
   region: string;
   found: number;
