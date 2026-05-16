@@ -134,6 +134,26 @@ const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 const DEFAULT_VENUE_PHOTO =
   "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80";
 
+// Walking-pace heuristic used for "X min walk" estimates from a km distance.
+const WALK_MIN_PER_KM = 12;
+
+// Hard ceiling on per-redemption cashback in MXN.
+const MAX_CASHBACK_MXN = 1000;
+
+// Parse a free-form numeric input; falls back to 0 for empty/invalid text.
+function toNumber(v: string | number | undefined | null): number {
+  if (typeof v === "number") return Number.isFinite(v) ? v : 0;
+  const n = parseFloat(String(v ?? ""));
+  return Number.isFinite(n) ? n : 0;
+}
+
+// "3.0 km" → minutes (rounded, min 1). Returns null for unparseable input.
+function walkMinutes(distance: string | number | undefined): number | null {
+  const km = toNumber(distance);
+  if (km <= 0) return null;
+  return Math.max(1, Math.round(km * WALK_MIN_PER_KM));
+}
+
 // Tier → Tailwind class lookup. Falls back to bronze for unknown tiers so
 // new tiers don't crash the UI; extend by adding entries below.
 const TIER_CLASSES = {
