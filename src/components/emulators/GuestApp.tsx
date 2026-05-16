@@ -123,7 +123,8 @@ export interface Coupon {
   firstVisit?: boolean;
   step?: number;
   used?: boolean;
-  [key: string]: unknown;
+  // Escape hatch — coupons carry many flow-specific fields.
+  [key: string]: any;
 }
 
 // Community catalog — shared across guest app & manager web. Joining a
