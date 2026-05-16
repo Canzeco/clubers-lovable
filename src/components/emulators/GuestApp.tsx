@@ -1153,7 +1153,7 @@ function PopularTimes() {
   ];
   const bars = patterns[day];
   const nowHour = new Date().getHours();
-  const nowIdx = day === todayIdx ? Math.max(0, Math.min(15, nowHour - startHour)) : -1;
+  const nowIdx = day === todayIdx ? clamp(nowHour - startHour, 0, 15) : -1;
   const highlight = nowIdx >= 0 ? nowIdx : bars.indexOf(Math.max(...bars));
   const label = (() => {
     const v = bars[highlight];
@@ -1462,7 +1462,7 @@ function MesitaVisitors({ venue }: { venue: Venue }) {
           const u = list[i % list.length];
           const ig = `${(126 - i * 9).toString()}.${(i * 3) % 10}k`;
           const base = u.score as number;
-          const jitter = (n: number) => Math.max(3, Math.min(5, Math.round(base + n)));
+          const jitter = (n: number) => clamp(Math.round(base + n), 3, 5);
           const subs = [
             { l: "Food", v: jitter(0) },
             { l: "Service", v: jitter(-0.2) },
@@ -2288,8 +2288,8 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
   const dx = drag?.x ?? 0;
   const dy = drag?.y ?? 0;
   const rot = dx / 14;
-  const likeOp = Math.min(1, Math.max(0, dx / 100));
-  const nopeOp = Math.min(1, Math.max(0, -dx / 100));
+  const likeOp = clamp(dx / 100, 0, 1);
+  const nopeOp = clamp(-dx / 100, 0, 1);
 
   const flying =
     dir === "l"
@@ -3475,7 +3475,7 @@ function CouponTicket({
   // Workflow derived from coupon type — one of 5 unique flows.
   const workflow = getCouponWorkflow(c);
   const stepLabels = workflow.map((s) => s.label);
-  const stepIdx = Math.max(0, Math.min(stepLabels.length - 1, c.step ?? 0));
+  const stepIdx = clamp(c.step ?? 0, 0, stepLabels.length - 1);
 
   let pill: { label: string; cls: string };
   if (isExpired) {
@@ -4017,7 +4017,7 @@ function CouponDetails({ coupon, onClose }: { coupon: Coupon; onClose: () => voi
   });
 
   const baseStep = stepOverride ?? coupon.step ?? 0;
-  const currentStep = Math.max(0, Math.min(steps.length - 1, baseStep));
+  const currentStep = clamp(baseStep, 0, steps.length - 1);
   const advance = () =>
     setStepOverride((prev) => Math.min(steps.length - 1, (prev ?? coupon.step ?? 0) + 1));
   // After the waiter scans + confirms, the flow advances to "Pay from your phone".
