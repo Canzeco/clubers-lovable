@@ -126,7 +126,7 @@ const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 
 // Default cover photo when a coupon/venue doesn't map to a known image.
 const DEFAULT_VENUE_PHOTO =
-  "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80";
+  "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1559339352-11d035aa65de.jpg";
 
 // Walking-pace heuristic used for "X min walk" estimates from a km distance.
 const WALK_MIN_PER_KM = 12;
@@ -297,7 +297,7 @@ const venues = [
   {
     name: "Casa Luminar",
     type: "Rooftop · Mediterranean",
-    img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
+    img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1517248135467-4c7edcad34c4.jpg",
     cashback: 20,
     price: "$$$",
     rating: 4.8,
@@ -330,16 +330,16 @@ const venues = [
       { day: "Sun", hours: "12:00pm – 11:00pm" },
     ],
     visitors: [
-      { name: "Valentina R.", handle: "@valenrose", tier: "gold", communities: ["tec"], score: 5.0, when: "Sat", comment: "Best sunset terrace in the city.", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80" },
-      { name: "Lucas M.", handle: "@lucasm", tier: "gold", communities: ["stanford"], score: 4.8, when: "Fri", comment: "The DJ set elevated everything.", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80" },
-      { name: "Sofía P.", handle: "@sofip", tier: "silver", communities: ["udem"], score: 5.0, when: "Last week", comment: "Service was flawless.", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80" },
-      { name: "Diego A.", handle: "@diegoa", tier: "bronze", communities: ["itam"], score: 4.5, when: "2 weeks ago", comment: "Worth the price tag.", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80" },
+      { name: "Valentina R.", handle: "@valenrose", tier: "gold", communities: ["tec"], score: 5.0, when: "Sat", comment: "Best sunset terrace in the city.", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1494790108377-be9c29b29330.jpg" },
+      { name: "Lucas M.", handle: "@lucasm", tier: "gold", communities: ["stanford"], score: 4.8, when: "Fri", comment: "The DJ set elevated everything.", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1500648767791-00dcc994a43e.jpg" },
+      { name: "Sofía P.", handle: "@sofip", tier: "silver", communities: ["udem"], score: 5.0, when: "Last week", comment: "Service was flawless.", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1438761681033-6461ffad8d80.jpg" },
+      { name: "Diego A.", handle: "@diegoa", tier: "bronze", communities: ["itam"], score: 4.5, when: "2 weeks ago", comment: "Worth the price tag.", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1507003211169-0a1dd7228f2d.jpg" },
     ],
   },
   {
     name: "Neón Bar",
     type: "Cocktails · Late night",
-    img: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80",
+    img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1514933651103-005eec06c04b.jpg",
     cashback: 20,
     price: "$$",
     rating: 4.6,
@@ -397,15 +397,15 @@ const venues = [
       { day: "Sun", hours: "9:00pm – 1:00am" },
     ],
     visitors: [
-      { name: "Camila V.", handle: "@camivb", tier: "gold", communities: ["tec", "stanford"], score: 5.0, when: "Wed", comment: "Mezcal flight is unreal.", img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=120&q=80" },
-      { name: "Mateo F.", handle: "@matef", tier: "gold", communities: ["udem"], score: 4.7, when: "Last Sat", comment: "Best vinyl set in town.", img: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=120&q=80" },
-      { name: "Renata K.", handle: "@renatak", tier: "silver", communities: ["itam"], score: 4.5, when: "Last week", comment: "Hidden gem, intimate vibe.", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" },
+      { name: "Camila V.", handle: "@camivb", tier: "gold", communities: ["tec", "stanford"], score: 5.0, when: "Wed", comment: "Mezcal flight is unreal.", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1531123897727-8f129e1688ce.jpg" },
+      { name: "Mateo F.", handle: "@matef", tier: "gold", communities: ["udem"], score: 4.7, when: "Last Sat", comment: "Best vinyl set in town.", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1492562080023-ab3db95bfbce.jpg" },
+      { name: "Renata K.", handle: "@renatak", tier: "silver", communities: ["itam"], score: 4.5, when: "Last week", comment: "Hidden gem, intimate vibe.", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1534528741775-53994a69daeb.jpg" },
     ],
   },
   {
     name: "Mar Verde",
     type: "Seafood · Brunch",
-    img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80",
+    img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1559339352-11d035aa65de.jpg",
     cashback: 0,
     price: "$$",
     rating: 4.4,
@@ -463,8 +463,8 @@ const venues = [
       { day: "Sun", hours: "8:00am – 6:00pm" },
     ],
     visitors: [
-      { name: "Ana T.", handle: "@anat", tier: "gold", communities: ["tec"], score: 4.8, when: "Yesterday", comment: "Brunch with ocean breeze, dreamy.", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&q=80" },
-      { name: "Tomás L.", handle: "@tomasl", tier: "silver", communities: ["stanford"], score: 4.6, when: "Last Sun", comment: "Seafood was incredibly fresh.", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&q=80" },
+      { name: "Ana T.", handle: "@anat", tier: "gold", communities: ["tec"], score: 4.8, when: "Yesterday", comment: "Brunch with ocean breeze, dreamy.", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1517841905240-472988babdf9.jpg" },
+      { name: "Tomás L.", handle: "@tomasl", tier: "silver", communities: ["stanford"], score: 4.6, when: "Last Sun", comment: "Seafood was incredibly fresh.", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1506794778202-cad84cf45f1d.jpg" },
     ],
   },
 ];
@@ -2175,8 +2175,8 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
 
   // Build slides per venue: [-2 hours, -1 reviews, 0 main, +1 photo, +2 photo]
   const extraPhotos = [
-    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80",
-    "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=900&q=80",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1414235077428-338989a2e8c0.jpg",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1467003909585-2f8a72700288.jpg",
   ];
   const minSlide = 0;
   const maxSlide = extraPhotos.length;
@@ -3686,17 +3686,17 @@ function CouponTicket({
 
 const VENUE_IMAGES = {
   "Mar Verde":
-    "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=240&h=320&fit=crop&q=70",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1559339352-11d035aa65de.jpg",
   "Neón Bar":
-    "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=240&h=320&fit=crop&q=70",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1514933651103-005eec06c04b.jpg",
   "Casa Luminar":
-    "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=240&h=320&fit=crop&q=70",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1519671482749-fd09be7ccebf.jpg",
   "Loto Café":
-    "https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=240&h=320&fit=crop&q=70",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1453614512568-c4024d13c247.jpg",
   "Atelier Nueve":
-    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=240&h=320&fit=crop&q=70",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1414235077428-338989a2e8c0.jpg",
   _default:
-    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=240&h=320&fit=crop&q=70",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1517248135467-4c7edcad34c4.jpg",
 } as const;
 
 // === 5 coupon workflows ===
@@ -3897,13 +3897,13 @@ function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps
 
 function CouponDetailSheet({ coupon, onClose }: { coupon: Coupon; onClose: () => void }) {
   const photoMap: Record<string, string> = {
-    "Casa Luminar": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
-    "Neón Bar": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80",
+    "Casa Luminar": "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1517248135467-4c7edcad34c4.jpg",
+    "Neón Bar": "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1514933651103-005eec06c04b.jpg",
     "Mar Verde": DEFAULT_VENUE_PHOTO,
-    "Loto Café": "https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=800&q=80",
-    "Atelier Nueve": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80",
-    "El Tope": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&q=80",
-    "Forno": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80",
+    "Loto Café": "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1453614512568-c4024d13c247.jpg",
+    "Atelier Nueve": "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1467003909585-2f8a72700288.jpg",
+    "El Tope": "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1565299585323-38d6b0865b47.jpg",
+    "Forno": "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1513104890138-7c749659a591.jpg",
   };
   const photo = photoMap[coupon.name ?? ""] || DEFAULT_VENUE_PHOTO;
   return (
@@ -4711,7 +4711,7 @@ function ProfileView() {
         <div className="flex items-center gap-4 pt-1">
           <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full ring-2 ring-tier-gold">
             <img
-              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80"
+              src="https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1494790108377-be9c29b29330.jpg"
               alt=""
               className="h-full w-full object-cover"
             />
@@ -6075,14 +6075,14 @@ function GuestAppShell({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) 
 }
 function PhotoCarousel() {
   const photos = [
-    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=80",
-    "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=900&q=80",
-    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80",
-    "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=900&q=80",
-    "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=900&q=80",
-    "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=900&q=80",
-    "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=900&q=80",
-    "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=900&q=80",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1517248135467-4c7edcad34c4.jpg",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1551782450-a2132b4ba21d.jpg",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1414235077428-338989a2e8c0.jpg",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1559339352-11d035aa65de.jpg",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1551024709-8f23befc6f87.jpg",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1467003909585-2f8a72700288.jpg",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1514933651103-005eec06c04b.jpg",
+    "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1528605248644-14dd04022da1.jpg",
   ];
   const ref = useRef<HTMLDivElement>(null);
   const [idx, setIdx] = useState(0);
