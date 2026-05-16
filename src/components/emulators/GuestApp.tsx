@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ComponentType, type SVGProps } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { GuestAuthScreen } from "./GuestAuthScreen";
 import { GuestOnboardingScreen } from "./GuestOnboardingScreen";
@@ -70,6 +70,62 @@ import {
 
 type Tab = "discover" | "rewards" | "qr" | "share" | "profile";
 type DiscoverMode = "catalog" | "map" | "tinder" | "ai";
+
+// Shared loose shapes — kept intentionally permissive so the static
+// emulator data can keep evolving without ceremony. The known fields are
+// documented for autocomplete; the index signature is the escape hatch.
+export type IconType = ComponentType<SVGProps<SVGSVGElement> & { className?: string }>;
+
+export type Hours = { day: string; hours: string };
+
+export interface Venue {
+  name?: string;
+  category?: string;
+  distance?: string;
+  cost?: number;
+  mesita?: number;
+  google?: number;
+  cb?: number;
+  hours?: Hours[];
+  visitors?: Visitor[];
+  // Escape hatch — the static catalog carries many one-off fields.
+  [key: string]: unknown;
+}
+
+export interface Visitor {
+  name?: string;
+  handle?: string;
+  img?: string;
+  tier?: string;
+  score?: number;
+  comment?: string;
+  communities?: string[];
+  // Escape hatch — visitor records carry many ad-hoc fields.
+  [key: string]: any;
+}
+
+export interface Coupon {
+  name?: string;
+  cb?: number;
+  color?: string;
+  category?: string;
+  distance?: string;
+  cost?: number;
+  mesita?: number;
+  google?: number;
+  isReservation?: boolean;
+  resStatus?: "confirmed" | "pending" | "cancelled";
+  resWhen?: string;
+  resRequested?: string;
+  resParty?: number;
+  expiresIn?: string;
+  code?: string;
+  firstVisit?: boolean;
+  step?: number;
+  used?: boolean;
+  // Escape hatch — coupons carry many flow-specific fields.
+  [key: string]: any;
+}
 
 // Community catalog — shared across guest app & manager web. Joining a
 // community requires email-domain verification (e.g. @tec.mx).
@@ -486,7 +542,7 @@ function ModeSwitcher({
   mode: DiscoverMode;
   setMode: (m: DiscoverMode) => void;
 }) {
-  const modes: { id: DiscoverMode; label: string; Icon: any }[] = [
+  const modes: { id: DiscoverMode; label: string; Icon: IconType }[] = [
     { id: "tinder", label: "Swipe", Icon: Flame },
     { id: "catalog", label: "Catalog", Icon: LayoutGrid },
     { id: "map", label: "Map", Icon: MapIcon },
@@ -1234,9 +1290,9 @@ function ReviewsSection() {
   );
 }
 
-function MesitaVisitors({ venue }: { venue: any }) {
+function MesitaVisitors({ venue }: { venue: Venue }) {
   const allCommunities = Array.from(
-    new Set<string>(venue.visitors.flatMap((v: any) => v.communities ?? [])),
+    new Set<string>((venue.visitors ?? []).flatMap((v: Visitor) => v.communities ?? [])),
   );
   const [filter, setFilter] = useState<string>("all");
   const sorts = [
@@ -1250,8 +1306,8 @@ function MesitaVisitors({ venue }: { venue: any }) {
   const filtered =
     filter === "all"
       ? venue.visitors
-      : venue.visitors.filter((v: any) => (v.communities ?? []).includes(filter));
-  const list = filtered.length ? filtered : venue.visitors;
+      : (venue.visitors ?? []).filter((v: Visitor) => (v.communities ?? []).includes(filter));
+  const list = (filtered?.length ? filtered : venue.visitors) ?? [];
   return (
     <div>
       <p className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -1720,7 +1776,7 @@ function ConciergeSection({ venueName }: { venueName: string }) {
 }
 
 function DetailsSection() {
-  const rows: { Icon: any; label: string; val: React.ReactNode }[] = [
+  const rows: { Icon: IconType; label: string; val: React.ReactNode }[] = [
     { Icon: Phone, label: "Contact", val: <a className="text-secondary" href="#">444 714 0346</a> },
     { Icon: Globe, label: "Website", val: <a className="text-secondary" href="#">@casaluminar</a> },
     { Icon: Banknote, label: "Price range", val: "MXN 310 – 500" },
@@ -2049,7 +2105,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: typeof venues[number]) => voi
   const todayClose = (() => {
     const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
     const today = days[new Date().getDay()];
-    const row = (v as any).hours?.find?.((h: any) => h.day === today);
+    const row = (v as Venue).hours?.find?.((h: Hours) => h.day === today);
     const h: string = row?.hours ?? "";
     if (!h || h === "Closed") return null;
     const parts = h.split("–").map((s) => s.trim());
@@ -3164,7 +3220,7 @@ function DiscoverHeader() {
 
 function WalletView({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   const [seg, setSeg] = useState<"active" | "expired" | "used">("active");
-  const [openCoupon, setOpenCoupon] = useState<any | null>(null);
+  const [openCoupon, setOpenCoupon] = useState<Coupon | null>(null);
   const active = [
     { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Wed May 14 · 8:00 PM", resParty: 2, expiresIn: "6d 12h", code: "MV-7702", firstVisit: false, step: 1 },
     { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, isReservation: true, resStatus: "pending" as const, resRequested: "Fri May 16 · 9:30 PM", resParty: 4, expiresIn: "—", code: "NB-9914", firstVisit: false, step: 0 },
@@ -3238,7 +3294,7 @@ function WalletView({ hideHeader = false }: { hideHeader?: boolean } = {}) {
       </div>
 
       <div className="space-y-4 px-5 pb-24">
-        {list.map((c: any, idx: number) => (
+        {list.map((c: Coupon, idx: number) => (
           <CouponTicket
             key={(c.name || "") + (c.code || c.when || idx)}
             c={c}
@@ -3259,7 +3315,7 @@ function WalletView({ hideHeader = false }: { hideHeader?: boolean } = {}) {
 }
 
 function ReservationsView({ hideHeader = false }: { hideHeader?: boolean } = {}) {
-  const [openCoupon, setOpenCoupon] = useState<any | null>(null);
+  const [openCoupon, setOpenCoupon] = useState<Coupon | null>(null);
   const upcoming = [
     { name: "Mar Verde", cb: 10, color: "tier-gold", category: "Seafood", distance: "3.0 km", cost: 4, mesita: 4.9, google: 4.7, isReservation: true, resStatus: "confirmed" as const, resWhen: "Wed May 14 · 8:00 PM", resParty: 2, expiresIn: "6d 12h", code: "MV-7702", firstVisit: false, step: 1 },
     { name: "Neón Bar", cb: 20, color: "tier-bronze", category: "Cocktails", distance: "2.1 km", cost: 3, mesita: 4.7, google: 4.5, isReservation: true, resStatus: "pending" as const, resRequested: "Fri May 16 · 9:30 PM", resParty: 4, expiresIn: "—", code: "NB-9914", firstVisit: false, step: 0 },
@@ -3302,7 +3358,7 @@ function ReservationsView({ hideHeader = false }: { hideHeader?: boolean } = {})
         ))}
       </div>
       <div className="space-y-4 px-5 pb-24">
-        {list.map((c: any, idx: number) => (
+        {list.map((c: Coupon, idx: number) => (
           <CouponTicket
             key={(c.name || "") + (c.code || idx)}
             c={c}
@@ -3326,7 +3382,7 @@ function CouponTicket({
   state,
   onClick,
 }: {
-  c: any;
+  c: Coupon;
   state: "active" | "expired" | "used";
   onClick: () => void;
 }) {
@@ -3574,7 +3630,7 @@ const VENUE_IMAGES = {
 // PSC  — Payment + Story + Cashback
 // Each workflow step has a short `label` (used by the pill/stepper) and a
 // longer `desc` (shown in the detail sheet under the label).
-export type WorkflowStep = { label: string; desc: string; Icon: any };
+export type WorkflowStep = { label: string; desc: string; Icon: IconType };
 
 const S_RESERVE: WorkflowStep = {
   label: "Booking reservation",
@@ -3655,7 +3711,7 @@ export type CouponType =
   | "pay_cashback"
   | "pay_story_cashback";
 
-export function getCouponType(c: any): CouponType {
+export function getCouponType(c: Coupon): CouponType {
   const isRes = !!c.isReservation;
   const cb = c.cb ?? 0;
   const reserveOnly = isRes && (c.reserveOnly || cb === 0);
@@ -3665,7 +3721,7 @@ export function getCouponType(c: any): CouponType {
   return story ? "pay_story_cashback" : "pay_cashback";
 }
 
-export function getCouponWorkflow(c: any): WorkflowStep[] {
+export function getCouponWorkflow(c: Coupon): WorkflowStep[] {
   switch (getCouponType(c)) {
     case "reservation": return WF_RESERVATION;
     case "reservation_pay_cashback": return WF_RES_PAY_CB;
@@ -3762,7 +3818,7 @@ function PipelineStepper({ step, steps = PIPELINE_STEPS }: { step: number; steps
   );
 }
 
-function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+function CouponDetailSheet({ coupon, onClose }: { coupon: Coupon; onClose: () => void }) {
   const photoMap: Record<string, string> = {
     "Casa Luminar": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
     "Neón Bar": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80",
@@ -3772,7 +3828,7 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
     "El Tope": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&q=80",
     "Forno": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80",
   };
-  const photo = photoMap[coupon.name] || "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80";
+  const photo = photoMap[coupon.name ?? ""] || "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80";
   return (
     <div className="absolute inset-0 z-30 flex items-end bg-black/50" onClick={onClose}>
       <div
@@ -3829,7 +3885,7 @@ function CouponDetailSheet({ coupon, onClose }: { coupon: any; onClose: () => vo
   );
 }
 
-function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+function CouponDetails({ coupon, onClose }: { coupon: Coupon; onClose: () => void }) {
   const isReservation =
     !!coupon.isReservation ||
     coupon.res === "pending" ||
@@ -4119,7 +4175,7 @@ function CouponDetails({ coupon, onClose }: { coupon: any; onClose: () => void }
   );
 }
 
-function StripeCheckoutModal({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+function StripeCheckoutModal({ coupon, onClose }: { coupon: Coupon; onClose: () => void }) {
   // The waiter only types in the final bill amount on their phone.
   const billTotal: number = coupon.bill?.total ?? 1340;
   const balanceAvailable = Math.min(coupon.balance ?? 180, Math.floor(billTotal * 0.4));
@@ -4297,7 +4353,7 @@ function StripeCheckoutModal({ coupon, onClose }: { coupon: any; onClose: () => 
   );
 }
 
-function PayWithCouponSheet({ coupon, onClose }: { coupon: any; onClose: () => void }) {
+function PayWithCouponSheet({ coupon, onClose }: { coupon: Coupon; onClose: () => void }) {
   return (
     <div className="absolute inset-0 z-40 flex items-end justify-center bg-black/60 p-4" onClick={onClose}>
       <div
@@ -4353,7 +4409,7 @@ function PayWithCouponSheet({ coupon, onClose }: { coupon: any; onClose: () => v
   );
 }
 
-function RedeemFlow({ coupon }: { coupon: any }) {
+function RedeemFlow({ coupon }: { coupon: Coupon }) {
   const requireStory = (coupon.cb ?? 0) >= 15;
   const [step, setStep] = useState<"form" | "sending" | "waiting" | "approved">("form");
   const [bill, setBill] = useState("");
@@ -4363,7 +4419,7 @@ function RedeemFlow({ coupon }: { coupon: any }) {
 
   const billNum = parseFloat(bill) || 0;
   const tipNum = parseFloat(tip) || 0;
-  const rawCashback = Math.round(billNum * (coupon.cb / 100));
+  const rawCashback = Math.round(billNum * ((coupon.cb ?? 0) / 100));
   const cashback = Math.min(rawCashback, 1000);
   const capped = rawCashback > 1000;
   const total = billNum + tipNum;
