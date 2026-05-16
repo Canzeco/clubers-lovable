@@ -1,4 +1,4 @@
-import { useState, type ComponentType, type SVGProps } from "react";
+import { useEffect, useState, type ComponentType, type SVGProps } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAppContent } from "@/lib/app-content";
@@ -682,9 +682,9 @@ function PromoRadar() {
   const [finds, setFinds] = useState<PromoFind[]>(seedFinds);
   const [filter, setFilter] = useState<"all" | "new" | "approved" | "rejected">("new");
 
-  if (finds !== seedFinds && finds.length === 0) {
+  useEffect(() => {
     setFinds(seedFinds);
-  }
+  }, [seedFinds]);
 
   const visible = finds.filter((f) => (filter === "all" ? true : f.status === filter));
   const counts = {
