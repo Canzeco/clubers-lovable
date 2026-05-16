@@ -135,16 +135,33 @@ const DEFAULT_VENUE_PHOTO =
   "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80";
 
 // Tier → Tailwind class lookup. Falls back to bronze for unknown tiers so
-// new tiers don't crash the UI; callers can extend the map as needed.
+// new tiers don't crash the UI; extend by adding entries below.
 const TIER_CLASSES = {
-  ring: { gold: "ring-tier-gold", silver: "ring-tier-silver", bronze: "ring-tier-bronze" },
-  bg: { gold: "bg-tier-gold", silver: "bg-tier-silver", bronze: "bg-tier-bronze" },
-  text: { gold: "text-tier-gold", silver: "text-tier-silver", bronze: "text-tier-bronze" },
+  ring: {
+    gold: "ring-tier-gold",
+    silver: "ring-tier-silver",
+    bronze: "ring-tier-bronze",
+    diamond: "ring-tier-diamond",
+  },
+  bg: {
+    gold: "bg-tier-gold",
+    silver: "bg-tier-silver",
+    bronze: "bg-tier-bronze",
+    diamond: "bg-tier-diamond",
+  },
+  text: {
+    gold: "text-tier-gold",
+    silver: "text-tier-silver",
+    bronze: "text-tier-bronze",
+    diamond: "text-tier-diamond",
+  },
 } as const;
 
+// Accepts "gold" or "tier-gold" (or undefined). Always returns a class.
 export function tierClass(prop: keyof typeof TIER_CLASSES, tier?: string): string {
-  const map = TIER_CLASSES[prop];
-  return (map as Record<string, string>)[tier ?? ""] ?? map.bronze;
+  const key = (tier ?? "").replace(/^tier-/, "");
+  const map = TIER_CLASSES[prop] as Record<string, string>;
+  return map[key] ?? map.bronze;
 }
 
 // Community catalog — shared across guest app & manager web. Joining a
@@ -4791,11 +4808,7 @@ function ProfileView() {
                 }`}
               >
                 <span
-                  className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold text-black ${
-                    r.color === "tier-gold" ? "bg-tier-gold" :
-                    r.color === "tier-silver" ? "bg-tier-silver" :
-                    r.color === "tier-diamond" ? "bg-tier-diamond" : "bg-tier-bronze"
-                  }`}
+                  className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold text-black ${tierClass("bg", r.color)}`}
                 >
                   {r.done ? <Check className="h-3.5 w-3.5" /> : r.t[0]}
                 </span>
