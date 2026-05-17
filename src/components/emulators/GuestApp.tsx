@@ -5900,7 +5900,6 @@ export function GuestApp() {
         tab={tab}
         setTab={setTab}
         onSignOut={() => {
-          setSession(null);
           setOnboarded(false);
           setTab("discover");
         }}
