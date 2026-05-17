@@ -63,11 +63,7 @@ export function ManagerWeb() {
   const [unitOpen, setUnitOpen] = useState(false);
   const units = DEMO_UNITS;
   const unit = units.find((u) => u.id === unitId) ?? units[0];
-  const [session, setSession] = useState<{ user: { id: string; email?: string } } | null>(null);
-
-  if (!session) {
-    return <ManagerAuthScreen onAuthenticated={(email) => setSession({ user: { id: "prototype-manager", email } })} />;
-  }
+  const [session, setSession] = useState<{ user: { id: string; email?: string } }>({ user: { id: "prototype-manager", email: "manager@casaluminar.mx" } });
 
   const nav: { id: TabId; label: string; Icon: typeof LayoutDashboard }[] = [
     { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
