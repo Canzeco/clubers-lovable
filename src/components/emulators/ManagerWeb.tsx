@@ -1468,7 +1468,7 @@ function Team() {
 
 /* ============== ACCOUNT ============== */
 
-function AccountView() {
+function AccountView({ onSignOut }: { onSignOut: () => void }) {
   const [notifs, setNotifs] = useState({
     redeems: true,
     payouts: true,
@@ -1477,17 +1477,7 @@ function AccountView() {
   });
   const [lang, setLang] = useState("EN");
   const [currency, setCurrency] = useState("MXN");
-  const { data: faqs = [] } = useQuery({
-    queryKey: ["faqs"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("faqs")
-        .select("question, answer, position")
-        .order("position", { ascending: true });
-      if (error) throw error;
-      return (data ?? []).map((f) => ({ q: f.question, a: f.answer }));
-    },
-  });
+  const faqs = DEMO_FAQS;
   const [open, setOpen] = useState<number | null>(0);
   return (
     <div className="space-y-5 p-6">
@@ -1663,7 +1653,7 @@ function AccountView() {
       </div>
 
       <button
-        onClick={() => { void supabase.auth.signOut(); }}
+        onClick={onSignOut}
         className="flex items-center gap-2 rounded-lg border border-border bg-card-soft px-3 py-2 text-xs text-rose-400 hover:bg-card"
       >
         <LogOut className="h-3.5 w-3.5" /> Sign out
@@ -1674,7 +1664,7 @@ function AccountView() {
 
 /* ============== AUTH SCREEN ============== */
 
-function ManagerAuthScreen() {
+function ManagerAuthScreen({ onAuthenticated }: { onAuthenticated: (email: string) => void }) {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -1682,30 +1672,18 @@ function ManagerAuthScreen() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setBusy(true);
-    try {
-      if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/manager`,
-            data: { venue_name: venueName },
-          },
-        });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setBusy(false);
+    if (!email.trim() || password.trim().length < 6 || (mode === "signup" && !venueName.trim())) {
+      setError("Complete the fields to enter the prototype");
+      return;
     }
+    setBusy(true);
+    window.setTimeout(() => {
+      onAuthenticated(email.trim() || "manager@mesita.app");
+      setBusy(false);
+    }, 450);
   };
 
   return (
