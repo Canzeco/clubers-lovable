@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type ComponentType, type SVGProps } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAppContent } from "@/lib/app-content";
 import { GuestAuthScreen } from "./GuestAuthScreen";
 import { GuestOnboardingScreen } from "./GuestOnboardingScreen";
@@ -460,7 +459,6 @@ const _venueSchema = [
 export type Venue = typeof _venueSchema[number];
 
 import { createContext as _createCtx, useContext as _useCtx } from "react";
-import { useQuery as _useQuery } from "@tanstack/react-query";
 
 const VenuesContext = _createCtx<Venue[]>([]);
 export function useVenues(): Venue[] {
@@ -468,21 +466,7 @@ export function useVenues(): Venue[] {
 }
 
 export function VenuesProvider({ children }: { children: React.ReactNode }) {
-  const { data } = _useQuery({
-    queryKey: ["guest-venues"],
-    queryFn: async (): Promise<Venue[]> => {
-      const { data, error } = await supabase
-        .from("venues")
-        .select("details")
-        .not("details", "is", null);
-      if (error) throw error;
-      return (data ?? [])
-        .map((r) => r.details as unknown as Venue)
-        .filter((v) => v && (v as { name?: string }).name);
-    },
-    staleTime: 60_000,
-  });
-  return <VenuesContext.Provider value={data ?? []}>{children}</VenuesContext.Provider>;
+  return <VenuesContext.Provider value={_venueSchema}>{children}</VenuesContext.Provider>;
 }
 
 
@@ -4731,7 +4715,7 @@ function RedeemFlow({ coupon }: { coupon: Coupon }) {
   );
 }
 
-function ProfileView() {
+function ProfileView({ onSignOut }: { onSignOut: () => void }) {
   const [igConnected, setIgConnected] = useState(false);
   const [showConnect, setShowConnect] = useState(false);
   const [showAppeal, setShowAppeal] = useState(false);
@@ -4999,7 +4983,7 @@ function ProfileView() {
             </div>
 
             <button
-              onClick={() => { void supabase.auth.signOut(); }}
+              onClick={onSignOut}
               className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card-soft px-4 py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground"
             >
               <LogOut className="h-4 w-4" /> Sign out
@@ -5904,75 +5888,40 @@ function AddCreditsSheet({
 
 export function GuestApp() {
   const [tab, setTab] = useState<Tab>("discover");
-  const [session, setSession] = useState<{ user: { id: string } } | null>(null);
-  const [authReady, setAuthReady] = useState(false);
-  const [onboarded, setOnboarded] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    let currentUserId: string | undefined;
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
-      const next = s as { user: { id: string } } | null;
-      setSession(next);
-      // Only reset onboarded when the signed-in user actually changes —
-      // token refreshes shouldn't flash a blank screen.
-      const nextId = next?.user?.id;
-      if (nextId !== currentUserId) {
-        currentUserId = nextId;
-        setOnboarded(null);
-      }
-    });
-    supabase.auth.getSession().then(({ data }) => {
-      const s = data.session as { user: { id: string } } | null;
-      currentUserId = s?.user?.id;
-      setSession(s);
-      setAuthReady(true);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (!session?.user?.id) return;
-    let cancelled = false;
-    supabase
-      .from("profiles")
-      .select("onboarded")
-      .eq("user_id", session.user.id)
-      .maybeSingle()
-      .then(({ data, error }) => {
-        if (cancelled) return;
-        if (error) {
-          // Network/RLS hiccup shouldn't trap the user on a blank screen —
-          // fall through to onboarding so they can recover.
-          console.error("[guest] profile fetch failed", error);
-          setOnboarded(false);
-          return;
-        }
-        setOnboarded(Boolean(data?.onboarded));
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [session?.user?.id]);
-
-  if (!authReady) {
-    return <div className="flex h-full items-center justify-center bg-background" />;
-  }
+  const [session, setSession] = useState<{ user: { id: string; email: string } } | null>(null);
+  const [onboarded, setOnboarded] = useState(false);
 
   if (!session) {
-    return <GuestAuthScreen />;
-  }
-
-  if (onboarded === null) {
-    return <div className="flex h-full items-center justify-center bg-background" />;
+    return (
+      <GuestAuthScreen
+        onAuthenticated={({ email }) => {
+          setSession({
+            user: {
+              id: "prototype-guest",
+              email,
+            },
+          });
+          setOnboarded(false);
+        }}
+      />
+    );
   }
 
   if (!onboarded) {
-    return <GuestOnboardingScreen userId={session.user.id} onDone={() => setOnboarded(true)} />;
+    return <GuestOnboardingScreen onDone={() => setOnboarded(true)} />;
   }
 
   return (
     <VenuesProvider>
-      <GuestAppShell tab={tab} setTab={setTab} />
+      <GuestAppShell
+        tab={tab}
+        setTab={setTab}
+        onSignOut={() => {
+          setSession(null);
+          setOnboarded(false);
+          setTab("discover");
+        }}
+      />
     </VenuesProvider>
   );
 }
@@ -6055,7 +6004,15 @@ function MyQrView() {
   );
 }
 
-function GuestAppShell({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) {
+function GuestAppShell({
+  tab,
+  setTab,
+  onSignOut,
+}: {
+  tab: Tab;
+  setTab: (t: Tab) => void;
+  onSignOut: () => void;
+}) {
   return (
     <div className="flex h-full flex-col bg-background text-foreground">
       <StatusBar />
@@ -6078,7 +6035,7 @@ function GuestAppShell({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }) 
         )}
         {tab === "profile" && (
           <div className="flex-1 overflow-y-auto scrollbar-hide">
-            <ProfileView />
+            <ProfileView onSignOut={onSignOut} />
           </div>
         )}
       </div>

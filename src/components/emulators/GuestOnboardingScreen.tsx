@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Loader2, ArrowRight } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { COUNTRIES } from "@/lib/countries";
 
 // Shared field chrome (label + matching input/select sizing).
@@ -27,7 +26,18 @@ function Field({
   );
 }
 
-export function GuestOnboardingScreen({ userId, onDone }: { userId: string; onDone: () => void }) {
+export function GuestOnboardingScreen({
+  onDone,
+}: {
+  onDone: (profile: {
+    name: string;
+    age: number;
+    sex: string;
+    country: string;
+    instagram: string;
+    phone: string;
+  }) => void;
+}) {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [sex, setSex] = useState("");
@@ -48,26 +58,17 @@ export function GuestOnboardingScreen({ userId, onDone }: { userId: string; onDo
       return;
     }
     setLoading(true);
-    try {
-      const { error } = await supabase
-        .from("profiles")
-        .update({
-          name: name.trim(),
-          age: ageNum,
-          sex,
-          country: country.trim(),
-          instagram: instagram.trim() || null,
-          phone: normalizedPhone,
-          onboarded: true,
-        })
-        .eq("user_id", userId);
-      if (error) throw error;
-      onDone();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
+    window.setTimeout(() => {
+      onDone({
+        name: name.trim(),
+        age: ageNum,
+        sex,
+        country: country.trim(),
+        instagram: instagram.trim(),
+        phone: normalizedPhone,
+      });
       setLoading(false);
-    }
+    }, 450);
   };
 
   return (
