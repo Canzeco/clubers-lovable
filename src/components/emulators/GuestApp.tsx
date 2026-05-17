@@ -5888,24 +5888,7 @@ function AddCreditsSheet({
 
 export function GuestApp() {
   const [tab, setTab] = useState<Tab>("discover");
-  const [session, setSession] = useState<{ user: { id: string; email: string } } | null>(null);
   const [onboarded, setOnboarded] = useState(false);
-
-  if (!session) {
-    return (
-      <GuestAuthScreen
-        onAuthenticated={({ email }) => {
-          setSession({
-            user: {
-              id: "prototype-guest",
-              email,
-            },
-          });
-          setOnboarded(false);
-        }}
-      />
-    );
-  }
 
   if (!onboarded) {
     return <GuestOnboardingScreen onDone={() => setOnboarded(true)} />;
@@ -5917,7 +5900,6 @@ export function GuestApp() {
         tab={tab}
         setTab={setTab}
         onSignOut={() => {
-          setSession(null);
           setOnboarded(false);
           setTab("discover");
         }}
