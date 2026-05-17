@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useAppContent } from "@/lib/app-content";
 import {
   BarChart3,
@@ -46,64 +44,29 @@ type TabId =
 
 type Unit = { id: string; name: string; city: string; emoji: string };
 
-function useUnits() {
-  return useQuery<Unit[]>({
-    queryKey: ["venues", "units"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("venues")
-        .select("id, slug, name, city, area, emoji")
-        .eq("is_unit", true)
-        .order("position", { ascending: true });
-      if (error) throw error;
-      return (data ?? []).map((v) => ({
-        id: v.slug ?? v.id,
-        name: v.name,
-        city: `${v.city ?? ""}${v.area ? ` · ${v.area}` : ""}`.trim(),
-        emoji: v.emoji ?? "🍽️",
-      }));
-    },
-  });
-}
+const DEMO_UNITS: Unit[] = [
+  { id: "casa-luminar", name: "Casa Luminar", city: "CDMX · Polanco", emoji: "🌙" },
+  { id: "bocanada", name: "Bocanada", city: "CDMX · Roma Norte", emoji: "🍷" },
+  { id: "patio-verde", name: "Patio Verde", city: "CDMX · Condesa", emoji: "🥐" },
+];
+
+const DEMO_FAQS = [
+  { q: "How does cashback approval work?", a: "For the prototype, approvals are simulated instantly after the waiter validates the ticket." },
+  { q: "Can I pause a campaign anytime?", a: "Yes — every promo control in this demo is frontend-only and updates immediately on screen." },
+  { q: "Do validators need a separate app?", a: "No. Mesita is designed so staff can validate redemptions with the waiter flow and QR tools you already previewed." },
+  { q: "Are payouts real in this prototype?", a: "No. Wallet balances, invoices, and transfers are mock data for demo purposes only." },
+];
 
 export function ManagerWeb() {
   const [tab, setTab] = useState<TabId>("dashboard");
-  const [unitId, setUnitId] = useState<string | null>(null);
+  const [unitId, setUnitId] = useState<string>(DEMO_UNITS[0].id);
   const [unitOpen, setUnitOpen] = useState(false);
-  const { data: units = [], isLoading: unitsLoading } = useUnits();
-  useEffect(() => {
-    if (!unitId && units.length > 0) setUnitId(units[0].id);
-  }, [unitId, units]);
+  const units = DEMO_UNITS;
   const unit = units.find((u) => u.id === unitId) ?? units[0];
-
   const [session, setSession] = useState<{ user: { id: string; email?: string } } | null>(null);
-  const [authReady, setAuthReady] = useState(false);
-
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
-      setSession(s as { user: { id: string; email?: string } } | null);
-    });
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session as { user: { id: string; email?: string } } | null);
-      setAuthReady(true);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
-  if (!authReady) {
-    return <div className="flex h-full items-center justify-center bg-background text-xs text-muted-foreground">Loading…</div>;
-  }
 
   if (!session) {
-    return <ManagerAuthScreen />;
-  }
-
-  if (unitsLoading || !unit) {
-    return (
-      <div className="flex h-full items-center justify-center bg-background text-xs text-muted-foreground">
-        Loading venues…
-      </div>
-    );
+    return <ManagerAuthScreen onAuthenticated={(email) => setSession({ user: { id: "prototype-manager", email } })} />;
   }
 
   const nav: { id: TabId; label: string; Icon: typeof LayoutDashboard }[] = [
@@ -221,7 +184,15 @@ export function ManagerWeb() {
         {tab === "analytics" && <Analytics />}
         {tab === "wallet" && <Wallet />}
         {tab === "team" && <Team />}
-        {tab === "account" && <AccountView />}
+        {tab === "account" && (
+          <AccountView
+            onSignOut={() => {
+              setSession(null);
+              setTab("dashboard");
+              setUnitId(DEMO_UNITS[0].id);
+            }}
+          />
+        )}
       </main>
     </div>
   );
