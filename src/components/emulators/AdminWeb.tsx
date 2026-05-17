@@ -1,6 +1,4 @@
 import { useEffect, useState, type ComponentType, type SVGProps } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { useAppContent } from "@/lib/app-content";
 import {
   Building2,
@@ -95,52 +93,21 @@ type Lead = {
   lastTouch: string;
 };
 
-function useStages() {
-  return useQuery<Stage[]>({
-    queryKey: ["pipeline_stages"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("pipeline_stages")
-        .select("stage_id, label, hint, color, count, position")
-        .order("position", { ascending: true });
-      if (error) throw error;
-      return (data ?? []).map((s) => ({
-        id: s.stage_id,
-        label: s.label,
-        hint: s.hint ?? "",
-        color: s.color ?? "bg-muted",
-        count: s.count ?? 0,
-      }));
-    },
-  });
-}
+const STAGES: Stage[] = [
+  { id: "sourced", label: "Sourced", hint: "Fresh candidates from maps and lists", color: "bg-secondary", count: 38 },
+  { id: "enriching", label: "Enriching", hint: "AI collecting socials, menus, and signals", color: "bg-accent", count: 22 },
+  { id: "review", label: "Review", hint: "Human QA before sales outreach", color: "bg-tier-gold", count: 11 },
+  { id: "sales", label: "Sales", hint: "Warm outreach and partner conversion", color: "bg-emerald-500", count: 7 },
+];
 
-function useLeads() {
-  return useQuery<Lead[]>({
-    queryKey: ["venues", "leads"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("venues")
-        .select("id, name, type, area, instagram, rating, ticket, fit, stage, owner, last_touch, position")
-        .eq("status", "lead")
-        .order("position", { ascending: true });
-      if (error) throw error;
-      return (data ?? []).map((v) => ({
-        id: v.id,
-        name: v.name,
-        type: v.type ?? "",
-        area: v.area ?? "",
-        ig: v.instagram ?? "—",
-        rating: Number(v.rating ?? 0),
-        ticket: v.ticket ?? "",
-        fit: (v.fit as Lead["fit"]) ?? "Warm",
-        stage: v.stage ?? "sourced",
-        owner: v.owner ?? "",
-        lastTouch: v.last_touch ?? "",
-      }));
-    },
-  });
-}
+const LEADS: Lead[] = [
+  { id: "1", name: "Casa Marea", type: "Seafood · Rooftop", area: "CDMX · Roma", ig: "@casamarea", rating: 4.8, ticket: "$900", fit: "Hot", stage: "sourced", owner: "Paula", lastTouch: "2h ago" },
+  { id: "2", name: "Forno Uno", type: "Italian · Late night", area: "Monterrey · San Pedro", ig: "@fornouno", rating: 4.6, ticket: "$720", fit: "Warm", stage: "sourced", owner: "Leo", lastTouch: "Today" },
+  { id: "3", name: "Salón Palma", type: "Cocktails", area: "CDMX · Juárez", ig: "@salonpalma", rating: 4.9, ticket: "$1,150", fit: "Hot", stage: "enriching", owner: "Iris", lastTouch: "AI running" },
+  { id: "4", name: "Bottega Norte", type: "Wine bar", area: "Guadalajara · Americana", ig: "@botteganorte", rating: 4.4, ticket: "$680", fit: "Warm", stage: "enriching", owner: "Iris", lastTouch: "Menus scraped" },
+  { id: "5", name: "Jardín Nómada", type: "Brunch · Garden", area: "CDMX · Condesa", ig: "@jardinnomada", rating: 4.7, ticket: "$540", fit: "Warm", stage: "review", owner: "Majo", lastTouch: "Pending approval" },
+  { id: "6", name: "Nocte Club", type: "Nightlife", area: "Monterrey · Centrito", ig: "@noctemty", rating: 4.5, ticket: "$1,400", fit: "Hot", stage: "sales", owner: "Diego", lastTouch: "Call booked" },
+];
 
 function FitChip({ fit }: { fit: Lead["fit"] }) {
   const map = {
