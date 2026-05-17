@@ -5888,11 +5888,6 @@ function AddCreditsSheet({
 
 export function GuestApp() {
   const [tab, setTab] = useState<Tab>("discover");
-  const [onboarded, setOnboarded] = useState(false);
-
-  if (!onboarded) {
-    return <GuestOnboardingScreen onDone={() => setOnboarded(true)} />;
-  }
 
   return (
     <VenuesProvider>
@@ -5900,7 +5895,6 @@ export function GuestApp() {
         tab={tab}
         setTab={setTab}
         onSignOut={() => {
-          setOnboarded(false);
           setTab("discover");
         }}
       />
