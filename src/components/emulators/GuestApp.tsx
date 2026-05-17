@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type ComponentType, type SVGProps } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAppContent } from "@/lib/app-content";
 import { GuestAuthScreen } from "./GuestAuthScreen";
 import { GuestOnboardingScreen } from "./GuestOnboardingScreen";
@@ -460,7 +459,6 @@ const _venueSchema = [
 export type Venue = typeof _venueSchema[number];
 
 import { createContext as _createCtx, useContext as _useCtx } from "react";
-import { useQuery as _useQuery } from "@tanstack/react-query";
 
 const VenuesContext = _createCtx<Venue[]>([]);
 export function useVenues(): Venue[] {
@@ -468,21 +466,7 @@ export function useVenues(): Venue[] {
 }
 
 export function VenuesProvider({ children }: { children: React.ReactNode }) {
-  const { data } = _useQuery({
-    queryKey: ["guest-venues"],
-    queryFn: async (): Promise<Venue[]> => {
-      const { data, error } = await supabase
-        .from("venues")
-        .select("details")
-        .not("details", "is", null);
-      if (error) throw error;
-      return (data ?? [])
-        .map((r) => r.details as unknown as Venue)
-        .filter((v) => v && (v as { name?: string }).name);
-    },
-    staleTime: 60_000,
-  });
-  return <VenuesContext.Provider value={data ?? []}>{children}</VenuesContext.Provider>;
+  return <VenuesContext.Provider value={_venueSchema}>{children}</VenuesContext.Provider>;
 }
 
 
