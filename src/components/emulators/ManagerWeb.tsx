@@ -183,7 +183,6 @@ export function ManagerWeb() {
         {tab === "account" && (
           <AccountView
             onSignOut={() => {
-              setSession(null);
               setTab("dashboard");
               setUnitId(DEMO_UNITS[0].id);
             }}
