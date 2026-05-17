@@ -973,14 +973,14 @@ type VenueCard = {
 };
 
 const VENUE_CARDS: VenueCard[] = [
-  { name: "La Cabaña de Pecos", city: "SLP · Lomas", category: "Steakhouse", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1414235077428-338989a2e8c0.jpg", managed: "admin", status: "draft", completeness: 72, active: true },
-  { name: "Bocanada", city: "CDMX · Roma Nte.", category: "Rooftop · Mediterranean", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1517248135467-4c7edcad34c4.jpg", managed: "partner", status: "live", completeness: 100, active: true },
-  { name: "Patio Verde", city: "CDMX · Condesa", category: "Brunch · Café", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1559339352-11d035aa65de.jpg", managed: "partner", status: "live", completeness: 96, active: true },
-  { name: "Galápago", city: "CDMX · Juárez", category: "Wine bar · Tapas", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1592861956120-e524fc739696.jpg", managed: "admin", status: "review", completeness: 58, active: true },
-  { name: "Casa Luminar", city: "CDMX · Polanco", category: "Cocktails · Late night", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1551024601-bec78aea704b.jpg", managed: "partner", status: "live", completeness: 100, active: true },
-  { name: "Sal de Mar", city: "Cancún · Centro", category: "Seafood", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1559339352-11d035aa65de.jpg", managed: "admin", status: "draft", completeness: 41, active: false },
-  { name: "Mar Verde", city: "Tulum", category: "Seafood · Beach", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1543007630-9710e4a00a20.jpg", managed: "partner", status: "live", completeness: 94, active: true },
-  { name: "El Huerto", city: "GDL · Lafayette", category: "Plant-forward", img: "https://vawhthlklfegseboiwye.supabase.co/storage/v1/object/public/venue-images/unsplash/1551782450-a2132b4ba21d.jpg", managed: "admin", status: "review", completeness: 63, active: false },
+  { name: "La Cabaña de Pecos", city: "SLP · Lomas", category: "Steakhouse", img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=80&auto=format&fit=crop", managed: "admin", status: "draft", completeness: 72, active: true },
+  { name: "Bocanada", city: "CDMX · Roma Nte.", category: "Rooftop · Mediterranean", img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80&auto=format&fit=crop", managed: "partner", status: "live", completeness: 100, active: true },
+  { name: "Patio Verde", city: "CDMX · Condesa", category: "Brunch · Café", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1200&q=80&auto=format&fit=crop", managed: "partner", status: "live", completeness: 96, active: true },
+  { name: "Galápago", city: "CDMX · Juárez", category: "Wine bar · Tapas", img: "https://images.unsplash.com/photo-1592861956120-e524fc739696?w=1200&q=80&auto=format&fit=crop", managed: "admin", status: "review", completeness: 58, active: true },
+  { name: "Casa Luminar", city: "CDMX · Polanco", category: "Cocktails · Late night", img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=1200&q=80&auto=format&fit=crop", managed: "partner", status: "live", completeness: 100, active: true },
+  { name: "Sal de Mar", city: "Cancún · Centro", category: "Seafood", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1200&q=80&auto=format&fit=crop", managed: "admin", status: "draft", completeness: 41, active: false },
+  { name: "Mar Verde", city: "Tulum", category: "Seafood · Beach", img: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=1200&q=80&auto=format&fit=crop", managed: "partner", status: "live", completeness: 94, active: true },
+  { name: "El Huerto", city: "GDL · Lafayette", category: "Plant-forward", img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=1200&q=80&auto=format&fit=crop", managed: "admin", status: "review", completeness: 63, active: false },
 ];
 
 function Venues() {
