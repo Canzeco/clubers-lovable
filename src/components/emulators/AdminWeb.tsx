@@ -211,8 +211,8 @@ function Pipeline() {
 }
 
 function StageView({ stageId }: { stageId: string }) {
-  const { data: stages = [] } = useStages();
-  const { data: leads = [] } = useLeads();
+  const stages = STAGES;
+  const leads = LEADS;
   const s = stages.find((x) => x.id === stageId);
   const items = leads.filter((l) => l.stage === stageId);
   if (!s) {
@@ -253,8 +253,8 @@ function StageView({ stageId }: { stageId: string }) {
 }
 
 function PipelineBoard() {
-  const { data: stages = [], isLoading: stagesLoading } = useStages();
-  const { data: leads = [] } = useLeads();
+  const stages = STAGES;
+  const leads = LEADS;
   return (
     <div className="space-y-4 p-6">
       <div className="flex items-end justify-between">
@@ -269,9 +269,6 @@ function PipelineBoard() {
         </button>
       </div>
 
-      {stagesLoading ? (
-        <div className="text-xs text-muted-foreground">Loading pipeline…</div>
-      ) : (
       <div className="grid grid-cols-4 gap-3">
         {stages.map((s) => {
           const items = leads.filter((l) => l.stage === s.id);
@@ -306,7 +303,6 @@ function PipelineBoard() {
           );
         })}
       </div>
-      )}
     </div>
   );
 }
@@ -1147,39 +1143,24 @@ const BOT_ICONS: Record<string, IconType> = {
   MapIcon, Sparkles, ShieldCheck, Send, Mic, Activity,
 };
 
-function useBots(): BotDef[] {
-  const { data } = useQuery({
-    queryKey: ["bots"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("bots").select("*").order("position");
-      if (error) throw error;
-      return data ?? [];
-    },
-    staleTime: 60_000,
-  });
-  return (data ?? []).map((r: any) => ({
-    name: r.name, role: r.role, Icon: BOT_ICONS[r.icon] ?? Activity,
-    status: r.status as BotStatus, region: r.region, found: r.found, goal: r.goal,
-    uses: r.uses ?? [], lastEvent: r.last_event ?? "",
-  }));
-}
+const BOTS: BotDef[] = [
+  { name: "Scout North", role: "sourcing", Icon: BOT_ICONS.MapIcon, status: "running", region: "Monterrey · premium districts", found: 182, goal: 220, uses: ["Maps", "Reviews", "IG scan"], lastEvent: "Found 12 new nightlife venues with premium spend signals." },
+  { name: "Enricher-02", role: "profile", Icon: BOT_ICONS.Sparkles, status: "running", region: "CDMX · Roma/Condesa", found: 88, goal: 120, uses: ["Meta", "Web", "Menu OCR"], lastEvent: "Pulled menus and pricing for Salón Palma." },
+  { name: "Trust Guard", role: "risk", Icon: BOT_ICONS.ShieldCheck, status: "idle", region: "All markets", found: 42, goal: 80, uses: ["Blacklist", "Reviews", "Duplicate check"], lastEvent: "Queued 4 suspicious duplicate accounts for review." },
+  { name: "Closer AI", role: "outreach", Icon: BOT_ICONS.Send, status: "running", region: "National", found: 37, goal: 60, uses: ["Email", "WhatsApp", "CRM sync"], lastEvent: "Sent a follow-up to Nocte Club owner with offer simulator." },
+  { name: "Voice Qualifier", role: "calls", Icon: BOT_ICONS.Mic, status: "error", region: "Guadalajara", found: 14, goal: 40, uses: ["ElevenLabs", "Call scripts"], lastEvent: "Carrier rate-limit hit · retry in 18 minutes." },
+  { name: "Ops Pulse", role: "monitoring", Icon: BOT_ICONS.Activity, status: "running", region: "Platform-wide", found: 95, goal: 100, uses: ["Metrics", "Alerts", "Anomaly scan"], lastEvent: "Detected promo spike in Casa Luminar and flagged for review." },
+];
 
-function useFeed() {
-  const { data } = useQuery({
-    queryKey: ["sourcing_feed"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("sourcing_feed").select("*").order("position");
-      if (error) throw error;
-      return data ?? [];
-    },
-    staleTime: 60_000,
-  });
-  return (data ?? []).map((r: any) => ({ t: r.t, b: r.bot, msg: r.msg, kind: r.kind }));
-}
+const FEED = [
+  { t: "09:14", b: "Scout North", msg: " tagged Casa Marea as high-fit rooftop prospect.", kind: "found" },
+  { t: "09:18", b: "Enricher-02", msg: " added 37 IG story highlights to Salón Palma.", kind: "hot" },
+  { t: "09:26", b: "Trust Guard", msg: " blocked a duplicate import from Yelp scrape.", kind: "ok" },
+  { t: "09:31", b: "Closer AI", msg: " booked a discovery call with Nocte Club for tomorrow.", kind: "hot" },
+  { t: "09:37", b: "Voice Qualifier", msg: " failed due to outbound limit; retry queued.", kind: "error" },
+];
 
 function BotFleet() {
-  const BOTS = useBots();
-  const FEED = useFeed();
   return (
     <div className="space-y-6 p-6">
       {/* header */}
@@ -1353,29 +1334,32 @@ type Integration = {
   link?: string;
 };
 
-function useStack(): { group: string; items: Integration[] }[] {
-  const { data } = useQuery({
-    queryKey: ["integrations"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("integrations").select("*").order("position");
-      if (error) throw error;
-      return data ?? [];
-    },
-    staleTime: 60_000,
-  });
-  const rows = data ?? [];
-  const groups = new Map<string, Integration[]>();
-  for (const r of rows as any[]) {
-    const item: Integration = {
-      name: r.name, category: r.category, purpose: r.purpose,
-      status: r.status as StackStatus, monthly: r.monthly ?? "—",
-      usage: r.usage ?? "—", link: r.link ?? undefined,
-    };
-    if (!groups.has(r.group_name)) groups.set(r.group_name, []);
-    groups.get(r.group_name)!.push(item);
-  }
-  return Array.from(groups, ([group, items]) => ({ group, items }));
-}
+const STACK: { group: string; items: Integration[] }[] = [
+  {
+    group: "Core platform",
+    items: [
+      { name: "Lovable", category: "Frontend", purpose: "Prototype UI and routing", status: "connected", monthly: "$0", usage: "Live preview active" },
+      { name: "GitHub", category: "Code", purpose: "Version control and repo sync", status: "connected", monthly: "$0", usage: "lovable branch" },
+      { name: "Vercel", category: "Deploy", purpose: "Web deployment target", status: "connected", monthly: "$24", usage: "2 preview deploys/day" },
+    ],
+  },
+  {
+    group: "Growth + AI",
+    items: [
+      { name: "Meta", category: "Social graph", purpose: "Instagram and WhatsApp growth loops", status: "connected", monthly: "$320", usage: "API calls 62%" },
+      { name: "ElevenLabs", category: "Voice", purpose: "Outbound agent calls", status: "low_credits", monthly: "$148", usage: "Credits 84% used" },
+      { name: "Infobip", category: "Messaging", purpose: "WhatsApp delivery", status: "connected", monthly: "$276", usage: "Healthy" },
+    ],
+  },
+  {
+    group: "Payments + ops",
+    items: [
+      { name: "Stripe", category: "Payments", purpose: "Cashback rails and billing", status: "connected", monthly: "$412", usage: "Stable" },
+      { name: "Semrush", category: "Research", purpose: "Venue intelligence enrichment", status: "missing", monthly: "—", usage: "Not connected" },
+      { name: "Notion", category: "Ops", purpose: "Internal playbooks and QA", status: "expired", monthly: "$12", usage: "Reconnect needed" },
+    ],
+  },
+];
 
 function statusMeta(s: StackStatus) {
   switch (s) {
@@ -1391,7 +1375,6 @@ function statusMeta(s: StackStatus) {
 }
 
 function SaasStack() {
-  const STACK = useStack();
   const all = STACK.flatMap((g) => g.items);
   const counts = {
     total: all.length,
