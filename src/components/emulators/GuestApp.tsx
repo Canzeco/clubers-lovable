@@ -2379,16 +2379,16 @@ function TinderMode({ onSelect }: { onSelect?: (v: Venue) => void } = {}) {
           </div>
           {/* swipe drag indicators (only visible while dragging) */}
           <div
-            className="pointer-events-none absolute left-5 top-5 rotate-[-12deg] rounded-md border-2 border-secondary px-3 py-1 text-sm font-bold uppercase tracking-widest text-secondary"
+            className="pointer-events-none absolute left-1/2 top-5 -translate-x-1/2 rounded-md border-2 border-secondary px-3 py-1 text-sm font-bold uppercase tracking-widest text-secondary"
             style={{ opacity: likeOp }}
           >
-            Yes
+            ↑ Yes
           </div>
           <div
-            className="pointer-events-none absolute right-5 top-5 rotate-[12deg] rounded-md border-2 border-destructive px-3 py-1 text-sm font-bold uppercase tracking-widest text-destructive"
+            className="pointer-events-none absolute left-1/2 bottom-5 -translate-x-1/2 rounded-md border-2 border-destructive px-3 py-1 text-sm font-bold uppercase tracking-widest text-destructive"
             style={{ opacity: nopeOp }}
           >
-            No
+            ↓ Skip
           </div>
           {isVideoSlide && (
             <button
