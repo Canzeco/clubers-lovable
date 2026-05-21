@@ -2293,8 +2293,8 @@ function TinderMode({ onSelect }: { onSelect?: (v: Venue) => void } = {}) {
       return;
     }
     const threshold = 90;
-    if (drag.x > threshold) fly("r");
-    else if (drag.x < -threshold) fly("l");
+    if (drag.y < -threshold) fly("r");
+    else if (drag.y > threshold) fly("l");
     else {
       setDrag(null);
       startRef.current = null;
@@ -2303,15 +2303,15 @@ function TinderMode({ onSelect }: { onSelect?: (v: Venue) => void } = {}) {
 
   const dx = drag?.x ?? 0;
   const dy = drag?.y ?? 0;
-  const rot = dx / 14;
-  const likeOp = clamp(dx / 100, 0, 1);
-  const nopeOp = clamp(-dx / 100, 0, 1);
+  const rot = dx / 40;
+  const likeOp = clamp(-dy / 100, 0, 1);
+  const nopeOp = clamp(dy / 100, 0, 1);
 
   const flying =
     dir === "l"
-      ? "translate(-120%, 0) rotate(-18deg)"
+      ? "translate(0, 120%) rotate(-4deg)"
       : dir === "r"
-      ? "translate(120%, 0) rotate(18deg)"
+      ? "translate(0, -120%) rotate(4deg)"
       : null;
 
   return (
@@ -2326,7 +2326,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: Venue) => void } = {}) {
           className={`relative flex flex-1 min-h-0 flex-col touch-none ${drag ? "" : "transition-transform duration-300"}`}
           style={{
             transform:
-              flying ?? `translate(${dx}px, ${dy * 0.3}px) rotate(${rot}deg)`,
+              flying ?? `translate(${dx * 0.2}px, ${dy}px) rotate(${rot}deg)`,
             opacity: dir ? 0 : 1,
             cursor: drag ? "grabbing" : "grab",
           }}
@@ -2379,16 +2379,16 @@ function TinderMode({ onSelect }: { onSelect?: (v: Venue) => void } = {}) {
           </div>
           {/* swipe drag indicators (only visible while dragging) */}
           <div
-            className="pointer-events-none absolute left-5 top-5 rotate-[-12deg] rounded-md border-2 border-secondary px-3 py-1 text-sm font-bold uppercase tracking-widest text-secondary"
+            className="pointer-events-none absolute left-1/2 top-5 -translate-x-1/2 rounded-md border-2 border-secondary px-3 py-1 text-sm font-bold uppercase tracking-widest text-secondary"
             style={{ opacity: likeOp }}
           >
-            Yes
+            ↑ Yes
           </div>
           <div
-            className="pointer-events-none absolute right-5 top-5 rotate-[12deg] rounded-md border-2 border-destructive px-3 py-1 text-sm font-bold uppercase tracking-widest text-destructive"
+            className="pointer-events-none absolute left-1/2 bottom-5 -translate-x-1/2 rounded-md border-2 border-destructive px-3 py-1 text-sm font-bold uppercase tracking-widest text-destructive"
             style={{ opacity: nopeOp }}
           >
-            No
+            ↓ Skip
           </div>
           {isVideoSlide && (
             <button
