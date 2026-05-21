@@ -2326,7 +2326,7 @@ function TinderMode({ onSelect }: { onSelect?: (v: Venue) => void } = {}) {
           className={`relative flex flex-1 min-h-0 flex-col touch-none ${drag ? "" : "transition-transform duration-300"}`}
           style={{
             transform:
-              flying ?? `translate(${dx}px, ${dy * 0.3}px) rotate(${rot}deg)`,
+              flying ?? `translate(${dx * 0.2}px, ${dy}px) rotate(${rot}deg)`,
             opacity: dir ? 0 : 1,
             cursor: drag ? "grabbing" : "grab",
           }}
