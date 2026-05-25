@@ -10,10 +10,10 @@ export const Route = createFileRoute("/business/")({
       { name: "description", content: "Sign in to your Mesita business workspace." },
     ],
   }),
-  component: ManagerLogin,
+  component: BusinessLogin,
 });
 
-function ManagerLogin() {
+function BusinessLogin() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("pato@canzeco.com");

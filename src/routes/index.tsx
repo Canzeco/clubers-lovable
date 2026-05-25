@@ -6,7 +6,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Mesita 🦚 — Platform" },
-      { name: "description", content: "Mesita platform: landing, manager, and consumer apps." },
+      { name: "description", content: "Mesita platform: landing, business, and consumer apps." },
     ],
   }),
   component: Index,

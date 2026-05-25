@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ChevronDown, LogOut } from "lucide-react";
 import type { ReactNode } from "react";
 
-// Shared header chrome for /manager/*, *except* the unit dashboard
+// Shared header chrome for /business/*, *except* the unit dashboard
 // (which renders its own full-bleed sidebar layout).
 export function BusinessShell({
   children,

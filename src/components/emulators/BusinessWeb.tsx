@@ -853,7 +853,7 @@ function Promos() {
             </p>
           </div>
           <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-[10px] font-semibold text-muted-foreground">
-            <Lock className="h-3 w-3" /> Manager-only
+            <Lock className="h-3 w-3" /> Business-only
           </span>
         </div>
 

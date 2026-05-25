@@ -1,5 +1,5 @@
-// Mock data for units a manager can operate. A "unit" is the entity a
-// manager runs — it can be one of four Clubers categories.
+// Mock data for units a business can operate. A "unit" is the entity a
+// business runs — it can be one of four Clubers categories.
 
 export type UnitType = "place" | "event" | "community" | "person" | "product" | "service" | "app";
 
@@ -22,7 +22,7 @@ export const UNIT_TYPE_META: Record<UnitType, { label: string; plural: string; h
   app:        { label: "App",        plural: "Apps",        hint: "Micro-app for consumers" },
 };
 
-// Mock — what the logged-in manager already operates.
+// Mock — what the logged-in business already operates.
 export const MY_UNITS: ManagedUnit[] = [
   {
     id: "cosmo-san-pedro",
