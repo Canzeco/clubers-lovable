@@ -1101,7 +1101,10 @@ function ShareScreen() {
 /* ─────────────────────────────────────────────────────────────
    PROFILE + UPGRADE
    ───────────────────────────────────────────────────────────── */
-function Profile({ tier, onUpgrade, savedCount }: { tier: Tier; onUpgrade: () => void; savedCount: number }) {
+function Profile({ tier, paths, onUpgrade, savedCount }: { tier: Tier; paths: ClassPaths; onUpgrade: () => void; savedCount: number }) {
+  const active = resolveActiveTier(paths);
+  const game = SEED_USER.gamification;
+  const xpPct = Math.min(100, Math.round((game.xp / game.xpToNext) * 100));
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
       <div className="flex items-center gap-3">
@@ -1111,8 +1114,8 @@ function Profile({ tier, onUpgrade, savedCount }: { tier: Tier; onUpgrade: () =>
           </div>
         </div>
         <div className="flex-1">
-          <p className="font-display text-xl font-bold">Daniel R.</p>
-          <p className="text-xs text-white/55"><Instagram className="-mt-0.5 mr-1 inline h-3 w-3" />@daniel · {t.profile.ig}</p>
+          <p className="font-display text-xl font-bold">{SEED_USER.name}</p>
+          <p className="text-xs text-white/55"><Instagram className="-mt-0.5 mr-1 inline h-3 w-3" />{SEED_USER.handle} · {paths.followers.followers.toLocaleString()} followers</p>
         </div>
       </div>
 
@@ -1122,6 +1125,7 @@ function Profile({ tier, onUpgrade, savedCount }: { tier: Tier; onUpgrade: () =>
           <TierBadge tier={tier} />
         </div>
         <p className="mt-2 font-display text-2xl font-bold">{TIER_META[tier].label}</p>
+        <p className="mt-1 text-[11px] text-white/55">{t.profile.activePath}: <span className="text-white/85 capitalize">{active.source}</span></p>
         <button onClick={onUpgrade} className="mt-3 inline-flex items-center gap-1 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-black">
           <Crown className="h-3.5 w-3.5" /> {t.profile.upgrade}
         </button>
@@ -1133,7 +1137,7 @@ function Profile({ tier, onUpgrade, savedCount }: { tier: Tier; onUpgrade: () =>
           {[
             { label: t.profile.visits, value: "23" },
             { label: t.profile.saved, value: String(savedCount) },
-            { label: t.profile.credits, value: "$240" },
+            { label: t.profile.credits, value: `$${SEED_USER.wallet.credits}` },
           ].map(s => (
             <div key={s.label} className="rounded-xl border border-white/10 bg-white/[0.04] py-3">
               <p className="font-display text-xl font-bold">{s.value}</p>
@@ -1143,12 +1147,60 @@ function Profile({ tier, onUpgrade, savedCount }: { tier: Tier; onUpgrade: () =>
         </div>
       </section>
 
+      {/* Gamification */}
+      <section className="mt-6">
+        <p className="eyebrow !text-white/40">{t.profile.gamification}</p>
+        <div className="mt-2 rounded-2xl border border-white/10 bg-gradient-to-br from-indigo-500/10 to-fuchsia-500/10 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-white/45">{t.profile.levelLabel}</p>
+              <p className="font-display text-xl font-bold">{game.level}</p>
+            </div>
+            <div className="flex items-center gap-3 text-[11px] text-white/75">
+              <span className="inline-flex items-center gap-1"><Zap className="h-3.5 w-3.5 text-amber-300" />{game.xp}/{game.xpToNext} {t.profile.xpLabel}</span>
+              <span className="inline-flex items-center gap-1"><Flame className="h-3.5 w-3.5 text-rose-300" />{game.streak}w {t.profile.streakLabel}</span>
+            </div>
+          </div>
+          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+            <div className="h-full rounded-full bg-gradient-to-r from-fuchsia-400 to-amber-300" style={{ width: `${xpPct}%` }} />
+          </div>
+          <p className="mt-3 text-[10px] uppercase tracking-wider text-white/45">{t.profile.badgesLabel}</p>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            {game.badges.map(b => (
+              <span key={b.id} className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px]">
+                <span>{b.emoji}</span>{b.label}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="mt-6">
         <p className="eyebrow !text-white/40">{t.profile.paths}</p>
         <div className="mt-2 space-y-2">
-          <PathRow icon={<Instagram className="h-4 w-4" />} title={t.profile.pathFollowers} desc={t.profile.pathFollowersDesc} />
-          <PathRow icon={<Wallet className="h-4 w-4" />} title={t.profile.pathSub} desc={t.profile.pathSubDesc} />
-          <PathRow icon={<Crown className="h-4 w-4" />} title={t.profile.pathManual} desc={t.profile.pathManualDesc} locked />
+          <PathRow
+            icon={<Instagram className="h-4 w-4" />}
+            title={t.profile.pathFollowers}
+            desc={`${paths.followers.followers.toLocaleString()} followers → ${TIER_META[paths.followers.tier].label} · ${t.profile.pathFollowersStory}`}
+            state={paths.followers.state}
+            highlight={active.source === "followers"}
+          />
+          <PathRow
+            icon={<Wallet className="h-4 w-4" />}
+            title={t.profile.pathSub}
+            desc={paths.subscription.state === "active" && paths.subscription.tier
+              ? `${TIER_META[paths.subscription.tier].label} · renueva ${paths.subscription.renewsOn ?? "—"}`
+              : t.profile.pathSubDesc}
+            state={paths.subscription.state}
+            highlight={active.source === "subscription"}
+          />
+          <PathRow
+            icon={<Crown className="h-4 w-4" />}
+            title={t.profile.pathManual}
+            desc={t.profile.pathManualDesc}
+            state={paths.manual.state}
+            highlight={active.source === "manual"}
+          />
         </div>
       </section>
 
@@ -1162,15 +1214,23 @@ function Profile({ tier, onUpgrade, savedCount }: { tier: Tier; onUpgrade: () =>
   );
 }
 
-function PathRow({ icon, title, desc, locked }: { icon: React.ReactNode; title: string; desc: string; locked?: boolean }) {
+function PathRow({ icon, title, desc, state, highlight }: { icon: React.ReactNode; title: string; desc: string; state: "active" | "inactive" | "locked"; highlight?: boolean }) {
+  const stateLabel = state === "active" ? t.profile.pathStateActive : state === "locked" ? t.profile.pathStateLocked : t.profile.pathStateInactive;
+  const stateClass = state === "active" ? "bg-emerald-300/15 text-emerald-200" : state === "locked" ? "bg-white/10 text-white/45" : "bg-white/10 text-white/55";
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+    <div className={`flex items-start gap-3 rounded-xl border p-3 ${highlight ? "border-fuchsia-300/50 bg-fuchsia-500/10" : "border-white/10 bg-white/[0.04]"}`}>
       <div className="rounded-lg bg-white/10 p-2 text-white/85">{icon}</div>
       <div className="flex-1">
-        <p className="text-sm font-semibold">{title}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-semibold">{title}</p>
+          {highlight && <span className="rounded-full bg-fuchsia-300/20 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-fuchsia-200">Activo</span>}
+        </div>
         <p className="mt-0.5 text-[11px] text-white/55">{desc}</p>
       </div>
-      {locked && <Lock className="h-4 w-4 text-white/40" />}
+      <span className={`shrink-0 rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${stateClass}`}>
+        {state === "locked" && <Lock className="mr-1 inline h-2.5 w-2.5" />}
+        {stateLabel}
+      </span>
     </div>
   );
 }
