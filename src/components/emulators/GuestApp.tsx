@@ -5,7 +5,7 @@ import {
   Star, BadgeCheck, ChevronLeft, ChevronRight, Calendar, Clock, Users,
   X, ArrowUp, ArrowDown, Loader2, Send, Gift, Copy, Instagram, Globe,
   Crown, Check, Lock, Heart, Wallet, Settings, ArrowRight, Flame,
-  CircleDollarSign, ArrowDownLeft, ArrowUpRight,
+  TrendingUp, CircleDollarSign, ArrowDownLeft, ArrowUpRight,
 } from "lucide-react";
 import {
   SEED_LISTINGS, TIERS, TIER_META, INFLUENCE_META, SEED_USER, clubersApi, t,
