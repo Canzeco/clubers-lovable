@@ -289,6 +289,11 @@ export const SEED_LISTINGS: Listing[] = [
     walkMin: 0,
     description: "The biggest festival in northern Mexico. Three stages, 100+ artists.",
     whenLabel: "Apr 3–5",
+    offerings: [
+      { id: "off-vip", name: "VIP wristband upgrade", kind: "service", price: 1800, description: "Skip the line, VIP viewing platform, dedicated bar." },
+      { id: "off-merch", name: "Pa'l Norte tour tee", kind: "product", price: 450, description: "Official 2026 lineup tee — limited print." },
+      { id: "off-valet", name: "Valet + on-site parking", kind: "service", price: 600, description: "Reserve a spot before the festival sells out parking." },
+    ],
   },
   // ── Communities ───────────────────────────────────────────
   // ── Experiences ───────────────────────────────────────────
