@@ -5,8 +5,8 @@ export const Route = createFileRoute("/guest")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Mesita — Guest" },
-      { name: "description", content: "Mesita guest app: discover venues, claim cashback, redeem with QR." },
+      { title: "Clubers — Guest" },
+      { name: "description", content: "Clubers: AI que cura tu noche. Descubre lugares, experiencias y eventos con beneficios para miembros." },
     ],
   }),
   component: () => (
