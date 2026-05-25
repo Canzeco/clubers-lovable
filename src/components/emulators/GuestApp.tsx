@@ -827,6 +827,49 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
           </div>
         )}
 
+        {/* Community group perks */}
+        {(unlockedCommunityPerks.length > 0 || lockedCommunityPerks.length > 0) && (
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <div className="flex items-center gap-2">
+              <Users className="h-3.5 w-3.5 text-fuchsia-300" />
+              <p className="text-[10px] uppercase tracking-wider text-white/55">{t.venue.communityPerksTitle}</p>
+            </div>
+            {unlockedCommunityPerks.length > 0 && (
+              <div className="mt-2 space-y-1.5">
+                {unlockedCommunityPerks.map(p => (
+                  <div key={p.communityId} className="flex items-center justify-between rounded-lg border border-emerald-300/30 bg-emerald-300/10 px-3 py-2">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-emerald-100">{p.label}</p>
+                      <p className="truncate text-[10px] uppercase tracking-wider text-emerald-200/70">via {p.communityName}</p>
+                    </div>
+                    <Check className="h-4 w-4 shrink-0 text-emerald-300" />
+                  </div>
+                ))}
+              </div>
+            )}
+            {lockedCommunityPerks.length > 0 && (
+              <div className="mt-3">
+                <p className="text-[10px] uppercase tracking-wider text-white/40">{t.venue.communityPerksLocked}</p>
+                <div className="mt-1.5 space-y-1.5">
+                  {lockedCommunityPerks.map(p => (
+                    <div key={p.communityId} className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm text-white/80">{p.label}</p>
+                        <p className="truncate text-[10px] uppercase tracking-wider text-white/40">via {p.communityName}</p>
+                      </div>
+                      <button
+                        onClick={() => onJoinCommunity(p.communityId)}
+                        className="shrink-0 rounded-md bg-white px-2 py-1 text-[10px] font-semibold text-black">
+                        {t.venue.joinToUnlock}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         <p className="text-sm leading-relaxed text-white/80">{listing.description}</p>
 
         <div className="grid grid-cols-2 gap-2 text-xs">
