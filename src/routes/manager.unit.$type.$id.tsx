@@ -2,9 +2,9 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ManagerWeb } from "@/components/emulators/ManagerWeb";
 import { ManagerShell } from "@/components/manager/Shell";
 import { findUnit, UNIT_TYPE_META, type UnitType } from "@/lib/manager/units";
-import { PartyPopper, Users, ChevronLeft, Sparkles } from "lucide-react";
+import { PartyPopper, Users, ChevronLeft, Sparkles, UserCircle2, ShoppingBag, Wrench } from "lucide-react";
 
-const VALID_TYPES: UnitType[] = ["place", "event", "community"];
+const VALID_TYPES: UnitType[] = ["place", "event", "community", "person", "product", "service"];
 
 export const Route = createFileRoute("/manager/unit/$type/$id")({
   ssr: false,
@@ -67,7 +67,12 @@ function UnitDashboard() {
 }
 
 function SoonDashboard({ type, name }: { type: Exclude<UnitType, "place">; name: string }) {
-  const Icon = type === "event" ? PartyPopper : Users;
+  const Icon =
+    type === "event" ? PartyPopper :
+    type === "community" ? Users :
+    type === "person" ? UserCircle2 :
+    type === "product" ? ShoppingBag :
+    Wrench;
   const meta = UNIT_TYPE_META[type];
 
   return (
