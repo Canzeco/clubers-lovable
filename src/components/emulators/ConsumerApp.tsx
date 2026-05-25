@@ -548,14 +548,34 @@ function PlanCard({ step, listing, tier, saved, onOpen, onSave, onReserve }: {
 }
 
 /* ── Swipe Deck ─────────────────────────────────────────────── */
-function SwipeDeck({ listings, tier, onOpen, onSave, onReserve }: { listings: Listing[]; tier: Tier; onOpen: (l: Listing) => void; onSave: (id: string) => void; onReserve: (l: Listing) => void }) {
+function SwipeDeck({ listings, tier, onOpen, onSave, onReserve, interleaveByCategory }: { listings: Listing[]; tier: Tier; onOpen: (l: Listing) => void; onSave: (id: string) => void; onReserve: (l: Listing) => void; interleaveByCategory?: boolean }) {
+  const ordered = useMemo(() => {
+    if (!interleaveByCategory) return listings;
+    // Round-robin by category so the user sees one example of each
+    // entity type before repeating: place → event → community → person →
+    // product → service → app → place ...
+    const order: Category[] = ["place", "event", "community", "person", "product", "service", "app"];
+    const buckets = new Map<Category, Listing[]>();
+    for (const c of order) buckets.set(c, []);
+    for (const l of listings) buckets.get(l.category)?.push(l);
+    const out: Listing[] = [];
+    let added = true;
+    while (added) {
+      added = false;
+      for (const c of order) {
+        const b = buckets.get(c)!;
+        if (b.length) { out.push(b.shift()!); added = true; }
+      }
+    }
+    return out;
+  }, [listings, interleaveByCategory]);
   const [idx, setIdx] = useState(0);
   const [drag, setDrag] = useState({ y: 0 });
   const [flying, setFlying] = useState<"up" | "down" | null>(null);
   const startY = useRef<number | null>(null);
 
-  const current = listings[idx];
-  const next = listings[idx + 1];
+  const current = ordered[idx];
+  const next = ordered[idx + 1];
 
   const onPointerDown = (e: React.PointerEvent) => { startY.current = e.clientY; };
   const onPointerMove = (e: React.PointerEvent) => { if (startY.current != null) setDrag({ y: e.clientY - startY.current }); };
@@ -564,7 +584,7 @@ function SwipeDeck({ listings, tier, onOpen, onSave, onReserve }: { listings: Li
       const dir = drag.y < 0 ? "up" : "down";
       if (dir === "up") onSave(current.id);
       setFlying(dir);
-      setTimeout(() => { setIdx(i => (i + 1) % listings.length); setDrag({ y: 0 }); setFlying(null); }, 220);
+      setTimeout(() => { setIdx(i => (i + 1) % ordered.length); setDrag({ y: 0 }); setFlying(null); }, 220);
     } else { setDrag({ y: 0 }); }
     startY.current = null;
   };
@@ -576,7 +596,7 @@ function SwipeDeck({ listings, tier, onOpen, onSave, onReserve }: { listings: Li
   const advance = (dir: "up" | "down") => {
     if (dir === "up") onSave(current.id);
     setFlying(dir);
-    setTimeout(() => { setIdx(i => (i + 1) % listings.length); setDrag({ y: 0 }); setFlying(null); }, 220);
+    setTimeout(() => { setIdx(i => (i + 1) % ordered.length); setDrag({ y: 0 }); setFlying(null); }, 220);
   };
 
   return (
