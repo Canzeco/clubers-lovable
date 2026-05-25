@@ -1,7 +1,7 @@
 // Mock data for units a manager can operate. A "unit" is the entity a
 // manager runs — it can be one of four Clubers categories.
 
-export type UnitType = "place" | "experience" | "event" | "community";
+export type UnitType = "place" | "event" | "community";
 
 export interface ManagedUnit {
   id: string;
@@ -14,7 +14,6 @@ export interface ManagedUnit {
 
 export const UNIT_TYPE_META: Record<UnitType, { label: string; plural: string; hint: string }> = {
   place:      { label: "Place",      plural: "Places",      hint: "Restaurant, bar, rooftop, club" },
-  experience: { label: "Experience", plural: "Experiences", hint: "Tasting, workshop, guided activity" },
   event:      { label: "Event",      plural: "Events",      hint: "Concert, pop-up, one-off night" },
   community:  { label: "Community",  plural: "Communities", hint: "Members club, school, group" },
 };
@@ -39,7 +38,7 @@ export const MY_UNITS: ManagedUnit[] = [
   },
   {
     id: "cata-mezcal",
-    type: "experience",
+    type: "event",
     name: "Cata de Mezcal con maestro",
     address: "Barrio Antiguo · Calle Padre Mier 200",
     city: "Monterrey",

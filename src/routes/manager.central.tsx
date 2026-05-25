@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPin, Plus, Sparkles, Compass, PartyPopper, Users, Store } from "lucide-react";
+import { MapPin, Plus, Sparkles, PartyPopper, Users, Store } from "lucide-react";
 import { ManagerShell } from "@/components/manager/Shell";
 import { MY_UNITS, UNIT_TYPE_META, type UnitType } from "@/lib/manager/units";
 
@@ -16,14 +16,12 @@ export const Route = createFileRoute("/manager/central")({
 
 const TYPE_ICON: Record<UnitType, typeof Store> = {
   place: Store,
-  experience: Compass,
   event: PartyPopper,
   community: Users,
 };
 
 const TYPE_ACCENT: Record<UnitType, string> = {
   place:      "from-rose-500/15 to-pink-500/5 text-rose-600",
-  experience: "from-emerald-500/15 to-teal-500/5 text-emerald-600",
   event:      "from-violet-500/15 to-fuchsia-500/5 text-violet-600",
   community:  "from-sky-500/15 to-cyan-500/5 text-sky-600",
 };
@@ -41,7 +39,7 @@ function Central() {
             </div>
             <h1 className="font-display text-3xl font-bold tracking-tight">Add your first unit</h1>
             <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-              Mesita lists every venue, experience, event and community on the open internet. Claim what you operate (or create a brand-new listing) and your dashboard shows up here.
+              Mesita lists every venue, event and community on the open internet. Claim what you operate (or create a brand-new listing) and your dashboard shows up here.
             </p>
             <Link
               to="/manager/add"

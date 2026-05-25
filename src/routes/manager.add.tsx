@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Store, Compass, PartyPopper, Users } from "lucide-react";
+import { Search, Store, PartyPopper, Users } from "lucide-react";
 import { ManagerShell } from "@/components/manager/Shell";
 import { UNIT_TYPE_META, type UnitType } from "@/lib/manager/units";
 
@@ -17,14 +17,12 @@ export const Route = createFileRoute("/manager/add")({
 
 const TYPE_ICON: Record<UnitType, typeof Store> = {
   place: Store,
-  experience: Compass,
   event: PartyPopper,
   community: Users,
 };
 
 const PLACEHOLDER: Record<UnitType, string> = {
   place:      "e.g. Cosmo San Pedro, Pangea, Koli…",
-  experience: "e.g. Cata de Mezcal, Pasta Workshop…",
   event:      "e.g. Pa'l Norte 2026, Bad Bunny Tour…",
   community:  "e.g. Rooftop Society MTY, Borregos Tec…",
 };
@@ -38,7 +36,7 @@ function AddUnit() {
       <div className="mx-auto max-w-2xl px-6 py-16">
         <h1 className="font-display text-4xl font-bold tracking-tight">Add a unit</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          A unit is anything you operate on Mesita — a place, an experience, an event or a community. Pick the type, then we'll pull the profile straight from the open internet and show its current Mesita status inline.
+          A unit is anything you operate on Mesita — a place, an event or a community. Pick the type, then we'll pull the profile straight from the open internet and show its current Mesita status inline.
         </p>
 
         <div className="mt-8">
