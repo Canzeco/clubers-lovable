@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Store, PartyPopper, Users } from "lucide-react";
+import { Search, Store, PartyPopper, Users, UserCircle2, ShoppingBag, Wrench } from "lucide-react";
 import { ManagerShell } from "@/components/manager/Shell";
 import { UNIT_TYPE_META, type UnitType } from "@/lib/manager/units";
 
@@ -19,12 +19,18 @@ const TYPE_ICON: Record<UnitType, typeof Store> = {
   place: Store,
   event: PartyPopper,
   community: Users,
+  person: UserCircle2,
+  product: ShoppingBag,
+  service: Wrench,
 };
 
 const PLACEHOLDER: Record<UnitType, string> = {
   place:      "e.g. Cosmo San Pedro, Pangea, Koli…",
   event:      "e.g. Pa'l Norte 2026, Bad Bunny Tour…",
   community:  "e.g. Rooftop Society MTY, Borregos Tec…",
+  person:     "e.g. DJ Andrea, Chef Koli…",
+  product:    "e.g. Mezcal Amores, signed cookbook…",
+  service:    "e.g. Barber San Pedro, event photographer…",
 };
 
 function AddUnit() {
@@ -43,7 +49,7 @@ function AddUnit() {
           <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Type of unit
           </p>
-          <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
             {(Object.keys(UNIT_TYPE_META) as UnitType[]).map((t) => {
               const Icon = TYPE_ICON[t];
               const active = type === t;

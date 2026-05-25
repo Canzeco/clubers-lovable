@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPin, Plus, Sparkles, PartyPopper, Users, Store } from "lucide-react";
+import { MapPin, Plus, Sparkles, PartyPopper, Users, Store, UserCircle2, ShoppingBag, Wrench } from "lucide-react";
 import { ManagerShell } from "@/components/manager/Shell";
 import { MY_UNITS, UNIT_TYPE_META, type UnitType } from "@/lib/manager/units";
 
@@ -18,12 +18,18 @@ const TYPE_ICON: Record<UnitType, typeof Store> = {
   place: Store,
   event: PartyPopper,
   community: Users,
+  person: UserCircle2,
+  product: ShoppingBag,
+  service: Wrench,
 };
 
 const TYPE_ACCENT: Record<UnitType, string> = {
   place:      "from-rose-500/15 to-pink-500/5 text-rose-600",
   event:      "from-violet-500/15 to-fuchsia-500/5 text-violet-600",
   community:  "from-sky-500/15 to-cyan-500/5 text-sky-600",
+  person:     "from-amber-500/15 to-orange-500/5 text-amber-600",
+  product:    "from-emerald-500/15 to-teal-500/5 text-emerald-600",
+  service:    "from-indigo-500/15 to-blue-500/5 text-indigo-600",
 };
 
 function Central() {
