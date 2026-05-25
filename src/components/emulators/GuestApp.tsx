@@ -301,29 +301,35 @@ function Discover({
               </div>
             </section>
 
-            <section className="mt-6">
-              <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Day</p>
-              <div className="flex flex-wrap gap-1.5">
-                {DAYS.map(d => (
-                  <button key={d} onClick={() => setWhen(w => ({ ...w, day: d }))}
-                    className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${when.day === d ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65"}`}>
-                    {d}
-                  </button>
-                ))}
-              </div>
-            </section>
+            {(cat === "event" || cat === "experience" || cat === "place") && (
+              <>
+                <section className="mt-6">
+                  <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Day</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {DAYS.map(d => (
+                      <button key={d} onClick={() => setWhen(w => ({ ...w, day: d }))}
+                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${when.day === d ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65"}`}>
+                        {d}
+                      </button>
+                    ))}
+                  </div>
+                </section>
 
-            <section className="mt-6">
-              <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Time</p>
-              <div className="flex flex-wrap gap-1.5">
-                {TIMES.map(tm => (
-                  <button key={tm} onClick={() => setWhen(w => ({ ...w, time: tm }))}
-                    className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${when.time === tm ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65"}`}>
-                    {tm}
-                  </button>
-                ))}
-              </div>
-            </section>
+                {(cat === "event" || cat === "experience") && (
+                  <section className="mt-6">
+                    <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Time</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {TIMES.map(tm => (
+                        <button key={tm} onClick={() => setWhen(w => ({ ...w, time: tm }))}
+                          className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${when.time === tm ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65"}`}>
+                          {tm}
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                )}
+              </>
+            )}
           </div>
 
           <div className="shrink-0 border-t border-white/10 bg-[oklch(0.10_0.02_280)]/95 px-4 py-3">
