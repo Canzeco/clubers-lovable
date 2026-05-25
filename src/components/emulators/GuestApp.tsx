@@ -412,7 +412,7 @@ function SwipeDeck({ listings, tier, onOpen, onSave, onReserve }: { listings: Li
       <div className="mt-3 flex items-center gap-2">
         <button onClick={() => advance("down")}
           className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] py-3 text-sm text-white/70 transition hover:bg-white/[0.08]">
-          <X className="h-4 w-4" /> {t.discover.skip ?? "Skip"}
+          <X className="h-4 w-4" /> {t.discover.skip}
         </button>
         <button onClick={() => onOpen(current)}
           className="flex items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-5 py-3 text-sm text-white/85 transition hover:bg-white/[0.08]">
@@ -420,7 +420,7 @@ function SwipeDeck({ listings, tier, onOpen, onSave, onReserve }: { listings: Li
         </button>
         <button onClick={() => onReserve(current)}
           className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-500 py-3 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/30 transition hover:brightness-110">
-          <BadgeCheck className="h-4 w-4" /> {t.discover.saveOrReserve ?? "Save or Reserve"}
+          <BadgeCheck className="h-4 w-4" /> {t.discover.saveOrReserve}
         </button>
       </div>
     </div>
