@@ -53,10 +53,11 @@ export interface Listing {
   igFollowers?: number;      // 12400
   role?: string;             // "DJ residente · Vértigo" · "Foodie · @koli"
   influenceTier?: "rising" | "creator" | "tastemaker" | "icon";
+  // Perks gated to members of specific community groups. This is how the
+  // spec's "20% off for all Tec students" rules get expressed on a venue.
+  communityPerks?: CommunityPerk[];
 }
 
-// A perk gated to members of a specific community group. This is how the
-// spec's "20% off for all Tec students" type rules get expressed on a venue.
 export interface CommunityPerk {
   communityId: string;        // matches a Listing.id where category === "community"
   communityName: string;      // denormalized for display
@@ -64,8 +65,6 @@ export interface CommunityPerk {
   pct: number;
   label: string;
 }
-
-declare module "./data" {}
 
 export const TIERS: Tier[] = ["bronze", "silver", "gold", "diamond"];
 
