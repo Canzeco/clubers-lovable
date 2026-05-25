@@ -646,7 +646,10 @@ function SwipeDeck({ listings, tier, onOpen, onSave, onReserve, interleaveByCate
           className="flex items-center justify-center gap-1.5 rounded-full border border-white/10 bg-black/60 px-5 py-3 text-sm text-white/90 backdrop-blur transition hover:bg-black/75">
           <LayoutGrid className="h-4 w-4" /> Info
         </button>
-        <button onClick={() => onReserve(current)}
+        <button onClick={() => {
+            if (current.category === "person" || current.category === "app") advance("right");
+            else onReserve(current);
+          }}
           className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-500 py-3 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/30 transition hover:brightness-110">
           <CtaIcon className="h-4 w-4" /> {ctaLabel}
         </button>
@@ -1237,7 +1240,8 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
 
       {/* Floating reserve CTA */}
       <div className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-white/10 bg-black/85 px-5 pb-6 pt-3 backdrop-blur-xl">
-        <button onClick={onReserve}
+        <button
+          onClick={listing.category === "person" ? onToggleSave : onReserve}
           className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 via-rose-500 to-amber-500 py-3.5 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/30">
           {listing.category === "product" ? (
             <><ShoppingBag className="h-4 w-4" /> Buy</>
@@ -1245,6 +1249,10 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
             <><Wrench className="h-4 w-4" /> Book service</>
           ) : listing.category === "app" ? (
             <><Smartphone className="h-4 w-4" /> Open app</>
+          ) : listing.category === "person" ? (
+            <><Heart className={`h-4 w-4 ${saved ? "fill-white" : ""}`} /> {saved ? "Following" : "Follow"}</>
+          ) : listing.category === "community" ? (
+            <><Users className="h-4 w-4" /> Join community</>
           ) : (
             <><Calendar className="h-4 w-4" /> {t.venue.reserve}</>
           )}
