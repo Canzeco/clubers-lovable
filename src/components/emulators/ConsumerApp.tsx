@@ -384,24 +384,16 @@ function Discover({
 
       {/* Mode body */}
       <div className="relative mt-3 flex-1 overflow-hidden">
-        {cat === "community" ? (
+        {mode === "swipe" ? (
+          <SwipeDeck listings={listings} tier={tier} onOpen={onOpenListing} onSave={(id) => onToggleSave(id)} onReserve={onReserve} interleaveByCategory={cat === null} />
+        ) : cat === "community" ? (
           <CommunityList listings={listings} onOpen={onOpenListing} memberships={memberships} onToggleMembership={onToggleMembership} />
         ) : cat === "person" ? (
           <PeopleList listings={listings} onOpen={onOpenListing} />
-        ) : cat === "event" ? (
-          mode === "swipe" ? (
-            <SwipeDeck listings={listings} tier={tier} onOpen={onOpenListing} onSave={(id) => onToggleSave(id)} onReserve={onReserve} />
-          ) : mode === "map" ? (
-            <MapView listings={listings} tier={tier} onOpen={onOpenListing} />
-          ) : (
-            <Catalog listings={listings} tier={tier} onOpen={onOpenListing} saved={saved} onToggleSave={onToggleSave} />
-          )
         ) : cat === null ? (
           <Catalog listings={listings} tier={tier} onOpen={onOpenListing} saved={saved} onToggleSave={onToggleSave} />
         ) : mode === "ai" ? (
           <AIPlanner tier={tier} onOpen={onOpenListing} onReserve={onReserve} saved={saved} onToggleSave={onToggleSave} />
-        ) : mode === "swipe" ? (
-          <SwipeDeck listings={listings} tier={tier} onOpen={onOpenListing} onSave={(id) => onToggleSave(id)} onReserve={onReserve} />
         ) : mode === "map" ? (
           <MapView listings={listings} tier={tier} onOpen={onOpenListing} />
         ) : (
