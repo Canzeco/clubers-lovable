@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   Sparkles, Compass, MapPin, LayoutGrid, Bookmark, QrCode, Share2, User,
   Star, BadgeCheck, ChevronLeft, ChevronRight, Calendar, Clock, Users,
   X, ArrowUp, ArrowDown, Loader2, Send, Gift, Copy, Instagram, Globe,
-  Utensils, Crown, Check, Lock, Heart, Wallet, Settings, ArrowRight,
-  Flame, Music,
+  Crown, Check, Lock, Heart, Wallet, Settings, ArrowRight, Flame,
 } from "lucide-react";
 import {
   SEED_LISTINGS, TIERS, TIER_META, clubersApi, t,
