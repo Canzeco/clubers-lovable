@@ -595,20 +595,20 @@ export const SEED_USER = {
   email: "daniel@tec.mx",
   paths: {
     followers: { state: "active" as PathState, handle: "@daniel", followers: 2300, tier: tierFromFollowers(2300), storyRequired: true },
-    subscription: { state: "active" as PathState, tier: "silver" as Tier, since: "Oct 2025", renewsOn: "14 Dic" },
+    subscription: { state: "active" as PathState, tier: "silver" as Tier, since: "Oct 2025", renewsOn: "Dec 14" },
     manual: { state: "locked" as PathState, tier: null },
   } as ClassPaths,
   wallet: {
     credits: 240,
     transactions: [
-      { id: "tx1", kind: "earned", amount: 96,  venue: "Koli",           when: "Hoy 21:14" },
-      { id: "tx2", kind: "spent",  amount: 50,  venue: "Biko",           when: "Ayer 14:32" },
-      { id: "tx3", kind: "earned", amount: 38,  venue: "Pangea",         when: "Vie 19:08" },
-      { id: "tx4", kind: "gift",   amount: 100, venue: "De: Sofía R.",   when: "Mié 11:00" },
-      { id: "tx5", kind: "earned", amount: 56,  venue: "Koli",           when: "Mar 22:40" },
+      { id: "tx1", kind: "earned", amount: 96,  venue: "Koli",            when: "Today 21:14" },
+      { id: "tx2", kind: "spent",  amount: 50,  venue: "Biko",            when: "Yesterday 14:32" },
+      { id: "tx3", kind: "earned", amount: 38,  venue: "Pangea",          when: "Fri 19:08" },
+      { id: "tx4", kind: "gift",   amount: 100, venue: "From: Sofía R.",  when: "Wed 11:00" },
+      { id: "tx5", kind: "earned", amount: 56,  venue: "Koli",            when: "Tue 22:40" },
     ],
     giftCards: [
-      { id: "g1", from: "Sofía R.", amount: 100, message: "¡Feliz cumple!" },
+      { id: "g1", from: "Sofía R.", amount: 100, message: "Happy birthday!" },
     ],
   } as WalletState,
   gamification: {
