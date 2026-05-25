@@ -1430,14 +1430,15 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
   const myCommunities = SEED_LISTINGS.filter(l => l.category === "community" && memberships.has(l.id));
   const [view, setView] = useState<"class" | "groups" | "connectors" | "settings">("class");
   const [connections, setConnections] = useState<Record<string, boolean>>({ instagram: true });
-  const connectors: Array<{ id: string; label: string; desc: string; icon: React.ReactNode }> = [
-    { id: "ai",        label: "ChatGPT / Claude", desc: "Let your AI book & act on your behalf (MCP)", icon: <Bot className="h-4 w-4" /> },
-    { id: "instagram", label: "Instagram", desc: "Followers, taste & social proof", icon: <Instagram className="h-4 w-4" /> },
-    { id: "linkedin",  label: "LinkedIn",  desc: "Industry, seniority & network", icon: <Globe className="h-4 w-4" /> },
-    { id: "spotify",   label: "Spotify",   desc: "Music & vibe matching", icon: <Sparkles className="h-4 w-4" /> },
-    { id: "google",    label: "Google",    desc: "Calendar & places visited", icon: <MapPin className="h-4 w-4" /> },
-    { id: "tiktok",    label: "TikTok",    desc: "Trends you actually care about", icon: <Flame className="h-4 w-4" /> },
-    { id: "amazon",    label: "Amazon",    desc: "Shopping taste & better deals", icon: <ShoppingBag className="h-4 w-4" /> },
+  type Connector = { id: string; label: string; desc: string; icon: React.ReactNode; tint: string; ring: string };
+  const connectors: Array<Connector> = [
+    { id: "ai",        label: "ChatGPT / Claude", desc: "Let your AI book & act on your behalf · MCP", icon: <Bot className="h-4 w-4" />,       tint: "bg-gradient-to-br from-violet-500 to-fuchsia-500", ring: "ring-violet-400/30" },
+    { id: "instagram", label: "Instagram",        desc: "Followers, taste & social proof",             icon: <Instagram className="h-4 w-4" />, tint: "bg-gradient-to-br from-fuchsia-500 via-rose-500 to-amber-400", ring: "ring-rose-400/30" },
+    { id: "linkedin",  label: "LinkedIn",         desc: "Industry, seniority & network",               icon: <Globe className="h-4 w-4" />,     tint: "bg-gradient-to-br from-sky-600 to-blue-700", ring: "ring-sky-400/30" },
+    { id: "spotify",   label: "Spotify",          desc: "Music & vibe matching",                       icon: <Sparkles className="h-4 w-4" />,  tint: "bg-gradient-to-br from-emerald-500 to-green-600", ring: "ring-emerald-400/30" },
+    { id: "google",    label: "Google",           desc: "Calendar & places visited",                   icon: <MapPin className="h-4 w-4" />,    tint: "bg-gradient-to-br from-amber-400 via-rose-400 to-sky-500", ring: "ring-amber-400/30" },
+    { id: "tiktok",    label: "TikTok",           desc: "Trends you actually care about",              icon: <Flame className="h-4 w-4" />,     tint: "bg-gradient-to-br from-cyan-400 via-white/80 to-rose-500", ring: "ring-cyan-400/30" },
+    { id: "amazon",    label: "Amazon",           desc: "Shopping taste & better deals",               icon: <ShoppingBag className="h-4 w-4" />, tint: "bg-gradient-to-br from-amber-500 to-orange-600", ring: "ring-amber-400/30" },
   ];
   const connectedCount = Object.values(connections).filter(Boolean).length;
   const tabs: Array<{ id: typeof view; label: string }> = [
@@ -1448,15 +1449,38 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
   ];
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
-      <div className="flex items-center gap-3">
-        <div className={`h-14 w-14 rounded-2xl ${TIER_META[tier].bg} p-[2px]`}>
-          <div className="flex h-full w-full items-center justify-center rounded-2xl bg-black/40">
-            <User className="h-6 w-6 text-white" />
+      {/* Identity card */}
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.07] via-white/[0.03] to-transparent p-4">
+        <div className={`pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full ${TIER_META[tier].bg} opacity-30 blur-3xl`} />
+        <div className="relative flex items-center gap-3">
+          <div className={`h-16 w-16 rounded-2xl ${TIER_META[tier].bg} p-[2px] shadow-lg shadow-black/40`}>
+            <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-black/60">
+              <User className="h-7 w-7 text-white" />
+            </div>
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <p className="font-display text-2xl font-bold leading-tight truncate">{SEED_USER.name}</p>
+              <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white ${TIER_META[tier].bg}`}>
+                <Crown className="h-2.5 w-2.5" /> {TIER_META[tier].label}
+              </span>
+            </div>
+            <p className="mt-0.5 truncate text-xs text-white/55">
+              <Instagram className="-mt-0.5 mr-1 inline h-3 w-3" />{SEED_USER.handle}
+            </p>
           </div>
         </div>
-        <div className="flex-1">
-          <p className="font-display text-xl font-bold">{SEED_USER.name}</p>
-          <p className="text-xs text-white/55"><Instagram className="-mt-0.5 mr-1 inline h-3 w-3" />{SEED_USER.handle} · {paths.followers.followers.toLocaleString()} followers</p>
+        <div className="relative mt-3 grid grid-cols-3 gap-2">
+          {[
+            { label: "Followers", value: paths.followers.followers >= 1000 ? `${(paths.followers.followers/1000).toFixed(1)}K` : `${paths.followers.followers}` },
+            { label: "Saved",     value: `${savedCount}` },
+            { label: "Connected", value: `${connectedCount}/${connectors.length}` },
+          ].map(s => (
+            <div key={s.label} className="rounded-xl border border-white/10 bg-black/30 px-2 py-2 text-center">
+              <p className="font-display text-base font-bold leading-none">{s.value}</p>
+              <p className="mt-1 text-[9px] uppercase tracking-wider text-white/45">{s.label}</p>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -1570,28 +1594,37 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
 
       {view === "connectors" && (
         <section className="mt-5">
-          <p className="text-[11px] text-white/55">Link your accounts so Mesita can match you with better venues, events and people. The more you connect, the smarter the recs.</p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-[11px] text-white/55">Link your accounts so Mesita can match you with better venues, events & people.</p>
+            <span className="shrink-0 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-semibold text-white/70">{connectedCount}/{connectors.length}</span>
+          </div>
           <div className="mt-4 space-y-2">
             {connectors.map(c => {
               const on = !!connections[c.id];
               return (
-                <div key={c.id} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
-                  <div className="rounded-lg bg-white/10 p-2 text-white/85">{c.icon}</div>
+                <div key={c.id} className={`group relative flex items-center gap-3 overflow-hidden rounded-2xl border bg-white/[0.04] p-3 transition ${on ? "border-emerald-400/25" : "border-white/10"}`}>
+                  <div className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-lg shadow-black/40 ring-1 ${c.tint} ${c.ring}`}>
+                    {c.icon}
+                  </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold">{c.label}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-semibold">{c.label}</p>
+                      {on && <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />}
+                    </div>
                     <p className="truncate text-[10px] text-white/50">{c.desc}</p>
                   </div>
                   <button
                     onClick={() => setConnections(p => ({ ...p, [c.id]: !on }))}
-                    className={`shrink-0 rounded-md px-2.5 py-1 text-[11px] font-semibold ${on ? "bg-emerald-300/15 text-emerald-200" : "bg-white text-black"}`}>
-                    {on ? "Connected" : "Connect"}
+                    className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-semibold transition ${on ? "border border-emerald-400/30 bg-emerald-400/10 text-emerald-200" : "bg-white text-black hover:bg-white/90"}`}>
+                    {on ? (<span className="inline-flex items-center gap-1"><Check className="h-3 w-3" />Connected</span>) : "Connect"}
                   </button>
                 </div>
               );
             })}
           </div>
-          <p className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-[10px] text-white/45">
-            Mesita only reads what's needed to improve matching — never posts on your behalf.
+          <p className="mt-4 flex items-start gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-[10px] text-white/55">
+            <Lock className="mt-0.5 h-3 w-3 shrink-0 text-emerald-300/70" />
+            <span>Mesita only reads what's needed to improve matching — never posts on your behalf.</span>
           </p>
         </section>
       )}
