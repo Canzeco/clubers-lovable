@@ -57,6 +57,10 @@ export interface Listing {
   developer?: string;      // who built the app
   installs?: number;       // social proof, e.g. 12400
   onboardingSteps?: string[]; // ["Allow camera", "Take 3 selfies", "Get your report"]
+  // Identity claims this app needs. Mesita owns these once and auto-skips
+  // any step the user has already cleared in another app — that's the
+  // "one-time onboarding, dynamic software" promise.
+  requiresIdentity?: IdentityClaim[];
   // For communities
   members?: number;          // 1820
   entryRule?: string;        // "Solo @tec.mx" · "Aprobación del admin" · "Abierto"
@@ -75,10 +79,20 @@ export interface Listing {
 export interface Offering {
   id: string;
   name: string;
-  kind: "product" | "service";
-  price: number; // MXN
+  kind: "product" | "service" | "subscription";
+  price: number; // MXN — per-charge price (e.g. 89 for $89/mo)
+  interval?: "month" | "year"; // required when kind === "subscription"
   description?: string;
 }
+
+export type IdentityClaim =
+  | "face"        // selfie / face scan already on file
+  | "voice"       // voice sample on file
+  | "ig"          // Instagram connected
+  | "age"         // verified date of birth
+  | "location"    // city / address
+  | "id"          // government ID verified
+  | "medical";    // basic medical intake on file (sex, allergies, meds)
 
 export interface CommunityPerk {
   communityId: string;        // matches a Listing.id where category === "community"
