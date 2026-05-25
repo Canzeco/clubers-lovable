@@ -440,6 +440,9 @@ export const t = {
     mechanicFormal: "Cashback in Clubers credits · pay by card via Clubers",
     mechanicInformal: "Instant discount on the bill · pay however you want",
     welcomeBanner: "First visit: this perk applies on top of your class.",
+    communityPerksTitle: "Group perks unlocked",
+    communityPerksLocked: "Perks for groups you don't belong to",
+    joinToUnlock: "Join to unlock",
   },
   reserve: {
     title: "Book a table",
