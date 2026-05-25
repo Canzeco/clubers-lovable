@@ -47,13 +47,13 @@ const initial: Msg[] = [
   {
     id: 1,
     from: "bot",
-    text: "Hola Carlos 👋 Soy Mesita. Aquí te llegan los tickets de tus clientes en *Casa Luminar*.",
+    text: "Hi Carlos 👋 I'm Mesita. Your customers' tickets at *Casa Luminar* land here.",
     time: TIME_INCOMING,
   },
   {
     id: 2,
     from: "bot",
-    text: "📩 *Nuevo ticket entrante* — Valentina R. está pidiendo tu validación.",
+    text: "📩 *New incoming ticket* — Valentina R. is requesting your validation.",
     time: TIME_INCOMING,
   },
   {
@@ -75,7 +75,7 @@ const initial: Msg[] = [
   {
     id: 4,
     from: "bot",
-    text: "¿Confirmas que el ticket es correcto? Se cobrará en Balance de la clienta.",
+    text: "Confirm the ticket is correct? It will be charged to the customer's balance.",
     type: "buttons",
     payload: ["✅ Confirmar", "❌ Rechazar"],
     time: TIME_INCOMING,
@@ -102,7 +102,7 @@ export function ValidatorChat() {
       });
       push({
         from: "bot",
-        text: "Listo. Pago acreditado al venue en Balance. Te aviso del próximo ticket.",
+        text: "Done. Payment credited to the venue's balance. I'll ping you on the next ticket.",
         type: "buttons",
         payload: ["📊 Cierre del turno"],
       });
@@ -131,7 +131,7 @@ export function ValidatorChat() {
         </div>
         <div className="flex-1">
           <p className="font-medium text-white">Mesita · Validador</p>
-          <p className="text-[11px] text-white/60">en línea</p>
+          <p className="text-[11px] text-white/60">online</p>
         </div>
         <Video className="h-5 w-5 text-white/70" />
         <Phone className="h-5 w-5 text-white/70" />
@@ -205,7 +205,7 @@ export function ValidatorChat() {
                       <span className="font-semibold text-emerald-300">{p.total}</span>
                     </div>
                     <div className="flex justify-between text-[11px] text-white/60">
-                      <span>Cupón</span>
+                      <span>Coupon</span>
                       <span>{p.coupon}</span>
                     </div>
                     {p.story && (

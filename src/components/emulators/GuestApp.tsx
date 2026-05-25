@@ -231,10 +231,10 @@ function AIPlanner({
   const [plan, setPlan] = useState<Listing[] | null>(null);
 
   const examples = [
-    "Cena romántica en San Pedro, bajo $1200",
-    "Rooftop con buena música y trago",
-    "Club con DJ internacional esta noche",
-    "Cena rápida y después algo en vivo",
+    "Romantic dinner in San Pedro, under $1200",
+    "Rooftop with good music and drinks",
+    "Club with international DJ tonight",
+    "Quick dinner then something live",
   ];
 
   const submit = async (q: string) => {
@@ -285,7 +285,7 @@ function AIPlanner({
       {submitted && (
         <div className="mt-6">
           <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
-            <p className="text-[10px] uppercase tracking-wider text-white/40">Tu búsqueda</p>
+            <p className="text-[10px] uppercase tracking-wider text-white/40">Your search</p>
             <p className="mt-1 text-sm text-white/85">"{submitted}"</p>
           </div>
 
@@ -344,9 +344,9 @@ function PlanCard({ step, listing, tier, saved, onOpen, onSave, onReserve }: {
         </div>
         <div className="rounded-lg bg-white/[0.04] p-2.5 text-[11px] text-white/70">
           <span className="text-white/45">{t.discover.why}: </span>
-          {step === 1 ? "Rooftop con vista, abre temprano y entra justo en tu vibra." :
-           step === 2 ? "Cena cercana y de alta cocina, top en Clubers." :
-           "Mismo zona, abre tarde — cierras la noche en grande."}
+          {step === 1 ? "Rooftop with a view, opens early and fits your vibe perfectly." :
+           step === 2 ? "Nearby fine-dining dinner, top-rated on Clubers." :
+           "Same area, opens late — close the night in style."}
         </div>
         <div className="flex items-center gap-2">
           {perk ? (
@@ -480,12 +480,12 @@ function SwipeCard({ listing, tier, style, overlay, onPointerDown, onPointerMove
 
       {overlay === "save" && (
         <div className="absolute left-1/2 top-12 -translate-x-1/2 rounded-2xl border-2 border-fuchsia-300 bg-fuchsia-500/20 px-5 py-2 text-sm font-bold uppercase tracking-widest text-fuchsia-100 backdrop-blur">
-          <ArrowUp className="mr-1 inline h-4 w-4" /> Guardar
+          <ArrowUp className="mr-1 inline h-4 w-4" /> Save
         </div>
       )}
       {overlay === "skip" && (
         <div className="absolute bottom-32 left-1/2 -translate-x-1/2 rounded-2xl border-2 border-white/60 bg-white/10 px-5 py-2 text-sm font-bold uppercase tracking-widest text-white backdrop-blur">
-          <ArrowDown className="mr-1 inline h-4 w-4" /> Pasar
+          <ArrowDown className="mr-1 inline h-4 w-4" /> Skip
         </div>
       )}
     </div>
@@ -580,7 +580,7 @@ function CatalogCard({ listing, tier, onOpen, saved, onToggleSave, compact }: {
               <span className="inline-block rounded-md bg-white/[0.04] px-2 py-0.5 text-[10px] text-white/40">Sin perk</span>
             )}
             <span className={`ml-2 text-[10px] ${listing.openNow ? "text-emerald-300" : "text-white/40"}`}>
-              {listing.openNow ? "● Abierto" : "○ Cerrado"}
+              {listing.openNow ? "● Open" : "○ Closed"}
             </span>
           </div>
         </div>
@@ -594,7 +594,7 @@ function PlaceholderCategory({ listings, onOpen }: { listings: Listing[]; onOpen
   return (
     <div className="h-full overflow-y-auto px-4 pb-28 pt-2">
       <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-fuchsia-500/10 to-rose-500/10 p-4">
-        <p className="font-display text-base font-semibold">Próximamente</p>
+        <p className="font-display text-base font-semibold">Coming soon</p>
         <p className="mt-1 text-xs text-white/65">{t.discover.comingSoon}</p>
       </div>
       <div className="mt-4 space-y-3">
@@ -623,7 +623,7 @@ function CommunityList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: 
   return (
     <div className="h-full overflow-y-auto px-4 pb-28 pt-2">
       <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-indigo-500/10 to-fuchsia-500/10 p-4">
-        <p className="font-display text-base font-semibold">Comunidades</p>
+        <p className="font-display text-base font-semibold">Communities</p>
         <p className="mt-1 text-xs text-white/65">Grupos abiertos, members clubs y comunidades universitarias. Únete o crea la tuya.</p>
       </div>
       <div className="mt-4 space-y-3">
@@ -643,16 +643,16 @@ function CommunityList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: 
             </div>
             <div className="space-y-2 p-3">
               <div className="flex items-center gap-3 text-[11px] text-white/70">
-                <span className="inline-flex items-center gap-1"><Users className="h-3 w-3" />{fmt(l.members ?? 0)} miembros</span>
+                <span className="inline-flex items-center gap-1"><Users className="h-3 w-3" />{fmt(l.members ?? 0)} members</span>
                 <span className="text-white/30">·</span>
                 <span className="inline-flex items-center gap-1"><Lock className="h-3 w-3" />{l.entryRule}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[11px] text-white/55">
-                  {l.monthlyFee && l.monthlyFee > 0 ? `$${l.monthlyFee}/mes` : "Gratis"}
+                  {l.monthlyFee && l.monthlyFee > 0 ? `$${l.monthlyFee}/mo` : "Free"}
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-lg bg-white px-2.5 py-1 text-[11px] font-semibold text-black">
-                  {l.monthlyFee && l.monthlyFee > 0 ? "Suscribirme" : "Unirme"} <ArrowRight className="h-3 w-3" />
+                  {l.monthlyFee && l.monthlyFee > 0 ? "Subscribe" : "Join"} <ArrowRight className="h-3 w-3" />
                 </span>
               </div>
             </div>
@@ -669,8 +669,8 @@ function PeopleList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: Lis
   return (
     <div className="h-full overflow-y-auto px-4 pb-28 pt-2">
       <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-amber-500/10 to-rose-500/10 p-4">
-        <p className="font-display text-base font-semibold">Gente que mueve la ciudad</p>
-        <p className="mt-1 text-xs text-white/65">Tastemakers, creators y DJs. Síguelos para no perderte dónde estarán esta noche.</p>
+        <p className="font-display text-base font-semibold">People who move the city</p>
+        <p className="mt-1 text-xs text-white/65">Tastemakers, creators and DJs. Follow them so you don't miss where they'll be tonight.</p>
       </div>
       <div className="mt-4 space-y-3">
         {listings.map(l => {
@@ -696,7 +696,7 @@ function PeopleList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: Lis
                   <span className="inline-flex items-center gap-1"><Instagram className="h-3 w-3" />{fmt(l.igFollowers ?? 0)} followers</span>
                 </div>
               </div>
-              <span className="shrink-0 rounded-lg bg-white px-2.5 py-1.5 text-[11px] font-semibold text-black">Seguir</span>
+              <span className="shrink-0 rounded-lg bg-white px-2.5 py-1.5 text-[11px] font-semibold text-black">Follow</span>
             </button>
           );
         })}
@@ -763,7 +763,7 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
             <p className="text-[10px] uppercase tracking-wider text-fuchsia-200">{t.venue.yourPerk}</p>
             <TierBadge tier={tier} small />
           </div>
-          <p className="mt-1 text-xl font-semibold">{perk?.label ?? "Sin perk · venue listado"}</p>
+          <p className="mt-1 text-xl font-semibold">{perk?.label ?? "No perk · listed venue"}</p>
           {listing.fiscalType && (
             <p className="mt-1 text-[11px] text-white/60">
               {listing.fiscalType === "formal" ? t.venue.mechanicFormal : t.venue.mechanicInformal}
@@ -795,8 +795,8 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
 
         <div className="grid grid-cols-2 gap-2 text-xs">
           <Info icon={<Clock className="h-3.5 w-3.5" />} label={listing.hours} />
-          <Info icon={<MapPin className="h-3.5 w-3.5" />} label={`${listing.walkMin} min caminando`} />
-          <Info icon={<Globe className="h-3.5 w-3.5" />} label="Sitio web" />
+          <Info icon={<MapPin className="h-3.5 w-3.5" />} label={`${listing.walkMin} min walk`} />
+          <Info icon={<Globe className="h-3.5 w-3.5" />} label="Website" />
           <Info icon={<Instagram className="h-3.5 w-3.5" />} label="Instagram" />
         </div>
       </div>
@@ -824,9 +824,9 @@ function Info({ icon, label }: { icon: React.ReactNode; label: string }) {
    RESERVE SHEET
    ───────────────────────────────────────────────────────────── */
 function ReserveSheet({ listing, onClose, onDone }: { listing: Listing; onClose: () => void; onDone: (when: string, party: number) => void }) {
-  const dates = ["Hoy", "Mañana", "Vie 13", "Sáb 14", "Dom 15"];
+  const dates = ["Today", "Tomorrow", "Fri 13", "Sat 14", "Sun 15"];
   const times = ["19:00", "20:00", "20:30", "21:00", "21:30", "22:00"];
-  const [date, setDate] = useState("Hoy");
+  const [date, setDate] = useState("Today");
   const [time, setTime] = useState("21:00");
   const [party, setParty] = useState(2);
   const [phase, setPhase] = useState<"form" | "contacting" | "done">("form");
@@ -1060,7 +1060,7 @@ function PayScreen({ tier }: { tier: Tier }) {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-semibold">{tx.venue}</p>
-                        <p className="text-[11px] text-white/55 capitalize">{tx.kind === "earned" ? "Cashback ganado" : tx.kind === "spent" ? "Crédito gastado" : tx.kind === "gift" ? "Regalo recibido" : "Reembolso"} · {tx.when}</p>
+                        <p className="text-[11px] text-white/55 capitalize">{tx.kind === "earned" ? "Cashback earned" : tx.kind === "spent" ? "Credit spent" : tx.kind === "gift" ? "Gift received" : "Refund"} · {tx.when}</p>
                       </div>
                       <p className={`font-display text-base font-bold ${positive ? "text-emerald-300" : "text-rose-300"}`}>{positive ? "+" : "−"}${tx.amount}</p>
                     </div>
@@ -1338,7 +1338,7 @@ function UpgradeScreen({ tier, onClose, onSelect }: { tier: Tier; onClose: () =>
               <div className={`${meta.bg} px-4 py-3 text-black/85`}>
                 <div className="flex items-center justify-between">
                   <p className="font-display text-xl font-bold">{meta.label}</p>
-                  <p className="text-sm font-semibold">{meta.price === 0 ? "Gratis" : `$${meta.price} MXN`}{meta.price !== 0 && <span className="text-xs font-normal">{t.profile.perMonth}</span>}</p>
+                  <p className="text-sm font-semibold">{meta.price === 0 ? "Free" : `$${meta.price} MXN`}{meta.price !== 0 && <span className="text-xs font-normal">{t.profile.perMonth}</span>}</p>
                 </div>
                 <p className="mt-0.5 text-[11px] opacity-80">o {meta.followers}</p>
               </div>
