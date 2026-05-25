@@ -1183,13 +1183,13 @@ function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
       )}
 
       <section className="mt-6">
-        <div className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex flex-wrap gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-2">
           {groups.map(g => {
             const count = g.cat ? items.filter(l => l.category === g.cat).length : items.length;
             const active = selCat === g.cat;
             return (
               <button key={g.label} onClick={() => setSelCat(g.cat)}
-                className={`shrink-0 rounded-full border px-3 py-1.5 text-xs transition ${active ? "border-white/80 bg-white text-black" : "border-white/15 bg-white/[0.04] text-white/70"}`}>
+                className={`rounded-full border px-3 py-1.5 text-xs transition ${active ? "border-white/80 bg-white text-black" : "border-white/10 bg-white/[0.03] text-white/70"}`}>
                 {g.label} <span className={`ml-1 ${active ? "text-black/55" : "text-white/40"}`}>{count}</span>
               </button>
             );
