@@ -173,6 +173,13 @@ function Discover({
           </div>
           <div className="flex flex-1 items-center divide-x divide-white/10 rounded-full border border-white/10 bg-white/[0.04] px-1 py-1.5">
             <div className="flex flex-1 items-center gap-2 px-3">
+              <Sparkles className="h-4 w-4 text-fuchsia-300" />
+              <div className="leading-tight">
+                <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/45">What</p>
+                <p className="font-display text-[13px] font-semibold">{t.discover.cats[cat]}</p>
+              </div>
+            </div>
+            <div className="flex flex-1 items-center gap-2 px-3">
               <MapPin className="h-4 w-4 text-fuchsia-300" />
               <div className="leading-tight">
                 <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/45">Where</p>
