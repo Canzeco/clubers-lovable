@@ -342,22 +342,6 @@ function Discover({
             </button>
           ))}
         </div>
-
-        {/* Subcategory chips — derived from data for the selected What */}
-        {subcategories.length > 0 && (
-          <div className="mt-2.5 flex gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-hide">
-            <button onClick={() => setSub(null)}
-              className={`shrink-0 rounded-full border px-2.5 py-1 font-medium transition ${sub === null ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/55 hover:text-white/80"}`}>
-              All
-            </button>
-            {subcategories.map(s => (
-              <button key={s} onClick={() => setSub(s === sub ? null : s)}
-                className={`shrink-0 rounded-full border px-2.5 py-1 font-medium transition ${sub === s ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/55 hover:text-white/80"}`}>
-                {s}
-              </button>
-            ))}
-          </div>
-        )}
       </header>
 
       {/* Mode body */}
