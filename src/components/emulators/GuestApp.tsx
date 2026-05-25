@@ -1427,7 +1427,16 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
 }) {
   const active = resolveActiveTier(paths);
   const myCommunities = SEED_LISTINGS.filter(l => l.category === "community" && memberships.has(l.id));
-  const [view, setView] = useState<"home" | "groups" | "settings">("home");
+  const [view, setView] = useState<"home" | "groups" | "connectors" | "settings">("home");
+  const [connections, setConnections] = useState<Record<string, boolean>>({ instagram: true });
+  const connectors: Array<{ id: string; label: string; desc: string; icon: React.ReactNode }> = [
+    { id: "instagram", label: "Instagram", desc: "Followers, taste & social proof", icon: <Instagram className="h-4 w-4" /> },
+    { id: "linkedin",  label: "LinkedIn",  desc: "Industry, seniority & network", icon: <Globe className="h-4 w-4" /> },
+    { id: "spotify",   label: "Spotify",   desc: "Music & vibe matching", icon: <Sparkles className="h-4 w-4" /> },
+    { id: "google",    label: "Google",    desc: "Calendar & places visited", icon: <MapPin className="h-4 w-4" /> },
+    { id: "tiktok",    label: "TikTok",    desc: "Trends you actually care about", icon: <Flame className="h-4 w-4" /> },
+  ];
+  const connectedCount = Object.values(connections).filter(Boolean).length;
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
       {view !== "home" && (
@@ -1465,6 +1474,10 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
         <button onClick={() => setView("groups")} className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
           <span className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-white/55" /> {t.profile.myGroups}</span>
           <span className="inline-flex items-center gap-2 text-xs text-white/45">{myCommunities.length} <ChevronRight className="h-4 w-4" /></span>
+        </button>
+        <button onClick={() => setView("connectors")} className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
+          <span className="inline-flex items-center gap-2"><Share2 className="h-4 w-4 text-white/55" /> Connectors</span>
+          <span className="inline-flex items-center gap-2 text-xs text-white/45">{connectedCount}/{connectors.length} <ChevronRight className="h-4 w-4" /></span>
         </button>
         <button onClick={() => setView("settings")} className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
           <span className="inline-flex items-center gap-2"><Settings className="h-4 w-4 text-white/55" /> {t.profile.settings}</span>
@@ -1520,6 +1533,35 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
               </button>
             ))}
           </div>
+        </section>
+      )}
+
+      {view === "connectors" && (
+        <section>
+          <h2 className="font-display text-2xl font-bold">Connectors</h2>
+          <p className="mt-1 text-[11px] text-white/55">Link your accounts so Mesita can match you with better venues, events and people. The more you connect, the smarter the recs.</p>
+          <div className="mt-4 space-y-2">
+            {connectors.map(c => {
+              const on = !!connections[c.id];
+              return (
+                <div key={c.id} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+                  <div className="rounded-lg bg-white/10 p-2 text-white/85">{c.icon}</div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold">{c.label}</p>
+                    <p className="truncate text-[10px] text-white/50">{c.desc}</p>
+                  </div>
+                  <button
+                    onClick={() => setConnections(p => ({ ...p, [c.id]: !on }))}
+                    className={`shrink-0 rounded-md px-2.5 py-1 text-[11px] font-semibold ${on ? "bg-emerald-300/15 text-emerald-200" : "bg-white text-black"}`}>
+                    {on ? "Connected" : "Connect"}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-[10px] text-white/45">
+            Mesita only reads what's needed to improve matching — never posts on your behalf.
+          </p>
         </section>
       )}
     </div>
