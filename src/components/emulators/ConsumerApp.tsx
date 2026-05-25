@@ -135,6 +135,19 @@ function BottomNav({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) 
       <div className="mx-auto grid max-w-md grid-cols-5 px-2 pb-3 pt-2">
         {items.map(({ id, label, Icon }) => {
           const active = tab === id;
+          if (id === "profile") {
+            return (
+              <button key={id} onClick={() => onChange(id)}
+                className={`group flex flex-col items-center gap-1 rounded-lg py-1 text-[10px] font-medium transition ${active ? "text-fuchsia-300" : "text-white/55 hover:text-white/80"}`}>
+                <div className={`flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-rose-500 p-[1.5px] transition ${active ? "scale-110 ring-2 ring-fuchsia-300/60" : ""}`}>
+                  <div className="flex h-full w-full items-center justify-center rounded-full bg-black/70">
+                    <User className="h-3 w-3 text-white" />
+                  </div>
+                </div>
+                <span className="tracking-wide">{label}</span>
+              </button>
+            );
+          }
           return (
             <button key={id} onClick={() => onChange(id)}
               className={`group flex flex-col items-center gap-1 rounded-lg py-1 text-[10px] font-medium transition ${active ? "text-fuchsia-300" : "text-white/55 hover:text-white/80"}`}>
