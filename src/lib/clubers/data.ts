@@ -506,3 +506,120 @@ export const clubersApi = {
     return { id: `res_${Math.random().toString(36).slice(2, 8)}`, status: "pending" as const };
   },
 };
+
+// ───────────────────────────────────────────────────────────────
+// Class paths (Mesita primitive ported to Clubers)
+// Active class = highest of the three paths.
+// ───────────────────────────────────────────────────────────────
+export type PathState = "active" | "inactive" | "locked";
+
+export interface FollowersPath {
+  state: PathState;
+  handle: string;
+  followers: number;
+  tier: Tier; // tier this path qualifies for
+  storyRequired: boolean;
+}
+export interface SubscriptionPath {
+  state: PathState;
+  tier: Tier | null;
+  since?: string;
+  renewsOn?: string;
+}
+export interface ManualPath {
+  state: PathState;
+  tier: Tier | null;
+  reason?: string;
+}
+export interface ClassPaths {
+  followers: FollowersPath;
+  subscription: SubscriptionPath;
+  manual: ManualPath;
+}
+
+// Tier ladder helpers
+const TIER_RANK: Record<Tier, number> = { bronze: 0, silver: 1, gold: 2, diamond: 3 };
+export function tierFromFollowers(n: number): Tier {
+  if (n >= 20000) return "diamond";
+  if (n >= 5000) return "gold";
+  if (n >= 1000) return "silver";
+  return "bronze";
+}
+export function resolveActiveTier(p: ClassPaths): { tier: Tier; source: keyof ClassPaths } {
+  const candidates: Array<{ tier: Tier; source: keyof ClassPaths }> = [
+    { tier: p.followers.state === "active" ? p.followers.tier : "bronze", source: "followers" },
+    { tier: p.subscription.state === "active" && p.subscription.tier ? p.subscription.tier : "bronze", source: "subscription" },
+    { tier: p.manual.state === "active" && p.manual.tier ? p.manual.tier : "bronze", source: "manual" },
+  ];
+  return candidates.reduce((best, c) => TIER_RANK[c.tier] > TIER_RANK[best.tier] ? c : best, candidates[0]);
+}
+
+// ───────────────────────────────────────────────────────────────
+// Wallet & gamification
+// ───────────────────────────────────────────────────────────────
+export interface WalletTx {
+  id: string;
+  kind: "earned" | "spent" | "gift" | "refund";
+  amount: number; // MXN
+  venue: string;
+  when: string;  // "Hoy 21:14" etc
+}
+export interface GiftCard {
+  id: string;
+  from: string;
+  amount: number;
+  message?: string;
+}
+export interface WalletState {
+  credits: number;
+  transactions: WalletTx[];
+  giftCards: GiftCard[];
+}
+
+export type LevelName = "Explorer" | "Regular" | "Tastemaker" | "Connoisseur" | "Icon";
+export interface Gamification {
+  xp: number;
+  xpToNext: number;
+  level: LevelName;
+  streak: number;        // consecutive weeks with at least one visit
+  badges: Array<{ id: string; label: string; emoji: string }>;
+}
+
+// ───────────────────────────────────────────────────────────────
+// Seed user — used by the prototype as the current logged-in guest.
+// ───────────────────────────────────────────────────────────────
+export const SEED_USER = {
+  name: "Daniel R.",
+  handle: "@daniel",
+  email: "daniel@tec.mx",
+  paths: {
+    followers: { state: "active" as PathState, handle: "@daniel", followers: 2300, tier: tierFromFollowers(2300), storyRequired: true },
+    subscription: { state: "active" as PathState, tier: "silver" as Tier, since: "Oct 2025", renewsOn: "14 Dic" },
+    manual: { state: "locked" as PathState, tier: null },
+  } as ClassPaths,
+  wallet: {
+    credits: 240,
+    transactions: [
+      { id: "tx1", kind: "earned", amount: 96,  venue: "Koli",           when: "Hoy 21:14" },
+      { id: "tx2", kind: "spent",  amount: 50,  venue: "Biko",           when: "Ayer 14:32" },
+      { id: "tx3", kind: "earned", amount: 38,  venue: "Pangea",         when: "Vie 19:08" },
+      { id: "tx4", kind: "gift",   amount: 100, venue: "De: Sofía R.",   when: "Mié 11:00" },
+      { id: "tx5", kind: "earned", amount: 56,  venue: "Koli",           when: "Mar 22:40" },
+    ],
+    giftCards: [
+      { id: "g1", from: "Sofía R.", amount: 100, message: "¡Feliz cumple!" },
+    ],
+  } as WalletState,
+  gamification: {
+    xp: 1280,
+    xpToNext: 2000,
+    level: "Tastemaker" as LevelName,
+    streak: 4,
+    badges: [
+      { id: "b1", label: "Rooftop King",   emoji: "🌆" },
+      { id: "b2", label: "First Sip",      emoji: "🥂" },
+      { id: "b3", label: "Diamond Closer", emoji: "💎" },
+      { id: "b4", label: "MTY Local",      emoji: "📍" },
+    ],
+  } as Gamification,
+};
