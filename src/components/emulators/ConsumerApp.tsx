@@ -1472,18 +1472,48 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
       </div>
 
       {view === "class" && (
-        <section className="mt-5">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-            <div className="flex items-center justify-between">
-              <p className="text-[10px] uppercase tracking-wider text-white/45">{t.profile.currentClass}</p>
-              <TierBadge tier={tier} />
-            </div>
-            <p className="mt-2 font-display text-2xl font-bold">{TIER_META[tier].label}</p>
-            <p className="mt-1 text-[11px] text-white/55">{t.profile.activePath}: <span className="text-white/85 capitalize">{active.source}</span></p>
-            <button onClick={onUpgrade} className="mt-3 inline-flex items-center gap-1 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-black">
-              <Crown className="h-3.5 w-3.5" /> {t.profile.upgrade}
-            </button>
-          </div>
+        <section className="mt-5 space-y-3">
+          {(["bronze","silver","gold","diamond"] as Tier[]).map(tk => {
+            const meta = TIER_META[tk];
+            const isCurrent = tk === tier;
+            const priceLabel = tk === "bronze" ? "Free" : `$${meta.price}/mo`;
+            const desc =
+              tk === "bronze"  ? "Default · under 1K followers" :
+              tk === "silver"  ? "1K+ followers · or $200/mo" :
+              tk === "gold"    ? "5K+ followers · or $500/mo" :
+                                 "20K+ · $1,000/mo · or appeal";
+            const cashback =
+              tk === "bronze"  ? "Base cashback" :
+              tk === "silver"  ? "More cashback" :
+              tk === "gold"    ? "Even more cashback" :
+                                 "Most cashback · VIP";
+            return (
+              <div key={tk}
+                className={`rounded-2xl border bg-white/[0.04] p-4 ${isCurrent ? "border-yellow-300/60" : "border-white/10"}`}>
+                <div className="flex items-start gap-3">
+                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-base font-bold text-white ${meta.bg}`}>
+                    {meta.label[0]}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="font-display text-base font-bold">Mesita {meta.label}</p>
+                      <p className="font-display text-sm font-bold whitespace-nowrap">{priceLabel}</p>
+                    </div>
+                    <p className="mt-0.5 text-[11px] text-white/55">{desc}</p>
+                    <div className="mt-1.5 flex items-center justify-between gap-2">
+                      <p className="text-[12px] font-medium text-fuchsia-300">{cashback}</p>
+                      {isCurrent && (
+                        <span className="rounded-md bg-yellow-300/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-yellow-200">Current</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          <button onClick={onUpgrade} className="mt-2 inline-flex items-center gap-1 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-black">
+            <Crown className="h-3.5 w-3.5" /> {t.profile.upgrade}
+          </button>
         </section>
       )}
 
