@@ -10,20 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WaiterRouteImport } from './routes/waiter'
-import { Route as ManagerRouteImport } from './routes/manager'
 import { Route as LandingRouteImport } from './routes/landing'
 import { Route as GuestRouteImport } from './routes/guest'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ManagerIndexRouteImport } from './routes/manager.index'
+import { Route as ManagerCentralRouteImport } from './routes/manager.central'
+import { Route as ManagerAddRouteImport } from './routes/manager.add'
+import { Route as ManagerUnitTypeIdRouteImport } from './routes/manager.unit.$type.$id'
 
 const WaiterRoute = WaiterRouteImport.update({
   id: '/waiter',
   path: '/waiter',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ManagerRoute = ManagerRouteImport.update({
-  id: '/manager',
-  path: '/manager',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LandingRoute = LandingRouteImport.update({
@@ -46,22 +44,48 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ManagerIndexRoute = ManagerIndexRouteImport.update({
+  id: '/manager/',
+  path: '/manager/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManagerCentralRoute = ManagerCentralRouteImport.update({
+  id: '/manager/central',
+  path: '/manager/central',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManagerAddRoute = ManagerAddRouteImport.update({
+  id: '/manager/add',
+  path: '/manager/add',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManagerUnitTypeIdRoute = ManagerUnitTypeIdRouteImport.update({
+  id: '/manager/unit/$type/$id',
+  path: '/manager/unit/$type/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/guest': typeof GuestRoute
   '/landing': typeof LandingRoute
-  '/manager': typeof ManagerRoute
   '/waiter': typeof WaiterRoute
+  '/manager/add': typeof ManagerAddRoute
+  '/manager/central': typeof ManagerCentralRoute
+  '/manager/': typeof ManagerIndexRoute
+  '/manager/unit/$type/$id': typeof ManagerUnitTypeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/guest': typeof GuestRoute
   '/landing': typeof LandingRoute
-  '/manager': typeof ManagerRoute
   '/waiter': typeof WaiterRoute
+  '/manager/add': typeof ManagerAddRoute
+  '/manager/central': typeof ManagerCentralRoute
+  '/manager': typeof ManagerIndexRoute
+  '/manager/unit/$type/$id': typeof ManagerUnitTypeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,22 +93,46 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/guest': typeof GuestRoute
   '/landing': typeof LandingRoute
-  '/manager': typeof ManagerRoute
   '/waiter': typeof WaiterRoute
+  '/manager/add': typeof ManagerAddRoute
+  '/manager/central': typeof ManagerCentralRoute
+  '/manager/': typeof ManagerIndexRoute
+  '/manager/unit/$type/$id': typeof ManagerUnitTypeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/guest' | '/landing' | '/manager' | '/waiter'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/guest'
+    | '/landing'
+    | '/waiter'
+    | '/manager/add'
+    | '/manager/central'
+    | '/manager/'
+    | '/manager/unit/$type/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/guest' | '/landing' | '/manager' | '/waiter'
+  to:
+    | '/'
+    | '/admin'
+    | '/guest'
+    | '/landing'
+    | '/waiter'
+    | '/manager/add'
+    | '/manager/central'
+    | '/manager'
+    | '/manager/unit/$type/$id'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/guest'
     | '/landing'
-    | '/manager'
     | '/waiter'
+    | '/manager/add'
+    | '/manager/central'
+    | '/manager/'
+    | '/manager/unit/$type/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -92,8 +140,11 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   GuestRoute: typeof GuestRoute
   LandingRoute: typeof LandingRoute
-  ManagerRoute: typeof ManagerRoute
   WaiterRoute: typeof WaiterRoute
+  ManagerAddRoute: typeof ManagerAddRoute
+  ManagerCentralRoute: typeof ManagerCentralRoute
+  ManagerIndexRoute: typeof ManagerIndexRoute
+  ManagerUnitTypeIdRoute: typeof ManagerUnitTypeIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -103,13 +154,6 @@ declare module '@tanstack/react-router' {
       path: '/waiter'
       fullPath: '/waiter'
       preLoaderRoute: typeof WaiterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/manager': {
-      id: '/manager'
-      path: '/manager'
-      fullPath: '/manager'
-      preLoaderRoute: typeof ManagerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/landing': {
@@ -140,6 +184,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/manager/': {
+      id: '/manager/'
+      path: '/manager'
+      fullPath: '/manager/'
+      preLoaderRoute: typeof ManagerIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manager/central': {
+      id: '/manager/central'
+      path: '/manager/central'
+      fullPath: '/manager/central'
+      preLoaderRoute: typeof ManagerCentralRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manager/add': {
+      id: '/manager/add'
+      path: '/manager/add'
+      fullPath: '/manager/add'
+      preLoaderRoute: typeof ManagerAddRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manager/unit/$type/$id': {
+      id: '/manager/unit/$type/$id'
+      path: '/manager/unit/$type/$id'
+      fullPath: '/manager/unit/$type/$id'
+      preLoaderRoute: typeof ManagerUnitTypeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -148,8 +220,11 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   GuestRoute: GuestRoute,
   LandingRoute: LandingRoute,
-  ManagerRoute: ManagerRoute,
   WaiterRoute: WaiterRoute,
+  ManagerAddRoute: ManagerAddRoute,
+  ManagerCentralRoute: ManagerCentralRoute,
+  ManagerIndexRoute: ManagerIndexRoute,
+  ManagerUnitTypeIdRoute: ManagerUnitTypeIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
