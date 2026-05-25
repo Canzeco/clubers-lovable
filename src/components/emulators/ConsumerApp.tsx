@@ -1100,7 +1100,13 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
       <div className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-white/10 bg-black/85 px-5 pb-6 pt-3 backdrop-blur-xl">
         <button onClick={onReserve}
           className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 via-rose-500 to-amber-500 py-3.5 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/30">
-          <Calendar className="h-4 w-4" /> {t.venue.reserve}
+          {listing.category === "product" ? (
+            <><ShoppingBag className="h-4 w-4" /> Buy</>
+          ) : listing.category === "service" ? (
+            <><Wrench className="h-4 w-4" /> Book service</>
+          ) : (
+            <><Calendar className="h-4 w-4" /> {t.venue.reserve}</>
+          )}
         </button>
       </div>
     </div>
