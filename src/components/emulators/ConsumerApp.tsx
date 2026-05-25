@@ -117,11 +117,24 @@ export function ConsumerApp() {
         />
       )}
       {reserveFor && (
-        <ReserveSheet
-          listing={reserveFor}
-          onClose={() => setReserveFor(null)}
-          onDone={(when, party) => { addReservation(reserveFor, when, party); setSaved(p => new Set(p).add(reserveFor.id)); setReserveFor(null); setTab("saved"); }}
-        />
+        reserveFor.category === "community" ? (
+          <JoinCommunitySheet
+            listing={reserveFor}
+            alreadyMember={memberships.has(reserveFor.id)}
+            onClose={() => setReserveFor(null)}
+            onDone={() => {
+              if (!memberships.has(reserveFor.id)) toggleMembership(reserveFor.id);
+              setSaved(p => new Set(p).add(reserveFor.id));
+              setReserveFor(null);
+            }}
+          />
+        ) : (
+          <ReserveSheet
+            listing={reserveFor}
+            onClose={() => setReserveFor(null)}
+            onDone={(when, party) => { addReservation(reserveFor, when, party); setSaved(p => new Set(p).add(reserveFor.id)); setReserveFor(null); setTab("saved"); }}
+          />
+        )
       )}
       {showUpgrade && (
         <UpgradeScreen tier={tier} onClose={() => setShowUpgrade(false)} onSelect={(newTier) => {
@@ -1348,6 +1361,114 @@ function ReserveSheet({ listing, onClose, onDone }: { listing: Listing; onClose:
 /* ─────────────────────────────────────────────────────────────
    SAVED
    ───────────────────────────────────────────────────────────── */
+/* ── Join Community Sheet ─────────────────────────────────── */
+function JoinCommunitySheet({ listing, alreadyMember, onClose, onDone }: {
+  listing: Listing; alreadyMember: boolean; onClose: () => void; onDone: () => void;
+}) {
+  const needsVerification = listing.entryRule && !/open to everyone/i.test(listing.entryRule);
+  const hasFee = (listing.monthlyFee ?? 0) > 0;
+  type Phase = "intro" | "verifying" | "done";
+  const [phase, setPhase] = useState<Phase>("intro");
+  const [accepted, setAccepted] = useState(false);
+
+  const join = async () => {
+    if (needsVerification || hasFee) {
+      setPhase("verifying");
+      await new Promise(r => setTimeout(r, 1200));
+    }
+    setPhase("done");
+  };
+
+  return (
+    <div className="absolute inset-0 z-40 flex items-end bg-black/70 backdrop-blur-sm">
+      <div className="w-full rounded-t-3xl border-t border-white/10 bg-[oklch(0.13_0.03_280)] p-5 pb-8 text-white">
+        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/20" />
+
+        {phase === "intro" && (
+          <>
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-[11px] uppercase tracking-wider text-white/45">Join community</p>
+                <h3 className="font-display text-xl font-semibold">{listing.name}</h3>
+                <p className="mt-0.5 text-[12px] text-white/55">
+                  {(listing.members ?? 0).toLocaleString()} members · {listing.subcategory}
+                </p>
+              </div>
+              <button onClick={onClose} className="rounded-full bg-white/10 p-1.5"><X className="h-4 w-4" /></button>
+            </div>
+
+            <div className="mt-5 space-y-2">
+              <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+                <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-fuchsia-300" />
+                <div className="text-[12px]">
+                  <p className="font-semibold text-white">Entry requirement</p>
+                  <p className="text-white/60">{listing.entryRule ?? "Open to everyone"}</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+                <Wallet className="mt-0.5 h-4 w-4 shrink-0 text-fuchsia-300" />
+                <div className="text-[12px]">
+                  <p className="font-semibold text-white">Membership</p>
+                  <p className="text-white/60">
+                    {hasFee ? `$${listing.monthlyFee} MXN / month` : "Free to join"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <label className="mt-4 flex cursor-pointer items-start gap-2 text-[12px] text-white/70">
+              <input type="checkbox" checked={accepted} onChange={e => setAccepted(e.target.checked)}
+                className="mt-0.5 h-4 w-4 accent-fuchsia-500" />
+              <span>I agree to the community rules and code of conduct.</span>
+            </label>
+
+            <button disabled={!accepted} onClick={join}
+              className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-rose-500 py-3.5 text-sm font-semibold shadow-lg shadow-fuchsia-500/30 disabled:cursor-not-allowed disabled:opacity-40">
+              <Users className="h-4 w-4" />
+              {hasFee ? `Join · $${listing.monthlyFee}/mo` : "Join community"}
+            </button>
+          </>
+        )}
+
+        {phase === "verifying" && (
+          <div className="py-10 text-center">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-fuchsia-500/20">
+              <Loader2 className="h-6 w-6 animate-spin text-fuchsia-300" />
+            </div>
+            <h3 className="font-display text-xl font-semibold">
+              {hasFee && needsVerification ? "Verifying & charging…" : hasFee ? "Processing payment…" : "Verifying access…"}
+            </h3>
+            <p className="mx-auto mt-2 max-w-xs text-sm text-white/65">
+              {needsVerification ? listing.entryRule : "Setting up your membership."}
+            </p>
+          </div>
+        )}
+
+        {phase === "done" && (
+          <div className="py-6 text-center">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/20">
+              <Check className="h-7 w-7 text-emerald-300" />
+            </div>
+            <h3 className="font-display text-xl font-semibold">
+              {alreadyMember ? "You're in" : "Welcome to the crew"}
+            </h3>
+            <p className="mx-auto mt-1 max-w-xs text-[13px] text-white/65">
+              Group perks unlocked. Join the chat to meet the community.
+            </p>
+            <a href="https://chat.whatsapp.com/" target="_blank" rel="noopener noreferrer"
+              className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-[oklch(0.72_0.18_150)] py-3.5 text-sm font-semibold text-black shadow-lg">
+              <Share2 className="h-4 w-4" /> Open WhatsApp group
+            </a>
+            <button onClick={onDone} className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 py-3 text-sm font-semibold text-white/80">
+              Done
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
   tier: Tier; saved: Set<string>; reservations: Array<{ id: string; listingId: string; when: string; party: number; status: "pending" | "confirmed" }>;
   onOpen: (l: Listing) => void; onToggleSave: (id: string) => void;
