@@ -1183,14 +1183,14 @@ function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
       )}
 
       <section className="mt-6">
-        <div className="flex flex-wrap gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-2">
+        <div className="flex flex-wrap gap-2">
           {groups.map(g => {
             const count = g.cat ? items.filter(l => l.category === g.cat).length : items.length;
             const active = selCat === g.cat;
             return (
               <button key={g.label} onClick={() => setSelCat(g.cat)}
-                className={`rounded-full border px-3 py-1.5 text-xs transition ${active ? "border-white/80 bg-white text-black" : "border-white/10 bg-white/[0.03] text-white/70"}`}>
-                {g.label} <span className={`ml-1 ${active ? "text-black/55" : "text-white/40"}`}>{count}</span>
+                className={`rounded-full border px-3 py-1.5 text-xs transition ${active ? "border-emerald-400/70 bg-emerald-400/15 text-emerald-200" : "border-white/15 bg-transparent text-white/75"}`}>
+                {g.label} <span className={`ml-1 ${active ? "text-emerald-200/70" : "text-white/40"}`}>{count}</span>
               </button>
             );
           })}
