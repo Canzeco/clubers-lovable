@@ -14,6 +14,7 @@ import { Route as LandingRouteImport } from './routes/landing'
 import { Route as GuestRouteImport } from './routes/guest'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ManagerIndexRouteImport } from './routes/manager.index'
 
 const WaiterRoute = WaiterRouteImport.update({
   id: '/waiter',
@@ -40,6 +41,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ManagerIndexRoute = ManagerIndexRouteImport.update({
+  id: '/manager/',
+  path: '/manager/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/guest': typeof GuestRoute
   '/landing': typeof LandingRoute
   '/waiter': typeof WaiterRoute
+  '/manager/': typeof ManagerIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/guest': typeof GuestRoute
   '/landing': typeof LandingRoute
   '/waiter': typeof WaiterRoute
+  '/manager': typeof ManagerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,21 @@ export interface FileRoutesById {
   '/guest': typeof GuestRoute
   '/landing': typeof LandingRoute
   '/waiter': typeof WaiterRoute
+  '/manager/': typeof ManagerIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/guest' | '/landing' | '/waiter'
+  fullPaths: '/' | '/admin' | '/guest' | '/landing' | '/waiter' | '/manager/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/guest' | '/landing' | '/waiter'
-  id: '__root__' | '/' | '/admin' | '/guest' | '/landing' | '/waiter'
+  to: '/' | '/admin' | '/guest' | '/landing' | '/waiter' | '/manager'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/guest'
+    | '/landing'
+    | '/waiter'
+    | '/manager/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +93,7 @@ export interface RootRouteChildren {
   GuestRoute: typeof GuestRoute
   LandingRoute: typeof LandingRoute
   WaiterRoute: typeof WaiterRoute
+  ManagerIndexRoute: typeof ManagerIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +133,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/manager/': {
+      id: '/manager/'
+      path: '/manager'
+      fullPath: '/manager/'
+      preLoaderRoute: typeof ManagerIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,7 +149,18 @@ const rootRouteChildren: RootRouteChildren = {
   GuestRoute: GuestRoute,
   LandingRoute: LandingRoute,
   WaiterRoute: WaiterRoute,
+  ManagerIndexRoute: ManagerIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
