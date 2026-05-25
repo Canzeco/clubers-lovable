@@ -111,6 +111,7 @@ export const SEED_LISTINGS: Listing[] = [
     description: "Cocina del noreste mexicano por Rodrigo Rivera-Río. Menú degustación con producto local.",
     perks: cashbackPerks(3, 8, 12, 18),
     welcomePerk: { kind: "cashback", pct: 15, label: "15% en tu primera visita" },
+    fiscalType: "formal",
   },
   {
     id: "pangea",
@@ -127,6 +128,7 @@ export const SEED_LISTINGS: Listing[] = [
     description: "Clásico de Guillermo González Beristáin. Cocina mediterránea con producto del norte.",
     perks: cashbackPerks(3, 7, 10, 15),
     welcomePerk: { kind: "cashback", pct: 12, label: "12% en tu primera visita" },
+    fiscalType: "formal",
   },
   {
     id: "lacatarina",
@@ -143,6 +145,7 @@ export const SEED_LISTINGS: Listing[] = [
     description: "Rooftop con vista al Cerro de la Silla. Coctelería de autor, dj sets jueves a sábado.",
     perks: discountPerks(5, 10, 15, 20),
     welcomePerk: { kind: "discount", pct: 20, label: "20% en tu primer trago" },
+    fiscalType: "informal",
   },
   {
     id: "lacervecería",
@@ -159,6 +162,7 @@ export const SEED_LISTINGS: Listing[] = [
     description: "Más de 80 etiquetas de cerveza artesanal mexicana. Cocina de bar y trivia los martes.",
     perks: discountPerks(5, 10, 15, 20),
     welcomePerk: { kind: "discount", pct: 25, label: "25% en tu primera cuenta" },
+    fiscalType: "informal",
   },
   {
     id: "doloreschico",
@@ -203,6 +207,7 @@ export const SEED_LISTINGS: Listing[] = [
     description: "Club en el piso 30 con line-up internacional. Reserva de mesa con bottle service.",
     perks: cashbackPerks(0, 5, 10, 15),
     welcomePerk: { kind: "cashback", pct: 10, label: "10% en tu primera mesa" },
+    fiscalType: "informal",
   },
   {
     id: "biko",
@@ -219,6 +224,7 @@ export const SEED_LISTINGS: Listing[] = [
     description: "Cocina vasca contemporánea, pintxos y carta de vinos curada.",
     perks: cashbackPerks(4, 8, 12, 16),
     welcomePerk: { kind: "cashback", pct: 12, label: "12% en tu primera visita" },
+    fiscalType: "formal",
   },
   // Experiences — placeholders
   {
