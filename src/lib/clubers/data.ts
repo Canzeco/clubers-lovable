@@ -406,6 +406,7 @@ export const t = {
     yourNight: "Tu noche",
     why: "Por qué te lo recomendamos",
     swipeHint: "Desliza ↑ para guardar · ↓ para pasar",
+    skip: "Skip", saveOrReserve: "Save or Reserve",
     openNow: "Abierto ahora", closed: "Cerrado",
     comingSoon: "Próximamente — ahora solo restaurantes y bares.",
   },
