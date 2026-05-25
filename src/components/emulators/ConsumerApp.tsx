@@ -1515,74 +1515,32 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
           </div>
 
           {/* The Card */}
-          <div className="relative overflow-hidden rounded-[28px] border border-white/15 bg-gradient-to-br from-white/[0.09] via-white/[0.04] to-transparent p-5 shadow-2xl shadow-black/50">
-            <div className={`pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full ${TIER_META[tier].bg} opacity-40 blur-3xl`} />
-            <div className="pointer-events-none absolute -left-16 -bottom-16 h-48 w-48 rounded-full bg-fuchsia-500/30 opacity-40 blur-3xl" />
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40">Your card</p>
 
-            <div className="relative flex items-start justify-between gap-3">
-              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/55">Mesita · Card</span>
-              <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white ${TIER_META[tier].bg}`}>
-                <Crown className="h-2.5 w-2.5" /> {TIER_META[tier].label}
-              </span>
-            </div>
-
-            <div className="relative mt-4 flex items-center gap-3">
-              <div className={`h-16 w-16 rounded-2xl ${TIER_META[tier].bg} p-[2px] shadow-lg shadow-black/40`}>
-                <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-black/60">
-                  <User className="h-7 w-7 text-white" />
-                </div>
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="font-display text-2xl font-bold leading-tight truncate">{SEED_USER.name}</p>
-                <p className="mt-0.5 truncate text-xs text-white/60">
-                  <Instagram className="-mt-0.5 mr-1 inline h-3 w-3" />{SEED_USER.handle} · {paths.followers.followers.toLocaleString()} followers
-                </p>
-              </div>
-            </div>
-
-            {/* Vibe tags */}
-            <div className="relative mt-4 flex flex-wrap gap-1.5">
+            <div className="mt-3 flex flex-wrap gap-1.5">
               {["Rooftop nights","Natural wine","Indie electronic","Pádel","San Pedro"].map(tag => (
-                <span key={tag} className="rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-1 text-[10px] font-medium text-white/80">{tag}</span>
+                <span key={tag} className="rounded-full bg-white/[0.06] px-2.5 py-1 text-[10px] text-white/75">{tag}</span>
               ))}
             </div>
 
-            {/* AI Fit */}
-            <div className="relative mt-4 rounded-2xl border border-violet-300/20 bg-gradient-to-br from-violet-500/15 via-fuchsia-500/10 to-transparent p-3">
+            <div className="mt-4 border-t border-white/[0.06] pt-3">
               <div className="flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5 text-violet-200" />
-                <p className="text-[10px] font-bold uppercase tracking-wider text-violet-200">AI Fit</p>
+                <Sparkles className="h-3 w-3 text-violet-300" />
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-violet-300">AI fit</p>
               </div>
-              <p className="mt-1.5 text-[12px] leading-snug text-white/85">
-                High-signal rooftop regular with a curated late-week rhythm. Strong overlap with creative founders & natural-wine crowds in San Pedro. Likely a great +1 for intimate openings and Thursday-night sets.
+              <p className="mt-1.5 text-[12px] leading-snug text-white/80">
+                Rooftop regular with a late-week rhythm. Overlaps with creative founders and natural-wine crowds in San Pedro.
               </p>
-              <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                {[
-                  { k: "Taste match", v: "94%" },
-                  { k: "Scene", v: "Nightlife · Food" },
-                  { k: "Energy", v: "Thu–Sat" },
-                ].map(m => (
-                  <span key={m.k} className="rounded-md bg-black/30 px-2 py-0.5 text-[9px] text-white/70">
-                    <span className="text-white/45">{m.k}</span> <span className="font-semibold text-white">{m.v}</span>
-                  </span>
-                ))}
-              </div>
             </div>
 
-            <div className="relative mt-4 flex items-center justify-between gap-2">
-              <div className="flex items-center gap-1.5 text-[10px] text-white/55">
-                <Search className="h-3 w-3" />
-                {discoverable ? "Visible in people search" : "Hidden from search"}
-              </div>
-              <button className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1.5 text-[11px] font-semibold text-black">
-                <Share2 className="h-3 w-3" /> Share card
-              </button>
-            </div>
+            <button className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-white px-3 py-2 text-[12px] font-semibold text-black">
+              <Share2 className="h-3.5 w-3.5" /> Share card
+            </button>
           </div>
 
-          <p className="flex items-start gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-[10px] text-white/55">
-            <Lock className="mt-0.5 h-3 w-3 shrink-0 text-emerald-300/70" />
-            <span>Your card is generated from your connectors and activity. You control what's visible — Mesita never shares your contact info.</span>
+          <p className="px-1 text-[10px] text-white/45">
+            Generated from your connectors. Mesita never shares your contact info.
           </p>
         </section>
       )}
