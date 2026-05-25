@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Store, PartyPopper, Users, UserCircle2, ShoppingBag, Wrench, Smartphone } from "lucide-react";
+import { Search, Store, PartyPopper, Users, ShoppingBag, Wrench, Smartphone } from "lucide-react";
 import { BusinessShell } from "@/components/business/Shell";
 import { UNIT_TYPE_META, type UnitType } from "@/lib/business/units";
 

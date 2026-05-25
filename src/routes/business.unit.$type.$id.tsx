@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { BusinessWeb } from "@/components/emulators/BusinessWeb";
 import { BusinessShell } from "@/components/business/Shell";
 import { findUnit, UNIT_TYPE_META, type UnitType } from "@/lib/business/units";
-import { PartyPopper, Users, ChevronLeft, Sparkles, UserCircle2, ShoppingBag, Wrench, Smartphone } from "lucide-react";
+import { PartyPopper, Users, ChevronLeft, Sparkles, ShoppingBag, Wrench, Smartphone } from "lucide-react";
 
 const VALID_TYPES: UnitType[] = ["place", "event", "community", "product", "service", "app"];
 

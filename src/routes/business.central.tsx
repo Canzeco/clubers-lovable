@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPin, Plus, Sparkles, PartyPopper, Users, Store, UserCircle2, ShoppingBag, Wrench, Smartphone } from "lucide-react";
+import { MapPin, Plus, Sparkles, PartyPopper, Users, Store, ShoppingBag, Wrench, Smartphone } from "lucide-react";
 import { BusinessShell } from "@/components/business/Shell";
 import { MY_UNITS, UNIT_TYPE_META, type UnitType } from "@/lib/business/units";
 
