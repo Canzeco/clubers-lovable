@@ -295,7 +295,7 @@ export const SEED_LISTINGS: Listing[] = [
   {
     id: "exp-cata",
     name: "Cata de Mezcal con maestro mezcalero",
-    category: "experience", subcategory: "Tasting",
+    category: "event", subcategory: "Tasting",
     participation: "partner",
     zone: "Barrio Antiguo", priceLevel: 3,
     clubersRating: 4.8, googleRating: 4.7,
@@ -307,12 +307,13 @@ export const SEED_LISTINGS: Listing[] = [
     perks: cashbackPerks(5, 10, 15, 20),
     welcomePerk: { kind: "cashback", pct: 20, label: "20% on your first tasting" },
     fiscalType: "formal",
+    whenLabel: "Thu–Sat · 20:00",
     durationLabel: "2 h",
   },
   {
     id: "exp-cook",
     name: "Taller de cocina norteña",
-    category: "experience", subcategory: "Workshop",
+    category: "event", subcategory: "Workshop",
     participation: "listed",
     zone: "San Pedro", priceLevel: 3,
     clubersRating: 4.6, googleRating: 4.5,
@@ -321,6 +322,7 @@ export const SEED_LISTINGS: Listing[] = [
     gallery: [], openNow: false, hours: "Sat · 11:00",
     walkMin: 9,
     description: "Half-day workshop: cabrito, machaca and flour tortillas with a regional chef. Eat what you cook.",
+    whenLabel: "Sat · 11:00",
     durationLabel: "Half day",
   },
   {
