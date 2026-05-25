@@ -635,6 +635,15 @@ export const SEED_USER = {
     subscription: { state: "active" as PathState, tier: "silver" as Tier, since: "Oct 2025", renewsOn: "Dec 14" },
     manual: { state: "locked" as PathState, tier: null },
   } as ClassPaths,
+  // The user belongs to many groups at once — class (paths) is one, influence
+  // is auto-derived from followers, and these are the custom communities they
+  // hold. Each unlocks venue-side perks targeted at that community.
+  memberships: [
+    { communityId: "com-tec",     joinedOn: "Aug 2024", role: "member" },
+    { communityId: "com-foodies", joinedOn: "Mar 2025", role: "member" },
+  ] as Membership[],
+  // Auto-derived from IG followers (2.3K → "creator" influence tier).
+  influenceTier: "creator" as NonNullable<Listing["influenceTier"]>,
   wallet: {
     credits: 240,
     transactions: [
