@@ -55,6 +55,18 @@ export interface Listing {
   influenceTier?: "rising" | "creator" | "tastemaker" | "icon";
 }
 
+// A perk gated to members of a specific community group. This is how the
+// spec's "20% off for all Tec students" type rules get expressed on a venue.
+export interface CommunityPerk {
+  communityId: string;        // matches a Listing.id where category === "community"
+  communityName: string;      // denormalized for display
+  kind: PerkKind;
+  pct: number;
+  label: string;
+}
+
+declare module "./data" {}
+
 export const TIERS: Tier[] = ["bronze", "silver", "gold", "diamond"];
 
 export const INFLUENCE_META: Record<NonNullable<Listing["influenceTier"]>, { label: string; min: string }> = {
