@@ -717,6 +717,11 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
             <TierBadge tier={tier} small />
           </div>
           <p className="mt-1 text-xl font-semibold">{perk?.label ?? "Sin perk · venue listado"}</p>
+          {listing.fiscalType && (
+            <p className="mt-1 text-[11px] text-white/60">
+              {listing.fiscalType === "formal" ? t.venue.mechanicFormal : t.venue.mechanicInformal}
+            </p>
+          )}
           {listing.welcomePerk && (
             <p className="mt-1 text-xs text-white/65"><Sparkles className="-mt-0.5 mr-1 inline h-3 w-3 text-amber-300" /> {t.venue.welcome}: {listing.welcomePerk.label}</p>
           )}
@@ -726,6 +731,18 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
             </button>
           )}
         </div>
+
+        {listing.welcomePerk && (
+          <div className="rounded-2xl border border-amber-300/30 bg-amber-300/10 p-3">
+            <div className="flex items-start gap-2">
+              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
+              <div>
+                <p className="text-xs font-semibold text-amber-100">{t.venue.welcome}: {listing.welcomePerk.label}</p>
+                <p className="text-[11px] text-amber-100/70">{t.venue.welcomeBanner}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <p className="text-sm leading-relaxed text-white/80">{listing.description}</p>
 
