@@ -6,6 +6,7 @@ import {
   X, ArrowUp, ArrowDown, Loader2, Send, Gift, Copy, Instagram, Globe,
   Crown, Check, Lock, Heart, Wallet, Settings, ArrowRight, Flame,
   TrendingUp, CircleDollarSign, ArrowDownLeft, ArrowUpRight, ShoppingBag,
+  Bot,
 } from "lucide-react";
 import {
   SEED_LISTINGS, TIERS, TIER_META, INFLUENCE_META, SEED_USER, clubersApi, t,
