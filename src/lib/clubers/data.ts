@@ -57,6 +57,10 @@ export interface Listing {
   developer?: string;      // who built the app
   installs?: number;       // social proof, e.g. 12400
   onboardingSteps?: string[]; // ["Allow camera", "Take 3 selfies", "Get your report"]
+  // Identity claims this app needs. Mesita owns these once and auto-skips
+  // any step the user has already cleared in another app — that's the
+  // "one-time onboarding, dynamic software" promise.
+  requiresIdentity?: IdentityClaim[];
   // For communities
   members?: number;          // 1820
   entryRule?: string;        // "Solo @tec.mx" · "Aprobación del admin" · "Abierto"
@@ -75,10 +79,20 @@ export interface Listing {
 export interface Offering {
   id: string;
   name: string;
-  kind: "product" | "service";
-  price: number; // MXN
+  kind: "product" | "service" | "subscription";
+  price: number; // MXN — per-charge price (e.g. 89 for $89/mo)
+  interval?: "month" | "year"; // required when kind === "subscription"
   description?: string;
 }
+
+export type IdentityClaim =
+  | "face"        // selfie / face scan already on file
+  | "voice"       // voice sample on file
+  | "ig"          // Instagram connected
+  | "age"         // verified date of birth
+  | "location"    // city / address
+  | "id"          // government ID verified
+  | "medical";    // basic medical intake on file (sex, allergies, meds)
 
 export interface CommunityPerk {
   communityId: string;        // matches a Listing.id where category === "community"
@@ -567,6 +581,7 @@ export const SEED_LISTINGS: Listing[] = [
     installs: 18400,
     onboardingSteps: ["Allow camera access", "Take 3 guided selfies", "Get your private report in 30 s"],
     durationLabel: "2 min",
+    requiresIdentity: ["face"],
   },
   {
     id: "app-voice-coach",
@@ -585,6 +600,7 @@ export const SEED_LISTINGS: Listing[] = [
     installs: 6200,
     onboardingSteps: ["Allow mic access", "Record a 30 s sample", "Get your daily drill plan"],
     durationLabel: "1 min",
+    requiresIdentity: ["voice"],
   },
   {
     id: "app-style-fit",
@@ -603,6 +619,38 @@ export const SEED_LISTINGS: Listing[] = [
     installs: 9100,
     onboardingSteps: ["Take a daylight selfie", "Snap a full-body photo", "Get your seasonal palette"],
     durationLabel: "3 min",
+    requiresIdentity: ["face"],
+  },
+  {
+    id: "app-norte-rx",
+    name: "Norte Rx · Hair, skin & weight",
+    category: "app", subcategory: "Telehealth",
+    participation: "partner",
+    zone: "In-app", priceLevel: 3,
+    clubersRating: 4.8, googleRating: 0,
+    vibes: ["telehealth", "subscription", "prescribed"],
+    cover: photo("1576091160550-2173dba999ef", 303),
+    gallery: [], openNow: true, hours: "Always",
+    walkMin: 0,
+    description: "Async consult with a licensed Mexican physician. Personalized protocol for hair loss, acne, or weight management — refilled at your door every month.",
+    appKind: "Telehealth",
+    developer: "Norte Rx Clinic",
+    installs: 4200,
+    onboardingSteps: [
+      "3-minute medical intake",
+      "Async review by a licensed MD (under 12 h)",
+      "Monthly refill ships discreetly",
+    ],
+    durationLabel: "3 min intake",
+    requiresIdentity: ["face", "age", "id", "medical", "location"],
+    offerings: [
+      { id: "rx-hair-sub",  name: "Hair growth · monthly protocol",     kind: "subscription", price: 890, interval: "month", description: "Finasteride + minoxidil, MD-supervised, ships every 30 days." },
+      { id: "rx-skin-sub",  name: "Clear skin · monthly protocol",      kind: "subscription", price: 690, interval: "month", description: "Tretinoin + azelaic compound, formulated per intake." },
+      { id: "rx-glp1-sub",  name: "Weight management · GLP-1 program",  kind: "subscription", price: 3490, interval: "month", description: "Eligibility required. Includes weekly check-ins and dose titration." },
+      { id: "rx-consult",   name: "One-shot video consult",             kind: "service",      price: 450, description: "20-minute video call with an MD — no commitment." },
+      { id: "rx-derm-kit",  name: "Daily derm kit (cleanser + SPF)",    kind: "product",      price: 690, description: "Ships with your first prescription. Non-prescription." },
+    ],
+    fiscalType: "formal",
   },
 ];
 

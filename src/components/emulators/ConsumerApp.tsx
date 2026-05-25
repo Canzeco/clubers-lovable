@@ -11,8 +11,22 @@ import {
 } from "lucide-react";
 import {
   SEED_LISTINGS, TIERS, TIER_META, INFLUENCE_META, SEED_USER, clubersApi, t,
-  resolveActiveTier, type Listing, type Category, type Tier, type ClassPaths,
+  resolveActiveTier, type Listing, type Category, type Tier, type ClassPaths, type IdentityClaim,
 } from "@/lib/clubers/data";
+
+// Mock — which identity claims the logged-in user has already cleared on
+// Mesita. Apps that require these get to auto-skip the corresponding step.
+// In production this is sourced from the user's profile + verifier status.
+const USER_CLAIMS: Set<IdentityClaim> = new Set(["face", "ig", "location"]);
+const CLAIM_META: Record<IdentityClaim, { label: string; emoji: string }> = {
+  face:     { label: "Face",      emoji: "🙂" },
+  voice:    { label: "Voice",     emoji: "🎙️" },
+  ig:       { label: "Instagram", emoji: "📸" },
+  age:      { label: "Age",       emoji: "🎂" },
+  location: { label: "Location",  emoji: "📍" },
+  id:       { label: "Gov ID",    emoji: "🪪" },
+  medical:  { label: "Medical",   emoji: "🩺" },
+};
 
 /* ============================================================
    Clubers — Consumer Web App
@@ -1089,37 +1103,87 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
             {listing.durationLabel && (
               <p className="mt-3 text-[11px] text-white/60"><Clock className="-mt-0.5 mr-1 inline h-3 w-3" /> {listing.durationLabel} to complete</p>
             )}
+            {listing.requiresIdentity && listing.requiresIdentity.length > 0 && (
+              <div className="mt-3 border-t border-white/10 pt-3">
+                <p className="text-[10px] uppercase tracking-wider text-white/45">Uses your Mesita identity</p>
+                <div className="mt-1.5 flex flex-wrap gap-1.5">
+                  {listing.requiresIdentity.map((claim) => {
+                    const m = CLAIM_META[claim];
+                    const onFile = USER_CLAIMS.has(claim);
+                    return (
+                      <span
+                        key={claim}
+                        className={`flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] ${
+                          onFile
+                            ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
+                            : "border-cyan-400/30 bg-cyan-400/5 text-cyan-100"
+                        }`}
+                        title={onFile ? "Already on file — auto-skip" : "We'll collect this once"}
+                      >
+                        <span>{m.emoji}</span>
+                        <span>{m.label}</span>
+                        {onFile && <Check className="h-2.5 w-2.5" />}
+                      </span>
+                    );
+                  })}
+                </div>
+                <p className="mt-1.5 text-[10px] text-white/45">
+                  {listing.requiresIdentity.filter(c => USER_CLAIMS.has(c)).length} of {listing.requiresIdentity.length} already on file — onboarding picks up where it ends.
+                </p>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Event offerings — inline products & services */}
-        {listing.category === "event" && listing.offerings && listing.offerings.length > 0 && (
+        {/* Inline offerings — events and apps both sell products / services / subscriptions */}
+        {(listing.category === "event" || listing.category === "app") && listing.offerings && listing.offerings.length > 0 && (
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
             <div className="flex items-center gap-2">
               <Sparkles className="h-3.5 w-3.5 text-fuchsia-300" />
-              <p className="text-[10px] uppercase tracking-wider text-white/55">Add to your night</p>
+              <p className="text-[10px] uppercase tracking-wider text-white/55">
+                {listing.category === "event" ? "Add to your night" : "What's inside this app"}
+              </p>
             </div>
             <div className="mt-3 space-y-2">
-              {listing.offerings.map(o => (
-                <div key={o.id} className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3">
-                  <div className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${o.kind === "product" ? "bg-emerald-400/15 text-emerald-200" : "bg-sky-400/15 text-sky-200"}`}>
-                    {o.kind === "product" ? <ShoppingBag className="h-3.5 w-3.5" /> : <Wrench className="h-3.5 w-3.5" />}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="truncate text-sm font-semibold">{o.name}</p>
-                      <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider ${o.kind === "product" ? "bg-emerald-400/15 text-emerald-200" : "bg-sky-400/15 text-sky-200"}`}>
-                        {o.kind}
-                      </span>
+              {listing.offerings.map(o => {
+                const tone =
+                  o.kind === "product"      ? "bg-emerald-400/15 text-emerald-200" :
+                  o.kind === "service"      ? "bg-sky-400/15 text-sky-200"         :
+                                              "bg-fuchsia-400/15 text-fuchsia-200";
+                const Icon =
+                  o.kind === "product"      ? ShoppingBag :
+                  o.kind === "service"      ? Wrench      :
+                                              Sparkles;
+                const label =
+                  o.kind === "subscription" ? "subscription" : o.kind;
+                return (
+                  <div key={o.id} className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                    <div className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${tone}`}>
+                      <Icon className="h-3.5 w-3.5" />
                     </div>
-                    {o.description && <p className="mt-0.5 text-[11px] text-white/60">{o.description}</p>}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="truncate text-sm font-semibold">{o.name}</p>
+                        <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider ${tone}`}>
+                          {label}
+                        </span>
+                      </div>
+                      {o.description && <p className="mt-0.5 text-[11px] text-white/60">{o.description}</p>}
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <p className="font-display text-sm font-bold">
+                        ${o.price.toLocaleString()}
+                        {o.kind === "subscription" && o.interval && (
+                          <span className="ml-0.5 text-[10px] font-medium text-white/55">/{o.interval === "month" ? "mo" : "yr"}</span>
+                        )}
+                      </p>
+                      <button className="mt-1 rounded-md bg-white px-2 py-0.5 text-[10px] font-semibold text-black">
+                        {o.kind === "subscription" ? "Subscribe" : "Add"}
+                      </button>
+                    </div>
                   </div>
-                  <div className="shrink-0 text-right">
-                    <p className="font-display text-sm font-bold">${o.price.toLocaleString()}</p>
-                    <button className="mt-1 rounded-md bg-white px-2 py-0.5 text-[10px] font-semibold text-black">Add</button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
