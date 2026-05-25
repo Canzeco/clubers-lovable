@@ -3,7 +3,7 @@
 // functions in `clubersApi` for Supabase Edge Function calls later.
 
 export type Tier = "bronze" | "silver" | "gold" | "diamond";
-export type Category = "place" | "event" | "experience" | "community" | "person";
+export type Category = "place" | "event" | "community" | "person" | "product" | "service";
 export type Participation = "listed" | "partner";
 export type PerkKind = "cashback" | "discount";
 export type FiscalType = "formal" | "informal";
@@ -41,8 +41,17 @@ export interface Listing {
   fiscalType?: FiscalType;
   // For events
   whenLabel?: string; // "Vie 14 dic · 22:00"
-  // For experiences
-  durationLabel?: string; // "2 h" · "Half day"
+  // Duration label (events, services)
+  durationLabel?: string; // "2 h" · "Half day" · "45 min"
+  // For events: inline products/services sold alongside the event
+  offerings?: Offering[];
+  // For products
+  price?: number;       // MXN
+  productKind?: string; // "Bottle" · "Merch" · "Voucher"
+  soldBy?: string;      // denormalized name of the place/person selling it
+  // For services
+  serviceKind?: string; // "Haircut" · "Personal trainer" · "Photographer"
+  providedBy?: string;  // denormalized name of the place/person providing it
   // For communities
   members?: number;          // 1820
   entryRule?: string;        // "Solo @tec.mx" · "Aprobación del admin" · "Abierto"
@@ -56,6 +65,14 @@ export interface Listing {
   // Perks gated to members of specific community groups. This is how the
   // spec's "20% off for all Tec students" rules get expressed on a venue.
   communityPerks?: CommunityPerk[];
+}
+
+export interface Offering {
+  id: string;
+  name: string;
+  kind: "product" | "service";
+  price: number; // MXN
+  description?: string;
 }
 
 export interface CommunityPerk {
