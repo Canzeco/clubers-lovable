@@ -566,6 +566,15 @@ export interface ClassPaths {
   manual: ManualPath;
 }
 
+// Community membership held by the user (Mesita's "groups" primitive,
+// generalized). A user can hold many at once and each community can gate
+// perks at venues across the platform.
+export interface Membership {
+  communityId: string;       // matches a Listing.id where category === "community"
+  joinedOn: string;
+  role?: "member" | "admin";
+}
+
 // Tier ladder helpers
 const TIER_RANK: Record<Tier, number> = { bronze: 0, silver: 1, gold: 2, diamond: 3 };
 export function tierFromFollowers(n: number): Tier {
