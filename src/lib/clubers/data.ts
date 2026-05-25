@@ -123,6 +123,9 @@ export const SEED_LISTINGS: Listing[] = [
     perks: cashbackPerks(3, 8, 12, 18),
     welcomePerk: { kind: "cashback", pct: 15, label: "15% on your first visit" },
     fiscalType: "formal",
+    communityPerks: [
+      { communityId: "com-foodies", communityName: "MTY Foodies", kind: "cashback", pct: 14, label: "14% cashback for MTY Foodies" },
+    ],
   },
   {
     id: "pangea",
@@ -157,6 +160,10 @@ export const SEED_LISTINGS: Listing[] = [
     perks: discountPerks(5, 10, 15, 20),
     welcomePerk: { kind: "discount", pct: 20, label: "20% on your first drink" },
     fiscalType: "informal",
+    communityPerks: [
+      { communityId: "com-tec", communityName: "Borregos Tec", kind: "discount", pct: 25, label: "25% off for Tec students" },
+      { communityId: "com-roof", communityName: "Rooftop Society MTY", kind: "discount", pct: 30, label: "30% off + skip the line" },
+    ],
   },
   {
     id: "lacervecería",
