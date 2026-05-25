@@ -3,7 +3,7 @@
 // functions in `clubersApi` for Supabase Edge Function calls later.
 
 export type Tier = "bronze" | "silver" | "gold" | "diamond";
-export type Category = "place" | "event" | "community" | "person";
+export type Category = "place" | "event" | "experience" | "community" | "person";
 export type Participation = "listed" | "partner";
 export type PerkKind = "cashback" | "discount";
 export type FiscalType = "formal" | "informal";
@@ -41,6 +41,8 @@ export interface Listing {
   fiscalType?: FiscalType;
   // For events
   whenLabel?: string; // "Vie 14 dic · 22:00"
+  // For experiences
+  durationLabel?: string; // "2 h" · "Half day"
   // For communities
   members?: number;          // 1820
   entryRule?: string;        // "Solo @tec.mx" · "Aprobación del admin" · "Abierto"
@@ -272,6 +274,38 @@ export const SEED_LISTINGS: Listing[] = [
     whenLabel: "Apr 3–5",
   },
   // ── Communities ───────────────────────────────────────────
+  // ── Experiences ───────────────────────────────────────────
+  {
+    id: "exp-cata",
+    name: "Cata de Mezcal con maestro mezcalero",
+    category: "experience", subcategory: "Tasting",
+    participation: "partner",
+    zone: "Barrio Antiguo", priceLevel: 3,
+    clubersRating: 4.8, googleRating: 4.7,
+    vibes: ["intimate", "guided", "spirits"],
+    cover: photo("1514362545857-3bc16c4c7d1b", 130),
+    gallery: [], openNow: true, hours: "Thu–Sat · 20:00",
+    walkMin: 14,
+    description: "Two-hour guided mezcal tasting with a master mezcalero. Six labels, small bites, max 10 guests.",
+    perks: cashbackPerks(5, 10, 15, 20),
+    welcomePerk: { kind: "cashback", pct: 20, label: "20% on your first tasting" },
+    fiscalType: "formal",
+    durationLabel: "2 h",
+  },
+  {
+    id: "exp-cook",
+    name: "Taller de cocina norteña",
+    category: "experience", subcategory: "Workshop",
+    participation: "listed",
+    zone: "San Pedro", priceLevel: 3,
+    clubersRating: 4.6, googleRating: 4.5,
+    vibes: ["hands-on", "regional", "group"],
+    cover: photo("1556909114-f6e7ad7d3136", 131),
+    gallery: [], openNow: false, hours: "Sat · 11:00",
+    walkMin: 9,
+    description: "Half-day workshop: cabrito, machaca and flour tortillas with a regional chef. Eat what you cook.",
+    durationLabel: "Half day",
+  },
   {
     id: "com-tec",
     name: "Borregos Tec",
@@ -386,7 +420,7 @@ export const t = {
   nav: { discover: "Discover", saved: "Saved", pay: "Pay", share: "Share", profile: "Profile" },
   discover: {
     ai: "AI Planner", swipe: "Swipe", map: "Map", catalog: "Catalog",
-    cats: { place: "Places", event: "Events", community: "Communities", person: "People" },
+    cats: { place: "Places", event: "Events", experience: "Experiences", community: "Communities", person: "People" },
     aiHero: "What are you in the mood for tonight?",
     aiPlaceholder: "Rooftop dinner and something live, under $800, walking distance in San Pedro…",
     aiBuilding: "Building your night…",

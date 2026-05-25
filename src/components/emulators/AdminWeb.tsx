@@ -18,6 +18,7 @@ import {
   Building2,
   PartyPopper,
   UserCircle2,
+  Compass,
   ChevronRight,
   Eye,
   PencilLine,
@@ -35,6 +36,7 @@ type EntityTab = Category;
 const TAB_META: Record<EntityTab, { label: string; plural: string; Icon: IconType; hint: string; accent: string }> = {
   place:     { label: "Place",     plural: "Places",      Icon: Building2,    hint: "Venues, restaurants, bars, rooftops",      accent: "from-rose-500 to-pink-500" },
   event:     { label: "Event",     plural: "Events",      Icon: PartyPopper,  hint: "One-off nights, concerts, pop-ups",        accent: "from-violet-500 to-fuchsia-500" },
+  experience:{ label: "Experience",plural: "Experiences", Icon: Compass,      hint: "Tastings, workshops, guided activities",   accent: "from-emerald-500 to-teal-500" },
   community: { label: "Community", plural: "Communities", Icon: Users,        hint: "Clubs, schools, member groups",            accent: "from-sky-500 to-cyan-500" },
   person:    { label: "Person",    plural: "People",      Icon: UserCircle2,  hint: "DJs, foodies, hosts, tastemakers",          accent: "from-amber-500 to-orange-500" },
 };
@@ -49,12 +51,13 @@ export function AdminWeb() {
     { id: "dashboard", label: "Overview",     Icon: TrendingUp, hint: "Network at a glance" },
     { id: "place",     label: "Places",       Icon: Building2,  hint: "City inventory" },
     { id: "event",     label: "Events",       Icon: PartyPopper,hint: "Tonight & upcoming" },
+    { id: "experience",label: "Experiences",  Icon: Compass,    hint: "Tastings & workshops" },
     { id: "community", label: "Communities",  Icon: Users,      hint: "Group rails" },
     { id: "person",    label: "People",       Icon: UserCircle2,hint: "Creators & hosts" },
   ];
 
   const counts = useMemo(() => {
-    const c: Record<EntityTab, number> = { place: 0, event: 0, community: 0, person: 0 };
+    const c: Record<EntityTab, number> = { place: 0, event: 0, experience: 0, community: 0, person: 0 };
     SEED_LISTINGS.forEach(l => { c[l.category]++; });
     return c;
   }, []);

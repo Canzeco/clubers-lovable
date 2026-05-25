@@ -210,7 +210,7 @@ function Discover({
 
         {/* Category chips */}
         <div className="mt-2.5 flex gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-hide">
-          {(["place", "event", "community", "person"] as Category[]).map(c => (
+          {(["place", "event", "experience", "community", "person"] as Category[]).map(c => (
             <button key={c} onClick={() => setCat(c)}
               className={`shrink-0 rounded-full border px-2.5 py-1 font-medium transition ${cat === c ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 bg-transparent text-white/55 hover:text-white/80"}`}>
               {t.discover.cats[c]}
@@ -1006,6 +1006,7 @@ function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
   const groups: Array<{ cat: Category; label: string }> = [
     { cat: "place",     label: t.discover.cats.place },
     { cat: "event",     label: t.discover.cats.event },
+    { cat: "experience",label: t.discover.cats.experience },
     { cat: "community", label: t.discover.cats.community },
     { cat: "person",    label: t.discover.cats.person },
   ];
