@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   Sparkles, Compass, MapPin, LayoutGrid, Bookmark, QrCode, Share2, User,
   Star, BadgeCheck, ChevronLeft, ChevronRight, Calendar, Clock, Users,
@@ -246,9 +247,9 @@ function Discover({
         </div>
       </header>
 
-      {/* Filter sheet — full screen overlay (sibling of header so inset-0 covers Discover) */}
-      {picker && (
-        <div className="absolute inset-0 z-40 flex flex-col bg-[oklch(0.10_0.02_280)]/98 backdrop-blur-xl">
+      {/* Filter sheet — full screen overlay (portal so it covers entire viewport incl. bottom nav) */}
+      {picker && typeof document !== "undefined" && createPortal(
+        <div className="fixed inset-0 z-[100] flex flex-col bg-[oklch(0.10_0.02_280)]/98 backdrop-blur-xl">
           <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3">
             <p className="font-display text-base font-semibold">Filters</p>
             <button onClick={() => setPicker(null)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-white/70 hover:text-white">
@@ -337,7 +338,8 @@ function Discover({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Mode body */}
