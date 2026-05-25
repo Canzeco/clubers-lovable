@@ -149,12 +149,14 @@ function BottomNav({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) 
    DISCOVER
    ───────────────────────────────────────────────────────────── */
 function Discover({
-  tier, saved, onToggleSave, onOpenListing, onReserve,
+  tier, saved, onToggleSave, onOpenListing, onReserve, memberships, onToggleMembership,
 }: {
   tier: Tier; saved: Set<string>;
   onToggleSave: (id: string) => void;
   onOpenListing: (l: Listing) => void;
   onReserve: (l: Listing) => void;
+  memberships: Set<string>;
+  onToggleMembership: (communityId: string) => void;
 }) {
   const [mode, setMode] = useState<DiscoverMode>("ai");
   const [cat, setCat] = useState<Category>("place");
@@ -220,7 +222,7 @@ function Discover({
       {/* Mode body */}
       <div className="relative mt-3 flex-1 overflow-hidden">
         {cat === "community" ? (
-          <CommunityList listings={listings} onOpen={onOpenListing} />
+          <CommunityList listings={listings} onOpen={onOpenListing} memberships={memberships} onToggleMembership={onToggleMembership} />
         ) : cat === "person" ? (
           <PeopleList listings={listings} onOpen={onOpenListing} />
         ) : cat !== "place" ? (
