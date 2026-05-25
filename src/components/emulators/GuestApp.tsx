@@ -1006,6 +1006,7 @@ function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
   const groups: Array<{ cat: Category; label: string }> = [
     { cat: "place",     label: t.discover.cats.place },
     { cat: "event",     label: t.discover.cats.event },
+    { cat: "experience",label: t.discover.cats.experience },
     { cat: "community", label: t.discover.cats.community },
     { cat: "person",    label: t.discover.cats.person },
   ];
