@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Search, Store, PartyPopper, Users, UserCircle2, ShoppingBag, Wrench, Smartphone } from "lucide-react";
-import { ManagerShell } from "@/components/manager/Shell";
-import { UNIT_TYPE_META, type UnitType } from "@/lib/manager/units";
+import { BusinessShell } from "@/components/business/Shell";
+import { UNIT_TYPE_META, type UnitType } from "@/lib/business/units";
 
 export const Route = createFileRoute("/business/add")({
   ssr: false,
@@ -40,7 +40,7 @@ function AddUnit() {
   const [query, setQuery] = useState("");
 
   return (
-    <ManagerShell>
+    <BusinessShell>
       <div className="mx-auto max-w-2xl px-6 py-16">
         <h1 className="font-display text-4xl font-bold tracking-tight">Add a unit</h1>
         <p className="mt-2 text-sm text-muted-foreground">
@@ -100,7 +100,7 @@ function AddUnit() {
 
         <div className="mt-10 flex items-center justify-between gap-3">
           <Link
-            to="/manager/central"
+            to="/business/central"
             className="text-sm font-medium text-muted-foreground hover:text-foreground"
           >
             ← Back to central
@@ -113,6 +113,6 @@ function AddUnit() {
           </button>
         </div>
       </div>
-    </ManagerShell>
+    </BusinessShell>
   );
 }

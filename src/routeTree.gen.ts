@@ -15,9 +15,9 @@ import { Route as ConsumerRouteImport } from './routes/consumer'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BusinessIndexRouteImport } from './routes/business.index'
-import { Route as ManagerCentralRouteImport } from './routes/manager.central'
-import { Route as ManagerAddRouteImport } from './routes/manager.add'
-import { Route as ManagerUnitTypeIdRouteImport } from './routes/manager.unit.$type.$id'
+import { Route as BusinessCentralRouteImport } from './routes/business.central'
+import { Route as BusinessAddRouteImport } from './routes/business.add'
+import { Route as BusinessUnitTypeIdRouteImport } from './routes/business.unit.$type.$id'
 
 const WaiterRoute = WaiterRouteImport.update({
   id: '/waiter',
@@ -49,19 +49,19 @@ const BusinessIndexRoute = BusinessIndexRouteImport.update({
   path: '/business/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ManagerCentralRoute = ManagerCentralRouteImport.update({
-  id: '/manager/central',
-  path: '/manager/central',
+const BusinessCentralRoute = BusinessCentralRouteImport.update({
+  id: '/business/central',
+  path: '/business/central',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ManagerAddRoute = ManagerAddRouteImport.update({
-  id: '/manager/add',
-  path: '/manager/add',
+const BusinessAddRoute = BusinessAddRouteImport.update({
+  id: '/business/add',
+  path: '/business/add',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ManagerUnitTypeIdRoute = ManagerUnitTypeIdRouteImport.update({
-  id: '/manager/unit/$type/$id',
-  path: '/manager/unit/$type/$id',
+const BusinessUnitTypeIdRoute = BusinessUnitTypeIdRouteImport.update({
+  id: '/business/unit/$type/$id',
+  path: '/business/unit/$type/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -71,10 +71,10 @@ export interface FileRoutesByFullPath {
   '/consumer': typeof ConsumerRoute
   '/landing': typeof LandingRoute
   '/waiter': typeof WaiterRoute
-  '/manager/add': typeof ManagerAddRoute
-  '/manager/central': typeof ManagerCentralRoute
+  '/business/add': typeof BusinessAddRoute
+  '/business/central': typeof BusinessCentralRoute
   '/business/': typeof BusinessIndexRoute
-  '/manager/unit/$type/$id': typeof ManagerUnitTypeIdRoute
+  '/business/unit/$type/$id': typeof BusinessUnitTypeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -82,10 +82,10 @@ export interface FileRoutesByTo {
   '/consumer': typeof ConsumerRoute
   '/landing': typeof LandingRoute
   '/waiter': typeof WaiterRoute
-  '/manager/add': typeof ManagerAddRoute
-  '/manager/central': typeof ManagerCentralRoute
+  '/business/add': typeof BusinessAddRoute
+  '/business/central': typeof BusinessCentralRoute
   '/business': typeof BusinessIndexRoute
-  '/manager/unit/$type/$id': typeof ManagerUnitTypeIdRoute
+  '/business/unit/$type/$id': typeof BusinessUnitTypeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -94,10 +94,10 @@ export interface FileRoutesById {
   '/consumer': typeof ConsumerRoute
   '/landing': typeof LandingRoute
   '/waiter': typeof WaiterRoute
-  '/manager/add': typeof ManagerAddRoute
-  '/manager/central': typeof ManagerCentralRoute
+  '/business/add': typeof BusinessAddRoute
+  '/business/central': typeof BusinessCentralRoute
   '/business/': typeof BusinessIndexRoute
-  '/manager/unit/$type/$id': typeof ManagerUnitTypeIdRoute
+  '/business/unit/$type/$id': typeof BusinessUnitTypeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -107,10 +107,10 @@ export interface FileRouteTypes {
     | '/consumer'
     | '/landing'
     | '/waiter'
-    | '/manager/add'
-    | '/manager/central'
+    | '/business/add'
+    | '/business/central'
     | '/business/'
-    | '/manager/unit/$type/$id'
+    | '/business/unit/$type/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -118,10 +118,10 @@ export interface FileRouteTypes {
     | '/consumer'
     | '/landing'
     | '/waiter'
-    | '/manager/add'
-    | '/manager/central'
+    | '/business/add'
+    | '/business/central'
     | '/business'
-    | '/manager/unit/$type/$id'
+    | '/business/unit/$type/$id'
   id:
     | '__root__'
     | '/'
@@ -129,10 +129,10 @@ export interface FileRouteTypes {
     | '/consumer'
     | '/landing'
     | '/waiter'
-    | '/manager/add'
-    | '/manager/central'
+    | '/business/add'
+    | '/business/central'
     | '/business/'
-    | '/manager/unit/$type/$id'
+    | '/business/unit/$type/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -141,10 +141,10 @@ export interface RootRouteChildren {
   ConsumerRoute: typeof ConsumerRoute
   LandingRoute: typeof LandingRoute
   WaiterRoute: typeof WaiterRoute
-  ManagerAddRoute: typeof ManagerAddRoute
-  ManagerCentralRoute: typeof ManagerCentralRoute
+  BusinessAddRoute: typeof BusinessAddRoute
+  BusinessCentralRoute: typeof BusinessCentralRoute
   BusinessIndexRoute: typeof BusinessIndexRoute
-  ManagerUnitTypeIdRoute: typeof ManagerUnitTypeIdRoute
+  BusinessUnitTypeIdRoute: typeof BusinessUnitTypeIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -191,25 +191,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BusinessIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/manager/central': {
-      id: '/manager/central'
-      path: '/manager/central'
-      fullPath: '/manager/central'
-      preLoaderRoute: typeof ManagerCentralRouteImport
+    '/business/central': {
+      id: '/business/central'
+      path: '/business/central'
+      fullPath: '/business/central'
+      preLoaderRoute: typeof BusinessCentralRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/manager/add': {
-      id: '/manager/add'
-      path: '/manager/add'
-      fullPath: '/manager/add'
-      preLoaderRoute: typeof ManagerAddRouteImport
+    '/business/add': {
+      id: '/business/add'
+      path: '/business/add'
+      fullPath: '/business/add'
+      preLoaderRoute: typeof BusinessAddRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/manager/unit/$type/$id': {
-      id: '/manager/unit/$type/$id'
-      path: '/manager/unit/$type/$id'
-      fullPath: '/manager/unit/$type/$id'
-      preLoaderRoute: typeof ManagerUnitTypeIdRouteImport
+    '/business/unit/$type/$id': {
+      id: '/business/unit/$type/$id'
+      path: '/business/unit/$type/$id'
+      fullPath: '/business/unit/$type/$id'
+      preLoaderRoute: typeof BusinessUnitTypeIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -221,10 +221,10 @@ const rootRouteChildren: RootRouteChildren = {
   ConsumerRoute: ConsumerRoute,
   LandingRoute: LandingRoute,
   WaiterRoute: WaiterRoute,
-  ManagerAddRoute: ManagerAddRoute,
-  ManagerCentralRoute: ManagerCentralRoute,
+  BusinessAddRoute: BusinessAddRoute,
+  BusinessCentralRoute: BusinessCentralRoute,
   BusinessIndexRoute: BusinessIndexRoute,
-  ManagerUnitTypeIdRoute: ManagerUnitTypeIdRoute,
+  BusinessUnitTypeIdRoute: BusinessUnitTypeIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

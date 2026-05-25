@@ -59,7 +59,7 @@ const DEMO_FAQS = [
   { q: "Are payouts real in this prototype?", a: "No. Wallet balances, invoices, and transfers are mock data for demo purposes only." },
 ];
 
-export function ManagerWeb() {
+export function BusinessWeb() {
   const [tab, setTab] = useState<TabId>("dashboard");
   const [unitId, setUnitId] = useState<string>(DEMO_UNITS[0].id);
   const [unitOpen, setUnitOpen] = useState(false);
@@ -173,7 +173,7 @@ export function ManagerWeb() {
           </div>
           <div className="flex-1 overflow-hidden">
             <p className="truncate text-xs font-semibold leading-none">
-              {session.user.email?.split("@")[0] ?? "Manager"}
+              {session.user.email?.split("@")[0] ?? "Business"}
             </p>
             <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
               Owner · {session.user.email ?? ""}
@@ -1364,7 +1364,7 @@ function Wallet() {
 function Team() {
   const managers = [
     { n: "Diego Salas", r: "Owner", e: "diego@luminar.mx", on: true },
-    { n: "María Ortiz", r: "Manager", e: "maria@luminar.mx", on: true },
+    { n: "María Ortiz", r: "Business", e: "maria@luminar.mx", on: true },
     { n: "Pablo Reyes", r: "Marketing", e: "pablo@luminar.mx", on: false },
   ];
   const validators = [
@@ -1670,7 +1670,7 @@ function AccountView({ onSignOut }: { onSignOut: () => void }) {
 
 /* ============== AUTH SCREEN ============== */
 
-function ManagerAuthScreen({ onAuthenticated }: { onAuthenticated: (email: string) => void }) {
+function BusinessAuthScreen({ onAuthenticated }: { onAuthenticated: (email: string) => void }) {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -1696,7 +1696,7 @@ function ManagerAuthScreen({ onAuthenticated }: { onAuthenticated: (email: strin
     <div className="flex h-full items-center justify-center bg-background p-6">
       <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-elev">
         <div className="mb-5">
-          <p className="eyebrow text-secondary">Mesita · Manager</p>
+          <p className="eyebrow text-secondary">Mesita · Business</p>
           <h1 className="mt-1 font-display text-2xl font-semibold">
             {mode === "login" ? "Sign in to your venue" : "Create your venue account"}
           </h1>

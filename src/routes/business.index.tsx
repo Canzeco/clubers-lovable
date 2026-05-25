@@ -7,7 +7,7 @@ export const Route = createFileRoute("/business/")({
   head: () => ({
     meta: [
       { title: "Mesita — Sign in" },
-      { name: "description", content: "Sign in to your Mesita manager workspace." },
+      { name: "description", content: "Sign in to your Mesita business workspace." },
     ],
   }),
   component: ManagerLogin,
@@ -27,7 +27,7 @@ function ManagerLogin() {
             🍅
           </div>
           <h1 className="font-display text-3xl font-bold tracking-tight">mesita.</h1>
-          <p className="text-sm text-muted-foreground">Manager workspace</p>
+          <p className="text-sm text-muted-foreground">Business workspace</p>
         </div>
 
         <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
@@ -53,7 +53,7 @@ function ManagerLogin() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              navigate({ to: "/manager/central" });
+              navigate({ to: "/business/central" });
             }}
             className="space-y-3"
           >

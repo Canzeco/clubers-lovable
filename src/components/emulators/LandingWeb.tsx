@@ -366,7 +366,7 @@ export function LandingWeb() {
           <div className="venues-cta">
             <h3>Ready to fill your room with the right people?</h3>
             <p>Open your venue dashboard. Setup takes about ten minutes.</p>
-            <a href="#" className="btn btn-primary">Open manager.mesita.app</a>
+            <a href="#" className="btn btn-primary">Open business.mesita.app</a>
           </div>
         </div>
       </section>
