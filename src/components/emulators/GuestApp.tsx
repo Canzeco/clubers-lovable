@@ -160,7 +160,7 @@ function Discover({
   onToggleMembership: (communityId: string) => void;
 }) {
   const [mode, setMode] = useState<DiscoverMode>("ai");
-  const [cat, setCat] = useState<Category>("place");
+  const [cat, setCat] = useState<Category | null>(null);
   const [sub, setSub] = useState<string | null>(null);
   const [city, setCity] = useState("Monterrey");
   const [when, setWhen] = useState<{ day: string; time: string }>({ day: "Tonight", time: "8PM" });
@@ -173,12 +173,13 @@ function Discover({
 
   const subcategories = useMemo(() => {
     const set = new Set<string>();
+    if (!cat) return [];
     for (const l of SEED_LISTINGS) if (l.category === cat && l.subcategory) set.add(l.subcategory);
     return Array.from(set);
   }, [cat]);
 
   const listings = useMemo(
-    () => SEED_LISTINGS.filter(l => l.category === cat && (!sub || l.subcategory === sub)),
+    () => SEED_LISTINGS.filter(l => (!cat || l.category === cat) && (!sub || l.subcategory === sub)),
     [cat, sub],
   );
 
@@ -199,7 +200,7 @@ function Discover({
               <Sparkles className="h-4 w-4 text-fuchsia-300" />
               <div className="leading-tight">
                 <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/45">What</p>
-                <p className="font-display text-[13px] font-semibold">{t.discover.cats[cat]}</p>
+                <p className="font-display text-[13px] font-semibold">{cat ? t.discover.cats[cat] : "All"}</p>
               </div>
             </button>
             <button
@@ -261,6 +262,11 @@ function Discover({
             <section>
               <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">What are you looking for</p>
               <div className="grid grid-cols-2 gap-1.5">
+                <button onClick={() => { setCat(null); setSub(null); }}
+                  className={`col-span-2 flex items-center justify-between rounded-xl border px-3 py-3 text-sm transition ${cat === null ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/75 hover:bg-white/5"}`}>
+                  <span className="font-medium">All</span>
+                  {cat === null && <Check className="h-4 w-4 text-fuchsia-300" />}
+                </button>
                 {CATS.map(c => (
                   <button key={c} onClick={() => { if (c !== cat) setSub(null); setCat(c); }}
                     className={`flex items-center justify-between rounded-xl border px-3 py-3 text-sm transition ${cat === c ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/75 hover:bg-white/5"}`}>
@@ -273,7 +279,7 @@ function Discover({
 
             {subcategories.length > 0 && (
               <section className="mt-6">
-                <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Type of {t.discover.cats[cat].toLowerCase()}</p>
+                <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Type of {cat ? t.discover.cats[cat].toLowerCase() : ""}</p>
                 <div className="flex flex-wrap gap-1.5">
                   <button onClick={() => setSub(null)}
                     className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${sub === null ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65"}`}>
@@ -334,7 +340,7 @@ function Discover({
 
           <div className="shrink-0 border-t border-white/10 bg-[oklch(0.10_0.02_280)]/95 px-4 py-3">
             <div className="flex items-center gap-2">
-              <button onClick={() => { setCat("place"); setSub(null); setCity("Monterrey"); setWhen({ day: "Tonight", time: "8PM" }); }}
+              <button onClick={() => { setCat(null); setSub(null); setCity("Monterrey"); setWhen({ day: "Tonight", time: "8PM" }); }}
                 className="rounded-full border border-white/10 px-4 py-2.5 text-xs font-semibold text-white/70 hover:text-white">
                 Reset
               </button>
