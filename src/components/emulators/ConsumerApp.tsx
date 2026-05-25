@@ -1430,7 +1430,6 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
   const myCommunities = SEED_LISTINGS.filter(l => l.category === "community" && memberships.has(l.id));
   const [view, setView] = useState<"class" | "groups" | "connectors" | "settings">("class");
   const [connections, setConnections] = useState<Record<string, boolean>>({ instagram: true });
-  const connectors: Array<{ id: string; label: string; desc: string; icon: React.ReactNode }> = [
   type Connector = { id: string; label: string; desc: string; icon: React.ReactNode; tint: string; ring: string };
   const connectors: Array<Connector> = [
     { id: "ai",        label: "ChatGPT / Claude", desc: "Let your AI book & act on your behalf · MCP", icon: <Bot className="h-4 w-4" />,       tint: "bg-gradient-to-br from-violet-500 to-fuchsia-500", ring: "ring-violet-400/30" },
