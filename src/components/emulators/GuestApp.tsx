@@ -200,7 +200,7 @@ function Discover({
               <Sparkles className="h-4 w-4 text-fuchsia-300" />
               <div className="leading-tight">
                 <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/45">What</p>
-                <p className="font-display text-[13px] font-semibold">{t.discover.cats[cat]}</p>
+                <p className="font-display text-[13px] font-semibold">{cat ? t.discover.cats[cat] : "All"}</p>
               </div>
             </button>
             <button
@@ -274,7 +274,7 @@ function Discover({
 
             {subcategories.length > 0 && (
               <section className="mt-6">
-                <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Type of {t.discover.cats[cat].toLowerCase()}</p>
+                <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Type of {cat ? t.discover.cats[cat].toLowerCase() : ""}</p>
                 <div className="flex flex-wrap gap-1.5">
                   <button onClick={() => setSub(null)}
                     className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${sub === null ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65"}`}>
