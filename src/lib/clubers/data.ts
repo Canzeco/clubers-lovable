@@ -3,7 +3,7 @@
 // functions in `clubersApi` for Supabase Edge Function calls later.
 
 export type Tier = "bronze" | "silver" | "gold" | "diamond";
-export type Category = "place" | "experience" | "event" | "community" | "person";
+export type Category = "place" | "event" | "community" | "person";
 export type Participation = "listed" | "partner";
 export type PerkKind = "cashback" | "discount";
 export type FiscalType = "formal" | "informal";
@@ -34,15 +34,13 @@ export interface Listing {
   // Perk per tier — undefined tier means no perk (listed venues)
   perks?: Record<Tier, Perk>;
   welcomePerk?: Perk;
-  // Forces the perk mechanic on transactional partners (place/experience/event).
+  // Forces the perk mechanic on transactional partners (place/event).
   // formal → cashback returned as Clubers credits (only valid if guest pays
   // through Clubers). informal → instant discount applied to the bill (Clubers
   // stays off the payment rail).
   fiscalType?: FiscalType;
   // For events
   whenLabel?: string; // "Vie 14 dic · 22:00"
-  // For experiences
-  durationLabel?: string;
   // For communities
   members?: number;          // 1820
   entryRule?: string;        // "Solo @tec.mx" · "Aprobación del admin" · "Abierto"
@@ -244,35 +242,6 @@ export const SEED_LISTINGS: Listing[] = [
     welcomePerk: { kind: "cashback", pct: 12, label: "12% on your first visit" },
     fiscalType: "formal",
   },
-  // Experiences — placeholders
-  {
-    id: "exp-cata",
-    name: "Mezcal Tasting",
-    category: "experience", subcategory: "Tasting",
-    participation: "listed",
-    zone: "San Pedro", priceLevel: 3,
-    clubersRating: 4.7, googleRating: 4.6,
-    vibes: ["guided", "mezcal", "intimate"],
-    cover: photo("1551024709-8f23befc6f87", 91),
-    gallery: [], openNow: true, hours: "Sat 19:00",
-    walkMin: 14,
-    description: "Guided tasting of 7 artisan mezcales from Oaxaca, Guerrero and Durango.",
-    durationLabel: "2 hrs",
-  },
-  {
-    id: "exp-cook",
-    name: "Northern Mexican Cooking Class",
-    category: "experience", subcategory: "Class",
-    participation: "listed",
-    zone: "Centro", priceLevel: 2,
-    clubersRating: 4.5, googleRating: 4.4,
-    vibes: ["hands-on", "small groups"],
-    cover: photo("1556909114-f6e7ad7d3136", 92),
-    gallery: [], openNow: true, hours: "Sun 12:00",
-    walkMin: 20,
-    description: "Learn to make machaca, gorditas and discada with a local chef.",
-    durationLabel: "3 hrs",
-  },
   // Events — placeholders
   {
     id: "ev-bcn",
@@ -417,7 +386,7 @@ export const t = {
   nav: { discover: "Discover", saved: "Saved", pay: "Pay", share: "Share", profile: "Profile" },
   discover: {
     ai: "AI Planner", swipe: "Swipe", map: "Map", catalog: "Catalog",
-    cats: { place: "Places", experience: "Experiences", event: "Events", community: "Communities", person: "People" },
+    cats: { place: "Places", event: "Events", community: "Communities", person: "People" },
     aiHero: "What are you in the mood for tonight?",
     aiPlaceholder: "Rooftop dinner and something live, under $800, walking distance in San Pedro…",
     aiBuilding: "Building your night…",
