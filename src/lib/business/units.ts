@@ -1,7 +1,7 @@
 // Mock data for units a business can operate. A "unit" is the entity a
 // business runs — it can be one of four Clubers categories.
 
-export type UnitType = "place" | "event" | "community" | "person" | "product" | "service" | "app";
+export type UnitType = "place" | "event" | "community" | "product" | "service" | "app";
 
 export interface ManagedUnit {
   id: string;
@@ -16,9 +16,8 @@ export const UNIT_TYPE_META: Record<UnitType, { label: string; plural: string; h
   place:      { label: "Place",      plural: "Places",      hint: "Restaurant, bar, rooftop, club" },
   event:      { label: "Event",      plural: "Events",      hint: "Concert, pop-up, one-off night" },
   community:  { label: "Community",  plural: "Communities", hint: "Members club, school, group" },
-  person:     { label: "Person",     plural: "People",      hint: "DJ, host, foodie, tastemaker" },
-  product:    { label: "Product",    plural: "Products",    hint: "Bottle, merch, voucher" },
-  service:    { label: "Service",    plural: "Services",    hint: "Barber, trainer, photographer" },
+  product:    { label: "Products",   plural: "Products",    hint: "Bottle, merch, voucher" },
+  service:    { label: "Services",   plural: "Services",    hint: "Barber, trainer, photographer" },
   app:        { label: "App",        plural: "Apps",        hint: "Micro-app for consumers" },
 };
 
