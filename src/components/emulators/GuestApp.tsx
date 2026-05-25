@@ -4,10 +4,11 @@ import {
   Star, BadgeCheck, ChevronLeft, ChevronRight, Calendar, Clock, Users,
   X, ArrowUp, ArrowDown, Loader2, Send, Gift, Copy, Instagram, Globe,
   Crown, Check, Lock, Heart, Wallet, Settings, ArrowRight, Flame,
+  TrendingUp, Trophy, Zap, CircleDollarSign, ArrowDownLeft, ArrowUpRight,
 } from "lucide-react";
 import {
-  SEED_LISTINGS, TIERS, TIER_META, INFLUENCE_META, clubersApi, t,
-  type Listing, type Category, type Tier,
+  SEED_LISTINGS, TIERS, TIER_META, INFLUENCE_META, SEED_USER, clubersApi, t,
+  resolveActiveTier, type Listing, type Category, type Tier, type ClassPaths,
 } from "@/lib/clubers/data";
 
 /* ============================================================
@@ -16,12 +17,13 @@ import {
    Section structure: Discover · Saved · QR · Share · Profile
    ============================================================ */
 
-type Tab = "discover" | "saved" | "qr" | "share" | "profile";
+type Tab = "discover" | "saved" | "pay" | "share" | "profile";
 type DiscoverMode = "ai" | "swipe" | "map" | "catalog";
 
 export function GuestApp() {
   const [tab, setTab] = useState<Tab>("discover");
-  const [tier, setTier] = useState<Tier>("silver");
+  const [paths, setPaths] = useState<ClassPaths>(SEED_USER.paths);
+  const tier = resolveActiveTier(paths).tier;
   const [saved, setSaved] = useState<Set<string>>(new Set(["koli", "lacatarina"]));
   const [reservations, setReservations] = useState<Array<{ id: string; listingId: string; when: string; party: number; status: "pending" | "confirmed" }>>([]);
   const [activeListing, setActiveListing] = useState<Listing | null>(null);
@@ -59,10 +61,10 @@ export function GuestApp() {
               onOpen={setActiveListing} onToggleSave={toggleSaved}
             />
           )}
-          {tab === "qr" && <QRScreen tier={tier} />}
+          {tab === "pay" && <PayScreen tier={tier} />}
           {tab === "share" && <ShareScreen />}
           {tab === "profile" && (
-            <Profile tier={tier} onUpgrade={() => setShowUpgrade(true)} savedCount={saved.size} />
+            <Profile tier={tier} paths={paths} onUpgrade={() => setShowUpgrade(true)} savedCount={saved.size} />
           )}
         </main>
 
@@ -87,7 +89,10 @@ export function GuestApp() {
         />
       )}
       {showUpgrade && (
-        <UpgradeScreen tier={tier} onClose={() => setShowUpgrade(false)} onSelect={(t) => { setTier(t); setShowUpgrade(false); }} />
+        <UpgradeScreen tier={tier} onClose={() => setShowUpgrade(false)} onSelect={(newTier) => {
+          setPaths(p => ({ ...p, subscription: { ...p.subscription, state: newTier === "bronze" ? "inactive" : "active", tier: newTier === "bronze" ? null : newTier } }));
+          setShowUpgrade(false);
+        }} />
       )}
     </div>
   );
@@ -100,7 +105,7 @@ function BottomNav({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) 
   const items: Array<{ id: Tab; label: string; Icon: React.ComponentType<{ className?: string }> }> = [
     { id: "discover", label: t.nav.discover, Icon: Compass },
     { id: "saved",    label: t.nav.saved,    Icon: Bookmark },
-    { id: "qr",       label: t.nav.qr,       Icon: QrCode },
+    { id: "pay",      label: t.nav.pay,      Icon: QrCode },
     { id: "share",    label: t.nav.share,    Icon: Share2 },
     { id: "profile",  label: t.nav.profile,  Icon: User },
   ];
@@ -712,6 +717,11 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
             <TierBadge tier={tier} small />
           </div>
           <p className="mt-1 text-xl font-semibold">{perk?.label ?? "Sin perk · venue listado"}</p>
+          {listing.fiscalType && (
+            <p className="mt-1 text-[11px] text-white/60">
+              {listing.fiscalType === "formal" ? t.venue.mechanicFormal : t.venue.mechanicInformal}
+            </p>
+          )}
           {listing.welcomePerk && (
             <p className="mt-1 text-xs text-white/65"><Sparkles className="-mt-0.5 mr-1 inline h-3 w-3 text-amber-300" /> {t.venue.welcome}: {listing.welcomePerk.label}</p>
           )}
@@ -721,6 +731,18 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
             </button>
           )}
         </div>
+
+        {listing.welcomePerk && (
+          <div className="rounded-2xl border border-amber-300/30 bg-amber-300/10 p-3">
+            <div className="flex items-start gap-2">
+              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
+              <div>
+                <p className="text-xs font-semibold text-amber-100">{t.venue.welcome}: {listing.welcomePerk.label}</p>
+                <p className="text-[11px] text-amber-100/70">{t.venue.welcomeBanner}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <p className="text-sm leading-relaxed text-white/80">{listing.description}</p>
 
@@ -898,38 +920,127 @@ function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   QR
+   PAY (QR + Wallet)
    ───────────────────────────────────────────────────────────── */
-function QRScreen({ tier }: { tier: Tier }) {
+function PayScreen({ tier }: { tier: Tier }) {
+  const [sub, setSub] = useState<"qr" | "wallet">("qr");
+  const wallet = SEED_USER.wallet;
+  // Story-verification banner only when the active class came from the followers path
+  const showStoryBanner = SEED_USER.paths.followers.state === "active" && SEED_USER.paths.followers.storyRequired && tier !== "bronze";
+
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
-      <h1 className="font-display text-2xl font-bold">{t.qr.title}</h1>
-      <p className="mt-1 text-sm text-white/55">{t.qr.desc}</p>
-
-      <div className="mt-6 rounded-3xl border border-white/10 bg-white/[0.04] p-6">
-        <div className="mx-auto flex h-64 w-64 items-center justify-center rounded-2xl bg-white p-4">
-          <QRPattern />
-        </div>
-        <div className="mt-5 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-white/45">Clase actual</p>
-            <p className="font-display text-lg font-semibold">{TIER_META[tier].label}</p>
-          </div>
-          <TierBadge tier={tier} />
-        </div>
+      <div className="flex items-center justify-between">
+        <h1 className="font-display text-2xl font-bold">{t.pay.title}</h1>
+        <TierBadge tier={tier} />
       </div>
 
-      <section className="mt-8">
-        <p className="eyebrow !text-white/40">{t.qr.howTitle}</p>
-        <ol className="mt-3 space-y-3">
-          {t.qr.how.map((step, i) => (
-            <li key={i} className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-fuchsia-500/20 text-xs font-bold text-fuchsia-200">{i + 1}</span>
-              <p className="text-sm text-white/80">{step}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
+      {/* Sub-tabs */}
+      <div className="mt-4 flex gap-1.5 rounded-full border border-white/10 bg-white/5 p-1 text-xs">
+        {([
+          { id: "qr" as const,     label: t.pay.tabQr,     Icon: QrCode },
+          { id: "wallet" as const, label: t.pay.tabWallet, Icon: Wallet },
+        ]).map(({ id, label, Icon }) => (
+          <button key={id} onClick={() => setSub(id)}
+            className={`flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-1.5 font-medium transition ${sub === id ? "bg-white text-black" : "text-white/65 hover:text-white"}`}>
+            <Icon className="h-3.5 w-3.5" />{label}
+          </button>
+        ))}
+      </div>
+
+      {sub === "qr" && (
+        <>
+          <p className="mt-4 text-sm text-white/55">{t.qr.desc}</p>
+          <div className="mt-4 rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+            <div className="mx-auto flex h-60 w-60 items-center justify-center rounded-2xl bg-white p-4">
+              <QRPattern />
+            </div>
+            <div className="mt-5 flex items-center justify-between">
+              <div>
+                <p className="text-[10px] uppercase tracking-wider text-white/45">Clase actual</p>
+                <p className="font-display text-lg font-semibold">{TIER_META[tier].label}</p>
+              </div>
+              <span className="rounded-lg bg-emerald-300/15 px-2.5 py-1 text-[11px] font-semibold text-emerald-200">+{TIER_META[tier].price === 0 ? "0" : (TIER_META[tier].price / 20).toFixed(0)}% cashback</span>
+            </div>
+          </div>
+
+          {showStoryBanner && (
+            <div className="mt-4 rounded-2xl border border-amber-300/30 bg-amber-300/10 p-4">
+              <div className="flex items-start gap-3">
+                <div className="rounded-lg bg-amber-300/20 p-2 text-amber-200"><Instagram className="h-4 w-4" /></div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-amber-100">{t.pay.storyPending}</p>
+                  <p className="mt-0.5 text-[11px] text-amber-100/75">{t.pay.storyDesc}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <section className="mt-6">
+            <p className="eyebrow !text-white/40">{t.qr.howTitle}</p>
+            <ol className="mt-3 space-y-3">
+              {t.qr.how.map((step, i) => (
+                <li key={i} className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-fuchsia-500/20 text-xs font-bold text-fuchsia-200">{i + 1}</span>
+                  <p className="text-sm text-white/80">{step}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        </>
+      )}
+
+      {sub === "wallet" && (
+        <>
+          <div className="mt-4 rounded-3xl border border-white/10 bg-gradient-to-br from-emerald-500/15 to-fuchsia-500/15 p-5">
+            <p className="text-[10px] uppercase tracking-wider text-white/55">{t.pay.walletBalance}</p>
+            <p className="mt-1 font-display text-4xl font-bold">${wallet.credits}<span className="ml-1 text-base font-medium text-white/55">MXN</span></p>
+            <p className="mt-2 text-[11px] text-white/65">{t.pay.walletDesc}</p>
+          </div>
+
+          <section className="mt-6">
+            <p className="eyebrow !text-white/40">{t.pay.tx}</p>
+            {wallet.transactions.length === 0 ? (
+              <p className="mt-2 text-sm text-white/55">{t.pay.noTx}</p>
+            ) : (
+              <div className="mt-2 space-y-2">
+                {wallet.transactions.map(tx => {
+                  const positive = tx.kind === "earned" || tx.kind === "gift" || tx.kind === "refund";
+                  return (
+                    <div key={tx.id} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+                      <div className={`rounded-lg p-2 ${positive ? "bg-emerald-300/15 text-emerald-200" : "bg-rose-300/15 text-rose-200"}`}>
+                        {positive ? <ArrowDownLeft className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold">{tx.venue}</p>
+                        <p className="text-[11px] text-white/55 capitalize">{tx.kind === "earned" ? "Cashback ganado" : tx.kind === "spent" ? "Crédito gastado" : tx.kind === "gift" ? "Regalo recibido" : "Reembolso"} · {tx.when}</p>
+                      </div>
+                      <p className={`font-display text-base font-bold ${positive ? "text-emerald-300" : "text-rose-300"}`}>{positive ? "+" : "−"}${tx.amount}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+
+          {wallet.giftCards.length > 0 && (
+            <section className="mt-6">
+              <p className="eyebrow !text-white/40">{t.pay.gifts}</p>
+              <div className="mt-2 space-y-2">
+                {wallet.giftCards.map(g => (
+                  <div key={g.id} className="flex items-start gap-3 rounded-xl border border-white/10 bg-gradient-to-br from-amber-300/10 to-fuchsia-500/10 p-3">
+                    <div className="rounded-lg bg-amber-300/20 p-2 text-amber-200"><Gift className="h-4 w-4" /></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold">${g.amount} de {g.from}</p>
+                      {g.message && <p className="text-[11px] italic text-white/55">"{g.message}"</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -983,6 +1094,37 @@ function ShareScreen() {
         </div>
         <button className="mt-3 w-full rounded-xl bg-white/10 py-2.5 text-sm font-semibold text-white">{t.share.giftCta}</button>
       </div>
+
+      {/* Gift a subscription */}
+      <div className="mt-3 rounded-2xl border border-white/10 bg-gradient-to-br from-fuchsia-500/10 to-amber-300/10 p-4">
+        <div className="flex items-start gap-3">
+          <div className="rounded-xl bg-fuchsia-500/20 p-2 text-fuchsia-200"><Crown className="h-5 w-5" /></div>
+          <div className="flex-1">
+            <p className="font-display text-base font-semibold">{t.giftSub.title}</p>
+            <p className="mt-1 text-xs text-white/65">{t.giftSub.desc}</p>
+          </div>
+        </div>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {(["silver", "gold", "diamond"] as Tier[]).map(tk => (
+            <button key={tk} className="rounded-xl border border-white/10 bg-white/[0.04] py-2 text-[11px] font-semibold text-white/85 hover:bg-white/10">
+              {TIER_META[tk].label}
+              <span className="block text-[10px] font-normal text-white/45">${TIER_META[tk].price} MXN</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Creator program */}
+      <div className="mt-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+        <div className="flex items-start gap-3">
+          <div className="rounded-xl bg-emerald-300/15 p-2 text-emerald-200"><TrendingUp className="h-5 w-5" /></div>
+          <div className="flex-1">
+            <p className="font-display text-base font-semibold">{t.creator.title}</p>
+            <p className="mt-1 text-xs text-white/65">{t.creator.desc}</p>
+          </div>
+        </div>
+        <button className="mt-3 w-full rounded-xl bg-white/10 py-2.5 text-sm font-semibold text-white">{t.creator.cta}</button>
+      </div>
     </div>
   );
 }
@@ -990,7 +1132,10 @@ function ShareScreen() {
 /* ─────────────────────────────────────────────────────────────
    PROFILE + UPGRADE
    ───────────────────────────────────────────────────────────── */
-function Profile({ tier, onUpgrade, savedCount }: { tier: Tier; onUpgrade: () => void; savedCount: number }) {
+function Profile({ tier, paths, onUpgrade, savedCount }: { tier: Tier; paths: ClassPaths; onUpgrade: () => void; savedCount: number }) {
+  const active = resolveActiveTier(paths);
+  const game = SEED_USER.gamification;
+  const xpPct = Math.min(100, Math.round((game.xp / game.xpToNext) * 100));
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
       <div className="flex items-center gap-3">
@@ -1000,8 +1145,8 @@ function Profile({ tier, onUpgrade, savedCount }: { tier: Tier; onUpgrade: () =>
           </div>
         </div>
         <div className="flex-1">
-          <p className="font-display text-xl font-bold">Daniel R.</p>
-          <p className="text-xs text-white/55"><Instagram className="-mt-0.5 mr-1 inline h-3 w-3" />@daniel · {t.profile.ig}</p>
+          <p className="font-display text-xl font-bold">{SEED_USER.name}</p>
+          <p className="text-xs text-white/55"><Instagram className="-mt-0.5 mr-1 inline h-3 w-3" />{SEED_USER.handle} · {paths.followers.followers.toLocaleString()} followers</p>
         </div>
       </div>
 
@@ -1011,6 +1156,7 @@ function Profile({ tier, onUpgrade, savedCount }: { tier: Tier; onUpgrade: () =>
           <TierBadge tier={tier} />
         </div>
         <p className="mt-2 font-display text-2xl font-bold">{TIER_META[tier].label}</p>
+        <p className="mt-1 text-[11px] text-white/55">{t.profile.activePath}: <span className="text-white/85 capitalize">{active.source}</span></p>
         <button onClick={onUpgrade} className="mt-3 inline-flex items-center gap-1 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-black">
           <Crown className="h-3.5 w-3.5" /> {t.profile.upgrade}
         </button>
@@ -1022,7 +1168,7 @@ function Profile({ tier, onUpgrade, savedCount }: { tier: Tier; onUpgrade: () =>
           {[
             { label: t.profile.visits, value: "23" },
             { label: t.profile.saved, value: String(savedCount) },
-            { label: t.profile.credits, value: "$240" },
+            { label: t.profile.credits, value: `$${SEED_USER.wallet.credits}` },
           ].map(s => (
             <div key={s.label} className="rounded-xl border border-white/10 bg-white/[0.04] py-3">
               <p className="font-display text-xl font-bold">{s.value}</p>
@@ -1032,12 +1178,60 @@ function Profile({ tier, onUpgrade, savedCount }: { tier: Tier; onUpgrade: () =>
         </div>
       </section>
 
+      {/* Gamification */}
+      <section className="mt-6">
+        <p className="eyebrow !text-white/40">{t.profile.gamification}</p>
+        <div className="mt-2 rounded-2xl border border-white/10 bg-gradient-to-br from-indigo-500/10 to-fuchsia-500/10 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-white/45">{t.profile.levelLabel}</p>
+              <p className="font-display text-xl font-bold">{game.level}</p>
+            </div>
+            <div className="flex items-center gap-3 text-[11px] text-white/75">
+              <span className="inline-flex items-center gap-1"><Zap className="h-3.5 w-3.5 text-amber-300" />{game.xp}/{game.xpToNext} {t.profile.xpLabel}</span>
+              <span className="inline-flex items-center gap-1"><Flame className="h-3.5 w-3.5 text-rose-300" />{game.streak}w {t.profile.streakLabel}</span>
+            </div>
+          </div>
+          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+            <div className="h-full rounded-full bg-gradient-to-r from-fuchsia-400 to-amber-300" style={{ width: `${xpPct}%` }} />
+          </div>
+          <p className="mt-3 text-[10px] uppercase tracking-wider text-white/45">{t.profile.badgesLabel}</p>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            {game.badges.map(b => (
+              <span key={b.id} className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px]">
+                <span>{b.emoji}</span>{b.label}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="mt-6">
         <p className="eyebrow !text-white/40">{t.profile.paths}</p>
         <div className="mt-2 space-y-2">
-          <PathRow icon={<Instagram className="h-4 w-4" />} title={t.profile.pathFollowers} desc={t.profile.pathFollowersDesc} />
-          <PathRow icon={<Wallet className="h-4 w-4" />} title={t.profile.pathSub} desc={t.profile.pathSubDesc} />
-          <PathRow icon={<Crown className="h-4 w-4" />} title={t.profile.pathManual} desc={t.profile.pathManualDesc} locked />
+          <PathRow
+            icon={<Instagram className="h-4 w-4" />}
+            title={t.profile.pathFollowers}
+            desc={`${paths.followers.followers.toLocaleString()} followers → ${TIER_META[paths.followers.tier].label} · ${t.profile.pathFollowersStory}`}
+            state={paths.followers.state}
+            highlight={active.source === "followers"}
+          />
+          <PathRow
+            icon={<Wallet className="h-4 w-4" />}
+            title={t.profile.pathSub}
+            desc={paths.subscription.state === "active" && paths.subscription.tier
+              ? `${TIER_META[paths.subscription.tier].label} · renueva ${paths.subscription.renewsOn ?? "—"}`
+              : t.profile.pathSubDesc}
+            state={paths.subscription.state}
+            highlight={active.source === "subscription"}
+          />
+          <PathRow
+            icon={<Crown className="h-4 w-4" />}
+            title={t.profile.pathManual}
+            desc={t.profile.pathManualDesc}
+            state={paths.manual.state}
+            highlight={active.source === "manual"}
+          />
         </div>
       </section>
 
@@ -1051,15 +1245,23 @@ function Profile({ tier, onUpgrade, savedCount }: { tier: Tier; onUpgrade: () =>
   );
 }
 
-function PathRow({ icon, title, desc, locked }: { icon: React.ReactNode; title: string; desc: string; locked?: boolean }) {
+function PathRow({ icon, title, desc, state, highlight }: { icon: React.ReactNode; title: string; desc: string; state: "active" | "inactive" | "locked"; highlight?: boolean }) {
+  const stateLabel = state === "active" ? t.profile.pathStateActive : state === "locked" ? t.profile.pathStateLocked : t.profile.pathStateInactive;
+  const stateClass = state === "active" ? "bg-emerald-300/15 text-emerald-200" : state === "locked" ? "bg-white/10 text-white/45" : "bg-white/10 text-white/55";
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+    <div className={`flex items-start gap-3 rounded-xl border p-3 ${highlight ? "border-fuchsia-300/50 bg-fuchsia-500/10" : "border-white/10 bg-white/[0.04]"}`}>
       <div className="rounded-lg bg-white/10 p-2 text-white/85">{icon}</div>
       <div className="flex-1">
-        <p className="text-sm font-semibold">{title}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-semibold">{title}</p>
+          {highlight && <span className="rounded-full bg-fuchsia-300/20 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-fuchsia-200">Activo</span>}
+        </div>
         <p className="mt-0.5 text-[11px] text-white/55">{desc}</p>
       </div>
-      {locked && <Lock className="h-4 w-4 text-white/40" />}
+      <span className={`shrink-0 rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${stateClass}`}>
+        {state === "locked" && <Lock className="mr-1 inline h-2.5 w-2.5" />}
+        {stateLabel}
+      </span>
     </div>
   );
 }

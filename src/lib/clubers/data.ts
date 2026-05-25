@@ -6,6 +6,7 @@ export type Tier = "bronze" | "silver" | "gold" | "diamond";
 export type Category = "place" | "experience" | "event" | "community" | "person";
 export type Participation = "listed" | "partner";
 export type PerkKind = "cashback" | "discount";
+export type FiscalType = "formal" | "informal";
 
 export interface Perk {
   kind: PerkKind;
@@ -33,6 +34,11 @@ export interface Listing {
   // Perk per tier — undefined tier means no perk (listed venues)
   perks?: Record<Tier, Perk>;
   welcomePerk?: Perk;
+  // Forces the perk mechanic on transactional partners (place/experience/event).
+  // formal → cashback returned as Clubers credits (only valid if guest pays
+  // through Clubers). informal → instant discount applied to the bill (Clubers
+  // stays off the payment rail).
+  fiscalType?: FiscalType;
   // For events
   whenLabel?: string; // "Vie 14 dic · 22:00"
   // For experiences
@@ -105,6 +111,7 @@ export const SEED_LISTINGS: Listing[] = [
     description: "Cocina del noreste mexicano por Rodrigo Rivera-Río. Menú degustación con producto local.",
     perks: cashbackPerks(3, 8, 12, 18),
     welcomePerk: { kind: "cashback", pct: 15, label: "15% en tu primera visita" },
+    fiscalType: "formal",
   },
   {
     id: "pangea",
@@ -121,6 +128,7 @@ export const SEED_LISTINGS: Listing[] = [
     description: "Clásico de Guillermo González Beristáin. Cocina mediterránea con producto del norte.",
     perks: cashbackPerks(3, 7, 10, 15),
     welcomePerk: { kind: "cashback", pct: 12, label: "12% en tu primera visita" },
+    fiscalType: "formal",
   },
   {
     id: "lacatarina",
@@ -137,6 +145,7 @@ export const SEED_LISTINGS: Listing[] = [
     description: "Rooftop con vista al Cerro de la Silla. Coctelería de autor, dj sets jueves a sábado.",
     perks: discountPerks(5, 10, 15, 20),
     welcomePerk: { kind: "discount", pct: 20, label: "20% en tu primer trago" },
+    fiscalType: "informal",
   },
   {
     id: "lacervecería",
@@ -153,6 +162,7 @@ export const SEED_LISTINGS: Listing[] = [
     description: "Más de 80 etiquetas de cerveza artesanal mexicana. Cocina de bar y trivia los martes.",
     perks: discountPerks(5, 10, 15, 20),
     welcomePerk: { kind: "discount", pct: 25, label: "25% en tu primera cuenta" },
+    fiscalType: "informal",
   },
   {
     id: "doloreschico",
@@ -197,6 +207,7 @@ export const SEED_LISTINGS: Listing[] = [
     description: "Club en el piso 30 con line-up internacional. Reserva de mesa con bottle service.",
     perks: cashbackPerks(0, 5, 10, 15),
     welcomePerk: { kind: "cashback", pct: 10, label: "10% en tu primera mesa" },
+    fiscalType: "informal",
   },
   {
     id: "biko",
@@ -213,6 +224,7 @@ export const SEED_LISTINGS: Listing[] = [
     description: "Cocina vasca contemporánea, pintxos y carta de vinos curada.",
     perks: cashbackPerks(4, 8, 12, 16),
     welcomePerk: { kind: "cashback", pct: 12, label: "12% en tu primera visita" },
+    fiscalType: "formal",
   },
   // Experiences — placeholders
   {
@@ -384,7 +396,7 @@ export const SEED_LISTINGS: Listing[] = [
 export const t = {
   brand: "Clubers",
   tagline: "Tu noche, curada por AI.",
-  nav: { discover: "Descubre", saved: "Guarda", qr: "QR", share: "Comparte", profile: "Perfil" },
+  nav: { discover: "Descubre", saved: "Guarda", pay: "Pay", share: "Comparte", profile: "Perfil" },
   discover: {
     ai: "AI Planner", swipe: "Swipe", map: "Mapa", catalog: "Catálogo",
     cats: { place: "Lugares", experience: "Experiencias", event: "Eventos", community: "Comunidades", person: "Gente" },
@@ -406,6 +418,9 @@ export const t = {
     clubers: "Clubers", google: "Google",
     menu: "Menú", instagram: "Instagram", website: "Sitio",
     upgradeHint: "Sube de clase para mejorar este beneficio →",
+    mechanicFormal: "Cashback en créditos Clubers · paga con tarjeta vía Clubers",
+    mechanicInformal: "Descuento instantáneo al ticket · paga como prefieras",
+    welcomeBanner: "Primera visita: este perk se aplica además de tu clase.",
   },
   reserve: {
     title: "Reservar mesa",
@@ -419,17 +434,37 @@ export const t = {
   },
   saved: { title: "Tus guardados", upcoming: "Próximas reservaciones", empty: "Aún no has guardado nada. Vé a Descubre y empieza a explorar." },
   qr: { title: "Tu QR", desc: "Muestra este código al mesero al pagar.", howTitle: "Cómo funciona", how: ["Llega al venue y pide la cuenta.", "El mesero escanea tu QR.", "Pagas con la app — el cashback se acredita al instante."] },
+  pay: {
+    title: "Pay",
+    tabQr: "QR",
+    tabWallet: "Wallet",
+    walletBalance: "Tus créditos Clubers",
+    walletDesc: "Acumulas créditos cuando pagas con tarjeta en venues formales. Los gastas en cualquier partner.",
+    tx: "Movimientos",
+    gifts: "Gift cards recibidas",
+    noTx: "Aún no tienes movimientos.",
+    noGifts: "Aún no has recibido ningún regalo.",
+    storyPending: "Verifica tu story",
+    storyDesc: "Tu perk se libera cuando publiques una story etiquetando al venue. La detectamos automáticamente.",
+  },
   share: { title: "Invita y gana", subtitle: "Por cada amigo que se una con tu código, ambos ganan $100 en créditos Clubers.", code: "Tu código", invite: "Invitar amigos", giftTitle: "Regala un beneficio", giftDesc: "Regala una visita con perk Gold en cualquier partner.", giftCta: "Enviar regalo" },
+  giftSub: { title: "Regala una suscripción", desc: "Regala un mes de Silver, Gold o Diamond. Llega con tu nombre y se activa al instante.", cta: "Elegir plan" },
+  creator: { title: "Programa de creators", desc: "Si tu Instagram tiene 5K+ seguidores, cada amigo que entre con tu código te da revenue share durante 6 meses.", cta: "Solicitar acceso" },
   profile: {
     title: "Tu perfil",
     currentClass: "Tu clase actual",
+    activePath: "Path activo",
     paths: "Cómo subes de clase",
     pathFollowers: "Por seguidores en Instagram",
     pathFollowersDesc: "Conecta tu IG y verificamos automáticamente.",
+    pathFollowersStory: "Requiere story tag al venue para liberar perk.",
     pathSub: "Por suscripción",
     pathSubDesc: "Pago mensual, sin tener que postear historia.",
     pathManual: "Por invitación",
     pathManualDesc: "Solo para influencers verificados por nuestro equipo.",
+    pathStateActive: "Activo",
+    pathStateLocked: "Bloqueado",
+    pathStateInactive: "Inactivo",
     upgrade: "Subir de clase",
     current: "Actual",
     choosePlan: "Elige tu plan",
@@ -444,6 +479,11 @@ export const t = {
     visits: "Visitas", saved: "Guardados", credits: "Créditos",
     ig: "Instagram conectada",
     settings: "Ajustes",
+    gamification: "Tu progreso",
+    levelLabel: "Nivel",
+    xpLabel: "XP",
+    streakLabel: "Racha",
+    badgesLabel: "Insignias",
   },
   common: { back: "Volver", close: "Cerrar", continue: "Continuar" },
 };
@@ -465,4 +505,121 @@ export const clubersApi = {
     await new Promise(r => setTimeout(r, 1400));
     return { id: `res_${Math.random().toString(36).slice(2, 8)}`, status: "pending" as const };
   },
+};
+
+// ───────────────────────────────────────────────────────────────
+// Class paths (Mesita primitive ported to Clubers)
+// Active class = highest of the three paths.
+// ───────────────────────────────────────────────────────────────
+export type PathState = "active" | "inactive" | "locked";
+
+export interface FollowersPath {
+  state: PathState;
+  handle: string;
+  followers: number;
+  tier: Tier; // tier this path qualifies for
+  storyRequired: boolean;
+}
+export interface SubscriptionPath {
+  state: PathState;
+  tier: Tier | null;
+  since?: string;
+  renewsOn?: string;
+}
+export interface ManualPath {
+  state: PathState;
+  tier: Tier | null;
+  reason?: string;
+}
+export interface ClassPaths {
+  followers: FollowersPath;
+  subscription: SubscriptionPath;
+  manual: ManualPath;
+}
+
+// Tier ladder helpers
+const TIER_RANK: Record<Tier, number> = { bronze: 0, silver: 1, gold: 2, diamond: 3 };
+export function tierFromFollowers(n: number): Tier {
+  if (n >= 20000) return "diamond";
+  if (n >= 5000) return "gold";
+  if (n >= 1000) return "silver";
+  return "bronze";
+}
+export function resolveActiveTier(p: ClassPaths): { tier: Tier; source: keyof ClassPaths } {
+  const candidates: Array<{ tier: Tier; source: keyof ClassPaths }> = [
+    { tier: p.followers.state === "active" ? p.followers.tier : "bronze", source: "followers" },
+    { tier: p.subscription.state === "active" && p.subscription.tier ? p.subscription.tier : "bronze", source: "subscription" },
+    { tier: p.manual.state === "active" && p.manual.tier ? p.manual.tier : "bronze", source: "manual" },
+  ];
+  return candidates.reduce((best, c) => TIER_RANK[c.tier] > TIER_RANK[best.tier] ? c : best, candidates[0]);
+}
+
+// ───────────────────────────────────────────────────────────────
+// Wallet & gamification
+// ───────────────────────────────────────────────────────────────
+export interface WalletTx {
+  id: string;
+  kind: "earned" | "spent" | "gift" | "refund";
+  amount: number; // MXN
+  venue: string;
+  when: string;  // "Hoy 21:14" etc
+}
+export interface GiftCard {
+  id: string;
+  from: string;
+  amount: number;
+  message?: string;
+}
+export interface WalletState {
+  credits: number;
+  transactions: WalletTx[];
+  giftCards: GiftCard[];
+}
+
+export type LevelName = "Explorer" | "Regular" | "Tastemaker" | "Connoisseur" | "Icon";
+export interface Gamification {
+  xp: number;
+  xpToNext: number;
+  level: LevelName;
+  streak: number;        // consecutive weeks with at least one visit
+  badges: Array<{ id: string; label: string; emoji: string }>;
+}
+
+// ───────────────────────────────────────────────────────────────
+// Seed user — used by the prototype as the current logged-in guest.
+// ───────────────────────────────────────────────────────────────
+export const SEED_USER = {
+  name: "Daniel R.",
+  handle: "@daniel",
+  email: "daniel@tec.mx",
+  paths: {
+    followers: { state: "active" as PathState, handle: "@daniel", followers: 2300, tier: tierFromFollowers(2300), storyRequired: true },
+    subscription: { state: "active" as PathState, tier: "silver" as Tier, since: "Oct 2025", renewsOn: "14 Dic" },
+    manual: { state: "locked" as PathState, tier: null },
+  } as ClassPaths,
+  wallet: {
+    credits: 240,
+    transactions: [
+      { id: "tx1", kind: "earned", amount: 96,  venue: "Koli",           when: "Hoy 21:14" },
+      { id: "tx2", kind: "spent",  amount: 50,  venue: "Biko",           when: "Ayer 14:32" },
+      { id: "tx3", kind: "earned", amount: 38,  venue: "Pangea",         when: "Vie 19:08" },
+      { id: "tx4", kind: "gift",   amount: 100, venue: "De: Sofía R.",   when: "Mié 11:00" },
+      { id: "tx5", kind: "earned", amount: 56,  venue: "Koli",           when: "Mar 22:40" },
+    ],
+    giftCards: [
+      { id: "g1", from: "Sofía R.", amount: 100, message: "¡Feliz cumple!" },
+    ],
+  } as WalletState,
+  gamification: {
+    xp: 1280,
+    xpToNext: 2000,
+    level: "Tastemaker" as LevelName,
+    streak: 4,
+    badges: [
+      { id: "b1", label: "Rooftop King",   emoji: "🌆" },
+      { id: "b2", label: "First Sip",      emoji: "🥂" },
+      { id: "b3", label: "Diamond Closer", emoji: "💎" },
+      { id: "b4", label: "MTY Local",      emoji: "📍" },
+    ],
+  } as Gamification,
 };
