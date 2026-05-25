@@ -639,18 +639,18 @@ function SwipeDeck({ listings, tier, onOpen, onSave, onReserve, interleaveByCate
         return (
       <div className="pointer-events-none absolute inset-x-4 bottom-4 z-10 flex items-center gap-2 [&>*]:pointer-events-auto">
         <button onClick={() => advance("left")}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white/10 bg-black/60 py-3 text-sm text-white/80 backdrop-blur transition hover:bg-black/75">
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white/10 bg-neutral-900 py-3 text-sm text-white/80 transition hover:bg-neutral-800">
           <X className="h-4 w-4" /> {t.discover.skip}
         </button>
         <button onClick={() => onOpen(current)}
-          className="flex items-center justify-center gap-1.5 rounded-full border border-white/10 bg-black/60 px-5 py-3 text-sm text-white/90 backdrop-blur transition hover:bg-black/75">
+          className="flex items-center justify-center gap-1.5 rounded-full border border-white/10 bg-neutral-900 px-5 py-3 text-sm text-white/90 transition hover:bg-neutral-800">
           <LayoutGrid className="h-4 w-4" /> Info
         </button>
         <button onClick={() => {
             if (current.category === "person" || current.category === "app") advance("right");
             else onReserve(current);
           }}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-500 py-3 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/30 transition hover:brightness-110">
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-500 py-3 text-sm font-semibold text-white transition hover:brightness-110">
           <CtaIcon className="h-4 w-4" /> {ctaLabel}
         </button>
       </div>
