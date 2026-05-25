@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ManagerIndexRouteImport } from './routes/manager.index'
 import { Route as ManagerCentralRouteImport } from './routes/manager.central'
 import { Route as ManagerAddRouteImport } from './routes/manager.add'
+import { Route as ManagerUnitTypeIdRouteImport } from './routes/manager.unit.$type.$id'
 
 const WaiterRoute = WaiterRouteImport.update({
   id: '/waiter',
@@ -58,6 +59,11 @@ const ManagerAddRoute = ManagerAddRouteImport.update({
   path: '/manager/add',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ManagerUnitTypeIdRoute = ManagerUnitTypeIdRouteImport.update({
+  id: '/manager/unit/$type/$id',
+  path: '/manager/unit/$type/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/manager/add': typeof ManagerAddRoute
   '/manager/central': typeof ManagerCentralRoute
   '/manager/': typeof ManagerIndexRoute
+  '/manager/unit/$type/$id': typeof ManagerUnitTypeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/manager/add': typeof ManagerAddRoute
   '/manager/central': typeof ManagerCentralRoute
   '/manager': typeof ManagerIndexRoute
+  '/manager/unit/$type/$id': typeof ManagerUnitTypeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/manager/add': typeof ManagerAddRoute
   '/manager/central': typeof ManagerCentralRoute
   '/manager/': typeof ManagerIndexRoute
+  '/manager/unit/$type/$id': typeof ManagerUnitTypeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/manager/add'
     | '/manager/central'
     | '/manager/'
+    | '/manager/unit/$type/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/manager/add'
     | '/manager/central'
     | '/manager'
+    | '/manager/unit/$type/$id'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/manager/add'
     | '/manager/central'
     | '/manager/'
+    | '/manager/unit/$type/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   ManagerAddRoute: typeof ManagerAddRoute
   ManagerCentralRoute: typeof ManagerCentralRoute
   ManagerIndexRoute: typeof ManagerIndexRoute
+  ManagerUnitTypeIdRoute: typeof ManagerUnitTypeIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerAddRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/manager/unit/$type/$id': {
+      id: '/manager/unit/$type/$id'
+      path: '/manager/unit/$type/$id'
+      fullPath: '/manager/unit/$type/$id'
+      preLoaderRoute: typeof ManagerUnitTypeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   ManagerAddRoute: ManagerAddRoute,
   ManagerCentralRoute: ManagerCentralRoute,
   ManagerIndexRoute: ManagerIndexRoute,
+  ManagerUnitTypeIdRoute: ManagerUnitTypeIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
