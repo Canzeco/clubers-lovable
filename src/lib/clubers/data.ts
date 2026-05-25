@@ -555,7 +555,7 @@ export const t = {
   nav: { discover: "Discover", saved: "Saved", pay: "Pay", share: "Share", profile: "Profile" },
   discover: {
     ai: "AI Planner", swipe: "Swipe", map: "Map", catalog: "Catalog",
-    cats: { place: "Places", event: "Events", experience: "Experiences", community: "Communities", person: "People" },
+    cats: { place: "Places", event: "Events", community: "Communities", person: "People", product: "Products", service: "Services" },
     aiHero: "What are you in the mood for tonight?",
     aiPlaceholder: "Rooftop dinner and something live, under $800, walking distance in San Pedro…",
     aiBuilding: "Building your night…",
