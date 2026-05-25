@@ -1258,10 +1258,15 @@ function ShareScreen() {
 /* ─────────────────────────────────────────────────────────────
    PROFILE + UPGRADE
    ───────────────────────────────────────────────────────────── */
-function Profile({ tier, paths, onUpgrade, savedCount }: { tier: Tier; paths: ClassPaths; onUpgrade: () => void; savedCount: number }) {
+function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembership }: {
+  tier: Tier; paths: ClassPaths; onUpgrade: () => void; savedCount: number;
+  memberships: Set<string>; onLeaveMembership: (communityId: string) => void;
+}) {
   const active = resolveActiveTier(paths);
   const game = SEED_USER.gamification;
   const xpPct = Math.min(100, Math.round((game.xp / game.xpToNext) * 100));
+  const influence = INFLUENCE_META[SEED_USER.influenceTier];
+  const myCommunities = SEED_LISTINGS.filter(l => l.category === "community" && memberships.has(l.id));
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
       <div className="flex items-center gap-3">
