@@ -1003,6 +1003,12 @@ function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
   onOpen: (l: Listing) => void; onToggleSave: (id: string) => void;
 }) {
   const items = SEED_LISTINGS.filter(l => saved.has(l.id));
+  const groups: Array<{ cat: Category; label: string }> = [
+    { cat: "place",     label: t.discover.cats.place },
+    { cat: "event",     label: t.discover.cats.event },
+    { cat: "community", label: t.discover.cats.community },
+    { cat: "person",    label: t.discover.cats.person },
+  ];
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
       <h1 className="font-display text-2xl font-bold">{t.saved.title}</h1>
@@ -1030,14 +1036,27 @@ function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
       )}
 
       <section className="mt-6">
-        <p className="eyebrow !text-white/40">Tus favoritos</p>
         {items.length === 0 ? (
           <p className="mt-3 rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center text-sm text-white/55">{t.saved.empty}</p>
         ) : (
-          <div className="mt-2 space-y-3">
-            {items.map(l => (
-              <CatalogCard key={l.id} listing={l} tier={tier} onOpen={() => onOpen(l)} saved onToggleSave={() => onToggleSave(l.id)} />
-            ))}
+          <div className="space-y-6">
+            {groups.map(g => {
+              const inGroup = items.filter(l => l.category === g.cat);
+              if (inGroup.length === 0) return null;
+              return (
+                <div key={g.cat}>
+                  <div className="flex items-center justify-between">
+                    <p className="eyebrow !text-white/40">{g.label}</p>
+                    <span className="text-[10px] uppercase tracking-wider text-white/35">{inGroup.length}</span>
+                  </div>
+                  <div className="mt-2 space-y-3">
+                    {inGroup.map(l => (
+                      <CatalogCard key={l.id} listing={l} tier={tier} onOpen={() => onOpen(l)} saved onToggleSave={() => onToggleSave(l.id)} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </section>
