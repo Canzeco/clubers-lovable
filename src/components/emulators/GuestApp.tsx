@@ -210,7 +210,7 @@ function Discover({
 
         {/* Category chips */}
         <div className="mt-2.5 flex gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-hide">
-          {(["place", "experience", "event", "community", "person"] as Category[]).map(c => (
+          {(["place", "event", "community", "person"] as Category[]).map(c => (
             <button key={c} onClick={() => setCat(c)}
               className={`shrink-0 rounded-full border px-2.5 py-1 font-medium transition ${cat === c ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 bg-transparent text-white/55 hover:text-white/80"}`}>
               {t.discover.cats[c]}
@@ -609,7 +609,7 @@ function CatalogCard({ listing, tier, onOpen, saved, onToggleSave, compact }: {
   );
 }
 
-/* ── Placeholder category (Experiences / Events) ────────────── */
+/* ── Placeholder category (Events) ──────────────────────────── */
 function PlaceholderCategory({ listings, onOpen }: { listings: Listing[]; onOpen: (l: Listing) => void }) {
   return (
     <div className="h-full overflow-y-auto px-4 pb-28 pt-2">
