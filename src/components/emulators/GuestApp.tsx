@@ -1427,8 +1427,16 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
 }) {
   const active = resolveActiveTier(paths);
   const myCommunities = SEED_LISTINGS.filter(l => l.category === "community" && memberships.has(l.id));
+  const [view, setView] = useState<"home" | "groups" | "settings">("home");
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
+      {view !== "home" && (
+        <button onClick={() => setView("home")} className="mb-3 inline-flex items-center gap-1 text-xs text-white/60 hover:text-white">
+          <ChevronRight className="h-3.5 w-3.5 rotate-180" /> Back
+        </button>
+      )}
+
+      {view === "home" && <>
       <div className="flex items-center gap-3">
         <div className={`h-14 w-14 rounded-2xl ${TIER_META[tier].bg} p-[2px]`}>
           <div className="flex h-full w-full items-center justify-center rounded-2xl bg-black/40">
@@ -1453,100 +1461,67 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
         </button>
       </div>
 
-      {/* Multi-group membership — the spec's "real engine" */}
-      <section className="mt-6">
-        <p className="eyebrow !text-white/40">{t.profile.myGroups}</p>
-        <p className="mt-1 text-[11px] text-white/55">{t.profile.myGroupsDesc}</p>
-        <div className="mt-3 space-y-3">
-          {/* Class + Influence row */}
-          <div className="grid grid-cols-2 gap-2">
-            <div className={`rounded-xl border border-white/10 bg-white/[0.04] p-3`}>
-              <p className="text-[9px] uppercase tracking-wider text-white/45">{t.profile.classGroup}</p>
-              <div className="mt-1 flex items-center gap-2">
-                <span className={`h-2.5 w-2.5 rounded-full ${TIER_META[tier].bg}`} />
-                <p className="font-display text-base font-semibold">{TIER_META[tier].label}</p>
-              </div>
-              <p className="mt-0.5 text-[10px] text-white/45">via {active.source}</p>
-            </div>
-          </div>
-
-          {/* Community memberships */}
-          <div>
-            <p className="text-[9px] uppercase tracking-wider text-white/45">{t.profile.communityGroups}</p>
-            <div className="mt-1.5 space-y-1.5">
-              {myCommunities.length === 0 && (
-                <p className="rounded-xl border border-dashed border-white/10 px-3 py-3 text-[11px] text-white/50">
-                  No communities yet. Head to Discover → Communities to join your first one.
-                </p>
-              )}
-              {myCommunities.map(c => (
-                <div key={c.id} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-2.5">
-                  <img src={c.cover} alt={c.name} className="h-10 w-10 shrink-0 rounded-lg object-cover" />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold">{c.name}</p>
-                    <p className="truncate text-[10px] text-white/50">{c.subcategory} · {(c.members ?? 0).toLocaleString()} members</p>
-                  </div>
-                  <button onClick={() => onLeaveMembership(c.id)} className="shrink-0 rounded-md border border-white/15 px-2 py-1 text-[10px] text-white/70 hover:text-white">
-                    {t.profile.leaveGroup}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-6">
-        <p className="eyebrow !text-white/40">{t.profile.stats}</p>
-        <div className="mt-2 grid grid-cols-3 gap-2 text-center">
-          {[
-            { label: t.profile.visits, value: "23" },
-            { label: t.profile.saved, value: String(savedCount) },
-            { label: t.profile.credits, value: `$${SEED_USER.wallet.credits}` },
-          ].map(s => (
-            <div key={s.label} className="rounded-xl border border-white/10 bg-white/[0.04] py-3">
-              <p className="font-display text-xl font-bold">{s.value}</p>
-              <p className="mt-0.5 text-[10px] uppercase tracking-wider text-white/45">{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-6">
-        <p className="eyebrow !text-white/40">{t.profile.paths}</p>
-        <div className="mt-2 space-y-2">
-          <PathRow
-            icon={<Instagram className="h-4 w-4" />}
-            title={t.profile.pathFollowers}
-            desc={`${paths.followers.followers.toLocaleString()} followers → ${TIER_META[paths.followers.tier].label} · ${t.profile.pathFollowersStory}`}
-            state={paths.followers.state}
-            highlight={active.source === "followers"}
-          />
-          <PathRow
-            icon={<Wallet className="h-4 w-4" />}
-            title={t.profile.pathSub}
-            desc={paths.subscription.state === "active" && paths.subscription.tier
-              ? `${TIER_META[paths.subscription.tier].label} · renueva ${paths.subscription.renewsOn ?? "—"}`
-              : t.profile.pathSubDesc}
-            state={paths.subscription.state}
-            highlight={active.source === "subscription"}
-          />
-          <PathRow
-            icon={<Crown className="h-4 w-4" />}
-            title={t.profile.pathManual}
-            desc={t.profile.pathManualDesc}
-            state={paths.manual.state}
-            highlight={active.source === "manual"}
-          />
-        </div>
-      </section>
-
-      <section className="mt-6">
-        <button className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
+      <section className="mt-6 space-y-2">
+        <button onClick={() => setView("groups")} className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
+          <span className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-white/55" /> {t.profile.myGroups}</span>
+          <span className="inline-flex items-center gap-2 text-xs text-white/45">{myCommunities.length} <ChevronRight className="h-4 w-4" /></span>
+        </button>
+        <button onClick={() => setView("settings")} className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
           <span className="inline-flex items-center gap-2"><Settings className="h-4 w-4 text-white/55" /> {t.profile.settings}</span>
           <ChevronRight className="h-4 w-4 text-white/45" />
         </button>
       </section>
+      </>}
+
+      {view === "groups" && (
+        <section>
+          <h2 className="font-display text-2xl font-bold">{t.profile.myGroups}</h2>
+          <p className="mt-1 text-[11px] text-white/55">{t.profile.myGroupsDesc}</p>
+          <div className="mt-4 space-y-1.5">
+            {myCommunities.length === 0 && (
+              <p className="rounded-xl border border-dashed border-white/10 px-3 py-6 text-center text-[11px] text-white/50">
+                No communities yet. Head to Discover → Communities to join your first one.
+              </p>
+            )}
+            {myCommunities.map(c => (
+              <div key={c.id} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-2.5">
+                <img src={c.cover} alt={c.name} className="h-10 w-10 shrink-0 rounded-lg object-cover" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold">{c.name}</p>
+                  <p className="truncate text-[10px] text-white/50">{c.subcategory} · {(c.members ?? 0).toLocaleString()} members</p>
+                </div>
+                <button onClick={() => onLeaveMembership(c.id)} className="shrink-0 rounded-md border border-white/15 px-2 py-1 text-[10px] text-white/70 hover:text-white">
+                  {t.profile.leaveGroup}
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {view === "settings" && (
+        <section>
+          <h2 className="font-display text-2xl font-bold">{t.profile.settings}</h2>
+          <div className="mt-4 space-y-2">
+            {[
+              { label: "Account", desc: `${SEED_USER.handle}` },
+              { label: "Notifications", desc: "Push notifications" },
+              { label: "Language", desc: "Español" },
+              { label: "Privacy", desc: "Data & permissions" },
+              { label: "Help & support", desc: "FAQ, contact" },
+              { label: "Log out", desc: "" },
+            ].map(s => (
+              <button key={s.label} className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-left text-sm">
+                <span>
+                  <p>{s.label}</p>
+                  {s.desc && <p className="text-[10px] text-white/45">{s.desc}</p>}
+                </span>
+                <ChevronRight className="h-4 w-4 text-white/45" />
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
