@@ -7,6 +7,7 @@ import {
   Crown, Check, Lock, Heart, Wallet, Settings, ArrowRight, Flame,
   TrendingUp, CircleDollarSign, ArrowDownLeft, ArrowUpRight, ShoppingBag,
   Bot,
+  Eye, EyeOff, Search,
 } from "lucide-react";
 import {
   SEED_LISTINGS, TIERS, TIER_META, INFLUENCE_META, SEED_USER, clubersApi, t,
@@ -1428,7 +1429,8 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
 }) {
   const active = resolveActiveTier(paths);
   const myCommunities = SEED_LISTINGS.filter(l => l.category === "community" && memberships.has(l.id));
-  const [view, setView] = useState<"class" | "groups" | "connectors" | "settings">("class");
+  const [view, setView] = useState<"card" | "class" | "groups" | "connectors" | "settings">("card");
+  const [discoverable, setDiscoverable] = useState(true);
   const [connections, setConnections] = useState<Record<string, boolean>>({ instagram: true });
   type Connector = { id: string; label: string; desc: string; icon: React.ReactNode; tint: string; ring: string };
   const connectors: Array<Connector> = [
@@ -1442,6 +1444,7 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
   ];
   const connectedCount = Object.values(connections).filter(Boolean).length;
   const tabs: Array<{ id: typeof view; label: string }> = [
+    { id: "card",       label: "Card" },
     { id: "class",      label: "Class" },
     { id: "groups",     label: "Groups" },
     { id: "connectors", label: "Connectors" },
