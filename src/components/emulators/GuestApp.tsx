@@ -1535,6 +1535,35 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
           </div>
         </section>
       )}
+
+      {view === "connectors" && (
+        <section>
+          <h2 className="font-display text-2xl font-bold">Connectors</h2>
+          <p className="mt-1 text-[11px] text-white/55">Link your accounts so Mesita can match you with better venues, events and people. The more you connect, the smarter the recs.</p>
+          <div className="mt-4 space-y-2">
+            {connectors.map(c => {
+              const on = !!connections[c.id];
+              return (
+                <div key={c.id} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+                  <div className="rounded-lg bg-white/10 p-2 text-white/85">{c.icon}</div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold">{c.label}</p>
+                    <p className="truncate text-[10px] text-white/50">{c.desc}</p>
+                  </div>
+                  <button
+                    onClick={() => setConnections(p => ({ ...p, [c.id]: !on }))}
+                    className={`shrink-0 rounded-md px-2.5 py-1 text-[11px] font-semibold ${on ? "bg-emerald-300/15 text-emerald-200" : "bg-white text-black"}`}>
+                    {on ? "Connected" : "Connect"}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-[10px] text-white/45">
+            Mesita only reads what's needed to improve matching — never posts on your behalf.
+          </p>
+        </section>
+      )}
     </div>
   );
 }
