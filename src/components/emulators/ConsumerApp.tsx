@@ -117,11 +117,24 @@ export function ConsumerApp() {
         />
       )}
       {reserveFor && (
-        <ReserveSheet
-          listing={reserveFor}
-          onClose={() => setReserveFor(null)}
-          onDone={(when, party) => { addReservation(reserveFor, when, party); setSaved(p => new Set(p).add(reserveFor.id)); setReserveFor(null); setTab("saved"); }}
-        />
+        reserveFor.category === "community" ? (
+          <JoinCommunitySheet
+            listing={reserveFor}
+            alreadyMember={memberships.has(reserveFor.id)}
+            onClose={() => setReserveFor(null)}
+            onDone={() => {
+              if (!memberships.has(reserveFor.id)) toggleMembership(reserveFor.id);
+              setSaved(p => new Set(p).add(reserveFor.id));
+              setReserveFor(null);
+            }}
+          />
+        ) : (
+          <ReserveSheet
+            listing={reserveFor}
+            onClose={() => setReserveFor(null)}
+            onDone={(when, party) => { addReservation(reserveFor, when, party); setSaved(p => new Set(p).add(reserveFor.id)); setReserveFor(null); setTab("saved"); }}
+          />
+        )
       )}
       {showUpgrade && (
         <UpgradeScreen tier={tier} onClose={() => setShowUpgrade(false)} onSelect={(newTier) => {
