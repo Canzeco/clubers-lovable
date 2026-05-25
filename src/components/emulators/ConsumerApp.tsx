@@ -1361,13 +1361,6 @@ function ReserveSheet({ listing, onClose, onDone }: { listing: Listing; onClose:
 /* ─────────────────────────────────────────────────────────────
    SAVED
    ───────────────────────────────────────────────────────────── */
-function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
-  tier: Tier; saved: Set<string>; reservations: Array<{ id: string; listingId: string; when: string; party: number; status: "pending" | "confirmed" }>;
-  onOpen: (l: Listing) => void; onToggleSave: (id: string) => void;
-}) {
-  return _SavedImpl({ tier, saved, reservations, onOpen, onToggleSave });
-}
-
 /* ── Join Community Sheet ─────────────────────────────────── */
 function JoinCommunitySheet({ listing, alreadyMember, onClose, onDone }: {
   listing: Listing; alreadyMember: boolean; onClose: () => void; onDone: () => void;
@@ -1476,7 +1469,7 @@ function JoinCommunitySheet({ listing, alreadyMember, onClose, onDone }: {
   );
 }
 
-function _SavedImpl({ tier, saved, reservations, onOpen, onToggleSave }: {
+function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
   tier: Tier; saved: Set<string>; reservations: Array<{ id: string; listingId: string; when: string; party: number; status: "pending" | "confirmed" }>;
   onOpen: (l: Listing) => void; onToggleSave: (id: string) => void;
 }) {
