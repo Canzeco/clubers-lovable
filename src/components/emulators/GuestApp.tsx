@@ -229,67 +229,102 @@ function Discover({
           </div>
         </div>
 
-        {/* Filter popover */}
+        {/* Filter sheet — full screen */}
         {picker && (
-          <>
-            <div className="fixed inset-0 z-30" onClick={() => setPicker(null)} />
-            <div className="absolute left-4 right-4 top-[68px] z-40 rounded-2xl border border-white/10 bg-[oklch(0.14_0.03_290)]/95 p-3 shadow-2xl backdrop-blur-xl">
-              {picker === "what" && (
-                <div className="flex flex-col gap-1">
-                  <p className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">What are you looking for</p>
+          <div className="absolute inset-0 z-40 flex flex-col bg-[oklch(0.10_0.02_280)]/98 backdrop-blur-xl">
+            <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+              <p className="font-display text-base font-semibold">Filters</p>
+              <button onClick={() => setPicker(null)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-white/70 hover:text-white">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-4 py-4 pb-28">
+              {/* WHAT */}
+              <section>
+                <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">What are you looking for</p>
+                <div className="grid grid-cols-2 gap-1.5">
                   {CATS.map(c => (
-                      <button key={c} onClick={() => { setCat(c); setSub(null); setPicker(null); }}
-                      className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition ${cat === c ? "bg-fuchsia-500/15 text-fuchsia-100" : "text-white/75 hover:bg-white/5"}`}>
+                    <button key={c} onClick={() => { if (c !== cat) setSub(null); setCat(c); }}
+                      className={`flex items-center justify-between rounded-xl border px-3 py-3 text-sm transition ${cat === c ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/75 hover:bg-white/5"}`}>
                       <span className="font-medium">{t.discover.cats[c]}</span>
                       {cat === c && <Check className="h-4 w-4 text-fuchsia-300" />}
                     </button>
                   ))}
                 </div>
+              </section>
+
+              {/* SUBCATEGORY */}
+              {subcategories.length > 0 && (
+                <section className="mt-6">
+                  <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Type of {t.discover.cats[cat].toLowerCase()}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    <button onClick={() => setSub(null)}
+                      className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${sub === null ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65"}`}>
+                      All
+                    </button>
+                    {subcategories.map(s => (
+                      <button key={s} onClick={() => setSub(s === sub ? null : s)}
+                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${sub === s ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65"}`}>
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </section>
               )}
-              {picker === "where" && (
-                <div className="flex flex-col gap-1">
-                  <p className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">City</p>
+
+              {/* WHERE */}
+              <section className="mt-6">
+                <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Where</p>
+                <div className="flex flex-wrap gap-1.5">
                   {CITIES.map(c => (
-                    <button key={c} onClick={() => { setCity(c); setPicker(null); }}
-                      className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition ${city === c ? "bg-fuchsia-500/15 text-fuchsia-100" : "text-white/75 hover:bg-white/5"}`}>
-                      <span className="font-medium">{c}</span>
-                      {city === c && <Check className="h-4 w-4 text-fuchsia-300" />}
+                    <button key={c} onClick={() => setCity(c)}
+                      className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${city === c ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65"}`}>
+                      {c}
                     </button>
                   ))}
                 </div>
-              )}
-              {picker === "when" && (
-                <div className="flex flex-col gap-3">
-                  <div>
-                    <p className="px-1 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Day</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {DAYS.map(d => (
-                        <button key={d} onClick={() => setWhen(w => ({ ...w, day: d }))}
-                          className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${when.day === d ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65 hover:text-white"}`}>
-                          {d}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <p className="px-1 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Time</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {TIMES.map(tm => (
-                        <button key={tm} onClick={() => setWhen(w => ({ ...w, time: tm }))}
-                          className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${when.time === tm ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65 hover:text-white"}`}>
-                          {tm}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <button onClick={() => setPicker(null)}
-                    className="mt-1 w-full rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-500 py-2 text-xs font-semibold text-white">
-                    Apply
-                  </button>
+              </section>
+
+              {/* WHEN */}
+              <section className="mt-6">
+                <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Day</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {DAYS.map(d => (
+                    <button key={d} onClick={() => setWhen(w => ({ ...w, day: d }))}
+                      className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${when.day === d ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65"}`}>
+                      {d}
+                    </button>
+                  ))}
                 </div>
-              )}
+              </section>
+
+              <section className="mt-6">
+                <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Time</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {TIMES.map(tm => (
+                    <button key={tm} onClick={() => setWhen(w => ({ ...w, time: tm }))}
+                      className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${when.time === tm ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65"}`}>
+                      {tm}
+                    </button>
+                  ))}
+                </div>
+              </section>
             </div>
-          </>
+
+            <div className="absolute inset-x-0 bottom-0 border-t border-white/10 bg-[oklch(0.10_0.02_280)]/95 px-4 py-3 backdrop-blur-xl">
+              <div className="flex items-center gap-2">
+                <button onClick={() => { setCat("place"); setSub(null); setCity("Monterrey"); setWhen({ day: "Tonight", time: "8PM" }); }}
+                  className="rounded-full border border-white/10 px-4 py-2.5 text-xs font-semibold text-white/70 hover:text-white">
+                  Reset
+                </button>
+                <button onClick={() => setPicker(null)}
+                  className="flex-1 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-500 py-2.5 text-sm font-semibold text-white">
+                  Show results
+                </button>
+              </div>
+            </div>
+          </div>
         )}
 
         {/* Mode segmented control — Mesita style */}
