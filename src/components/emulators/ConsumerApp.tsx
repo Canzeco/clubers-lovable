@@ -6,7 +6,7 @@ import {
   X, ArrowUp, ArrowDown, Loader2, Send, Gift, Copy, Instagram, Globe,
   Crown, Check, Lock, Heart, Wallet, Settings, ArrowRight, Flame,
   TrendingUp, CircleDollarSign, ArrowDownLeft, ArrowUpRight, ShoppingBag,
-  Bot,
+  Bot, Wrench,
   Eye, EyeOff, Search,
 } from "lucide-react";
 import {
@@ -184,7 +184,7 @@ function Discover({
   const CITIES = ["Monterrey", "San Pedro", "CDMX", "Guadalajara", "Tulum", "Mérida"];
   const DAYS = ["Tonight", "Tomorrow", "This weekend", "Next week"];
   const TIMES = ["6PM", "7PM", "8PM", "9PM", "10PM", "11PM", "Late"];
-  const CATS: Category[] = ["place", "event", "experience", "community", "person"];
+  const CATS: Category[] = ["place", "event", "community", "person", "product", "service"];
 
   const subcategories = useMemo(() => {
     const set = new Set<string>();
@@ -322,7 +322,7 @@ function Discover({
               </div>
             </section>
 
-            {(cat === "event" || cat === "experience" || cat === "place") && (
+            {(cat === "event" || cat === "place") && (
               <>
                 <section className="mt-6">
                   <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Day</p>
@@ -336,7 +336,7 @@ function Discover({
                   </div>
                 </section>
 
-                {(cat === "event" || cat === "experience") && (
+                {cat === "event" && (
                   <section className="mt-6">
                     <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Time</p>
                     <div className="flex flex-wrap gap-1.5">
@@ -374,7 +374,7 @@ function Discover({
           <CommunityList listings={listings} onOpen={onOpenListing} memberships={memberships} onToggleMembership={onToggleMembership} />
         ) : cat === "person" ? (
           <PeopleList listings={listings} onOpen={onOpenListing} />
-        ) : cat === "event" || cat === "experience" ? (
+        ) : cat === "event" ? (
           mode === "swipe" ? (
             <SwipeDeck listings={listings} tier={tier} onOpen={onOpenListing} onSave={(id) => onToggleSave(id)} onReserve={onReserve} />
           ) : mode === "map" ? (
@@ -1029,6 +1029,65 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
 
         <p className="text-sm leading-relaxed text-white/80">{listing.description}</p>
 
+        {/* Product / Service hero */}
+        {(listing.category === "product" || listing.category === "service") && (
+          <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-500/10 to-sky-500/10 p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 text-white/85">
+                  {listing.category === "product" ? <ShoppingBag className="h-3.5 w-3.5" /> : <Wrench className="h-3.5 w-3.5" />}
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-white/55">
+                    {listing.category === "product" ? (listing.productKind ?? "Product") : (listing.serviceKind ?? "Service")}
+                  </p>
+                  <p className="text-xs text-white/80">
+                    {listing.category === "product" ? `Sold by ${listing.soldBy ?? "—"}` : `Provided by ${listing.providedBy ?? "—"}`}
+                  </p>
+                </div>
+              </div>
+              {typeof listing.price === "number" && (
+                <p className="font-display text-2xl font-bold">${listing.price.toLocaleString()}<span className="ml-1 text-xs font-medium text-white/55">MXN</span></p>
+              )}
+            </div>
+            {listing.durationLabel && (
+              <p className="mt-2 text-[11px] text-white/60"><Clock className="-mt-0.5 mr-1 inline h-3 w-3" /> {listing.durationLabel}</p>
+            )}
+          </div>
+        )}
+
+        {/* Event offerings — inline products & services */}
+        {listing.category === "event" && listing.offerings && listing.offerings.length > 0 && (
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-3.5 w-3.5 text-fuchsia-300" />
+              <p className="text-[10px] uppercase tracking-wider text-white/55">Add to your night</p>
+            </div>
+            <div className="mt-3 space-y-2">
+              {listing.offerings.map(o => (
+                <div key={o.id} className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                  <div className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${o.kind === "product" ? "bg-emerald-400/15 text-emerald-200" : "bg-sky-400/15 text-sky-200"}`}>
+                    {o.kind === "product" ? <ShoppingBag className="h-3.5 w-3.5" /> : <Wrench className="h-3.5 w-3.5" />}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="truncate text-sm font-semibold">{o.name}</p>
+                      <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider ${o.kind === "product" ? "bg-emerald-400/15 text-emerald-200" : "bg-sky-400/15 text-sky-200"}`}>
+                        {o.kind}
+                      </span>
+                    </div>
+                    {o.description && <p className="mt-0.5 text-[11px] text-white/60">{o.description}</p>}
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <p className="font-display text-sm font-bold">${o.price.toLocaleString()}</p>
+                    <button className="mt-1 rounded-md bg-white px-2 py-0.5 text-[10px] font-semibold text-black">Add</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-2 gap-2 text-xs">
           <Info icon={<Clock className="h-3.5 w-3.5" />} label={listing.hours} />
           <Info icon={<MapPin className="h-3.5 w-3.5" />} label={`${listing.walkMin} min walk`} />
@@ -1041,7 +1100,13 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
       <div className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-white/10 bg-black/85 px-5 pb-6 pt-3 backdrop-blur-xl">
         <button onClick={onReserve}
           className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 via-rose-500 to-amber-500 py-3.5 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/30">
-          <Calendar className="h-4 w-4" /> {t.venue.reserve}
+          {listing.category === "product" ? (
+            <><ShoppingBag className="h-4 w-4" /> Buy</>
+          ) : listing.category === "service" ? (
+            <><Wrench className="h-4 w-4" /> Book service</>
+          ) : (
+            <><Calendar className="h-4 w-4" /> {t.venue.reserve}</>
+          )}
         </button>
       </div>
     </div>
@@ -1164,9 +1229,10 @@ function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
     { cat: null,        label: "All" },
     { cat: "place",     label: t.discover.cats.place },
     { cat: "event",     label: t.discover.cats.event },
-    { cat: "experience",label: t.discover.cats.experience },
     { cat: "community", label: t.discover.cats.community },
     { cat: "person",    label: t.discover.cats.person },
+    { cat: "product",   label: t.discover.cats.product },
+    { cat: "service",   label: t.discover.cats.service },
   ];
   const [selCat, setSelCat] = useState<Category | null>(null);
   const filtered = selCat ? items.filter(l => l.category === selCat) : items;

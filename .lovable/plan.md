@@ -1,71 +1,68 @@
-## Qué traemos de Mesita a Clubers
+Refactor the discovery taxonomy. Canonical categories become **six**: Places, Events, Communities, People, **Products**, **Services**. Remove Experiences (reclassify the two seed entries as Events). Products and Services are first-class — they appear in Discover filters, Saved filter chips, Catalog, Swipe, Map pins, and have their own detail rendering. Events can also *offer* products and services inline (a concert with merch + valet service), but Products/Services are independently searchable as their own categories.
 
-De Notion (Main) saco 8 primitivas que hacen real el modelo. Las llevo a Clubers manteniendo su modelo de 5 entidades (Places, Experiences, Events, Communities, People) y 4 modos de discover.
+## Why two layers
+- **Top-level category**: a Product or Service is a thing you can discover on its own (a barber, a bottle of mezcal-to-go, a personal trainer). It shows up in search.
+- **Event offerings**: an Event can also expose products/services as add-ons (a festival selling merch + parking + VIP upgrade). These are inline on the event detail, not separate top-level listings.
 
-### 1. Participación: Listed vs Verified Partner
-Ya existe. Lo dejo igual. Aplica a las 5 entidades.
+## Data model — `src/lib/clubers/data.ts`
 
-### 2. Tipo fiscal → mecánica forzada (solo Partners transaccionales)
-Cada Place/Experience/Event partner declara fiscal_type:
-- **Formal** → cashback como créditos Clubers (válido solo si paga con tarjeta vía Clubers)
-- **Informal** → descuento instantáneo aplicado al ticket (Clubers no toca el pago)
+- `Category` becomes `"place" | "event" | "community" | "person" | "product" | "service"`. Remove `"experience"`.
+- Extend `Listing` with optional product/service fields:
+  ```ts
+  // For products
+  price?: number;            // MXN
+  productKind?: string;      // "Bottle", "Merch", "Voucher"
+  soldBy?: string;           // denormalized name of the place/person that sells it
+  // For services
+  serviceKind?: string;      // "Haircut", "Personal trainer", "Photographer"
+  durationLabel?: string;    // already exists — reuse
+  providedBy?: string;       // denormalized name of the place/person providing
+  ```
+- Add an `Offering` interface for inline event add-ons:
+  ```ts
+  export interface Offering {
+    id: string;
+    name: string;
+    kind: "product" | "service";
+    price: number;
+    description?: string;
+  }
+  ```
+  and `offerings?: Offering[]` on `Listing` (used by events).
+- Reclassify the two `experience` seed entries (`exp-cata`, `exp-cook`) to `category: "event"` with `whenLabel` (drop `durationLabel` on these or keep, harmless).
+- Add seed data:
+  - **3 products** — e.g. `prod-mezcal` (bottle from the mezcal bar), `prod-koli-cookbook` (Koli signed cookbook), `prod-rooftop-merch` (Catarina branded tee). Each with `price`, `productKind`, `soldBy`, vibes, cover image.
+  - **3 services** — e.g. `srv-barber` (premium barber in San Pedro), `srv-trainer` (personal trainer), `srv-photographer` (event photographer for hire). Each with `serviceKind`, `priceLevel`, `providedBy` where relevant.
+- Add `offerings` to one event (Pa'l Norte): a couple of inline merch + VIP upgrade entries to demonstrate the pattern.
+- Update `t.discover.cats`: remove `experience`, add `product: "Products"`, `service: "Services"`.
 
-Communities y People no aplican (no hay ticket).
+## Discover — `src/components/emulators/ConsumerApp.tsx`
 
-### 3. Tres paths a la clase (Bronze/Silver/Gold/Diamond)
-La clase activa = la más alta de:
-- **Followers IG** verificados: <1K Bronze · 1K Silver · 5K Gold · 20K Diamond. Requiere story tag al venue para liberar el perk.
-- **Suscripción** (200/500/1000 MXN): instantánea, sin story.
-- **Manual**: invitación para influencers reales (chefs, prensa, fundadores).
+- `CATS` array: `["place", "event", "community", "person", "product", "service"]`.
+- Filter sheet (`What are you looking for`): now 6 chips. Layout already wraps — verify it still looks balanced (2 cols × 3 rows).
+- Day/Time filter conditional: keep only for `event` and `place` (drop experience branch).
+- Mode rendering branch: route `product` and `service` to a new `ProductList` / `ServiceList` view (or a single `OfferingList` reused for both). Keep swipe/map/catalog/AI working for them too — they're just listings.
 
-Profile muestra los tres paths con su estado y la clase efectiva.
+## Saved — Filter chips
 
-### 4. Welcome perk universal
-Primera visita a cualquier partner muestra perk de bienvenida (cashback o descuento). Ya existe en seed; lo formalizo como sección dedicada en el venue detail.
+- Replace `experience` chip with `product` and `service` chips. Final order: All · Places · Events · Communities · People · Products · Services.
 
-### 5. AI Reservation/Booking en cualquier entidad
-Funciona en Places listed y partner — para Experiences/Events se convierte en "AI Booking" (DM IG, web form, email). Ya existe el flujo; le añado los canales que ve el guest.
+## Listing detail (`VenueDetail`)
 
-### 6. Story-tag verification (path followers)
-En el flujo de Pay, si el guest llegó por path followers, el QR no libera el perk hasta verificar story con @mention. Auto-aprueba con mock; manual fallback "en revisión".
+- For `category === "product"`: render product hero (image, price big, soldBy, description, "Buy" CTA — non-functional placeholder).
+- For `category === "service"`: render service hero (image, serviceKind, providedBy, priceLevel/duration, "Book" CTA — non-functional placeholder).
+- For `category === "event"` with `offerings`: add an "Add to your night" section listing each offering with kind badge (Product/Service), price, and short description.
+- Remove any experience-specific branches.
 
-### 7. Comunidades + gamificación + sharing
-- Communities ya implementadas — añadir badge "verifica tu correo @x.mx".
-- Gamificación: XP, nivel con nombre (Tastemaker/Connoisseur/Icon), streak de visitas, badge regional. Se muestra en Profile.
-- Share: ya existe. Le añado "Regala suscripción Silver/Gold" (gift cards) y código de creador con tracking de visitas.
+## Card list components
 
-### 8. Renombrar QR → Pay + Wallet
-La pestaña central pasa de QR a Pay con dos sub-tabs:
-- **QR**: el código para escanear en venue
-- **Wallet**: créditos Clubers acumulados (de cashback), historial de transacciones, gift cards recibidos
+- `CatalogCard`, `SwipeCard`, `MapView` pins: work generically off `Listing`, so they already render products/services correctly once the data exists. Verify subcategory/price/zone display sensibly for product (`productKind` as subcategory fallback) and service (`serviceKind` as subcategory fallback). If not, surface those fields through the existing `subcategory` field on the seed entries to avoid extra rendering logic.
 
-## Cambios concretos por archivo
+## Manager / admin — out of scope for this turn
 
-### `src/lib/clubers/data.ts`
-- Listing: añadir `fiscalType?: "formal" | "informal"` a partners transaccionales
-- Tipo `ClassPaths` por usuario: `{ followers: { handle, count, tier }, subscription: { tier, since } | null, manual: { tier, reason } | null }`
-- Tipo `WalletState`: `{ credits, transactions[], giftCards[] }`
-- Tipo `Gamification`: `{ xp, level, streak, badges[] }`
-- Seed: añadir fiscalType a los venues partner, mock de wallet/gamification del usuario actual
+- `UnitType` and admin counts still reference `experience`. Leaving them untouched would create drift. Minimum hygiene: also remove `experience` from `src/lib/manager/units.ts`, `src/routes/manager.unit.$type.$id.tsx`, `src/routes/manager.add.tsx`, `src/routes/manager.central.tsx`, `src/components/emulators/AdminWeb.tsx`. Do NOT add product/service to the manager surfaces this turn — consumer-side first; manager taxonomy can follow.
 
-### `src/components/emulators/GuestApp.tsx`
-- BottomNav: cambiar `qr` por `pay` (label "Pay") manteniendo icono
-- `PayScreen`: dos sub-tabs (QR · Wallet). Wallet muestra créditos, lista de tx y gift cards. QR mantiene UI actual.
-- `Profile`: bloque "Tu clase" muestra los 3 paths con estado y cuál está activo. Botón Upgrade ofrece subir el path de suscripción.
-- `Profile`: añadir bloque Gamificación (XP/nivel/streak/badges)
-- `VenueDetail`: si fiscalType=informal, etiquetar perk como "descuento instantáneo"; si formal, "cashback en créditos". Welcome perk en bloque destacado.
-- `ShareScreen`: añadir CTA "Regalar suscripción"
-
-### Strings en `t.*`
-Añadir keys nuevas para pay, wallet, paths, gamification, welcome.
-
-## Lo que NO entra en este pase
-- Manager app (sigue como ya está)
-- Suscripción real con Stripe — solo mock UI
-- IG OAuth real — el handle y followers se simulan
-- Story-tag scanner real — sólo el estado en UI
-
-## Riesgo / scope
-Es 1 archivo de datos + 1 archivo de UI (~250 líneas netas añadidas). Ningún cambio de routing, ninguna migración Supabase, ninguna dependencia nueva.
-
-¿Avanzo con esto, o quitas/agregas algo antes?
+## Out of scope
+- Real checkout / booking flow for products and services (CTAs are placeholders).
+- Backend schema changes — pure frontend prototype.
+- Adding product/service authoring to the manager app.

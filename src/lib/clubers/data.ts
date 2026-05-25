@@ -3,7 +3,7 @@
 // functions in `clubersApi` for Supabase Edge Function calls later.
 
 export type Tier = "bronze" | "silver" | "gold" | "diamond";
-export type Category = "place" | "event" | "experience" | "community" | "person";
+export type Category = "place" | "event" | "community" | "person" | "product" | "service";
 export type Participation = "listed" | "partner";
 export type PerkKind = "cashback" | "discount";
 export type FiscalType = "formal" | "informal";
@@ -41,8 +41,17 @@ export interface Listing {
   fiscalType?: FiscalType;
   // For events
   whenLabel?: string; // "Vie 14 dic · 22:00"
-  // For experiences
-  durationLabel?: string; // "2 h" · "Half day"
+  // Duration label (events, services)
+  durationLabel?: string; // "2 h" · "Half day" · "45 min"
+  // For events: inline products/services sold alongside the event
+  offerings?: Offering[];
+  // For products
+  price?: number;       // MXN
+  productKind?: string; // "Bottle" · "Merch" · "Voucher"
+  soldBy?: string;      // denormalized name of the place/person selling it
+  // For services
+  serviceKind?: string; // "Haircut" · "Personal trainer" · "Photographer"
+  providedBy?: string;  // denormalized name of the place/person providing it
   // For communities
   members?: number;          // 1820
   entryRule?: string;        // "Solo @tec.mx" · "Aprobación del admin" · "Abierto"
@@ -56,6 +65,14 @@ export interface Listing {
   // Perks gated to members of specific community groups. This is how the
   // spec's "20% off for all Tec students" rules get expressed on a venue.
   communityPerks?: CommunityPerk[];
+}
+
+export interface Offering {
+  id: string;
+  name: string;
+  kind: "product" | "service";
+  price: number; // MXN
+  description?: string;
 }
 
 export interface CommunityPerk {
@@ -272,13 +289,18 @@ export const SEED_LISTINGS: Listing[] = [
     walkMin: 0,
     description: "The biggest festival in northern Mexico. Three stages, 100+ artists.",
     whenLabel: "Apr 3–5",
+    offerings: [
+      { id: "off-vip", name: "VIP wristband upgrade", kind: "service", price: 1800, description: "Skip the line, VIP viewing platform, dedicated bar." },
+      { id: "off-merch", name: "Pa'l Norte tour tee", kind: "product", price: 450, description: "Official 2026 lineup tee — limited print." },
+      { id: "off-valet", name: "Valet + on-site parking", kind: "service", price: 600, description: "Reserve a spot before the festival sells out parking." },
+    ],
   },
   // ── Communities ───────────────────────────────────────────
   // ── Experiences ───────────────────────────────────────────
   {
     id: "exp-cata",
     name: "Cata de Mezcal con maestro mezcalero",
-    category: "experience", subcategory: "Tasting",
+    category: "event", subcategory: "Tasting",
     participation: "partner",
     zone: "Barrio Antiguo", priceLevel: 3,
     clubersRating: 4.8, googleRating: 4.7,
@@ -290,12 +312,13 @@ export const SEED_LISTINGS: Listing[] = [
     perks: cashbackPerks(5, 10, 15, 20),
     welcomePerk: { kind: "cashback", pct: 20, label: "20% on your first tasting" },
     fiscalType: "formal",
+    whenLabel: "Thu–Sat · 20:00",
     durationLabel: "2 h",
   },
   {
     id: "exp-cook",
     name: "Taller de cocina norteña",
-    category: "experience", subcategory: "Workshop",
+    category: "event", subcategory: "Workshop",
     participation: "listed",
     zone: "San Pedro", priceLevel: 3,
     clubersRating: 4.6, googleRating: 4.5,
@@ -304,6 +327,7 @@ export const SEED_LISTINGS: Listing[] = [
     gallery: [], openNow: false, hours: "Sat · 11:00",
     walkMin: 9,
     description: "Half-day workshop: cabrito, machaca and flour tortillas with a regional chef. Eat what you cook.",
+    whenLabel: "Sat · 11:00",
     durationLabel: "Half day",
   },
   {
@@ -409,6 +433,117 @@ export const SEED_LISTINGS: Listing[] = [
     role: "Resident DJ · Vértigo",
     influenceTier: "icon",
   },
+  // ── Products ──────────────────────────────────────────────
+  {
+    id: "prod-mezcal-bottle",
+    name: "Mezcal Espadín Edición Maestro",
+    category: "product", subcategory: "Bottle",
+    participation: "partner",
+    zone: "Barrio Antiguo", priceLevel: 3,
+    clubersRating: 4.8, googleRating: 0,
+    vibes: ["spirits", "artisan", "to-go"],
+    cover: photo("1582106245687-cbb466a9f07f", 200),
+    gallery: [], openNow: true, hours: "—",
+    walkMin: 14,
+    description: "750ml bottle from the master mezcalero behind the tasting. Numbered batch, capped at 200 bottles.",
+    price: 1200,
+    productKind: "Bottle",
+    soldBy: "Cata de Mezcal",
+    perks: cashbackPerks(3, 6, 10, 14),
+    fiscalType: "formal",
+  },
+  {
+    id: "prod-koli-cookbook",
+    name: "Koli — Cocina de Origen (signed)",
+    category: "product", subcategory: "Cookbook",
+    participation: "partner",
+    zone: "San Pedro", priceLevel: 2,
+    clubersRating: 4.9, googleRating: 0,
+    vibes: ["fine dining", "gift", "regional"],
+    cover: photo("1544716278-ca5e3f4abd8c", 201),
+    gallery: [], openNow: true, hours: "—",
+    walkMin: 8,
+    description: "Hardcover by chef Rodrigo Rivera-Río. Personally signed for Mesita members at pickup.",
+    price: 890,
+    productKind: "Cookbook",
+    soldBy: "Koli Cocina de Origen",
+    perks: cashbackPerks(4, 8, 12, 16),
+    fiscalType: "formal",
+  },
+  {
+    id: "prod-rooftop-tee",
+    name: "La Catarina Sunset Tee",
+    category: "product", subcategory: "Merch",
+    participation: "partner",
+    zone: "San Pedro", priceLevel: 1,
+    clubersRating: 4.5, googleRating: 0,
+    vibes: ["streetwear", "rooftop", "limited"],
+    cover: photo("1521572163474-6864f9cf17ab", 202),
+    gallery: [], openNow: true, hours: "—",
+    walkMin: 5,
+    description: "Heavyweight cotton tee with the original Cerro de la Silla sunset print. Sizes S–XL.",
+    price: 590,
+    productKind: "Merch",
+    soldBy: "La Catarina Rooftop",
+    perks: discountPerks(5, 10, 15, 20),
+    fiscalType: "informal",
+  },
+  // ── Services ──────────────────────────────────────────────
+  {
+    id: "srv-barber",
+    name: "Barbería Don Lalo · Premium cut",
+    category: "service", subcategory: "Barber",
+    participation: "partner",
+    zone: "San Pedro", priceLevel: 2,
+    clubersRating: 4.8, googleRating: 4.9,
+    vibes: ["grooming", "old-school", "appointment"],
+    cover: photo("1503951914875-452162b0f3f1", 210),
+    gallery: [], openNow: true, hours: "Tue–Sat · 10–20",
+    walkMin: 6,
+    description: "Classic hot-towel haircut and beard line-up. 45 minutes, no rush, espresso on the house.",
+    price: 450,
+    serviceKind: "Haircut",
+    providedBy: "Barbería Don Lalo",
+    durationLabel: "45 min",
+    perks: discountPerks(5, 10, 15, 20),
+    fiscalType: "informal",
+  },
+  {
+    id: "srv-trainer",
+    name: "Coach Iván · Personal training",
+    category: "service", subcategory: "Personal trainer",
+    participation: "listed",
+    zone: "Valle Oriente", priceLevel: 3,
+    clubersRating: 4.7, googleRating: 4.8,
+    vibes: ["fitness", "1-on-1", "early"],
+    cover: photo("1517836357463-d25dfeac3438", 211),
+    gallery: [], openNow: true, hours: "Mon–Sat · 6–11 & 17–21",
+    walkMin: 0,
+    description: "Strength and conditioning 1-on-1 sessions. Programming included, in-person at your gym or at the studio.",
+    price: 650,
+    serviceKind: "Personal trainer",
+    providedBy: "Coach Iván",
+    durationLabel: "60 min",
+  },
+  {
+    id: "srv-photographer",
+    name: "Sofía Lens · Event photographer",
+    category: "service", subcategory: "Photographer",
+    participation: "partner",
+    zone: "Monterrey", priceLevel: 3,
+    clubersRating: 4.9, googleRating: 5.0,
+    vibes: ["editorial", "nightlife", "fast turnaround"],
+    cover: photo("1502920917128-1aa500764cbd", 212),
+    gallery: [], openNow: true, hours: "By booking",
+    walkMin: 0,
+    description: "Editorial-style coverage of dinners, openings and rooftop nights. Edited gallery within 48 h.",
+    price: 4500,
+    serviceKind: "Photographer",
+    providedBy: "Sofía Lens",
+    durationLabel: "2 h",
+    perks: cashbackPerks(3, 6, 10, 14),
+    fiscalType: "formal",
+  },
 ];
 
 // ───────────────────────────────────────────────────────────────
@@ -420,7 +555,7 @@ export const t = {
   nav: { discover: "Discover", saved: "Saved", pay: "Pay", share: "Share", profile: "Profile" },
   discover: {
     ai: "AI Planner", swipe: "Swipe", map: "Map", catalog: "Catalog",
-    cats: { place: "Places", event: "Events", experience: "Experiences", community: "Communities", person: "People" },
+    cats: { place: "Places", event: "Events", community: "Communities", person: "People", product: "Products", service: "Services" },
     aiHero: "What are you in the mood for tonight?",
     aiPlaceholder: "Rooftop dinner and something live, under $800, walking distance in San Pedro…",
     aiBuilding: "Building your night…",
