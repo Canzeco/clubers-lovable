@@ -3,7 +3,7 @@
 // functions in `clubersApi` for Supabase Edge Function calls later.
 
 export type Tier = "bronze" | "silver" | "gold" | "diamond";
-export type Category = "place" | "experience" | "event" | "community" | "person";
+export type Category = "place" | "event" | "community" | "person";
 export type Participation = "listed" | "partner";
 export type PerkKind = "cashback" | "discount";
 export type FiscalType = "formal" | "informal";
@@ -34,15 +34,13 @@ export interface Listing {
   // Perk per tier — undefined tier means no perk (listed venues)
   perks?: Record<Tier, Perk>;
   welcomePerk?: Perk;
-  // Forces the perk mechanic on transactional partners (place/experience/event).
+  // Forces the perk mechanic on transactional partners (place/event).
   // formal → cashback returned as Clubers credits (only valid if guest pays
   // through Clubers). informal → instant discount applied to the bill (Clubers
   // stays off the payment rail).
   fiscalType?: FiscalType;
   // For events
   whenLabel?: string; // "Vie 14 dic · 22:00"
-  // For experiences
-  durationLabel?: string;
   // For communities
   members?: number;          // 1820
   entryRule?: string;        // "Solo @tec.mx" · "Aprobación del admin" · "Abierto"
