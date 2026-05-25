@@ -626,7 +626,7 @@ function PlaceholderCategory({ listings, onOpen }: { listings: Listing[]; onOpen
                 <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
                 <div className="absolute bottom-3 left-3 right-3">
                   <h4 className="font-display text-lg font-semibold text-white">{l.name}</h4>
-                  <p className="text-[11px] text-white/65">{l.subcategory} · {l.whenLabel ?? l.durationLabel ?? l.hours}</p>
+                  <p className="text-[11px] text-white/65">{l.subcategory} · {l.whenLabel ?? l.hours}</p>
                 </div>
               </div>
             </button>
