@@ -740,13 +740,17 @@ function PeopleList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: Lis
 /* ─────────────────────────────────────────────────────────────
    VENUE DETAIL
    ───────────────────────────────────────────────────────────── */
-function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, onUpgrade }: {
+function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, onUpgrade, memberships, onJoinCommunity }: {
   listing: Listing; tier: Tier; saved: boolean;
   onClose: () => void; onToggleSave: () => void; onReserve: () => void; onUpgrade: () => void;
+  memberships: Set<string>;
+  onJoinCommunity: (communityId: string) => void;
 }) {
   const [photoIdx, setPhotoIdx] = useState(0);
   const photos = [listing.cover, ...listing.gallery];
   const perk = listing.perks?.[tier];
+  const unlockedCommunityPerks = (listing.communityPerks ?? []).filter(p => memberships.has(p.communityId));
+  const lockedCommunityPerks   = (listing.communityPerks ?? []).filter(p => !memberships.has(p.communityId));
 
   return (
     <div className="absolute inset-0 z-30 overflow-y-auto bg-[oklch(0.10_0.02_280)] text-white">
