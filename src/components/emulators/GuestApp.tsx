@@ -6,7 +6,7 @@ import {
   Crown, Check, Lock, Heart, Wallet, Settings, ArrowRight, Flame,
 } from "lucide-react";
 import {
-  SEED_LISTINGS, TIERS, TIER_META, clubersApi, t,
+  SEED_LISTINGS, TIERS, TIER_META, INFLUENCE_META, clubersApi, t,
   type Listing, type Category, type Tier,
 } from "@/lib/clubers/data";
 
@@ -153,10 +153,10 @@ function Discover({
         </div>
 
         {/* Category tabs */}
-        <div className="mt-4 flex gap-1.5 rounded-full border border-white/10 bg-white/5 p-1 text-xs">
-          {(["place", "experience", "event"] as Category[]).map(c => (
+        <div className="mt-4 flex gap-1.5 overflow-x-auto rounded-full border border-white/10 bg-white/5 p-1 text-xs scrollbar-hide">
+          {(["place", "experience", "event", "community", "person"] as Category[]).map(c => (
             <button key={c} onClick={() => setCat(c)}
-              className={`flex-1 rounded-full px-3 py-1.5 font-medium transition ${cat === c ? "bg-white text-black" : "text-white/65 hover:text-white"}`}>
+              className={`shrink-0 rounded-full px-3 py-1.5 font-medium transition ${cat === c ? "bg-white text-black" : "text-white/65 hover:text-white"}`}>
               {t.discover.cats[c]}
             </button>
           ))}
@@ -181,7 +181,11 @@ function Discover({
 
       {/* Mode body */}
       <div className="relative mt-3 flex-1 overflow-hidden">
-        {cat !== "place" ? (
+        {cat === "community" ? (
+          <CommunityList listings={listings} onOpen={onOpenListing} />
+        ) : cat === "person" ? (
+          <PeopleList listings={listings} onOpen={onOpenListing} />
+        ) : cat !== "place" ? (
           <PlaceholderCategory listings={listings} onOpen={onOpenListing} />
         ) : mode === "ai" ? (
           <AIPlanner tier={tier} onOpen={onOpenListing} onReserve={onReserve} saved={saved} onToggleSave={onToggleSave} />
