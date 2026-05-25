@@ -6,6 +6,7 @@ import {
   X, ArrowUp, ArrowDown, Loader2, Send, Gift, Copy, Instagram, Globe,
   Crown, Check, Lock, Heart, Wallet, Settings, ArrowRight, Flame,
   TrendingUp, CircleDollarSign, ArrowDownLeft, ArrowUpRight, ShoppingBag,
+  Bot,
 } from "lucide-react";
 import {
   SEED_LISTINGS, TIERS, TIER_META, INFLUENCE_META, SEED_USER, clubersApi, t,
@@ -1430,6 +1431,7 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
   const [view, setView] = useState<"class" | "groups" | "connectors" | "settings">("class");
   const [connections, setConnections] = useState<Record<string, boolean>>({ instagram: true });
   const connectors: Array<{ id: string; label: string; desc: string; icon: React.ReactNode }> = [
+    { id: "ai",        label: "ChatGPT / Claude", desc: "Let your AI book & act on your behalf (MCP)", icon: <Bot className="h-4 w-4" /> },
     { id: "instagram", label: "Instagram", desc: "Followers, taste & social proof", icon: <Instagram className="h-4 w-4" /> },
     { id: "linkedin",  label: "LinkedIn",  desc: "Industry, seniority & network", icon: <Globe className="h-4 w-4" /> },
     { id: "spotify",   label: "Spotify",   desc: "Music & vibe matching", icon: <Sparkles className="h-4 w-4" /> },
