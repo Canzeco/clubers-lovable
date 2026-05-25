@@ -26,7 +26,9 @@ export const Route = createFileRoute("/manager/unit/$type/$id")({
 });
 
 function UnitDashboard() {
-  const { type, id } = Route.useParams();
+  const params = Route.useParams();
+  const type = params.type as UnitType;
+  const id = params.id;
   const unit = findUnit(type, id);
 
   if (!unit) {
