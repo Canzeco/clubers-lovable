@@ -1,66 +1,71 @@
-## Goal
+## Qué traemos de Mesita a Clubers
 
-No hardcoded business data in the client. Every list (venues, promos, units, sourcing pipeline, dashboard stats, etc.) is stored in Supabase and read at runtime, even when the rows are seed/fake data for the demo.
+De Notion (Main) saco 8 primitivas que hacen real el modelo. Las llevo a Clubers manteniendo su modelo de 5 entidades (Places, Experiences, Events, Communities, People) y 4 modos de discover.
 
-## Scope
+### 1. Participación: Listed vs Verified Partner
+Ya existe. Lo dejo igual. Aplica a las 5 entidades.
 
-Three emulators currently ship inline arrays:
+### 2. Tipo fiscal → mecánica forzada (solo Partners transaccionales)
+Cada Place/Experience/Event partner declara fiscal_type:
+- **Formal** → cashback como créditos Clubers (válido solo si paga con tarjeta vía Clubers)
+- **Informal** → descuento instantáneo aplicado al ticket (Clubers no toca el pago)
 
-- `ManagerWeb.tsx` — `UNITS`, dashboard stats, promos, analytics, wallet, team, FAQs.
-- `AdminWeb.tsx` — sourcing stages, pipeline venues, bots, stack, portfolio, discover, promos, metrics, trust signals.
-- `GuestApp.tsx` — discover venues, coupons, reservations, friends, transactions.
+Communities y People no aplican (no hay ticket).
 
-All of it goes into Supabase.
+### 3. Tres paths a la clase (Bronze/Silver/Gold/Diamond)
+La clase activa = la más alta de:
+- **Followers IG** verificados: <1K Bronze · 1K Silver · 5K Gold · 20K Diamond. Requiere story tag al venue para liberar el perk.
+- **Suscripción** (200/500/1000 MXN): instantánea, sin story.
+- **Manual**: invitación para influencers reales (chefs, prensa, fundadores).
 
-## Tables (new, all public-readable for the demo, write-gated)
+Profile muestra los tres paths con su estado y la clase efectiva.
 
-```text
-venues          one row per place (admin + guest + manager all read this)
-venue_units     manager-side units (the dropdown in ManagerWeb)
-promos          cashback campaigns (manager + guest)
-coupons         per-user coupons (guest)
-reservations    guest reservations
-pipeline_stages admin sourcing pipeline columns
-pipeline_items  rows inside each stage
-bots            admin bots tab
-stack_services  admin stack tab
-metrics_kpis    admin metrics + manager dashboard stats
-trust_flags     admin trust & safety
-faqs            manager help center
-```
+### 4. Welcome perk universal
+Primera visita a cualquier partner muestra perk de bienvenida (cashback o descuento). Ya existe en seed; lo formalizo como sección dedicada en el venue detail.
 
-Each table: `id uuid pk`, domain columns, `created_at`. RLS on; SELECT open to `anon`+`authenticated` for the demo, INSERT/UPDATE/DELETE only for users with the `admin` role (via `user_roles` + `has_role`).
+### 5. AI Reservation/Booking en cualquier entidad
+Funciona en Places listed y partner — para Experiences/Events se convierte en "AI Booking" (DM IG, web form, email). Ya existe el flujo; le añado los canales que ve el guest.
 
-`user_roles` + `app_role` enum + `has_role()` SECURITY DEFINER function go in this migration too (per the user-roles rule). Admin role gets seeded manually later via the SQL editor; not part of this pass.
+### 6. Story-tag verification (path followers)
+En el flujo de Pay, si el guest llegó por path followers, el QR no libera el perk hasta verificar story con @mention. Auto-aprueba con mock; manual fallback "en revisión".
 
-## Seed
+### 7. Comunidades + gamificación + sharing
+- Communities ya implementadas — añadir badge "verifica tu correo @x.mx".
+- Gamificación: XP, nivel con nombre (Tastemaker/Connoisseur/Icon), streak de visitas, badge regional. Se muestra en Profile.
+- Share: ya existe. Le añado "Regala suscripción Silver/Gold" (gift cards) y código de creador con tracking de visitas.
 
-The migration seeds every table from the current hardcoded arrays so the UI looks identical on first load. No client-side fallback arrays remain.
+### 8. Renombrar QR → Pay + Wallet
+La pestaña central pasa de QR a Pay con dos sub-tabs:
+- **QR**: el código para escanear en venue
+- **Wallet**: créditos Clubers acumulados (de cashback), historial de transacciones, gift cards recibidos
 
-## Server access
+## Cambios concretos por archivo
 
-- Public reads use the browser supabase client directly (RLS-open SELECT). Simple, no server fn needed.
-- Admin writes (later) will go through `createServerFn` + `requireSupabaseAuth` + admin role check.
+### `src/lib/clubers/data.ts`
+- Listing: añadir `fiscalType?: "formal" | "informal"` a partners transaccionales
+- Tipo `ClassPaths` por usuario: `{ followers: { handle, count, tier }, subscription: { tier, since } | null, manual: { tier, reason } | null }`
+- Tipo `WalletState`: `{ credits, transactions[], giftCards[] }`
+- Tipo `Gamification`: `{ xp, level, streak, badges[] }`
+- Seed: añadir fiscalType a los venues partner, mock de wallet/gamification del usuario actual
 
-## Client changes
+### `src/components/emulators/GuestApp.tsx`
+- BottomNav: cambiar `qr` por `pay` (label "Pay") manteniendo icono
+- `PayScreen`: dos sub-tabs (QR · Wallet). Wallet muestra créditos, lista de tx y gift cards. QR mantiene UI actual.
+- `Profile`: bloque "Tu clase" muestra los 3 paths con estado y cuál está activo. Botón Upgrade ofrece subir el path de suscripción.
+- `Profile`: añadir bloque Gamificación (XP/nivel/streak/badges)
+- `VenueDetail`: si fiscalType=informal, etiquetar perk como "descuento instantáneo"; si formal, "cashback en créditos". Welcome perk en bloque destacado.
+- `ShareScreen`: añadir CTA "Regalar suscripción"
 
-For each emulator:
+### Strings en `t.*`
+Añadir keys nuevas para pay, wallet, paths, gamification, welcome.
 
-1. Replace inline `const UNITS = [...]` / `const stages = [...]` / etc. with a `useQuery` (react-query) hook that calls `supabase.from('<table>').select()`.
-2. Render skeletons while loading.
-3. Delete every hardcoded array and helper that fed those arrays.
+## Lo que NO entra en este pase
+- Manager app (sigue como ya está)
+- Suscripción real con Stripe — solo mock UI
+- IG OAuth real — el handle y followers se simulan
+- Story-tag scanner real — sólo el estado en UI
 
-The previously-added `venue_create` button in AdminWeb stays as a no-op for now; wiring it to an insert is a follow-up.
+## Riesgo / scope
+Es 1 archivo de datos + 1 archivo de UI (~250 líneas netas añadidas). Ningún cambio de routing, ninguna migración Supabase, ninguna dependencia nueva.
 
-## What I'm doing now
-
-1. Write one big migration: tables + RLS + `user_roles` + `has_role` + seeds.
-2. After you approve, rewrite `ManagerWeb`, `AdminWeb`, and `GuestApp` to read from Supabase using react-query + the browser client.
-3. Show skeletons during load and an inline error state on failure.
-
-## Out of scope (next round)
-
-- Admin auth gate + role assignment UI.
-- Mutations (create/edit/delete venues, promos, etc.) — only reads in this pass.
-- Real sourcing pipeline (Firecrawl / Places) — separate task.
-- Per-user guest coupons writing back to DB on redeem.
+¿Avanzo con esto, o quitas/agregas algo antes?
