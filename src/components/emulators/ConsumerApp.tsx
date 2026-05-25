@@ -612,6 +612,18 @@ function SwipeDeck({ listings, tier, onOpen, onSave, onReserve, interleaveByCate
         />
       </div>
       {/* Action bar — floats over the card */}
+      {(() => {
+        const cta: Record<Category, { label: string; Icon: typeof BadgeCheck }> = {
+          place:     { label: "Reserve", Icon: BadgeCheck },
+          service:   { label: "Reserve", Icon: BadgeCheck },
+          event:     { label: "Reserve", Icon: BadgeCheck },
+          product:   { label: "Buy",     Icon: ShoppingBag },
+          community: { label: "Join",    Icon: Users },
+          person:    { label: "Follow",  Icon: Heart },
+          app:       { label: "Open",    Icon: Smartphone },
+        };
+        const { label: ctaLabel, Icon: CtaIcon } = cta[current.category];
+        return (
       <div className="pointer-events-none absolute inset-x-4 bottom-4 z-10 flex items-center gap-2 [&>*]:pointer-events-auto">
         <button onClick={() => advance("left")}
           className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white/10 bg-black/60 py-3 text-sm text-white/80 backdrop-blur transition hover:bg-black/75">
@@ -619,13 +631,15 @@ function SwipeDeck({ listings, tier, onOpen, onSave, onReserve, interleaveByCate
         </button>
         <button onClick={() => onOpen(current)}
           className="flex items-center justify-center gap-1.5 rounded-full border border-white/10 bg-black/60 px-5 py-3 text-sm text-white/90 backdrop-blur transition hover:bg-black/75">
-          <LayoutGrid className="h-4 w-4" /> {t.discover.cats[current.category]}
+          <LayoutGrid className="h-4 w-4" /> Info
         </button>
         <button onClick={() => onReserve(current)}
           className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-500 py-3 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/30 transition hover:brightness-110">
-          <BadgeCheck className="h-4 w-4" /> {t.discover.saveOrReserve}
+          <CtaIcon className="h-4 w-4" /> {ctaLabel}
         </button>
       </div>
+        );
+      })()}
     </div>
   );
 }
