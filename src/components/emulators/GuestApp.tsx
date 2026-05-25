@@ -565,6 +565,94 @@ function PlaceholderCategory({ listings, onOpen }: { listings: Listing[]; onOpen
   );
 }
 
+/* ── Communities ────────────────────────────────────────────── */
+function CommunityList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: Listing) => void }) {
+  const fmt = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(1)}K` : `${n}`;
+  return (
+    <div className="h-full overflow-y-auto px-4 pb-28 pt-2">
+      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-indigo-500/10 to-fuchsia-500/10 p-4">
+        <p className="font-display text-base font-semibold">Comunidades</p>
+        <p className="mt-1 text-xs text-white/65">Grupos abiertos, members clubs y comunidades universitarias. Únete o crea la tuya.</p>
+      </div>
+      <div className="mt-4 space-y-3">
+        {listings.map(l => (
+          <button key={l.id} onClick={() => onOpen(l)}
+            className="block w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] text-left transition hover:border-white/20">
+            <div className="relative h-32">
+              <img src={l.cover} alt={l.name} className="h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+              {l.participation === "partner" && (
+                <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-[10px] text-fuchsia-200 backdrop-blur"><BadgeCheck className="h-3 w-3" />Verified</span>
+              )}
+              <div className="absolute bottom-3 left-3 right-3">
+                <p className="text-[10px] uppercase tracking-wider text-white/55">{l.subcategory} · {l.zone}</p>
+                <h4 className="font-display text-lg font-semibold text-white">{l.name}</h4>
+              </div>
+            </div>
+            <div className="space-y-2 p-3">
+              <div className="flex items-center gap-3 text-[11px] text-white/70">
+                <span className="inline-flex items-center gap-1"><Users className="h-3 w-3" />{fmt(l.members ?? 0)} miembros</span>
+                <span className="text-white/30">·</span>
+                <span className="inline-flex items-center gap-1"><Lock className="h-3 w-3" />{l.entryRule}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-white/55">
+                  {l.monthlyFee && l.monthlyFee > 0 ? `$${l.monthlyFee}/mes` : "Gratis"}
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-lg bg-white px-2.5 py-1 text-[11px] font-semibold text-black">
+                  {l.monthlyFee && l.monthlyFee > 0 ? "Suscribirme" : "Unirme"} <ArrowRight className="h-3 w-3" />
+                </span>
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── People ─────────────────────────────────────────────────── */
+function PeopleList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: Listing) => void }) {
+  const fmt = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}K` : `${n}`;
+  return (
+    <div className="h-full overflow-y-auto px-4 pb-28 pt-2">
+      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-amber-500/10 to-rose-500/10 p-4">
+        <p className="font-display text-base font-semibold">Gente que mueve la ciudad</p>
+        <p className="mt-1 text-xs text-white/65">Tastemakers, creators y DJs. Síguelos para no perderte dónde estarán esta noche.</p>
+      </div>
+      <div className="mt-4 space-y-3">
+        {listings.map(l => {
+          const inf = l.influenceTier ? INFLUENCE_META[l.influenceTier] : null;
+          return (
+            <button key={l.id} onClick={() => onOpen(l)}
+              className="flex w-full items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-left transition hover:border-white/20">
+              <div className="relative shrink-0">
+                <img src={l.cover} alt={l.name} className="h-16 w-16 rounded-full object-cover" />
+                {l.participation === "partner" && (
+                  <span className="absolute -bottom-1 -right-1 rounded-full bg-fuchsia-500 p-0.5 ring-2 ring-[oklch(0.10_0.02_280)]"><BadgeCheck className="h-3 w-3 text-white" /></span>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <h4 className="truncate font-display text-base font-semibold">{l.name}</h4>
+                  {inf && (
+                    <span className="shrink-0 rounded-full bg-amber-300/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-amber-200">{inf.label}</span>
+                  )}
+                </div>
+                <p className="truncate text-[11px] text-white/55">{l.handle} · {l.role}</p>
+                <div className="mt-1 flex items-center gap-2 text-[11px] text-white/65">
+                  <span className="inline-flex items-center gap-1"><Instagram className="h-3 w-3" />{fmt(l.igFollowers ?? 0)} followers</span>
+                </div>
+              </div>
+              <span className="shrink-0 rounded-lg bg-white px-2.5 py-1.5 text-[11px] font-semibold text-black">Seguir</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /* ─────────────────────────────────────────────────────────────
    VENUE DETAIL
    ───────────────────────────────────────────────────────────── */
