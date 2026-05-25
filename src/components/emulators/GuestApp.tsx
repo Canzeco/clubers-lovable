@@ -638,7 +638,10 @@ function PlaceholderCategory({ listings, onOpen }: { listings: Listing[]; onOpen
 }
 
 /* ── Communities ────────────────────────────────────────────── */
-function CommunityList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: Listing) => void }) {
+function CommunityList({ listings, onOpen, memberships, onToggleMembership }: {
+  listings: Listing[]; onOpen: (l: Listing) => void;
+  memberships: Set<string>; onToggleMembership: (id: string) => void;
+}) {
   const fmt = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(1)}K` : `${n}`;
   return (
     <div className="h-full overflow-y-auto px-4 pb-28 pt-2">
@@ -647,7 +650,9 @@ function CommunityList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: 
         <p className="mt-1 text-xs text-white/65">Grupos abiertos, members clubs y comunidades universitarias. Únete o crea la tuya.</p>
       </div>
       <div className="mt-4 space-y-3">
-        {listings.map(l => (
+        {listings.map(l => {
+          const joined = memberships.has(l.id);
+          return (
           <button key={l.id} onClick={() => onOpen(l)}
             className="block w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] text-left transition hover:border-white/20">
             <div className="relative h-32">
@@ -655,6 +660,9 @@ function CommunityList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: 
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
               {l.participation === "partner" && (
                 <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-[10px] text-fuchsia-200 backdrop-blur"><BadgeCheck className="h-3 w-3" />Verified</span>
+              )}
+              {joined && (
+                <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-emerald-500/90 px-2 py-1 text-[10px] font-semibold text-white shadow"><Check className="h-3 w-3" />Joined</span>
               )}
               <div className="absolute bottom-3 left-3 right-3">
                 <p className="text-[10px] uppercase tracking-wider text-white/55">{l.subcategory} · {l.zone}</p>
@@ -671,13 +679,17 @@ function CommunityList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: 
                 <span className="text-[11px] text-white/55">
                   {l.monthlyFee && l.monthlyFee > 0 ? `$${l.monthlyFee}/mo` : "Free"}
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-lg bg-white px-2.5 py-1 text-[11px] font-semibold text-black">
-                  {l.monthlyFee && l.monthlyFee > 0 ? "Subscribe" : "Join"} <ArrowRight className="h-3 w-3" />
+                <span
+                  role="button"
+                  onClick={(e) => { e.stopPropagation(); onToggleMembership(l.id); }}
+                  className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold ${joined ? "border border-white/20 bg-white/5 text-white/85" : "bg-white text-black"}`}>
+                  {joined ? "Joined" : (l.monthlyFee && l.monthlyFee > 0 ? "Subscribe" : "Join")} {!joined && <ArrowRight className="h-3 w-3" />}
                 </span>
               </div>
             </div>
           </button>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
