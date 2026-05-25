@@ -3,7 +3,7 @@
 // functions in `clubersApi` for Supabase Edge Function calls later.
 
 export type Tier = "bronze" | "silver" | "gold" | "diamond";
-export type Category = "place" | "experience" | "event";
+export type Category = "place" | "experience" | "event" | "community" | "person";
 export type Participation = "listed" | "partner";
 export type PerkKind = "cashback" | "discount";
 
@@ -37,9 +37,26 @@ export interface Listing {
   whenLabel?: string; // "Vie 14 dic · 22:00"
   // For experiences
   durationLabel?: string;
+  // For communities
+  members?: number;          // 1820
+  entryRule?: string;        // "Solo @tec.mx" · "Aprobación del admin" · "Abierto"
+  monthlyFee?: number;       // 0 if free
+  communityKind?: "college" | "members-club" | "open" | "professional";
+  // For people
+  handle?: string;           // "@anapaularz"
+  igFollowers?: number;      // 12400
+  role?: string;             // "DJ residente · Vértigo" · "Foodie · @koli"
+  influenceTier?: "rising" | "creator" | "tastemaker" | "icon";
 }
 
 export const TIERS: Tier[] = ["bronze", "silver", "gold", "diamond"];
+
+export const INFLUENCE_META: Record<NonNullable<Listing["influenceTier"]>, { label: string; min: string }> = {
+  rising:     { label: "Rising",     min: "<1K" },
+  creator:    { label: "Creator",    min: "1K+" },
+  tastemaker: { label: "Tastemaker", min: "10K+" },
+  icon:       { label: "Icon",       min: "100K+" },
+};
 
 export const TIER_META: Record<Tier, { label: string; price: number; followers: string; ring: string; chip: string; bg: string }> = {
   bronze:  { label: "Bronze",  price: 0,    followers: "Por defecto",       ring: "ring-amber-700/60",   chip: "bg-amber-700/20 text-amber-300 border-amber-700/40",   bg: "bg-tier-bronze" },
