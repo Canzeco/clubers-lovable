@@ -1293,6 +1293,57 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
         </button>
       </div>
 
+      {/* Multi-group membership — the spec's "real engine" */}
+      <section className="mt-6">
+        <p className="eyebrow !text-white/40">{t.profile.myGroups}</p>
+        <p className="mt-1 text-[11px] text-white/55">{t.profile.myGroupsDesc}</p>
+        <div className="mt-3 space-y-3">
+          {/* Class + Influence row */}
+          <div className="grid grid-cols-2 gap-2">
+            <div className={`rounded-xl border border-white/10 bg-white/[0.04] p-3`}>
+              <p className="text-[9px] uppercase tracking-wider text-white/45">{t.profile.classGroup}</p>
+              <div className="mt-1 flex items-center gap-2">
+                <span className={`h-2.5 w-2.5 rounded-full ${TIER_META[tier].bg}`} />
+                <p className="font-display text-base font-semibold">{TIER_META[tier].label}</p>
+              </div>
+              <p className="mt-0.5 text-[10px] text-white/45">via {active.source}</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
+              <p className="text-[9px] uppercase tracking-wider text-white/45">{t.profile.influenceGroup}</p>
+              <div className="mt-1 flex items-center gap-2">
+                <TrendingUp className="h-3.5 w-3.5 text-amber-300" />
+                <p className="font-display text-base font-semibold">{influence.label}</p>
+              </div>
+              <p className="mt-0.5 text-[10px] text-white/45">{influence.min} followers</p>
+            </div>
+          </div>
+
+          {/* Community memberships */}
+          <div>
+            <p className="text-[9px] uppercase tracking-wider text-white/45">{t.profile.communityGroups}</p>
+            <div className="mt-1.5 space-y-1.5">
+              {myCommunities.length === 0 && (
+                <p className="rounded-xl border border-dashed border-white/10 px-3 py-3 text-[11px] text-white/50">
+                  No communities yet. Head to Discover → Communities to join your first one.
+                </p>
+              )}
+              {myCommunities.map(c => (
+                <div key={c.id} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-2.5">
+                  <img src={c.cover} alt={c.name} className="h-10 w-10 shrink-0 rounded-lg object-cover" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold">{c.name}</p>
+                    <p className="truncate text-[10px] text-white/50">{c.subcategory} · {(c.members ?? 0).toLocaleString()} members</p>
+                  </div>
+                  <button onClick={() => onLeaveMembership(c.id)} className="shrink-0 rounded-md border border-white/15 px-2 py-1 text-[10px] text-white/70 hover:text-white">
+                    {t.profile.leaveGroup}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="mt-6">
         <p className="eyebrow !text-white/40">{t.profile.stats}</p>
         <div className="mt-2 grid grid-cols-3 gap-2 text-center">
