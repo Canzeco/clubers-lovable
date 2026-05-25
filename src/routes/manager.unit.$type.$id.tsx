@@ -16,12 +16,15 @@ export const Route = createFileRoute("/manager/unit/$type/$id")({
     },
     stringify: (p) => ({ type: p.type, id: p.id }),
   },
-  head: ({ params }) => ({
-    meta: [
-      { title: `Mesita — ${UNIT_TYPE_META[params.type].label}` },
-      { name: "description", content: `Manage your ${UNIT_TYPE_META[params.type].label.toLowerCase()} on Mesita.` },
-    ],
-  }),
+  head: ({ params }) => {
+    const meta = UNIT_TYPE_META[params.type as UnitType];
+    return {
+      meta: [
+        { title: `Mesita — ${meta.label}` },
+        { name: "description", content: `Manage your ${meta.label.toLowerCase()} on Mesita.` },
+      ],
+    };
+  },
   component: UnitDashboard,
 });
 
