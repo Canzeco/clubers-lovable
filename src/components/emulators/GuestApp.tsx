@@ -1094,6 +1094,37 @@ function ShareScreen() {
         </div>
         <button className="mt-3 w-full rounded-xl bg-white/10 py-2.5 text-sm font-semibold text-white">{t.share.giftCta}</button>
       </div>
+
+      {/* Gift a subscription */}
+      <div className="mt-3 rounded-2xl border border-white/10 bg-gradient-to-br from-fuchsia-500/10 to-amber-300/10 p-4">
+        <div className="flex items-start gap-3">
+          <div className="rounded-xl bg-fuchsia-500/20 p-2 text-fuchsia-200"><Crown className="h-5 w-5" /></div>
+          <div className="flex-1">
+            <p className="font-display text-base font-semibold">{t.giftSub.title}</p>
+            <p className="mt-1 text-xs text-white/65">{t.giftSub.desc}</p>
+          </div>
+        </div>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {(["silver", "gold", "diamond"] as Tier[]).map(tk => (
+            <button key={tk} className="rounded-xl border border-white/10 bg-white/[0.04] py-2 text-[11px] font-semibold text-white/85 hover:bg-white/10">
+              {TIER_META[tk].label}
+              <span className="block text-[10px] font-normal text-white/45">${TIER_META[tk].price} MXN</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Creator program */}
+      <div className="mt-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+        <div className="flex items-start gap-3">
+          <div className="rounded-xl bg-emerald-300/15 p-2 text-emerald-200"><TrendingUp className="h-5 w-5" /></div>
+          <div className="flex-1">
+            <p className="font-display text-base font-semibold">{t.creator.title}</p>
+            <p className="mt-1 text-xs text-white/65">{t.creator.desc}</p>
+          </div>
+        </div>
+        <button className="mt-3 w-full rounded-xl bg-white/10 py-2.5 text-sm font-semibold text-white">{t.creator.cta}</button>
+      </div>
     </div>
   );
 }
