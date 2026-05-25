@@ -1465,38 +1465,19 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
   ];
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
-      {/* Identity card */}
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.07] via-white/[0.03] to-transparent p-4">
-        <div className={`pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full ${TIER_META[tier].bg} opacity-30 blur-3xl`} />
-        <div className="relative flex items-center gap-3">
-          <div className={`h-16 w-16 rounded-2xl ${TIER_META[tier].bg} p-[2px] shadow-lg shadow-black/40`}>
-            <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-black/60">
-              <User className="h-7 w-7 text-white" />
-            </div>
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <p className="font-display text-2xl font-bold leading-tight truncate">{SEED_USER.name}</p>
-              <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white ${TIER_META[tier].bg}`}>
-                <Crown className="h-2.5 w-2.5" /> {TIER_META[tier].label}
-              </span>
-            </div>
-            <p className="mt-0.5 truncate text-xs text-white/55">
-              <Instagram className="-mt-0.5 mr-1 inline h-3 w-3" />{SEED_USER.handle}
-            </p>
+      {/* Identity header — compact */}
+      <div className="flex items-center gap-3">
+        <div className={`h-12 w-12 shrink-0 rounded-full ${TIER_META[tier].bg} p-[2px]`}>
+          <div className="flex h-full w-full items-center justify-center rounded-full bg-black/60">
+            <User className="h-5 w-5 text-white" />
           </div>
         </div>
-        <div className="relative mt-3 grid grid-cols-3 gap-2">
-          {[
-            { label: "Followers", value: paths.followers.followers >= 1000 ? `${(paths.followers.followers/1000).toFixed(1)}K` : `${paths.followers.followers}` },
-            { label: "Saved",     value: `${savedCount}` },
-            { label: "Connected", value: `${connectedCount}/${connectors.length}` },
-          ].map(s => (
-            <div key={s.label} className="rounded-xl border border-white/10 bg-black/30 px-2 py-2 text-center">
-              <p className="font-display text-base font-bold leading-none">{s.value}</p>
-              <p className="mt-1 text-[9px] uppercase tracking-wider text-white/45">{s.label}</p>
-            </div>
-          ))}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <p className="font-display text-xl font-bold leading-tight truncate">{SEED_USER.name}</p>
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-white/55">{TIER_META[tier].label}</span>
+          </div>
+          <p className="truncate text-xs text-white/50">{SEED_USER.handle}</p>
         </div>
       </div>
 
