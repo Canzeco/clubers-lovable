@@ -1,12 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ManagerWeb } from "@/components/emulators/ManagerWeb";
-import { ManagerShell } from "@/components/manager/Shell";
-import { findUnit, UNIT_TYPE_META, type UnitType } from "@/lib/manager/units";
+import { BusinessWeb } from "@/components/emulators/BusinessWeb";
+import { BusinessShell } from "@/components/business/Shell";
+import { findUnit, UNIT_TYPE_META, type UnitType } from "@/lib/business/units";
 import { PartyPopper, Users, ChevronLeft, Sparkles, UserCircle2, ShoppingBag, Wrench, Smartphone } from "lucide-react";
 
 const VALID_TYPES: UnitType[] = ["place", "event", "community", "person", "product", "service", "app"];
 
-export const Route = createFileRoute("/manager/unit/$type/$id")({
+export const Route = createFileRoute("/business/unit/$type/$id")({
   ssr: false,
   params: {
     parse: (raw) => {
@@ -36,20 +36,20 @@ function UnitDashboard() {
 
   if (!unit) {
     return (
-      <ManagerShell>
+      <BusinessShell>
         <div className="mx-auto max-w-md px-6 py-24 text-center">
           <h1 className="font-display text-2xl font-bold">Unit not found</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             We couldn't find a {UNIT_TYPE_META[type].label.toLowerCase()} with id <code>{id}</code> in your workspace.
           </p>
           <Link
-            to="/manager/central"
+            to="/business/central"
             className="mt-6 inline-flex items-center gap-1 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium hover:bg-card-soft"
           >
             <ChevronLeft className="h-3.5 w-3.5" /> Back to central
           </Link>
         </div>
-      </ManagerShell>
+      </BusinessShell>
     );
   }
 
@@ -58,7 +58,7 @@ function UnitDashboard() {
   if (type === "place") {
     return (
       <div className="h-screen w-screen overflow-hidden bg-background">
-        <ManagerWeb />
+        <BusinessWeb />
       </div>
     );
   }
@@ -77,10 +77,10 @@ function SoonDashboard({ type, name }: { type: Exclude<UnitType, "place">; name:
   const meta = UNIT_TYPE_META[type];
 
   return (
-    <ManagerShell>
+    <BusinessShell>
       <div className="mx-auto max-w-3xl px-6 py-16">
         <Link
-          to="/manager/central"
+          to="/business/central"
           className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground"
         >
           <ChevronLeft className="h-3 w-3" /> Central
@@ -119,6 +119,6 @@ function SoonDashboard({ type, name }: { type: Exclude<UnitType, "place">; name:
           </div>
         </div>
       </div>
-    </ManagerShell>
+    </BusinessShell>
   );
 }

@@ -2,9 +2,9 @@ import { Link } from "@tanstack/react-router";
 import { ChevronDown, LogOut } from "lucide-react";
 import type { ReactNode } from "react";
 
-// Shared header chrome for /manager/*, *except* the unit dashboard
+// Shared header chrome for /business/*, *except* the unit dashboard
 // (which renders its own full-bleed sidebar layout).
-export function ManagerShell({
+export function BusinessShell({
   children,
   email = "pato@canzeco.com",
 }: {
@@ -14,7 +14,7 @@ export function ManagerShell({
   return (
     <div className="flex min-h-screen flex-col bg-[#fdf6f3] text-foreground">
       <header className="flex items-center justify-between border-b border-black/5 bg-white/60 px-8 py-4 backdrop-blur">
-        <Link to="/manager/central" className="flex items-center gap-2">
+        <Link to="/business/central" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-rose-600 text-base">
             🍅
           </div>
@@ -33,9 +33,9 @@ export function ManagerShell({
   );
 }
 
-export function ManagerSignOutLink() {
+export function BusinessSignOutLink() {
   return (
-    <Link to="/manager" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
+    <Link to="/business" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
       <LogOut className="h-3 w-3" /> Sign out
     </Link>
   );

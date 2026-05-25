@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MapPin, Plus, Sparkles, PartyPopper, Users, Store, UserCircle2, ShoppingBag, Wrench, Smartphone } from "lucide-react";
-import { ManagerShell } from "@/components/manager/Shell";
-import { MY_UNITS, UNIT_TYPE_META, type UnitType } from "@/lib/manager/units";
+import { BusinessShell } from "@/components/business/Shell";
+import { MY_UNITS, UNIT_TYPE_META, type UnitType } from "@/lib/business/units";
 
-export const Route = createFileRoute("/manager/central")({
+export const Route = createFileRoute("/business/central")({
   ssr: false,
   head: () => ({
     meta: [
@@ -39,7 +39,7 @@ function Central() {
 
   if (units.length === 0) {
     return (
-      <ManagerShell>
+      <BusinessShell>
         <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-24">
           <div className="w-full rounded-3xl border border-black/5 bg-white p-10 text-center shadow-sm">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-pink-50">
@@ -50,19 +50,19 @@ function Central() {
               Mesita lists every venue, event and community on the open internet. Claim what you operate (or create a brand-new listing) and your dashboard shows up here.
             </p>
             <Link
-              to="/manager/add"
+              to="/business/add"
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-pink-500 to-rose-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-95"
             >
               <MapPin className="h-4 w-4" /> Add a unit
             </Link>
           </div>
         </div>
-      </ManagerShell>
+      </BusinessShell>
     );
   }
 
   return (
-    <ManagerShell>
+    <BusinessShell>
       <div className="mx-auto max-w-4xl px-6 py-12">
         <h1 className="font-display text-4xl font-bold tracking-tight">Your units</h1>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -75,7 +75,7 @@ function Central() {
             return (
               <Link
                 key={u.id}
-                to="/manager/unit/$type/$id"
+                to="/business/unit/$type/$id"
                 params={{ type: u.type, id: u.id }}
                 className="group rounded-2xl border border-black/5 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
               >
@@ -98,12 +98,12 @@ function Central() {
         </div>
 
         <Link
-          to="/manager/add"
+          to="/business/add"
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-black/15 bg-white/40 py-5 text-sm font-medium text-muted-foreground transition hover:border-pink-300 hover:bg-white hover:text-foreground"
         >
           <Plus className="h-4 w-4" /> Add another unit
         </Link>
       </div>
-    </ManagerShell>
+    </BusinessShell>
   );
 }

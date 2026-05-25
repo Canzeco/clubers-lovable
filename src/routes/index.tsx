@@ -6,7 +6,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Mesita 🦚 — Platform" },
-      { name: "description", content: "Mesita platform: landing, manager, and consumer apps." },
+      { name: "description", content: "Mesita platform: landing, business, and consumer apps." },
     ],
   }),
   component: Index,
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/")({
 
 const productsFallback = [
   { to: "/landing", label: "Landing", tag: "Marketing site", desc: "Public website explaining Mesita to venues and consumers." },
-  { to: "/manager", label: "Manager", tag: "Venue portal", desc: "Launch cashback campaigns, segment consumers, see revenue lift." },
+  { to: "/business", label: "Business", tag: "Venue portal", desc: "Launch cashback campaigns, segment consumers, see revenue lift." },
   { to: "/consumer", label: "Consumer", tag: "Mobile web", desc: "Swipe-to-discover venues, claim cashback, redeem with QR." },
 ] as const;
 

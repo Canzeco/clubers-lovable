@@ -50,7 +50,7 @@ export function LaptopFrame({ children, label }: { children: ReactNode; label?: 
             <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />
             <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
             <span className="ml-4 text-xs text-muted-foreground">
-              manager.mesita.app
+              business.mesita.app
             </span>
           </div>
           <div className="h-[calc(100%-1.75rem)] overflow-hidden">{children}</div>
