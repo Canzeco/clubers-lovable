@@ -1489,7 +1489,7 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
               tk === "bronze"  ? "Base cashback" :
               tk === "silver"  ? "More cashback" :
               tk === "gold"    ? "Even more cashback" :
-                                 "Most cashback · VIP";
+                                 "Most cashback";
             return (
               <div key={tk}
                 className={`rounded-2xl border bg-white/[0.04] p-4 ${isCurrent ? "border-yellow-300/60" : "border-white/10"}`}>
