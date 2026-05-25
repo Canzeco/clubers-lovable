@@ -160,6 +160,7 @@ function Discover({
 }) {
   const [mode, setMode] = useState<DiscoverMode>("ai");
   const [cat, setCat] = useState<Category>("place");
+  const [sub, setSub] = useState<string | null>(null);
   const [city, setCity] = useState("Monterrey");
   const [when, setWhen] = useState<{ day: string; time: string }>({ day: "Tonight", time: "8PM" });
   const [picker, setPicker] = useState<null | "what" | "where" | "when">(null);
@@ -169,7 +170,16 @@ function Discover({
   const TIMES = ["6PM", "7PM", "8PM", "9PM", "10PM", "11PM", "Late"];
   const CATS: Category[] = ["place", "event", "experience", "community", "person"];
 
-  const listings = useMemo(() => SEED_LISTINGS.filter(l => l.category === cat), [cat]);
+  const subcategories = useMemo(() => {
+    const set = new Set<string>();
+    for (const l of SEED_LISTINGS) if (l.category === cat && l.subcategory) set.add(l.subcategory);
+    return Array.from(set);
+  }, [cat]);
+
+  const listings = useMemo(
+    () => SEED_LISTINGS.filter(l => l.category === cat && (!sub || l.subcategory === sub)),
+    [cat, sub],
+  );
 
   return (
     <div className="relative flex h-full flex-col">
@@ -228,7 +238,7 @@ function Discover({
                 <div className="flex flex-col gap-1">
                   <p className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">What are you looking for</p>
                   {CATS.map(c => (
-                    <button key={c} onClick={() => { setCat(c); setPicker(null); }}
+                      <button key={c} onClick={() => { setCat(c); setSub(null); setPicker(null); }}
                       className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition ${cat === c ? "bg-fuchsia-500/15 text-fuchsia-100" : "text-white/75 hover:bg-white/5"}`}>
                       <span className="font-medium">{t.discover.cats[c]}</span>
                       {cat === c && <Check className="h-4 w-4 text-fuchsia-300" />}
@@ -297,6 +307,22 @@ function Discover({
             </button>
           ))}
         </div>
+
+        {/* Subcategory chips — derived from data for the selected What */}
+        {subcategories.length > 0 && (
+          <div className="mt-2.5 flex gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-hide">
+            <button onClick={() => setSub(null)}
+              className={`shrink-0 rounded-full border px-2.5 py-1 font-medium transition ${sub === null ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/55 hover:text-white/80"}`}>
+              All
+            </button>
+            {subcategories.map(s => (
+              <button key={s} onClick={() => setSub(s === sub ? null : s)}
+                className={`shrink-0 rounded-full border px-2.5 py-1 font-medium transition ${sub === s ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/55 hover:text-white/80"}`}>
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
       </header>
 
       {/* Mode body */}
