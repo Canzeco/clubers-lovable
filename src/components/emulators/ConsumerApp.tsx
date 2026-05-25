@@ -190,7 +190,7 @@ function Discover({
       <header className="relative px-4 pt-4">
         <div className="flex items-center gap-2">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-rose-500 text-white shadow-lg shadow-fuchsia-500/30">
-            <Flame className="h-5 w-5" />
+            <span className="font-serif text-lg font-bold leading-none">M</span>
           </div>
           <div className="flex flex-1 items-center divide-x divide-white/10 rounded-full border border-white/10 bg-white/[0.04] px-1 py-1.5">
             <button
