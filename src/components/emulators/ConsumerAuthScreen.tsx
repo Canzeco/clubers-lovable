@@ -8,7 +8,7 @@ const PRIMARY_BTN_CLASS =
 const OAUTH_BTN_CLASS =
   "flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card text-sm font-medium text-foreground transition disabled:opacity-60";
 
-export function GuestAuthScreen({
+export function ConsumerAuthScreen({
   onAuthenticated,
 }: {
   onAuthenticated: (payload: { email: string; mode: "signin" | "signup" | "oauth" }) => void;
@@ -23,7 +23,7 @@ export function GuestAuthScreen({
     setLoading(true);
     window.setTimeout(() => {
       onAuthenticated({
-        email: nextEmail.trim() || "guest@mesita.app",
+        email: nextEmail.trim() || "consumer@mesita.app",
         mode: nextMode,
       });
       setLoading(false);
@@ -32,7 +32,7 @@ export function GuestAuthScreen({
 
   const oauth = (provider: "google" | "apple") => {
     setError(null);
-    finishDemo("oauth", provider === "google" ? "guest.google@mesita.app" : "guest.apple@mesita.app");
+    finishDemo("oauth", provider === "google" ? "consumer.google@mesita.app" : "consumer.apple@mesita.app");
   };
 
   const submit = (e: React.FormEvent) => {

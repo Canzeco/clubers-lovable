@@ -109,7 +109,7 @@ const css = `
   font-size: 18px; color: var(--ink-soft); max-width: 640px; margin-bottom: 64px;
 }
 
-.mesita-landing .guests {
+.mesita-landing .consumers {
   background: white; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light);
 }
 .mesita-landing .feature-grid {
@@ -238,15 +238,15 @@ const css = `
   gap: 24px; margin: 64px auto 0; max-width: 900px;
 }
 .mesita-landing .cta-card { padding: 48px 32px; border-radius: 20px; text-align: left; }
-.mesita-landing .cta-card-guests { background: white; border: 1px solid var(--line-light); }
+.mesita-landing .cta-card-consumers { background: white; border: 1px solid var(--line-light); }
 .mesita-landing .cta-card-venues {
   background: linear-gradient(135deg, var(--pink), var(--pink-deep)); color: white;
 }
 .mesita-landing .cta-card h3 { font-family: 'Georgia', serif; font-size: 28px; margin-bottom: 16px; }
-.mesita-landing .cta-card-guests h3 { color: var(--ink); }
+.mesita-landing .cta-card-consumers h3 { color: var(--ink); }
 .mesita-landing .cta-card-venues h3 { color: white; }
 .mesita-landing .cta-card p { margin-bottom: 24px; }
-.mesita-landing .cta-card-guests p { color: var(--ink-soft); }
+.mesita-landing .cta-card-consumers p { color: var(--ink-soft); }
 .mesita-landing .cta-card-venues p { color: rgba(255, 255, 255, 0.9); }
 .mesita-landing .cta-card-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
 
@@ -274,7 +274,7 @@ export function LandingWeb() {
         <div className="container">
           <div className="logo">mesita<span>.</span></div>
           <div className="nav-links">
-            <a href="#guests">For Guests</a>
+            <a href="#consumers">For Consumers</a>
             <a href="#venues">For Venues</a>
             <a href="#tiers">Tiers</a>
             <a href="#download" className="btn btn-primary">Get the app</a>
@@ -285,9 +285,9 @@ export function LandingWeb() {
       <header className="hero">
         <div className="container hero-content">
           <span className="eyebrow">Restaurants · Cafés · Nightlife</span>
-          <h1>Some guests are <em>part of the product.</em></h1>
+          <h1>Some consumers are <em>part of the product.</em></h1>
           <p className="lead">
-            Mesita turns presence, influence, and social magnetism into spendable value — for the guests who fill the room, and the venues that want them in it.
+            Mesita turns presence, influence, and social magnetism into spendable value — for the consumers who fill the room, and the venues that want them in it.
           </p>
           <div className="hero-cta">
             <a href="#download" className="btn btn-primary">Get the app</a>
@@ -296,9 +296,9 @@ export function LandingWeb() {
         </div>
       </header>
 
-      <section id="guests" className="guests">
+      <section id="consumers" className="consumers">
         <div className="container">
-          <p className="section-eyebrow">For Guests</p>
+          <p className="section-eyebrow">For Consumers</p>
           <h2 className="section-title">The smartest way to decide<br />where to go out tonight.</h2>
           <p className="section-intro">
             Four ways to discover venues — a swipe feed with AI vibe tags, a map with cashback badges, a filterable catalog, and a conversational AI planner. All inside one app, or on WhatsApp with no download required.
@@ -307,7 +307,7 @@ export function LandingWeb() {
             <div className="feature-card">
               <p className="feature-num">01 / Intelligence</p>
               <h3>Experience Intelligence</h3>
-              <p>Mesita combines its own reviews, Google and Facebook ratings, real price signals, where Bronze, Silver, Gold, and Diamond guests are going right now, your friends' activity, and venue-tagged Instagram stories — into one discovery layer that's far smarter than a review app.</p>
+              <p>Mesita combines its own reviews, Google and Facebook ratings, real price signals, where Bronze, Silver, Gold, and Diamond consumers are going right now, your friends' activity, and venue-tagged Instagram stories — into one discovery layer that's far smarter than a review app.</p>
             </div>
             <div className="feature-card">
               <p className="feature-num">02 / Reservations</p>
@@ -326,30 +326,30 @@ export function LandingWeb() {
       <section id="venues" className="venues">
         <div className="container">
           <p className="section-eyebrow">For Venues</p>
-          <h2 className="section-title">Stop paying for foot traffic.<br />Start choosing your guests.</h2>
+          <h2 className="section-title">Stop paying for foot traffic.<br />Start choosing your consumers.</h2>
           <p className="section-intro">
-            Mesita is a targeted guest-acquisition channel, not a passive listing. Compete directly for high-intent guests who are deciding where to go out tonight — and reward the ones who actually move the needle.
+            Mesita is a targeted consumer-acquisition channel, not a passive listing. Compete directly for high-intent consumers who are deciding where to go out tonight — and reward the ones who actually move the needle.
           </p>
           <div className="feature-grid">
             <div className="feature-card">
               <p className="feature-num">01</p>
               <h3>Get Discovered &amp; Win Customers</h3>
-              <p>A one-time "Welcome" cashback offer, shown against the live pool of nearby guests who've never visited. Engineered to convert first-timers into regulars.</p>
+              <p>A one-time "Welcome" cashback offer, shown against the live pool of nearby consumers who've never visited. Engineered to convert first-timers into regulars.</p>
             </div>
             <div className="feature-card">
               <p className="feature-num">02</p>
-              <h3>Win the Magnetic &amp; Rich Guests</h3>
+              <h3>Win the Magnetic &amp; Rich Consumers</h3>
               <p>Set separate cashback rates for each tier — Bronze, Silver, Gold, Diamond. Each rate comes with an estimated lift in weekly visits, so you know exactly what you're buying.</p>
             </div>
             <div className="feature-card">
               <p className="feature-num">03</p>
               <h3>Automated Instagram Stories</h3>
-              <p>Pay a small bonus for verified guest stories tagging your venue. An AI bot detects mentions and tags and approves automatically. Real visits become real exposure.</p>
+              <p>Pay a small bonus for verified consumer stories tagging your venue. An AI bot detects mentions and tags and approves automatically. Real visits become real exposure.</p>
             </div>
             <div className="feature-card">
               <p className="feature-num">04</p>
               <h3>Easier Reservations</h3>
-              <p>Every booking includes advance visibility into group size and guest tier. Use reservations strategically to fill slow days and off-peak hours.</p>
+              <p>Every booking includes advance visibility into group size and consumer tier. Use reservations strategically to fill slow days and off-peak hours.</p>
             </div>
             <div className="feature-card">
               <p className="feature-num">05</p>
@@ -373,10 +373,10 @@ export function LandingWeb() {
 
       <section id="tiers" className="tiers">
         <div className="container">
-          <p className="section-eyebrow">Guest Tiers</p>
+          <p className="section-eyebrow">Consumer Tiers</p>
           <h2 className="section-title">Your social capital,<br />made spendable.</h2>
           <p className="section-intro">
-            Mesita segments guests into four tiers — automatically, based on real behavior and digital footprint. Higher tiers unlock richer cashback and priority access. The guests who shape the room get treated like it.
+            Mesita segments consumers into four tiers — automatically, based on real behavior and digital footprint. Higher tiers unlock richer cashback and priority access. The consumers who shape the room get treated like it.
           </p>
           <div className="tiers-grid">
             <div className="tier tier-bronze">
@@ -444,7 +444,7 @@ export function LandingWeb() {
             <p><strong>Toast</strong> runs the loyalty program.</p>
           </div>
           <p className="verdict">
-            Mesita does something none of them do: it treats guests as a <em>curated asset class</em> — and turns who walks through your door into a lever you can actually pull.
+            Mesita does something none of them do: it treats consumers as a <em>curated asset class</em> — and turns who walks through your door into a lever you can actually pull.
           </p>
         </div>
       </section>
@@ -453,8 +453,8 @@ export function LandingWeb() {
         <div className="container">
           <h2>Two sides.<br /><em>One table.</em></h2>
           <div className="cta-cards">
-            <div className="cta-card cta-card-guests">
-              <h3>For guests</h3>
+            <div className="cta-card cta-card-consumers">
+              <h3>For consumers</h3>
               <p>Find the right place tonight. Book the table in one tap. Earn cashback every time you walk in.</p>
               <div className="cta-card-buttons">
                 <a href="#" className="btn btn-primary">Download the app</a>

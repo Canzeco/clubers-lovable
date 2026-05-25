@@ -274,7 +274,7 @@ function Dashboard({ unit }: { unit: { name: string } }) {
           </div>
         </div>
         <div className="rounded-xl border border-border bg-card-soft p-4">
-          <p className="mb-3 text-sm font-medium">Guests by tier</p>
+          <p className="mb-3 text-sm font-medium">Consumers by tier</p>
           <div className="space-y-3">
             {[
               { t: "Gold", v: 18, c: "bg-tier-gold" },
@@ -348,7 +348,7 @@ function Place({ unit }: { unit: { name: string; city: string } }) {
         <div>
           <h1 className="font-display text-2xl font-semibold">Place</h1>
           <p className="text-xs text-muted-foreground">
-            Everything guests see about {unit.name}.
+            Everything consumers see about {unit.name}.
           </p>
         </div>
         <button className="rounded-lg bg-peacock px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-glow">
@@ -549,7 +549,7 @@ function Promos() {
     Diamond: 30,
   });
   const extras = [
-    { name: "Story bonus", desc: "+10% when guest posts a verified story", on: true },
+    { name: "Story bonus", desc: "+10% when consumer posts a verified story", on: true },
     { name: "Birthday boost", desc: "+30% during birthday week", on: true },
     { name: "Weekday lift", desc: "+5% Mon – Wed", on: false },
   ];
@@ -612,7 +612,7 @@ function Promos() {
                 WELCOME
               </span>
               <p className="mt-2 text-xs text-muted-foreground">
-                One-time discount to convert a new guest into a regular.
+                One-time discount to convert a new consumer into a regular.
               </p>
             </div>
             <span className="caption">First visit only</span>
@@ -647,7 +647,7 @@ function Promos() {
                 12,480
               </span>
               <span className="text-[9px] uppercase tracking-widest text-muted-foreground">
-                guests nearby · never visited
+                consumers nearby · never visited
               </span>
             </div>
             <p className="mt-1 text-[9px] text-muted-foreground">
@@ -831,7 +831,7 @@ function Promos() {
           })}
         </div>
         <p className="mt-3 text-[10px] text-muted-foreground">
-          Boost stacks on top of tier cashback. A Tec-verified Gold guest gets {values.Gold}% + community boost.
+          Boost stacks on top of tier cashback. A Tec-verified Gold consumer gets {values.Gold}% + community boost.
         </p>
         <p className="mt-1 text-[10px] text-muted-foreground">
           Note: community boosts don't apply to the welcome cashback — first-visit reward stays flat for everyone.
@@ -849,7 +849,7 @@ function Promos() {
           <div>
             <p className="text-sm font-medium">Who sees this promo</p>
             <p className="mt-0.5 text-[11px] text-muted-foreground">
-              Narrow distribution by country, age, or sex using guests' profile data. Internal targeting only — guests never see they were filtered. Use responsibly and within local advertising rules.
+              Narrow distribution by country, age, or sex using consumers' profile data. Internal targeting only — consumers never see they were filtered. Use responsibly and within local advertising rules.
             </p>
           </div>
           <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-[10px] font-semibold text-muted-foreground">
@@ -961,7 +961,7 @@ function Promos() {
               ))}
             </div>
             <p className="mt-2 text-[10px] text-muted-foreground">
-              Based on the guest's self-declared profile. Optional field — guests who didn't share are excluded when not "all".
+              Based on the consumer's self-declared profile. Optional field — consumers who didn't share are excluded when not "all".
             </p>
           </div>
         </div>

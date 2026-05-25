@@ -26,7 +26,7 @@ function Field({
   );
 }
 
-export function GuestOnboardingScreen({
+export function ConsumerOnboardingScreen({
   onDone,
 }: {
   onDone: (profile: {
