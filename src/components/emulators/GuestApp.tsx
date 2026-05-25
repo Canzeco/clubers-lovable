@@ -5,7 +5,7 @@ import {
   Star, BadgeCheck, ChevronLeft, ChevronRight, Calendar, Clock, Users,
   X, ArrowUp, ArrowDown, Loader2, Send, Gift, Copy, Instagram, Globe,
   Crown, Check, Lock, Heart, Wallet, Settings, ArrowRight, Flame,
-  TrendingUp, Trophy, Zap, CircleDollarSign, ArrowDownLeft, ArrowUpRight,
+  TrendingUp, CircleDollarSign, ArrowDownLeft, ArrowUpRight,
 } from "lucide-react";
 import {
   SEED_LISTINGS, TIERS, TIER_META, INFLUENCE_META, SEED_USER, clubersApi, t,
@@ -1425,9 +1425,6 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
   memberships: Set<string>; onLeaveMembership: (communityId: string) => void;
 }) {
   const active = resolveActiveTier(paths);
-  const game = SEED_USER.gamification;
-  const xpPct = Math.min(100, Math.round((game.xp / game.xpToNext) * 100));
-  const influence = INFLUENCE_META[SEED_USER.influenceTier];
   const myCommunities = SEED_LISTINGS.filter(l => l.category === "community" && memberships.has(l.id));
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
@@ -1470,14 +1467,6 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
               </div>
               <p className="mt-0.5 text-[10px] text-white/45">via {active.source}</p>
             </div>
-            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-              <p className="text-[9px] uppercase tracking-wider text-white/45">{t.profile.influenceGroup}</p>
-              <div className="mt-1 flex items-center gap-2">
-                <TrendingUp className="h-3.5 w-3.5 text-amber-300" />
-                <p className="font-display text-base font-semibold">{influence.label}</p>
-              </div>
-              <p className="mt-0.5 text-[10px] text-white/45">{influence.min} followers</p>
-            </div>
           </div>
 
           {/* Community memberships */}
@@ -1519,34 +1508,6 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
               <p className="mt-0.5 text-[10px] uppercase tracking-wider text-white/45">{s.label}</p>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* Gamification */}
-      <section className="mt-6">
-        <p className="eyebrow !text-white/40">{t.profile.gamification}</p>
-        <div className="mt-2 rounded-2xl border border-white/10 bg-gradient-to-br from-indigo-500/10 to-fuchsia-500/10 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[10px] uppercase tracking-wider text-white/45">{t.profile.levelLabel}</p>
-              <p className="font-display text-xl font-bold">{game.level}</p>
-            </div>
-            <div className="flex items-center gap-3 text-[11px] text-white/75">
-              <span className="inline-flex items-center gap-1"><Zap className="h-3.5 w-3.5 text-amber-300" />{game.xp}/{game.xpToNext} {t.profile.xpLabel}</span>
-              <span className="inline-flex items-center gap-1"><Flame className="h-3.5 w-3.5 text-rose-300" />{game.streak}w {t.profile.streakLabel}</span>
-            </div>
-          </div>
-          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
-            <div className="h-full rounded-full bg-gradient-to-r from-fuchsia-400 to-amber-300" style={{ width: `${xpPct}%` }} />
-          </div>
-          <p className="mt-3 text-[10px] uppercase tracking-wider text-white/45">{t.profile.badgesLabel}</p>
-          <div className="mt-1.5 flex flex-wrap gap-1.5">
-            {game.badges.map(b => (
-              <span key={b.id} className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px]">
-                <span>{b.emoji}</span>{b.label}
-              </span>
-            ))}
-          </div>
         </div>
       </section>
 
