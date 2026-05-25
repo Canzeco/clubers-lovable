@@ -1,7 +1,7 @@
 // Mock data for units a manager can operate. A "unit" is the entity a
 // manager runs — it can be one of four Clubers categories.
 
-export type UnitType = "place" | "event" | "community" | "person" | "product" | "service";
+export type UnitType = "place" | "event" | "community" | "person" | "product" | "service" | "app";
 
 export interface ManagedUnit {
   id: string;
@@ -19,6 +19,7 @@ export const UNIT_TYPE_META: Record<UnitType, { label: string; plural: string; h
   person:     { label: "Person",     plural: "People",      hint: "DJ, host, foodie, tastemaker" },
   product:    { label: "Product",    plural: "Products",    hint: "Bottle, merch, voucher" },
   service:    { label: "Service",    plural: "Services",    hint: "Barber, trainer, photographer" },
+  app:        { label: "App",        plural: "Apps",        hint: "Micro-app for consumers" },
 };
 
 // Mock — what the logged-in manager already operates.

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Store, PartyPopper, Users, UserCircle2, ShoppingBag, Wrench } from "lucide-react";
+import { Search, Store, PartyPopper, Users, UserCircle2, ShoppingBag, Wrench, Smartphone } from "lucide-react";
 import { ManagerShell } from "@/components/manager/Shell";
 import { UNIT_TYPE_META, type UnitType } from "@/lib/manager/units";
 
@@ -22,6 +22,7 @@ const TYPE_ICON: Record<UnitType, typeof Store> = {
   person: UserCircle2,
   product: ShoppingBag,
   service: Wrench,
+  app: Smartphone,
 };
 
 const PLACEHOLDER: Record<UnitType, string> = {
@@ -31,6 +32,7 @@ const PLACEHOLDER: Record<UnitType, string> = {
   person:     "e.g. DJ Andrea, Chef Koli…",
   product:    "e.g. Mezcal Amores, signed cookbook…",
   service:    "e.g. Barber San Pedro, event photographer…",
+  app:        "e.g. FaceLab, StyleFit, Tono voice coach…",
 };
 
 function AddUnit() {

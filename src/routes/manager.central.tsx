@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPin, Plus, Sparkles, PartyPopper, Users, Store, UserCircle2, ShoppingBag, Wrench } from "lucide-react";
+import { MapPin, Plus, Sparkles, PartyPopper, Users, Store, UserCircle2, ShoppingBag, Wrench, Smartphone } from "lucide-react";
 import { ManagerShell } from "@/components/manager/Shell";
 import { MY_UNITS, UNIT_TYPE_META, type UnitType } from "@/lib/manager/units";
 
@@ -21,6 +21,7 @@ const TYPE_ICON: Record<UnitType, typeof Store> = {
   person: UserCircle2,
   product: ShoppingBag,
   service: Wrench,
+  app: Smartphone,
 };
 
 const TYPE_ACCENT: Record<UnitType, string> = {
@@ -30,6 +31,7 @@ const TYPE_ACCENT: Record<UnitType, string> = {
   person:     "from-amber-500/15 to-orange-500/5 text-amber-600",
   product:    "from-emerald-500/15 to-teal-500/5 text-emerald-600",
   service:    "from-indigo-500/15 to-blue-500/5 text-indigo-600",
+  app:        "from-cyan-500/15 to-blue-500/5 text-cyan-600",
 };
 
 function Central() {
