@@ -42,7 +42,7 @@ function Index() {
         <div className="mb-12 max-w-2xl">
           <h1 className="font-display text-5xl font-semibold leading-tight">The Mesita platform</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Five surfaces, one social cashback engine. Pick a product to open it.
+            Three surfaces, one social cashback engine. Pick a product to open it.
           </p>
         </div>
 
