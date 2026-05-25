@@ -359,8 +359,16 @@ function Discover({
           <CommunityList listings={listings} onOpen={onOpenListing} memberships={memberships} onToggleMembership={onToggleMembership} />
         ) : cat === "person" ? (
           <PeopleList listings={listings} onOpen={onOpenListing} />
-        ) : cat !== "place" ? (
-          <PlaceholderCategory listings={listings} onOpen={onOpenListing} />
+        ) : cat === "event" || cat === "experience" ? (
+          mode === "swipe" ? (
+            <SwipeDeck listings={listings} tier={tier} onOpen={onOpenListing} onSave={(id) => onToggleSave(id)} onReserve={onReserve} />
+          ) : mode === "map" ? (
+            <MapView listings={listings} tier={tier} onOpen={onOpenListing} />
+          ) : (
+            <Catalog listings={listings} tier={tier} onOpen={onOpenListing} saved={saved} onToggleSave={onToggleSave} />
+          )
+        ) : cat === null ? (
+          <Catalog listings={listings} tier={tier} onOpen={onOpenListing} saved={saved} onToggleSave={onToggleSave} />
         ) : mode === "ai" ? (
           <AIPlanner tier={tier} onOpen={onOpenListing} onReserve={onReserve} saved={saved} onToggleSave={onToggleSave} />
         ) : mode === "swipe" ? (
