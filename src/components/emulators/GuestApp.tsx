@@ -25,6 +25,16 @@ export function GuestApp() {
   const [paths, setPaths] = useState<ClassPaths>(SEED_USER.paths);
   const tier = resolveActiveTier(paths).tier;
   const [saved, setSaved] = useState<Set<string>>(new Set(["koli", "lacatarina"]));
+  // Multi-group membership engine — user belongs to many communities at once.
+  const [memberships, setMemberships] = useState<Set<string>>(
+    new Set(SEED_USER.memberships.map(m => m.communityId))
+  );
+  const toggleMembership = (communityId: string) =>
+    setMemberships(prev => {
+      const next = new Set(prev);
+      if (next.has(communityId)) next.delete(communityId); else next.add(communityId);
+      return next;
+    });
   const [reservations, setReservations] = useState<Array<{ id: string; listingId: string; when: string; party: number; status: "pending" | "confirmed" }>>([]);
   const [activeListing, setActiveListing] = useState<Listing | null>(null);
   const [showUpgrade, setShowUpgrade] = useState(false);
@@ -53,6 +63,7 @@ export function GuestApp() {
             <Discover
               tier={tier} saved={saved} onToggleSave={toggleSaved}
               onOpenListing={setActiveListing} onReserve={setReserveFor}
+              memberships={memberships} onToggleMembership={toggleMembership}
             />
           )}
           {tab === "saved" && (
@@ -64,7 +75,12 @@ export function GuestApp() {
           {tab === "pay" && <PayScreen tier={tier} />}
           {tab === "share" && <ShareScreen />}
           {tab === "profile" && (
-            <Profile tier={tier} paths={paths} onUpgrade={() => setShowUpgrade(true)} savedCount={saved.size} />
+            <Profile
+              tier={tier} paths={paths} onUpgrade={() => setShowUpgrade(true)}
+              savedCount={saved.size}
+              memberships={memberships}
+              onLeaveMembership={toggleMembership}
+            />
           )}
         </main>
 
@@ -79,6 +95,8 @@ export function GuestApp() {
           onToggleSave={() => toggleSaved(activeListing.id)}
           onReserve={() => { setReserveFor(activeListing); setActiveListing(null); }}
           onUpgrade={() => { setActiveListing(null); setShowUpgrade(true); }}
+          memberships={memberships}
+          onJoinCommunity={toggleMembership}
         />
       )}
       {reserveFor && (
@@ -131,12 +149,14 @@ function BottomNav({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) 
    DISCOVER
    ───────────────────────────────────────────────────────────── */
 function Discover({
-  tier, saved, onToggleSave, onOpenListing, onReserve,
+  tier, saved, onToggleSave, onOpenListing, onReserve, memberships, onToggleMembership,
 }: {
   tier: Tier; saved: Set<string>;
   onToggleSave: (id: string) => void;
   onOpenListing: (l: Listing) => void;
   onReserve: (l: Listing) => void;
+  memberships: Set<string>;
+  onToggleMembership: (communityId: string) => void;
 }) {
   const [mode, setMode] = useState<DiscoverMode>("ai");
   const [cat, setCat] = useState<Category>("place");
@@ -202,7 +222,7 @@ function Discover({
       {/* Mode body */}
       <div className="relative mt-3 flex-1 overflow-hidden">
         {cat === "community" ? (
-          <CommunityList listings={listings} onOpen={onOpenListing} />
+          <CommunityList listings={listings} onOpen={onOpenListing} memberships={memberships} onToggleMembership={onToggleMembership} />
         ) : cat === "person" ? (
           <PeopleList listings={listings} onOpen={onOpenListing} />
         ) : cat !== "place" ? (
@@ -618,7 +638,10 @@ function PlaceholderCategory({ listings, onOpen }: { listings: Listing[]; onOpen
 }
 
 /* ── Communities ────────────────────────────────────────────── */
-function CommunityList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: Listing) => void }) {
+function CommunityList({ listings, onOpen, memberships, onToggleMembership }: {
+  listings: Listing[]; onOpen: (l: Listing) => void;
+  memberships: Set<string>; onToggleMembership: (id: string) => void;
+}) {
   const fmt = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(1)}K` : `${n}`;
   return (
     <div className="h-full overflow-y-auto px-4 pb-28 pt-2">
@@ -627,7 +650,9 @@ function CommunityList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: 
         <p className="mt-1 text-xs text-white/65">Grupos abiertos, members clubs y comunidades universitarias. Únete o crea la tuya.</p>
       </div>
       <div className="mt-4 space-y-3">
-        {listings.map(l => (
+        {listings.map(l => {
+          const joined = memberships.has(l.id);
+          return (
           <button key={l.id} onClick={() => onOpen(l)}
             className="block w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] text-left transition hover:border-white/20">
             <div className="relative h-32">
@@ -635,6 +660,9 @@ function CommunityList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: 
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
               {l.participation === "partner" && (
                 <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-[10px] text-fuchsia-200 backdrop-blur"><BadgeCheck className="h-3 w-3" />Verified</span>
+              )}
+              {joined && (
+                <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-emerald-500/90 px-2 py-1 text-[10px] font-semibold text-white shadow"><Check className="h-3 w-3" />Joined</span>
               )}
               <div className="absolute bottom-3 left-3 right-3">
                 <p className="text-[10px] uppercase tracking-wider text-white/55">{l.subcategory} · {l.zone}</p>
@@ -651,13 +679,17 @@ function CommunityList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: 
                 <span className="text-[11px] text-white/55">
                   {l.monthlyFee && l.monthlyFee > 0 ? `$${l.monthlyFee}/mo` : "Free"}
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-lg bg-white px-2.5 py-1 text-[11px] font-semibold text-black">
-                  {l.monthlyFee && l.monthlyFee > 0 ? "Subscribe" : "Join"} <ArrowRight className="h-3 w-3" />
+                <span
+                  role="button"
+                  onClick={(e) => { e.stopPropagation(); onToggleMembership(l.id); }}
+                  className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold ${joined ? "border border-white/20 bg-white/5 text-white/85" : "bg-white text-black"}`}>
+                  {joined ? "Joined" : (l.monthlyFee && l.monthlyFee > 0 ? "Subscribe" : "Join")} {!joined && <ArrowRight className="h-3 w-3" />}
                 </span>
               </div>
             </div>
           </button>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -708,13 +740,17 @@ function PeopleList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: Lis
 /* ─────────────────────────────────────────────────────────────
    VENUE DETAIL
    ───────────────────────────────────────────────────────────── */
-function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, onUpgrade }: {
+function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, onUpgrade, memberships, onJoinCommunity }: {
   listing: Listing; tier: Tier; saved: boolean;
   onClose: () => void; onToggleSave: () => void; onReserve: () => void; onUpgrade: () => void;
+  memberships: Set<string>;
+  onJoinCommunity: (communityId: string) => void;
 }) {
   const [photoIdx, setPhotoIdx] = useState(0);
   const photos = [listing.cover, ...listing.gallery];
   const perk = listing.perks?.[tier];
+  const unlockedCommunityPerks = (listing.communityPerks ?? []).filter(p => memberships.has(p.communityId));
+  const lockedCommunityPerks   = (listing.communityPerks ?? []).filter(p => !memberships.has(p.communityId));
 
   return (
     <div className="absolute inset-0 z-30 overflow-y-auto bg-[oklch(0.10_0.02_280)] text-white">
@@ -788,6 +824,49 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
                 <p className="text-[11px] text-amber-100/70">{t.venue.welcomeBanner}</p>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Community group perks */}
+        {(unlockedCommunityPerks.length > 0 || lockedCommunityPerks.length > 0) && (
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <div className="flex items-center gap-2">
+              <Users className="h-3.5 w-3.5 text-fuchsia-300" />
+              <p className="text-[10px] uppercase tracking-wider text-white/55">{t.venue.communityPerksTitle}</p>
+            </div>
+            {unlockedCommunityPerks.length > 0 && (
+              <div className="mt-2 space-y-1.5">
+                {unlockedCommunityPerks.map(p => (
+                  <div key={p.communityId} className="flex items-center justify-between rounded-lg border border-emerald-300/30 bg-emerald-300/10 px-3 py-2">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-emerald-100">{p.label}</p>
+                      <p className="truncate text-[10px] uppercase tracking-wider text-emerald-200/70">via {p.communityName}</p>
+                    </div>
+                    <Check className="h-4 w-4 shrink-0 text-emerald-300" />
+                  </div>
+                ))}
+              </div>
+            )}
+            {lockedCommunityPerks.length > 0 && (
+              <div className="mt-3">
+                <p className="text-[10px] uppercase tracking-wider text-white/40">{t.venue.communityPerksLocked}</p>
+                <div className="mt-1.5 space-y-1.5">
+                  {lockedCommunityPerks.map(p => (
+                    <div key={p.communityId} className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm text-white/80">{p.label}</p>
+                        <p className="truncate text-[10px] uppercase tracking-wider text-white/40">via {p.communityName}</p>
+                      </div>
+                      <button
+                        onClick={() => onJoinCommunity(p.communityId)}
+                        className="shrink-0 rounded-md bg-white px-2 py-1 text-[10px] font-semibold text-black">
+                        {t.venue.joinToUnlock}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -1179,10 +1258,15 @@ function ShareScreen() {
 /* ─────────────────────────────────────────────────────────────
    PROFILE + UPGRADE
    ───────────────────────────────────────────────────────────── */
-function Profile({ tier, paths, onUpgrade, savedCount }: { tier: Tier; paths: ClassPaths; onUpgrade: () => void; savedCount: number }) {
+function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembership }: {
+  tier: Tier; paths: ClassPaths; onUpgrade: () => void; savedCount: number;
+  memberships: Set<string>; onLeaveMembership: (communityId: string) => void;
+}) {
   const active = resolveActiveTier(paths);
   const game = SEED_USER.gamification;
   const xpPct = Math.min(100, Math.round((game.xp / game.xpToNext) * 100));
+  const influence = INFLUENCE_META[SEED_USER.influenceTier];
+  const myCommunities = SEED_LISTINGS.filter(l => l.category === "community" && memberships.has(l.id));
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
       <div className="flex items-center gap-3">
@@ -1208,6 +1292,57 @@ function Profile({ tier, paths, onUpgrade, savedCount }: { tier: Tier; paths: Cl
           <Crown className="h-3.5 w-3.5" /> {t.profile.upgrade}
         </button>
       </div>
+
+      {/* Multi-group membership — the spec's "real engine" */}
+      <section className="mt-6">
+        <p className="eyebrow !text-white/40">{t.profile.myGroups}</p>
+        <p className="mt-1 text-[11px] text-white/55">{t.profile.myGroupsDesc}</p>
+        <div className="mt-3 space-y-3">
+          {/* Class + Influence row */}
+          <div className="grid grid-cols-2 gap-2">
+            <div className={`rounded-xl border border-white/10 bg-white/[0.04] p-3`}>
+              <p className="text-[9px] uppercase tracking-wider text-white/45">{t.profile.classGroup}</p>
+              <div className="mt-1 flex items-center gap-2">
+                <span className={`h-2.5 w-2.5 rounded-full ${TIER_META[tier].bg}`} />
+                <p className="font-display text-base font-semibold">{TIER_META[tier].label}</p>
+              </div>
+              <p className="mt-0.5 text-[10px] text-white/45">via {active.source}</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
+              <p className="text-[9px] uppercase tracking-wider text-white/45">{t.profile.influenceGroup}</p>
+              <div className="mt-1 flex items-center gap-2">
+                <TrendingUp className="h-3.5 w-3.5 text-amber-300" />
+                <p className="font-display text-base font-semibold">{influence.label}</p>
+              </div>
+              <p className="mt-0.5 text-[10px] text-white/45">{influence.min} followers</p>
+            </div>
+          </div>
+
+          {/* Community memberships */}
+          <div>
+            <p className="text-[9px] uppercase tracking-wider text-white/45">{t.profile.communityGroups}</p>
+            <div className="mt-1.5 space-y-1.5">
+              {myCommunities.length === 0 && (
+                <p className="rounded-xl border border-dashed border-white/10 px-3 py-3 text-[11px] text-white/50">
+                  No communities yet. Head to Discover → Communities to join your first one.
+                </p>
+              )}
+              {myCommunities.map(c => (
+                <div key={c.id} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-2.5">
+                  <img src={c.cover} alt={c.name} className="h-10 w-10 shrink-0 rounded-lg object-cover" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold">{c.name}</p>
+                    <p className="truncate text-[10px] text-white/50">{c.subcategory} · {(c.members ?? 0).toLocaleString()} members</p>
+                  </div>
+                  <button onClick={() => onLeaveMembership(c.id)} className="shrink-0 rounded-md border border-white/15 px-2 py-1 text-[10px] text-white/70 hover:text-white">
+                    {t.profile.leaveGroup}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="mt-6">
         <p className="eyebrow !text-white/40">{t.profile.stats}</p>
