@@ -1164,9 +1164,10 @@ function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
     { cat: null,        label: "All" },
     { cat: "place",     label: t.discover.cats.place },
     { cat: "event",     label: t.discover.cats.event },
-    { cat: "experience",label: t.discover.cats.experience },
     { cat: "community", label: t.discover.cats.community },
     { cat: "person",    label: t.discover.cats.person },
+    { cat: "product",   label: t.discover.cats.product },
+    { cat: "service",   label: t.discover.cats.service },
   ];
   const [selCat, setSelCat] = useState<Category | null>(null);
   const filtered = selCat ? items.filter(l => l.category === selCat) : items;
