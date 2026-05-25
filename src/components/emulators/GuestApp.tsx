@@ -160,44 +160,127 @@ function Discover({
 }) {
   const [mode, setMode] = useState<DiscoverMode>("ai");
   const [cat, setCat] = useState<Category>("place");
+  const [city, setCity] = useState("Monterrey");
+  const [when, setWhen] = useState<{ day: string; time: string }>({ day: "Tonight", time: "8PM" });
+  const [picker, setPicker] = useState<null | "what" | "where" | "when">(null);
+
+  const CITIES = ["Monterrey", "San Pedro", "CDMX", "Guadalajara", "Tulum", "Mérida"];
+  const DAYS = ["Tonight", "Tomorrow", "This weekend", "Next week"];
+  const TIMES = ["6PM", "7PM", "8PM", "9PM", "10PM", "11PM", "Late"];
+  const CATS: Category[] = ["place", "event", "experience", "community", "person"];
 
   const listings = useMemo(() => SEED_LISTINGS.filter(l => l.category === cat), [cat]);
 
   return (
     <div className="relative flex h-full flex-col">
       {/* Header — Mesita-style top bar */}
-      <header className="px-4 pt-4">
+      <header className="relative px-4 pt-4">
         <div className="flex items-center gap-2">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-rose-500 text-white shadow-lg shadow-fuchsia-500/30">
             <Flame className="h-5 w-5" />
           </div>
           <div className="flex flex-1 items-center divide-x divide-white/10 rounded-full border border-white/10 bg-white/[0.04] px-1 py-1.5">
-            <div className="flex flex-1 items-center gap-2 px-3">
+            <button
+              type="button"
+              onClick={() => setPicker(p => p === "what" ? null : "what")}
+              className={`flex flex-1 items-center gap-2 px-3 text-left transition ${picker === "what" ? "text-fuchsia-200" : ""}`}
+            >
               <Sparkles className="h-4 w-4 text-fuchsia-300" />
               <div className="leading-tight">
                 <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/45">What</p>
                 <p className="font-display text-[13px] font-semibold">{t.discover.cats[cat]}</p>
               </div>
-            </div>
-            <div className="flex flex-1 items-center gap-2 px-3">
+            </button>
+            <button
+              type="button"
+              onClick={() => setPicker(p => p === "where" ? null : "where")}
+              className={`flex flex-1 items-center gap-2 px-3 text-left transition ${picker === "where" ? "text-fuchsia-200" : ""}`}
+            >
               <MapPin className="h-4 w-4 text-fuchsia-300" />
               <div className="leading-tight">
                 <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/45">Where</p>
-                <p className="font-display text-[13px] font-semibold">Monterrey</p>
+                <p className="font-display text-[13px] font-semibold">{city}</p>
               </div>
-            </div>
-            <div className="flex flex-1 items-center gap-2 px-3">
+            </button>
+            <button
+              type="button"
+              onClick={() => setPicker(p => p === "when" ? null : "when")}
+              className={`flex flex-1 items-center gap-2 px-3 text-left transition ${picker === "when" ? "text-fuchsia-200" : ""}`}
+            >
               <Calendar className="h-4 w-4 text-fuchsia-300" />
               <div className="leading-tight">
-                <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/45">When <span className="ml-0.5 text-white/70">8PM</span></p>
-                <p className="font-display text-[13px] font-semibold">Tonight</p>
+                <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/45">When <span className="ml-0.5 text-white/70">{when.time}</span></p>
+                <p className="font-display text-[13px] font-semibold">{when.day}</p>
               </div>
-            </div>
+            </button>
           </div>
           <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white shadow-lg ${TIER_META[tier].bg}`}>
             {tier[0].toUpperCase()}
           </div>
         </div>
+
+        {/* Filter popover */}
+        {picker && (
+          <>
+            <div className="fixed inset-0 z-30" onClick={() => setPicker(null)} />
+            <div className="absolute left-4 right-4 top-[68px] z-40 rounded-2xl border border-white/10 bg-[oklch(0.14_0.03_290)]/95 p-3 shadow-2xl backdrop-blur-xl">
+              {picker === "what" && (
+                <div className="flex flex-col gap-1">
+                  <p className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">What are you looking for</p>
+                  {CATS.map(c => (
+                    <button key={c} onClick={() => { setCat(c); setPicker(null); }}
+                      className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition ${cat === c ? "bg-fuchsia-500/15 text-fuchsia-100" : "text-white/75 hover:bg-white/5"}`}>
+                      <span className="font-medium">{t.discover.cats[c]}</span>
+                      {cat === c && <Check className="h-4 w-4 text-fuchsia-300" />}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {picker === "where" && (
+                <div className="flex flex-col gap-1">
+                  <p className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">City</p>
+                  {CITIES.map(c => (
+                    <button key={c} onClick={() => { setCity(c); setPicker(null); }}
+                      className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition ${city === c ? "bg-fuchsia-500/15 text-fuchsia-100" : "text-white/75 hover:bg-white/5"}`}>
+                      <span className="font-medium">{c}</span>
+                      {city === c && <Check className="h-4 w-4 text-fuchsia-300" />}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {picker === "when" && (
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <p className="px-1 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Day</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {DAYS.map(d => (
+                        <button key={d} onClick={() => setWhen(w => ({ ...w, day: d }))}
+                          className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${when.day === d ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65 hover:text-white"}`}>
+                          {d}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="px-1 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Time</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {TIMES.map(tm => (
+                        <button key={tm} onClick={() => setWhen(w => ({ ...w, time: tm }))}
+                          className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${when.time === tm ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 text-white/65 hover:text-white"}`}>
+                          {tm}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <button onClick={() => setPicker(null)}
+                    className="mt-1 w-full rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-500 py-2 text-xs font-semibold text-white">
+                    Apply
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
+        )}
 
         {/* Mode segmented control — Mesita style */}
         <div className="mt-4 flex items-center gap-0.5 rounded-full border border-white/10 bg-white/[0.04] p-1">
@@ -211,16 +294,6 @@ function Discover({
               className={`flex flex-1 items-center justify-center gap-1.5 rounded-full py-2 text-xs font-medium transition ${mode === id ? "bg-white text-black" : "text-white/65"}`}>
               <Icon className="h-3.5 w-3.5" />
               {label}
-            </button>
-          ))}
-        </div>
-
-        {/* Category chips */}
-        <div className="mt-2.5 flex gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-hide">
-          {(["place", "event", "experience", "community", "person"] as Category[]).map(c => (
-            <button key={c} onClick={() => setCat(c)}
-              className={`shrink-0 rounded-full border px-2.5 py-1 font-medium transition ${cat === c ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 bg-transparent text-white/55 hover:text-white/80"}`}>
-              {t.discover.cats[c]}
             </button>
           ))}
         </div>
