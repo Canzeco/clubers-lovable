@@ -3,7 +3,7 @@
 // functions in `clubersApi` for Supabase Edge Function calls later.
 
 export type Tier = "bronze" | "silver" | "gold" | "diamond";
-export type Category = "place" | "experience" | "event";
+export type Category = "place" | "experience" | "event" | "community" | "person";
 export type Participation = "listed" | "partner";
 export type PerkKind = "cashback" | "discount";
 
@@ -37,9 +37,26 @@ export interface Listing {
   whenLabel?: string; // "Vie 14 dic · 22:00"
   // For experiences
   durationLabel?: string;
+  // For communities
+  members?: number;          // 1820
+  entryRule?: string;        // "Solo @tec.mx" · "Aprobación del admin" · "Abierto"
+  monthlyFee?: number;       // 0 if free
+  communityKind?: "college" | "members-club" | "open" | "professional";
+  // For people
+  handle?: string;           // "@anapaularz"
+  igFollowers?: number;      // 12400
+  role?: string;             // "DJ residente · Vértigo" · "Foodie · @koli"
+  influenceTier?: "rising" | "creator" | "tastemaker" | "icon";
 }
 
 export const TIERS: Tier[] = ["bronze", "silver", "gold", "diamond"];
+
+export const INFLUENCE_META: Record<NonNullable<Listing["influenceTier"]>, { label: string; min: string }> = {
+  rising:     { label: "Rising",     min: "<1K" },
+  creator:    { label: "Creator",    min: "1K+" },
+  tastemaker: { label: "Tastemaker", min: "10K+" },
+  icon:       { label: "Icon",       min: "100K+" },
+};
 
 export const TIER_META: Record<Tier, { label: string; price: number; followers: string; ring: string; chip: string; bg: string }> = {
   bronze:  { label: "Bronze",  price: 0,    followers: "Por defecto",       ring: "ring-amber-700/60",   chip: "bg-amber-700/20 text-amber-300 border-amber-700/40",   bg: "bg-tier-bronze" },
@@ -255,6 +272,110 @@ export const SEED_LISTINGS: Listing[] = [
     description: "El festival más grande del norte. Tres escenarios, +100 artistas.",
     whenLabel: "3–5 abr",
   },
+  // ── Communities ───────────────────────────────────────────
+  {
+    id: "com-tec",
+    name: "Borregos Tec",
+    category: "community", subcategory: "Universidad",
+    participation: "listed",
+    zone: "Tec de Monterrey", priceLevel: 1,
+    clubersRating: 4.7, googleRating: 0,
+    vibes: ["estudiantes", "college", "after class"],
+    cover: photo("1523580494863-6f3031224c94", 110),
+    gallery: [], openNow: true, hours: "Siempre",
+    walkMin: 0,
+    description: "Comunidad oficial de estudiantes activos del Tec. Acceso a fiestas universitarias y descuentos exclusivos cerca del campus.",
+    members: 8420,
+    entryRule: "Solo correos @tec.mx",
+    monthlyFee: 0,
+    communityKind: "college",
+  },
+  {
+    id: "com-roof",
+    name: "Rooftop Society MTY",
+    category: "community", subcategory: "Members Club",
+    participation: "partner",
+    zone: "San Pedro", priceLevel: 3,
+    clubersRating: 4.8, googleRating: 0,
+    vibes: ["nightlife", "exclusivo", "after work"],
+    cover: photo("1551918120-9739cb430c6d", 111),
+    gallery: [], openNow: true, hours: "Jue–Sáb",
+    walkMin: 0,
+    description: "Club privado de aficionados a los mejores rooftops de la ciudad. Eventos mensuales solo para miembros, listas VIP en partners.",
+    members: 612,
+    entryRule: "Aprobación del admin",
+    monthlyFee: 350,
+    communityKind: "members-club",
+  },
+  {
+    id: "com-foodies",
+    name: "MTY Foodies",
+    category: "community", subcategory: "Abierta",
+    participation: "listed",
+    zone: "Monterrey", priceLevel: 1,
+    clubersRating: 4.5, googleRating: 0,
+    vibes: ["gastronomía", "abierta", "reviews"],
+    cover: photo("1414235077428-338989a2e8c0", 112),
+    gallery: [], openNow: true, hours: "Siempre",
+    walkMin: 0,
+    description: "La comunidad más grande de foodies en Monterrey. Comparte reviews, organiza salidas y vota los aperturas del mes.",
+    members: 3140,
+    entryRule: "Abierto a todos",
+    monthlyFee: 0,
+    communityKind: "open",
+  },
+  // ── People ────────────────────────────────────────────────
+  {
+    id: "per-ana",
+    name: "Ana Paula Ríos",
+    category: "person", subcategory: "Tastemaker",
+    participation: "partner",
+    zone: "San Pedro", priceLevel: 1,
+    clubersRating: 4.9, googleRating: 0,
+    vibes: ["nightlife", "moda", "foodie"],
+    cover: photo("1494790108377-be9c29b29330", 120),
+    gallery: [], openNow: true, hours: "—",
+    walkMin: 0,
+    description: "Donde aparece ella, llena el lugar. Curaduría semanal de los mejores rooftops y cenas de la ciudad.",
+    handle: "@anapaularz",
+    igFollowers: 24800,
+    role: "Tastemaker · Nightlife MTY",
+    influenceTier: "tastemaker",
+  },
+  {
+    id: "per-diego",
+    name: "Diego Salinas",
+    category: "person", subcategory: "Creator",
+    participation: "listed",
+    zone: "Centro", priceLevel: 1,
+    clubersRating: 4.6, googleRating: 0,
+    vibes: ["café", "indie", "música"],
+    cover: photo("1500648767791-00dcc994a43e", 121),
+    gallery: [], openNow: true, hours: "—",
+    walkMin: 0,
+    description: "Reseñas honestas de cafés de especialidad y bares íntimos del Centro y Barrio Antiguo.",
+    handle: "@diegofromcentro",
+    igFollowers: 4200,
+    role: "Creator · Café & bares",
+    influenceTier: "creator",
+  },
+  {
+    id: "per-marina",
+    name: "DJ Marina K",
+    category: "person", subcategory: "Icon",
+    participation: "partner",
+    zone: "Valle Oriente", priceLevel: 1,
+    clubersRating: 4.9, googleRating: 0,
+    vibes: ["dj", "house", "techno"],
+    cover: photo("1438761681033-6461ffad8d80", 122),
+    gallery: [], openNow: true, hours: "—",
+    walkMin: 0,
+    description: "Residente en Vértigo. Sus sesiones llenan cualquier sala donde toca. Sigue su calendario para no perderte la próxima noche.",
+    handle: "@marinak.dj",
+    igFollowers: 142000,
+    role: "DJ residente · Vértigo",
+    influenceTier: "icon",
+  },
 ];
 
 // ───────────────────────────────────────────────────────────────
@@ -266,7 +387,7 @@ export const t = {
   nav: { discover: "Descubre", saved: "Guarda", qr: "QR", share: "Comparte", profile: "Perfil" },
   discover: {
     ai: "AI Planner", swipe: "Swipe", map: "Mapa", catalog: "Catálogo",
-    cats: { place: "Lugares", experience: "Experiencias", event: "Eventos" },
+    cats: { place: "Lugares", experience: "Experiencias", event: "Eventos", community: "Comunidades", person: "Gente" },
     aiHero: "¿Qué se te antoja esta noche?",
     aiPlaceholder: "Cena en rooftop y algo en vivo, bajo $800, caminando en San Pedro…",
     aiBuilding: "Armando tu noche…",
