@@ -214,8 +214,8 @@ function Discover({
 
   return (
     <div className="relative flex h-full flex-col">
-      {/* Header — Mesita-style top bar */}
-      <header className="relative px-4 pt-4">
+      {/* Header — Mesita-style top bar (floats over swipe deck) */}
+      <header className={`px-4 pt-4 ${mode === "swipe" ? "absolute inset-x-0 top-0 z-20" : "relative"}`}>
         <div className="flex items-center gap-2">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-rose-500 text-white shadow-lg shadow-fuchsia-500/30">
             <span className="font-serif text-lg font-bold leading-none">M</span>
@@ -570,55 +570,55 @@ function SwipeDeck({ listings, tier, onOpen, onSave, onReserve, interleaveByCate
     return out;
   }, [listings, interleaveByCategory]);
   const [idx, setIdx] = useState(0);
-  const [drag, setDrag] = useState({ y: 0 });
-  const [flying, setFlying] = useState<"up" | "down" | null>(null);
-  const startY = useRef<number | null>(null);
+  const [drag, setDrag] = useState({ x: 0 });
+  const [flying, setFlying] = useState<"left" | "right" | null>(null);
+  const startX = useRef<number | null>(null);
 
   const current = ordered[idx];
   const next = ordered[idx + 1];
 
-  const onPointerDown = (e: React.PointerEvent) => { startY.current = e.clientY; };
-  const onPointerMove = (e: React.PointerEvent) => { if (startY.current != null) setDrag({ y: e.clientY - startY.current }); };
+  const onPointerDown = (e: React.PointerEvent) => { startX.current = e.clientX; };
+  const onPointerMove = (e: React.PointerEvent) => { if (startX.current != null) setDrag({ x: e.clientX - startX.current }); };
   const onPointerUp = () => {
-    if (Math.abs(drag.y) > 100) {
-      const dir = drag.y < 0 ? "up" : "down";
-      if (dir === "up") onSave(current.id);
+    if (Math.abs(drag.x) > 100) {
+      const dir = drag.x > 0 ? "right" : "left";
+      if (dir === "right") onSave(current.id);
       setFlying(dir);
-      setTimeout(() => { setIdx(i => (i + 1) % ordered.length); setDrag({ y: 0 }); setFlying(null); }, 220);
-    } else { setDrag({ y: 0 }); }
-    startY.current = null;
+      setTimeout(() => { setIdx(i => (i + 1) % ordered.length); setDrag({ x: 0 }); setFlying(null); }, 220);
+    } else { setDrag({ x: 0 }); }
+    startX.current = null;
   };
 
   if (!current) return null;
-  const flyY = flying === "up" ? -800 : flying === "down" ? 800 : drag.y;
-  const rot = (drag.y / 30);
+  const flyX = flying === "right" ? 800 : flying === "left" ? -800 : drag.x;
+  const rot = (drag.x / 30);
 
-  const advance = (dir: "up" | "down") => {
-    if (dir === "up") onSave(current.id);
+  const advance = (dir: "left" | "right") => {
+    if (dir === "right") onSave(current.id);
     setFlying(dir);
-    setTimeout(() => { setIdx(i => (i + 1) % ordered.length); setDrag({ y: 0 }); setFlying(null); }, 220);
+    setTimeout(() => { setIdx(i => (i + 1) % ordered.length); setDrag({ x: 0 }); setFlying(null); }, 220);
   };
 
   return (
-    <div className="relative flex h-full flex-col px-4 pb-24 pt-3">
+    <div className="absolute inset-0 flex flex-col">
       <div className="relative flex-1">
         {next && <SwipeCard listing={next} tier={tier} style={{ transform: "scale(0.95) translateY(8px)", opacity: 0.6 }} />}
         <SwipeCard
           listing={current} tier={tier}
           onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp}
-          onClick={() => Math.abs(drag.y) < 6 && onOpen(current)}
-          style={{ transform: `translateY(${flyY}px) rotate(${rot}deg)`, transition: flying ? "transform 220ms ease-out" : startY.current ? "none" : "transform 200ms" }}
-          overlay={drag.y < -40 ? "save" : drag.y > 40 ? "skip" : null}
+          onClick={() => Math.abs(drag.x) < 6 && onOpen(current)}
+          style={{ transform: `translateX(${flyX}px) rotate(${rot}deg)`, transition: flying ? "transform 220ms ease-out" : startX.current ? "none" : "transform 200ms" }}
+          overlay={drag.x > 40 ? "save" : drag.x < -40 ? "skip" : null}
         />
       </div>
-      {/* Action bar — Mesita-style */}
-      <div className="mt-3 flex items-center gap-2">
-        <button onClick={() => advance("down")}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] py-3 text-sm text-white/70 transition hover:bg-white/[0.08]">
+      {/* Action bar — floats over the card */}
+      <div className="pointer-events-none absolute inset-x-4 bottom-4 z-10 flex items-center gap-2 [&>*]:pointer-events-auto">
+        <button onClick={() => advance("left")}
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white/10 bg-black/60 py-3 text-sm text-white/80 backdrop-blur transition hover:bg-black/75">
           <X className="h-4 w-4" /> {t.discover.skip}
         </button>
         <button onClick={() => onOpen(current)}
-          className="flex items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-5 py-3 text-sm text-white/85 transition hover:bg-white/[0.08]">
+          className="flex items-center justify-center gap-1.5 rounded-full border border-white/10 bg-black/60 px-5 py-3 text-sm text-white/90 backdrop-blur transition hover:bg-black/75">
           <LayoutGrid className="h-4 w-4" /> {t.discover.cats[current.category]}
         </button>
         <button onClick={() => onReserve(current)}
