@@ -3,7 +3,7 @@
 // functions in `clubersApi` for Supabase Edge Function calls later.
 
 export type Tier = "bronze" | "silver" | "gold" | "diamond";
-export type Category = "place" | "event" | "community" | "person" | "product" | "service";
+export type Category = "place" | "event" | "community" | "person" | "product" | "service" | "app";
 export type Participation = "listed" | "partner";
 export type PerkKind = "cashback" | "discount";
 export type FiscalType = "formal" | "informal";
@@ -52,6 +52,11 @@ export interface Listing {
   // For services
   serviceKind?: string; // "Haircut" · "Personal trainer" · "Photographer"
   providedBy?: string;  // denormalized name of the place/person providing it
+  // For micro-apps
+  appKind?: string;        // "Facial analysis" · "Voice coach" · "Style fit"
+  developer?: string;      // who built the app
+  installs?: number;       // social proof, e.g. 12400
+  onboardingSteps?: string[]; // ["Allow camera", "Take 3 selfies", "Get your report"]
   // For communities
   members?: number;          // 1820
   entryRule?: string;        // "Solo @tec.mx" · "Aprobación del admin" · "Abierto"
