@@ -1056,6 +1056,42 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
           </div>
         )}
 
+        {/* Micro-app hero — auto onboarding */}
+        {listing.category === "app" && (
+          <div className="rounded-2xl border border-cyan-400/20 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 text-cyan-200">
+                  <Smartphone className="h-3.5 w-3.5" />
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-white/55">
+                    {listing.appKind ?? "Micro-app"}
+                  </p>
+                  <p className="text-xs text-white/80">by {listing.developer ?? "—"}</p>
+                </div>
+              </div>
+              {typeof listing.installs === "number" && (
+                <p className="text-[11px] text-white/70">{listing.installs.toLocaleString()} installs</p>
+              )}
+            </div>
+            {listing.onboardingSteps && listing.onboardingSteps.length > 0 && (
+              <div className="mt-3 space-y-1.5">
+                <p className="text-[10px] uppercase tracking-wider text-white/45">Auto onboarding</p>
+                {listing.onboardingSteps.map((step, i) => (
+                  <div key={i} className="flex items-start gap-2 text-[11px] text-white/80">
+                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-cyan-400/20 text-[9px] font-bold text-cyan-200">{i + 1}</span>
+                    <span>{step}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {listing.durationLabel && (
+              <p className="mt-3 text-[11px] text-white/60"><Clock className="-mt-0.5 mr-1 inline h-3 w-3" /> {listing.durationLabel} to complete</p>
+            )}
+          </div>
+        )}
+
         {/* Event offerings — inline products & services */}
         {listing.category === "event" && listing.offerings && listing.offerings.length > 0 && (
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
@@ -1104,6 +1140,8 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
             <><ShoppingBag className="h-4 w-4" /> Buy</>
           ) : listing.category === "service" ? (
             <><Wrench className="h-4 w-4" /> Book service</>
+          ) : listing.category === "app" ? (
+            <><Smartphone className="h-4 w-4" /> Open app</>
           ) : (
             <><Calendar className="h-4 w-4" /> {t.venue.reserve}</>
           )}
