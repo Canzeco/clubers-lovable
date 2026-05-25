@@ -4,10 +4,11 @@ import {
   Star, BadgeCheck, ChevronLeft, ChevronRight, Calendar, Clock, Users,
   X, ArrowUp, ArrowDown, Loader2, Send, Gift, Copy, Instagram, Globe,
   Crown, Check, Lock, Heart, Wallet, Settings, ArrowRight, Flame,
+  TrendingUp, Trophy, Zap, CircleDollarSign, ArrowDownLeft, ArrowUpRight,
 } from "lucide-react";
 import {
-  SEED_LISTINGS, TIERS, TIER_META, INFLUENCE_META, clubersApi, t,
-  type Listing, type Category, type Tier,
+  SEED_LISTINGS, TIERS, TIER_META, INFLUENCE_META, SEED_USER, clubersApi, t,
+  resolveActiveTier, type Listing, type Category, type Tier, type ClassPaths,
 } from "@/lib/clubers/data";
 
 /* ============================================================
@@ -16,12 +17,13 @@ import {
    Section structure: Discover · Saved · QR · Share · Profile
    ============================================================ */
 
-type Tab = "discover" | "saved" | "qr" | "share" | "profile";
+type Tab = "discover" | "saved" | "pay" | "share" | "profile";
 type DiscoverMode = "ai" | "swipe" | "map" | "catalog";
 
 export function GuestApp() {
   const [tab, setTab] = useState<Tab>("discover");
-  const [tier, setTier] = useState<Tier>("silver");
+  const [paths, setPaths] = useState<ClassPaths>(SEED_USER.paths);
+  const tier = resolveActiveTier(paths).tier;
   const [saved, setSaved] = useState<Set<string>>(new Set(["koli", "lacatarina"]));
   const [reservations, setReservations] = useState<Array<{ id: string; listingId: string; when: string; party: number; status: "pending" | "confirmed" }>>([]);
   const [activeListing, setActiveListing] = useState<Listing | null>(null);
@@ -59,10 +61,10 @@ export function GuestApp() {
               onOpen={setActiveListing} onToggleSave={toggleSaved}
             />
           )}
-          {tab === "qr" && <QRScreen tier={tier} />}
+          {tab === "pay" && <PayScreen tier={tier} />}
           {tab === "share" && <ShareScreen />}
           {tab === "profile" && (
-            <Profile tier={tier} onUpgrade={() => setShowUpgrade(true)} savedCount={saved.size} />
+            <Profile tier={tier} paths={paths} onUpgrade={() => setShowUpgrade(true)} savedCount={saved.size} />
           )}
         </main>
 
@@ -87,7 +89,10 @@ export function GuestApp() {
         />
       )}
       {showUpgrade && (
-        <UpgradeScreen tier={tier} onClose={() => setShowUpgrade(false)} onSelect={(t) => { setTier(t); setShowUpgrade(false); }} />
+        <UpgradeScreen tier={tier} onClose={() => setShowUpgrade(false)} onSelect={(newTier) => {
+          setPaths(p => ({ ...p, subscription: { ...p.subscription, state: newTier === "bronze" ? "inactive" : "active", tier: newTier === "bronze" ? null : newTier } }));
+          setShowUpgrade(false);
+        }} />
       )}
     </div>
   );
@@ -100,7 +105,7 @@ function BottomNav({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) 
   const items: Array<{ id: Tab; label: string; Icon: React.ComponentType<{ className?: string }> }> = [
     { id: "discover", label: t.nav.discover, Icon: Compass },
     { id: "saved",    label: t.nav.saved,    Icon: Bookmark },
-    { id: "qr",       label: t.nav.qr,       Icon: QrCode },
+    { id: "pay",      label: t.nav.pay,      Icon: QrCode },
     { id: "share",    label: t.nav.share,    Icon: Share2 },
     { id: "profile",  label: t.nav.profile,  Icon: User },
   ];
