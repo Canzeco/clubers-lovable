@@ -25,6 +25,16 @@ export function GuestApp() {
   const [paths, setPaths] = useState<ClassPaths>(SEED_USER.paths);
   const tier = resolveActiveTier(paths).tier;
   const [saved, setSaved] = useState<Set<string>>(new Set(["koli", "lacatarina"]));
+  // Multi-group membership engine — user belongs to many communities at once.
+  const [memberships, setMemberships] = useState<Set<string>>(
+    new Set(SEED_USER.memberships.map(m => m.communityId))
+  );
+  const toggleMembership = (communityId: string) =>
+    setMemberships(prev => {
+      const next = new Set(prev);
+      if (next.has(communityId)) next.delete(communityId); else next.add(communityId);
+      return next;
+    });
   const [reservations, setReservations] = useState<Array<{ id: string; listingId: string; when: string; party: number; status: "pending" | "confirmed" }>>([]);
   const [activeListing, setActiveListing] = useState<Listing | null>(null);
   const [showUpgrade, setShowUpgrade] = useState(false);
@@ -53,6 +63,7 @@ export function GuestApp() {
             <Discover
               tier={tier} saved={saved} onToggleSave={toggleSaved}
               onOpenListing={setActiveListing} onReserve={setReserveFor}
+              memberships={memberships} onToggleMembership={toggleMembership}
             />
           )}
           {tab === "saved" && (
@@ -64,7 +75,12 @@ export function GuestApp() {
           {tab === "pay" && <PayScreen tier={tier} />}
           {tab === "share" && <ShareScreen />}
           {tab === "profile" && (
-            <Profile tier={tier} paths={paths} onUpgrade={() => setShowUpgrade(true)} savedCount={saved.size} />
+            <Profile
+              tier={tier} paths={paths} onUpgrade={() => setShowUpgrade(true)}
+              savedCount={saved.size}
+              memberships={memberships}
+              onLeaveMembership={toggleMembership}
+            />
           )}
         </main>
 
@@ -79,6 +95,8 @@ export function GuestApp() {
           onToggleSave={() => toggleSaved(activeListing.id)}
           onReserve={() => { setReserveFor(activeListing); setActiveListing(null); }}
           onUpgrade={() => { setActiveListing(null); setShowUpgrade(true); }}
+          memberships={memberships}
+          onJoinCommunity={toggleMembership}
         />
       )}
       {reserveFor && (
