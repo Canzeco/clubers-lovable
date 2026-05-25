@@ -285,7 +285,7 @@ function AIPlanner({
       {submitted && (
         <div className="mt-6">
           <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
-            <p className="text-[10px] uppercase tracking-wider text-white/40">Tu búsqueda</p>
+            <p className="text-[10px] uppercase tracking-wider text-white/40">Your search</p>
             <p className="mt-1 text-sm text-white/85">"{submitted}"</p>
           </div>
 
@@ -670,7 +670,7 @@ function PeopleList({ listings, onOpen }: { listings: Listing[]; onOpen: (l: Lis
     <div className="h-full overflow-y-auto px-4 pb-28 pt-2">
       <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-amber-500/10 to-rose-500/10 p-4">
         <p className="font-display text-base font-semibold">People who move the city</p>
-        <p className="mt-1 text-xs text-white/65">Tastemakers, creators y DJs. Síguelos para no perderte dónde estarán esta noche.</p>
+        <p className="mt-1 text-xs text-white/65">Tastemakers, creators and DJs. Follow them so you don't miss where they'll be tonight.</p>
       </div>
       <div className="mt-4 space-y-3">
         {listings.map(l => {

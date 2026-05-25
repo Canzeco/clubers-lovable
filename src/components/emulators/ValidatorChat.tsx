@@ -131,7 +131,7 @@ export function ValidatorChat() {
         </div>
         <div className="flex-1">
           <p className="font-medium text-white">Mesita · Validador</p>
-          <p className="text-[11px] text-white/60">en línea</p>
+          <p className="text-[11px] text-white/60">online</p>
         </div>
         <Video className="h-5 w-5 text-white/70" />
         <Phone className="h-5 w-5 text-white/70" />

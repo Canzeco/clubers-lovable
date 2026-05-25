@@ -487,7 +487,7 @@ function DiscoverVenues() {
         <div>
           <h1 className="font-display text-2xl font-semibold">Discover venues</h1>
           <p className="text-sm text-muted-foreground">
-            Mesita AI rankea venues no afiliados según señal social y fit.
+            Mesita AI ranks unaffiliated venues by social signal and fit.
           </p>
         </div>
         <button className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground">
