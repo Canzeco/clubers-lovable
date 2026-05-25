@@ -1427,7 +1427,16 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
 }) {
   const active = resolveActiveTier(paths);
   const myCommunities = SEED_LISTINGS.filter(l => l.category === "community" && memberships.has(l.id));
-  const [view, setView] = useState<"home" | "groups" | "settings">("home");
+  const [view, setView] = useState<"home" | "groups" | "connectors" | "settings">("home");
+  const [connections, setConnections] = useState<Record<string, boolean>>({ instagram: true });
+  const connectors: Array<{ id: string; label: string; desc: string; icon: React.ReactNode }> = [
+    { id: "instagram", label: "Instagram", desc: "Followers, taste & social proof", icon: <Instagram className="h-4 w-4" /> },
+    { id: "linkedin",  label: "LinkedIn",  desc: "Industry, seniority & network", icon: <Globe className="h-4 w-4" /> },
+    { id: "spotify",   label: "Spotify",   desc: "Music & vibe matching", icon: <Sparkles className="h-4 w-4" /> },
+    { id: "google",    label: "Google",    desc: "Calendar & places visited", icon: <MapPin className="h-4 w-4" /> },
+    { id: "tiktok",    label: "TikTok",    desc: "Trends you actually care about", icon: <Flame className="h-4 w-4" /> },
+  ];
+  const connectedCount = Object.values(connections).filter(Boolean).length;
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
       {view !== "home" && (
@@ -1465,6 +1474,10 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
         <button onClick={() => setView("groups")} className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
           <span className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-white/55" /> {t.profile.myGroups}</span>
           <span className="inline-flex items-center gap-2 text-xs text-white/45">{myCommunities.length} <ChevronRight className="h-4 w-4" /></span>
+        </button>
+        <button onClick={() => setView("connectors")} className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
+          <span className="inline-flex items-center gap-2"><Share2 className="h-4 w-4 text-white/55" /> Connectors</span>
+          <span className="inline-flex items-center gap-2 text-xs text-white/45">{connectedCount}/{connectors.length} <ChevronRight className="h-4 w-4" /></span>
         </button>
         <button onClick={() => setView("settings")} className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
           <span className="inline-flex items-center gap-2"><Settings className="h-4 w-4 text-white/55" /> {t.profile.settings}</span>
