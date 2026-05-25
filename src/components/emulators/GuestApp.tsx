@@ -1427,7 +1427,7 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
 }) {
   const active = resolveActiveTier(paths);
   const myCommunities = SEED_LISTINGS.filter(l => l.category === "community" && memberships.has(l.id));
-  const [view, setView] = useState<"home" | "groups" | "connectors" | "settings">("home");
+  const [view, setView] = useState<"class" | "groups" | "connectors" | "settings">("class");
   const [connections, setConnections] = useState<Record<string, boolean>>({ instagram: true });
   const connectors: Array<{ id: string; label: string; desc: string; icon: React.ReactNode }> = [
     { id: "instagram", label: "Instagram", desc: "Followers, taste & social proof", icon: <Instagram className="h-4 w-4" /> },
@@ -1437,15 +1437,14 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
     { id: "tiktok",    label: "TikTok",    desc: "Trends you actually care about", icon: <Flame className="h-4 w-4" /> },
   ];
   const connectedCount = Object.values(connections).filter(Boolean).length;
+  const tabs: Array<{ id: typeof view; label: string }> = [
+    { id: "class",      label: "Class" },
+    { id: "groups",     label: "Groups" },
+    { id: "connectors", label: "Connectors" },
+    { id: "settings",   label: "Settings" },
+  ];
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
-      {view !== "home" && (
-        <button onClick={() => setView("home")} className="mb-3 inline-flex items-center gap-1 text-xs text-white/60 hover:text-white">
-          <ChevronRight className="h-3.5 w-3.5 rotate-180" /> Back
-        </button>
-      )}
-
-      {view === "home" && <>
       <div className="flex items-center gap-3">
         <div className={`h-14 w-14 rounded-2xl ${TIER_META[tier].bg} p-[2px]`}>
           <div className="flex h-full w-full items-center justify-center rounded-2xl bg-black/40">
@@ -1458,37 +1457,38 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
         </div>
       </div>
 
-      <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-        <div className="flex items-center justify-between">
-          <p className="text-[10px] uppercase tracking-wider text-white/45">{t.profile.currentClass}</p>
-          <TierBadge tier={tier} />
+      <div className="mt-5 -mx-5 flex gap-1 overflow-x-auto rounded-full px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex w-full gap-1 rounded-full border border-white/10 bg-white/[0.04] p-1">
+          {tabs.map(tb => {
+            const active = view === tb.id;
+            return (
+              <button key={tb.id} onClick={() => setView(tb.id)}
+                className={`flex-1 rounded-full px-3 py-1.5 text-xs font-semibold transition ${active ? "bg-white text-black" : "text-white/65"}`}>
+                {tb.label}
+              </button>
+            );
+          })}
         </div>
-        <p className="mt-2 font-display text-2xl font-bold">{TIER_META[tier].label}</p>
-        <p className="mt-1 text-[11px] text-white/55">{t.profile.activePath}: <span className="text-white/85 capitalize">{active.source}</span></p>
-        <button onClick={onUpgrade} className="mt-3 inline-flex items-center gap-1 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-black">
-          <Crown className="h-3.5 w-3.5" /> {t.profile.upgrade}
-        </button>
       </div>
 
-      <section className="mt-6 space-y-2">
-        <button onClick={() => setView("groups")} className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
-          <span className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-white/55" /> {t.profile.myGroups}</span>
-          <span className="inline-flex items-center gap-2 text-xs text-white/45">{myCommunities.length} <ChevronRight className="h-4 w-4" /></span>
-        </button>
-        <button onClick={() => setView("connectors")} className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
-          <span className="inline-flex items-center gap-2"><Share2 className="h-4 w-4 text-white/55" /> Connectors</span>
-          <span className="inline-flex items-center gap-2 text-xs text-white/45">{connectedCount}/{connectors.length} <ChevronRight className="h-4 w-4" /></span>
-        </button>
-        <button onClick={() => setView("settings")} className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm">
-          <span className="inline-flex items-center gap-2"><Settings className="h-4 w-4 text-white/55" /> {t.profile.settings}</span>
-          <ChevronRight className="h-4 w-4 text-white/45" />
-        </button>
-      </section>
-      </>}
+      {view === "class" && (
+        <section className="mt-5">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] uppercase tracking-wider text-white/45">{t.profile.currentClass}</p>
+              <TierBadge tier={tier} />
+            </div>
+            <p className="mt-2 font-display text-2xl font-bold">{TIER_META[tier].label}</p>
+            <p className="mt-1 text-[11px] text-white/55">{t.profile.activePath}: <span className="text-white/85 capitalize">{active.source}</span></p>
+            <button onClick={onUpgrade} className="mt-3 inline-flex items-center gap-1 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-black">
+              <Crown className="h-3.5 w-3.5" /> {t.profile.upgrade}
+            </button>
+          </div>
+        </section>
+      )}
 
       {view === "groups" && (
-        <section>
-          <h2 className="font-display text-2xl font-bold">{t.profile.myGroups}</h2>
+        <section className="mt-5">
           <p className="mt-1 text-[11px] text-white/55">{t.profile.myGroupsDesc}</p>
           <div className="mt-4 space-y-1.5">
             {myCommunities.length === 0 && (
@@ -1513,9 +1513,8 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
       )}
 
       {view === "settings" && (
-        <section>
-          <h2 className="font-display text-2xl font-bold">{t.profile.settings}</h2>
-          <div className="mt-4 space-y-2">
+        <section className="mt-5">
+          <div className="space-y-2">
             {[
               { label: "Account", desc: `${SEED_USER.handle}` },
               { label: "Notifications", desc: "Push notifications" },
@@ -1537,9 +1536,8 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
       )}
 
       {view === "connectors" && (
-        <section>
-          <h2 className="font-display text-2xl font-bold">Connectors</h2>
-          <p className="mt-1 text-[11px] text-white/55">Link your accounts so Mesita can match you with better venues, events and people. The more you connect, the smarter the recs.</p>
+        <section className="mt-5">
+          <p className="text-[11px] text-white/55">Link your accounts so Mesita can match you with better venues, events and people. The more you connect, the smarter the recs.</p>
           <div className="mt-4 space-y-2">
             {connectors.map(c => {
               const on = !!connections[c.id];
