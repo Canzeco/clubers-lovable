@@ -99,7 +99,7 @@ export const SEED_LISTINGS: Listing[] = [
   {
     id: "koli",
     name: "Koli Cocina de Origen",
-    category: "place", subcategory: "Restaurante",
+    category: "place", subcategory: "Restaurant",
     participation: "partner",
     zone: "San Pedro", priceLevel: 4,
     clubersRating: 4.8, googleRating: 4.7,
@@ -116,7 +116,7 @@ export const SEED_LISTINGS: Listing[] = [
   {
     id: "pangea",
     name: "Pangea",
-    category: "place", subcategory: "Restaurante",
+    category: "place", subcategory: "Restaurant",
     participation: "partner",
     zone: "San Pedro", priceLevel: 4,
     clubersRating: 4.7, googleRating: 4.6,
@@ -167,7 +167,7 @@ export const SEED_LISTINGS: Listing[] = [
   {
     id: "doloreschico",
     name: "Dolores Chico",
-    category: "place", subcategory: "Café",
+    category: "place", subcategory: "Cafe",
     participation: "listed",
     zone: "Centro", priceLevel: 2,
     clubersRating: 4.6, googleRating: 4.7,
@@ -181,7 +181,7 @@ export const SEED_LISTINGS: Listing[] = [
   {
     id: "fonda",
     name: "Fonda San Francisco",
-    category: "place", subcategory: "Restaurante",
+    category: "place", subcategory: "Restaurant",
     participation: "listed",
     zone: "Centro", priceLevel: 2,
     clubersRating: 4.3, googleRating: 4.4,
@@ -212,7 +212,7 @@ export const SEED_LISTINGS: Listing[] = [
   {
     id: "biko",
     name: "Biko Cocina Vasca",
-    category: "place", subcategory: "Restaurante",
+    category: "place", subcategory: "Restaurant",
     participation: "partner",
     zone: "Valle Oriente", priceLevel: 3,
     clubersRating: 4.5, googleRating: 4.5,
