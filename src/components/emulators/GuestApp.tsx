@@ -160,7 +160,7 @@ function Discover({
   onToggleMembership: (communityId: string) => void;
 }) {
   const [mode, setMode] = useState<DiscoverMode>("ai");
-  const [cat, setCat] = useState<Category>("place");
+  const [cat, setCat] = useState<Category | null>(null);
   const [sub, setSub] = useState<string | null>(null);
   const [city, setCity] = useState("Monterrey");
   const [when, setWhen] = useState<{ day: string; time: string }>({ day: "Tonight", time: "8PM" });
@@ -173,12 +173,13 @@ function Discover({
 
   const subcategories = useMemo(() => {
     const set = new Set<string>();
+    if (!cat) return [];
     for (const l of SEED_LISTINGS) if (l.category === cat && l.subcategory) set.add(l.subcategory);
     return Array.from(set);
   }, [cat]);
 
   const listings = useMemo(
-    () => SEED_LISTINGS.filter(l => l.category === cat && (!sub || l.subcategory === sub)),
+    () => SEED_LISTINGS.filter(l => (!cat || l.category === cat) && (!sub || l.subcategory === sub)),
     [cat, sub],
   );
 
