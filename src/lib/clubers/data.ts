@@ -65,10 +65,10 @@ export const INFLUENCE_META: Record<NonNullable<Listing["influenceTier"]>, { lab
 };
 
 export const TIER_META: Record<Tier, { label: string; price: number; followers: string; ring: string; chip: string; bg: string }> = {
-  bronze:  { label: "Bronze",  price: 0,    followers: "Por defecto",       ring: "ring-amber-700/60",   chip: "bg-amber-700/20 text-amber-300 border-amber-700/40",   bg: "bg-tier-bronze" },
-  silver:  { label: "Silver",  price: 200,  followers: "1K+ en Instagram",  ring: "ring-slate-300/70",   chip: "bg-slate-300/15 text-slate-200 border-slate-300/30",   bg: "bg-tier-silver" },
-  gold:    { label: "Gold",    price: 500,  followers: "5K+ en Instagram",  ring: "ring-yellow-300/80",  chip: "bg-yellow-300/15 text-yellow-200 border-yellow-300/30", bg: "bg-tier-gold" },
-  diamond: { label: "Diamond", price: 1000, followers: "20K+ en Instagram", ring: "ring-fuchsia-300/80", chip: "bg-fuchsia-300/15 text-fuchsia-200 border-fuchsia-300/30", bg: "bg-tier-diamond" },
+  bronze:  { label: "Bronze",  price: 0,    followers: "Default",           ring: "ring-amber-700/60",   chip: "bg-amber-700/20 text-amber-300 border-amber-700/40",   bg: "bg-tier-bronze" },
+  silver:  { label: "Silver",  price: 200,  followers: "1K+ on Instagram",  ring: "ring-slate-300/70",   chip: "bg-slate-300/15 text-slate-200 border-slate-300/30",   bg: "bg-tier-silver" },
+  gold:    { label: "Gold",    price: 500,  followers: "5K+ on Instagram",  ring: "ring-yellow-300/80",  chip: "bg-yellow-300/15 text-yellow-200 border-yellow-300/30", bg: "bg-tier-gold" },
+  diamond: { label: "Diamond", price: 1000, followers: "20K+ on Instagram", ring: "ring-fuchsia-300/80", chip: "bg-fuchsia-300/15 text-fuchsia-200 border-fuchsia-300/30", bg: "bg-tier-diamond" },
 };
 
 const photo = (q: string, seed: number) =>
