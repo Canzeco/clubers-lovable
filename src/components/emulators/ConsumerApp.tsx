@@ -646,7 +646,10 @@ function SwipeDeck({ listings, tier, onOpen, onSave, onReserve, interleaveByCate
           className="flex items-center justify-center gap-1.5 rounded-full border border-white/10 bg-black/60 px-5 py-3 text-sm text-white/90 backdrop-blur transition hover:bg-black/75">
           <LayoutGrid className="h-4 w-4" /> Info
         </button>
-        <button onClick={() => onReserve(current)}
+        <button onClick={() => {
+            if (current.category === "person" || current.category === "app") advance("right");
+            else onReserve(current);
+          }}
           className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-500 py-3 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/30 transition hover:brightness-110">
           <CtaIcon className="h-4 w-4" /> {ctaLabel}
         </button>
