@@ -545,7 +545,7 @@ function DoneStep({ tab, onClose }: { tab: EntityTab; onClose: () => void }) {
         <Check className="h-6 w-6" />
       </div>
       <p className="font-display text-xl font-semibold">{m.label} created</p>
-      <p className="max-w-xs text-xs text-muted-foreground">It's live on the network. Guests can already discover it on Clubers.</p>
+      <p className="max-w-xs text-xs text-muted-foreground">It's live on the network. Consumers can already discover it on Clubers.</p>
       <button onClick={onClose} className="mt-2 rounded-lg bg-foreground px-4 py-2 text-[11px] font-semibold text-background">
         Done
       </button>

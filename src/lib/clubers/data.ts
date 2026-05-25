@@ -35,7 +35,7 @@ export interface Listing {
   perks?: Record<Tier, Perk>;
   welcomePerk?: Perk;
   // Forces the perk mechanic on transactional partners (place/event).
-  // formal → cashback returned as Clubers credits (only valid if guest pays
+  // formal → cashback returned as Clubers credits (only valid if consumer pays
   // through Clubers). informal → instant discount applied to the bill (Clubers
   // stays off the payment rail).
   fiscalType?: FiscalType;
@@ -286,7 +286,7 @@ export const SEED_LISTINGS: Listing[] = [
     cover: photo("1514362545857-3bc16c4c7d1b", 130),
     gallery: [], openNow: true, hours: "Thu–Sat · 20:00",
     walkMin: 14,
-    description: "Two-hour guided mezcal tasting with a master mezcalero. Six labels, small bites, max 10 guests.",
+    description: "Two-hour guided mezcal tasting with a master mezcalero. Six labels, small bites, max 10 consumers.",
     perks: cashbackPerks(5, 10, 15, 20),
     welcomePerk: { kind: "cashback", pct: 20, label: "20% on your first tasting" },
     fiscalType: "formal",
@@ -627,7 +627,7 @@ export interface Gamification {
 }
 
 // ───────────────────────────────────────────────────────────────
-// Seed user — used by the prototype as the current logged-in guest.
+// Seed user — used by the prototype as the current logged-in consumer.
 // ───────────────────────────────────────────────────────────────
 export const SEED_USER = {
   name: "Daniel R.",

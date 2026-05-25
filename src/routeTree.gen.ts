@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WaiterRouteImport } from './routes/waiter'
 import { Route as LandingRouteImport } from './routes/landing'
-import { Route as GuestRouteImport } from './routes/guest'
+import { Route as ConsumerRouteImport } from './routes/consumer'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ManagerIndexRouteImport } from './routes/manager.index'
@@ -29,9 +29,9 @@ const LandingRoute = LandingRouteImport.update({
   path: '/landing',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GuestRoute = GuestRouteImport.update({
-  id: '/guest',
-  path: '/guest',
+const ConsumerRoute = ConsumerRouteImport.update({
+  id: '/consumer',
+  path: '/consumer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -68,7 +68,7 @@ const ManagerUnitTypeIdRoute = ManagerUnitTypeIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
-  '/guest': typeof GuestRoute
+  '/consumer': typeof ConsumerRoute
   '/landing': typeof LandingRoute
   '/waiter': typeof WaiterRoute
   '/manager/add': typeof ManagerAddRoute
@@ -79,7 +79,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
-  '/guest': typeof GuestRoute
+  '/consumer': typeof ConsumerRoute
   '/landing': typeof LandingRoute
   '/waiter': typeof WaiterRoute
   '/manager/add': typeof ManagerAddRoute
@@ -91,7 +91,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
-  '/guest': typeof GuestRoute
+  '/consumer': typeof ConsumerRoute
   '/landing': typeof LandingRoute
   '/waiter': typeof WaiterRoute
   '/manager/add': typeof ManagerAddRoute
@@ -104,7 +104,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
-    | '/guest'
+    | '/consumer'
     | '/landing'
     | '/waiter'
     | '/manager/add'
@@ -115,7 +115,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
-    | '/guest'
+    | '/consumer'
     | '/landing'
     | '/waiter'
     | '/manager/add'
@@ -126,7 +126,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
-    | '/guest'
+    | '/consumer'
     | '/landing'
     | '/waiter'
     | '/manager/add'
@@ -138,7 +138,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
-  GuestRoute: typeof GuestRoute
+  ConsumerRoute: typeof ConsumerRoute
   LandingRoute: typeof LandingRoute
   WaiterRoute: typeof WaiterRoute
   ManagerAddRoute: typeof ManagerAddRoute
@@ -163,11 +163,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LandingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/guest': {
-      id: '/guest'
-      path: '/guest'
-      fullPath: '/guest'
-      preLoaderRoute: typeof GuestRouteImport
+    '/consumer': {
+      id: '/consumer'
+      path: '/consumer'
+      fullPath: '/consumer'
+      preLoaderRoute: typeof ConsumerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -218,7 +218,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
-  GuestRoute: GuestRoute,
+  ConsumerRoute: ConsumerRoute,
   LandingRoute: LandingRoute,
   WaiterRoute: WaiterRoute,
   ManagerAddRoute: ManagerAddRoute,
@@ -229,3 +229,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

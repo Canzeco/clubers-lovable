@@ -13,7 +13,7 @@ import {
 } from "@/lib/clubers/data";
 
 /* ============================================================
-   Clubers — Guest Web App
+   Clubers — Consumer Web App
    Mobile-first. Premium dark nightlife aesthetic.
    Section structure: Discover · Saved · QR · Share · Profile
    ============================================================ */
@@ -21,7 +21,7 @@ import {
 type Tab = "discover" | "saved" | "pay" | "share" | "profile";
 type DiscoverMode = "ai" | "swipe" | "map" | "catalog";
 
-export function GuestApp() {
+export function ConsumerApp() {
   const [tab, setTab] = useState<Tab>("discover");
   const [paths, setPaths] = useState<ClassPaths>(SEED_USER.paths);
   const tier = resolveActiveTier(paths).tier;
