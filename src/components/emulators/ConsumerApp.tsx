@@ -214,8 +214,8 @@ function Discover({
 
   return (
     <div className="relative flex h-full flex-col">
-      {/* Header — Mesita-style top bar */}
-      <header className="relative px-4 pt-4">
+      {/* Header — Mesita-style top bar (floats over swipe deck) */}
+      <header className={`px-4 pt-4 ${mode === "swipe" ? "absolute inset-x-0 top-0 z-20" : "relative"}`}>
         <div className="flex items-center gap-2">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-rose-500 text-white shadow-lg shadow-fuchsia-500/30">
             <span className="font-serif text-lg font-bold leading-none">M</span>
