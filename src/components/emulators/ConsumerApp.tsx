@@ -6,7 +6,7 @@ import {
   X, ArrowUp, ArrowDown, Loader2, Send, Gift, Copy, Instagram, Globe,
   Crown, Check, Lock, Heart, Wallet, Settings, ArrowRight, Flame,
   TrendingUp, CircleDollarSign, ArrowDownLeft, ArrowUpRight, ShoppingBag,
-  Bot, Wrench,
+  Bot, Wrench, Smartphone,
   Eye, EyeOff, Search,
 } from "lucide-react";
 import {
@@ -184,7 +184,7 @@ function Discover({
   const CITIES = ["Monterrey", "San Pedro", "CDMX", "Guadalajara", "Tulum", "Mérida"];
   const DAYS = ["Tonight", "Tomorrow", "This weekend", "Next week"];
   const TIMES = ["6PM", "7PM", "8PM", "9PM", "10PM", "11PM", "Late"];
-  const CATS: Category[] = ["place", "event", "community", "person", "product", "service"];
+  const CATS: Category[] = ["place", "event", "community", "person", "product", "service", "app"];
 
   const subcategories = useMemo(() => {
     const set = new Set<string>();
@@ -1233,6 +1233,7 @@ function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
     { cat: "person",    label: t.discover.cats.person },
     { cat: "product",   label: t.discover.cats.product },
     { cat: "service",   label: t.discover.cats.service },
+    { cat: "app",       label: t.discover.cats.app },
   ];
   const [selCat, setSelCat] = useState<Category | null>(null);
   const filtered = selCat ? items.filter(l => l.category === selCat) : items;

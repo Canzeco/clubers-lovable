@@ -20,6 +20,7 @@ import {
   UserCircle2,
   ShoppingBag,
   Wrench,
+  Smartphone,
   ChevronRight,
   Eye,
   PencilLine,
@@ -41,6 +42,7 @@ const TAB_META: Record<EntityTab, { label: string; plural: string; Icon: IconTyp
   person:    { label: "Person",    plural: "People",      Icon: UserCircle2,  hint: "DJs, foodies, hosts, tastemakers",          accent: "from-amber-500 to-orange-500" },
   product:   { label: "Product",   plural: "Products",    Icon: ShoppingBag,  hint: "Bottles, merch, vouchers",                 accent: "from-emerald-500 to-teal-500" },
   service:   { label: "Service",   plural: "Services",    Icon: Wrench,       hint: "Barbers, trainers, photographers",         accent: "from-indigo-500 to-blue-500" },
+  app:       { label: "App",       plural: "Apps",        Icon: Smartphone,   hint: "Micro-apps: face review, voice coach…",    accent: "from-cyan-500 to-blue-500" },
 };
 
 type View = "dashboard" | EntityTab;
@@ -57,10 +59,11 @@ export function AdminWeb() {
     { id: "person",    label: "People",       Icon: UserCircle2,hint: "Creators & hosts" },
     { id: "product",   label: "Products",     Icon: ShoppingBag,hint: "Bottles, merch, vouchers" },
     { id: "service",   label: "Services",     Icon: Wrench,     hint: "Barbers, trainers, photographers" },
+    { id: "app",       label: "Apps",         Icon: Smartphone, hint: "Micro-apps for consumers" },
   ];
 
   const counts = useMemo(() => {
-    const c: Record<EntityTab, number> = { place: 0, event: 0, community: 0, person: 0, product: 0, service: 0 };
+    const c: Record<EntityTab, number> = { place: 0, event: 0, community: 0, person: 0, product: 0, service: 0, app: 0 };
     SEED_LISTINGS.forEach(l => { c[l.category]++; });
     return c;
   }, []);
