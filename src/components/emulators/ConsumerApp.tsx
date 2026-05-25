@@ -672,7 +672,7 @@ function SwipeCard({ listing, tier, style, overlay, onPointerDown, onPointerMove
       </div>
 
       {/* Bottom: eyebrow, name, meta, chips */}
-      <div className="absolute inset-x-0 bottom-0 p-5">
+      <div className="absolute inset-x-0 bottom-0 px-5 pt-5 pb-24">
         <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-white/65">
           {listing.subcategory}{listing.vibes[0] ? ` · ${listing.vibes[0]}` : ""}
         </p>
