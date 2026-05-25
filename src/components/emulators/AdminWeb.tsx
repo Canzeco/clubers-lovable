@@ -183,7 +183,7 @@ export function AdminWeb() {
               <Filter className="h-3.5 w-3.5" /> CDMX · Premium · 4★+
             </button>
             <button className="flex items-center gap-1 rounded-lg bg-gradient-to-r from-accent to-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-glow">
-              <Plus className="h-3.5 w-3.5" /> Añadir venue
+              <Plus className="h-3.5 w-3.5" /> Add venue
             </button>
           </div>
         </div>
@@ -220,8 +220,8 @@ function StageView({ stageId }: { stageId: string }) {
   }
   const descriptions: Record<string, string> = {
     sourced: "Lista manual desde Google Business Profile. Selecciona un venue y lanza Super-sourcing.",
-    enriching: "Agente AI buscando IG, FB, web, reseñas y posts. Consulta la base para evitar duplicados.",
-    review: "Revisión humana del perfil enriquecido. Edita y aprueba antes de pasar a ventas.",
+    enriching: "AI agent scanning IG, FB, web, reviews and posts. Checks the database to avoid duplicates.",
+    review: "Human review of the enriched profile. Edit and approve before sending to sales.",
     sales: "Contacto comercial · convertir en partner de Mesita.",
   };
   return (
@@ -290,7 +290,7 @@ function PipelineBoard() {
                 ))}
                 {s.id === "sourced" && (
                   <button className="flex w-full items-center justify-center gap-1 rounded-lg border border-dashed border-border py-2 text-xs text-muted-foreground hover:text-foreground">
-                    <Plus className="h-3 w-3" /> Añadir manual
+                    <Plus className="h-3 w-3" /> Add manually
                   </button>
                 )}
                 {s.id === "enriching" && (
@@ -333,7 +333,7 @@ function LeadCard({ l, stage }: { l: Lead; stage: string }) {
           <span className="rounded-full bg-card px-1.5 py-0.5">IG ✓</span>
           <span className="rounded-full bg-card px-1.5 py-0.5">FB ✓</span>
           <span className="rounded-full bg-card px-1.5 py-0.5">Web ✓</span>
-          <span className="rounded-full bg-card px-1.5 py-0.5 opacity-50">Reseñas…</span>
+          <span className="rounded-full bg-card px-1.5 py-0.5 opacity-50">Reviews…</span>
         </div>
       </div>
     );
@@ -409,11 +409,11 @@ function LeadCard({ l, stage }: { l: Lead; stage: string }) {
 
 function Portfolio() {
   const venues = useAppContent("admin_portfolio_venues", [
-    { n: "Casa Luminar", c: "CDMX · Roma", gmv: "$84.2k", redeems: 312, plan: "Premium", st: "Activo", health: 96 },
-    { n: "Neón Bar", c: "CDMX · Condesa", gmv: "$62.1k", redeems: 248, plan: "Premium", st: "Activo", health: 88 },
-    { n: "Loto Café", c: "GDL · Chapalita", gmv: "$22.4k", redeems: 142, plan: "Standard", st: "Activo", health: 71 },
+    { n: "Casa Luminar", c: "CDMX · Roma", gmv: "$84.2k", redeems: 312, plan: "Premium", st: "Active", health: 96 },
+    { n: "Neón Bar", c: "CDMX · Condesa", gmv: "$62.1k", redeems: 248, plan: "Premium", st: "Active", health: 88 },
+    { n: "Loto Café", c: "GDL · Chapalita", gmv: "$22.4k", redeems: 142, plan: "Standard", st: "Active", health: 71 },
     { n: "Costa Azul", c: "MTY · San Pedro", gmv: "$41.7k", redeems: 168, plan: "Standard", st: "Onboarding", health: 42 },
-    { n: "Bocanada", c: "CDMX · Roma", gmv: "$8.1k", redeems: 24, plan: "Trial", st: "Activo", health: 28 },
+    { n: "Bocanada", c: "CDMX · Roma", gmv: "$8.1k", redeems: 24, plan: "Trial", st: "Active", health: 28 },
   ]);
   return (
     <div className="space-y-4 p-6">
@@ -438,7 +438,7 @@ function Portfolio() {
           <span className="col-span-1">Canjeos</span>
           <span className="col-span-1">Plan</span>
           <span className="col-span-2">Health score</span>
-          <span className="col-span-1">Acción</span>
+          <span className="col-span-1">Action</span>
         </div>
         {venues.map((v) => (
           <div key={v.n} className="grid grid-cols-12 items-center border-b border-border/50 px-4 py-3 text-sm last:border-0 hover:bg-card">
@@ -476,7 +476,7 @@ function Portfolio() {
 
 function DiscoverVenues() {
   const targets = useAppContent("admin_discovery_targets", [
-    { n: "Galápago", area: "Roma Sur", ig: "14k", rating: 4.8, signals: ["3 Gold guests visitaron", "12 stories tagged"], fit: 92 },
+    { n: "Galápago", area: "Roma Sur", ig: "14k", rating: 4.8, signals: ["3 Gold guests visited", "12 stories tagged"], fit: 92 },
     { n: "Patio Verde", area: "Condesa", ig: "31k", rating: 4.5, signals: ["Trending IG · 7d", "Ticket alto"], fit: 88 },
     { n: "Tropikalia", area: "Cuauhtémoc", ig: "120k", rating: 4.3, signals: ["High footfall", "Late night"], fit: 84 },
     { n: "El Hueco", area: "Juárez", ig: "9k", rating: 4.6, signals: ["Vibe match · mezcal"], fit: 78 },
@@ -491,7 +491,7 @@ function DiscoverVenues() {
           </p>
         </div>
         <button className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground">
-          <Sparkles className="h-3.5 w-3.5" /> Refrescar señales
+          <Sparkles className="h-3.5 w-3.5" /> Refresh signals
         </button>
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -522,7 +522,7 @@ function DiscoverVenues() {
             </div>
             <div className="mt-3 flex gap-2">
               <button className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-peacock py-1.5 text-xs font-semibold text-primary-foreground shadow-glow">
-                <Plus className="h-3 w-3" /> Añadir a pipeline
+                <Plus className="h-3 w-3" /> Add to pipeline
               </button>
               <button className="rounded-lg border border-border px-2 text-muted-foreground"><Phone className="h-3 w-3" /></button>
               <button className="rounded-lg border border-border px-2 text-muted-foreground"><Mail className="h-3 w-3" /></button>
@@ -576,8 +576,8 @@ const findsSeed: PromoFind[] = [
     handle: "@neon.bar",
     detected: "hace 22 min",
     title: "DJ Set · Lola Vegga",
-    excerpt: "Sábado en la cabina: Lola Vegga b2b residentes. Cover gratis antes de las 11.",
-    when: "Sáb 16 · 22:30",
+    excerpt: "Saturday in the booth: Lola Vegga b2b residents. Free cover before 11.",
+    when: "Sat 16 · 22:30",
     type: "DJ set",
     confidence: 92,
     status: "new",
@@ -589,8 +589,8 @@ const findsSeed: PromoFind[] = [
     source: "facebook",
     handle: "Patio Verde Café",
     detected: "hace 1 h",
-    title: "Brunch de mamás · 15% off",
-    excerpt: "Domingo celebramos a las mamás con 15% en todo el brunch y mimosa de cortesía.",
+    title: "Moms' brunch · 15% off",
+    excerpt: "Sunday we celebrate moms with 15% off the whole brunch and a complimentary mimosa.",
     when: "Dom 17 · 10:00 – 14:00",
     type: "Promo",
     confidence: 88,
@@ -619,7 +619,7 @@ const findsSeed: PromoFind[] = [
     detected: "hace 5 h",
     title: "Cata vinos naturales",
     excerpt: "Cupos limitados · 6 vinos de productores mexicanos + tabla. $480 por persona.",
-    when: "Mié 13 · 20:00",
+    when: "Wed 13 · 20:00",
     type: "Evento",
     confidence: 74,
     status: "new",
@@ -683,7 +683,7 @@ function PromoRadar() {
         <Stat label="Cuentas observadas" value="312" delta="IG · FB" Icon={Radar} />
         <Stat label="Promos detectadas (7d)" value="184" delta="+22% vs sem ant." Icon={Sparkles} />
         <Stat label="Auto-publicadas" value="76%" delta="conf ≥ 85" Icon={CheckCircle2} />
-        <Stat label="Tiempo medio detección" value="6 min" delta="desde el post" Icon={Clock} />
+        <Stat label="Avg detection time" value="6 min" delta="from the post" Icon={Clock} />
       </div>
 
       <div className="flex gap-2 text-xs">
@@ -802,7 +802,7 @@ function PromoCard({
                 onClick={() => setStatus(f.id, "approved")}
                 className="flex items-center gap-1 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-black"
               >
-                <Check className="h-3 w-3" /> Publicar en catálogo
+                <Check className="h-3 w-3" /> Publish to catalog
               </button>
               <button className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground">
                 <PencilLine className="h-3 w-3" /> Editar antes
@@ -846,7 +846,7 @@ function MetricsImpl() {
       </div>
       <div className="grid grid-cols-4 gap-3">
         <Stat label="GMV influido" value="$2.74M" delta="+19% MoM" Icon={Wallet} />
-        <Stat label="Comisión 10%" value="$274k" delta="+19%" Icon={TrendingUp} />
+        <Stat label="10% commission" value="$274k" delta="+19%" Icon={TrendingUp} />
         <Stat label="Venues activos" value="312" delta="+12 este mes" Icon={Building2} />
         <Stat label="MAU" value="18.4k" delta="+24%" Icon={Users} />
       </div>
@@ -939,9 +939,9 @@ function TrustTier() {
           <p className="flex items-center gap-2 text-sm font-medium"><ShieldCheck className="h-4 w-4 text-destructive" /> Trust flags</p>
           <div className="mt-3 space-y-2 text-sm">
             {[
-              { t: "Story duplicada · Neón Bar", sev: "high" },
-              { t: "Múltiples cuentas mismo device", sev: "med" },
-              { t: "Velocidad de canje anómala", sev: "low" },
+              { t: "Duplicate story · Neón Bar", sev: "high" },
+              { t: "Multiple accounts on same device", sev: "med" },
+              { t: "Anomalous redemption velocity", sev: "low" },
             ].map((f) => (
               <div key={f.t} className="flex items-center justify-between rounded-lg bg-card p-2">
                 <span className="flex items-center gap-2">
