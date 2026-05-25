@@ -503,6 +503,13 @@ export const t = {
     xpLabel: "XP",
     streakLabel: "Streak",
     badgesLabel: "Badges",
+    myGroups: "Your groups",
+    myGroupsDesc: "Everything you belong to. Each group unlocks its own perks at venues across the city.",
+    classGroup: "Class",
+    influenceGroup: "Influence",
+    communityGroups: "Communities",
+    joinMore: "Browse communities",
+    leaveGroup: "Leave",
   },
   common: { back: "Back", close: "Close", continue: "Continue" },
 };
