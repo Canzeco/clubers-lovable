@@ -184,7 +184,7 @@ function Discover({
   const CITIES = ["Monterrey", "San Pedro", "CDMX", "Guadalajara", "Tulum", "Mérida"];
   const DAYS = ["Tonight", "Tomorrow", "This weekend", "Next week"];
   const TIMES = ["6PM", "7PM", "8PM", "9PM", "10PM", "11PM", "Late"];
-  const CATS: Category[] = ["place", "event", "experience", "community", "person"];
+  const CATS: Category[] = ["place", "event", "community", "person", "product", "service"];
 
   const subcategories = useMemo(() => {
     const set = new Set<string>();
@@ -322,7 +322,7 @@ function Discover({
               </div>
             </section>
 
-            {(cat === "event" || cat === "experience" || cat === "place") && (
+            {(cat === "event" || cat === "place") && (
               <>
                 <section className="mt-6">
                   <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Day</p>
@@ -336,7 +336,7 @@ function Discover({
                   </div>
                 </section>
 
-                {(cat === "event" || cat === "experience") && (
+                {cat === "event" && (
                   <section className="mt-6">
                     <p className="pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Time</p>
                     <div className="flex flex-wrap gap-1.5">
@@ -374,7 +374,7 @@ function Discover({
           <CommunityList listings={listings} onOpen={onOpenListing} memberships={memberships} onToggleMembership={onToggleMembership} />
         ) : cat === "person" ? (
           <PeopleList listings={listings} onOpen={onOpenListing} />
-        ) : cat === "event" || cat === "experience" ? (
+        ) : cat === "event" ? (
           mode === "swipe" ? (
             <SwipeDeck listings={listings} tier={tier} onOpen={onOpenListing} onSave={(id) => onToggleSave(id)} onReserve={onReserve} />
           ) : mode === "map" ? (
