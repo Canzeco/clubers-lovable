@@ -6,7 +6,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Mesita 🦚 — Platform" },
-      { name: "description", content: "Mesita platform: landing, admin, manager, waiter, and guest apps." },
+      { name: "description", content: "Mesita platform: landing, manager, and guest apps." },
     ],
   }),
   component: Index,
@@ -14,9 +14,7 @@ export const Route = createFileRoute("/")({
 
 const productsFallback = [
   { to: "/landing", label: "Landing", tag: "Marketing site", desc: "Public website explaining Mesita to venues and guests." },
-  { to: "/admin", label: "Admin", tag: "Mesita HQ", desc: "Operate the network: venues, tier curation, revenue, trust & safety." },
   { to: "/manager", label: "Manager", tag: "Venue portal", desc: "Launch cashback campaigns, segment guests, see revenue lift." },
-  { to: "/waiter", label: "Waiter", tag: "Staff · WhatsApp", desc: "Waiters validate QR coupons in a familiar chat — no new tools." },
   { to: "/guest", label: "Guest", tag: "Mobile web", desc: "Swipe-to-discover venues, claim cashback, redeem with QR." },
 ] as const;
 
@@ -44,7 +42,7 @@ function Index() {
         <div className="mb-12 max-w-2xl">
           <h1 className="font-display text-5xl font-semibold leading-tight">The Mesita platform</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Five surfaces, one social cashback engine. Pick a product to open it.
+            Three surfaces, one social cashback engine. Pick a product to open it.
           </p>
         </div>
 
