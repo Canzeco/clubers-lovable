@@ -16,6 +16,7 @@ import {
   Sparkles,
   Star,
   Store,
+  Package,
   TrendingUp,
   UserPlus,
   Users,
@@ -36,6 +37,7 @@ import {
 type TabId =
   | "dashboard"
   | "place"
+  | "products"
   | "promos"
   | "analytics"
   | "wallet"
@@ -65,13 +67,14 @@ export function ManagerWeb() {
   const unit = units.find((u) => u.id === unitId) ?? units[0];
   const [session, setSession] = useState<{ user: { id: string; email?: string } }>({ user: { id: "prototype-manager", email: "manager@casaluminar.mx" } });
 
-  const nav: { id: TabId; label: string; Icon: typeof LayoutDashboard }[] = [
-    { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
-    { id: "place", label: "Place", Icon: Store },
-    { id: "promos", label: "Promos", Icon: Megaphone },
-    { id: "analytics", label: "Analytics", Icon: BarChart3 },
-    { id: "wallet", label: "Wallet", Icon: WalletIcon },
-    { id: "team", label: "Team", Icon: Users },
+  const nav: { id: TabId; label: string; Icon: typeof LayoutDashboard; soon?: boolean }[] = [
+    { id: "dashboard",  label: "Home",        Icon: LayoutDashboard },
+    { id: "place",      label: "Place",       Icon: Store },
+    { id: "products",   label: "Products",    Icon: Package, soon: true },
+    { id: "promos",     label: "Promos",      Icon: Megaphone },
+    { id: "analytics",  label: "Performance", Icon: BarChart3 },
+    { id: "wallet",     label: "Wallet",      Icon: WalletIcon },
+    { id: "team",       label: "Team",        Icon: Users },
   ];
 
   return (
@@ -132,15 +135,23 @@ export function ManagerWeb() {
           {nav.map((n) => (
             <button
               key={n.id}
-              onClick={() => setTab(n.id)}
+              onClick={() => { if (!n.soon) setTab(n.id); }}
+              disabled={n.soon}
               className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${
                 tab === n.id
                   ? "bg-sidebar-accent text-sidebar-primary"
-                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50"
+                  : n.soon
+                    ? "text-sidebar-foreground/40 cursor-not-allowed"
+                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50"
               }`}
             >
               <n.Icon className="h-4 w-4" />
-              {n.label}
+              <span className="flex-1 text-left">{n.label}</span>
+              {n.soon && (
+                <span className="rounded-full bg-sidebar-accent/60 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-sidebar-foreground/60">
+                  Soon
+                </span>
+              )}
             </button>
           ))}
         </nav>
