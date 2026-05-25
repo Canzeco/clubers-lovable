@@ -6,7 +6,7 @@ import { PartyPopper, Users, ChevronLeft, Sparkles, UserCircle2, ShoppingBag, Wr
 
 const VALID_TYPES: UnitType[] = ["place", "event", "community", "person", "product", "service", "app"];
 
-export const Route = createFileRoute("/manager/unit/$type/$id")({
+export const Route = createFileRoute("/business/unit/$type/$id")({
   ssr: false,
   params: {
     parse: (raw) => {

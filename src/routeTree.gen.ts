@@ -14,7 +14,7 @@ import { Route as LandingRouteImport } from './routes/landing'
 import { Route as ConsumerRouteImport } from './routes/consumer'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ManagerIndexRouteImport } from './routes/manager.index'
+import { Route as BusinessIndexRouteImport } from './routes/business.index'
 import { Route as ManagerCentralRouteImport } from './routes/manager.central'
 import { Route as ManagerAddRouteImport } from './routes/manager.add'
 import { Route as ManagerUnitTypeIdRouteImport } from './routes/manager.unit.$type.$id'
@@ -44,9 +44,9 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ManagerIndexRoute = ManagerIndexRouteImport.update({
-  id: '/manager/',
-  path: '/manager/',
+const BusinessIndexRoute = BusinessIndexRouteImport.update({
+  id: '/business/',
+  path: '/business/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ManagerCentralRoute = ManagerCentralRouteImport.update({
@@ -73,7 +73,7 @@ export interface FileRoutesByFullPath {
   '/waiter': typeof WaiterRoute
   '/manager/add': typeof ManagerAddRoute
   '/manager/central': typeof ManagerCentralRoute
-  '/manager/': typeof ManagerIndexRoute
+  '/business/': typeof BusinessIndexRoute
   '/manager/unit/$type/$id': typeof ManagerUnitTypeIdRoute
 }
 export interface FileRoutesByTo {
@@ -84,7 +84,7 @@ export interface FileRoutesByTo {
   '/waiter': typeof WaiterRoute
   '/manager/add': typeof ManagerAddRoute
   '/manager/central': typeof ManagerCentralRoute
-  '/manager': typeof ManagerIndexRoute
+  '/business': typeof BusinessIndexRoute
   '/manager/unit/$type/$id': typeof ManagerUnitTypeIdRoute
 }
 export interface FileRoutesById {
@@ -96,7 +96,7 @@ export interface FileRoutesById {
   '/waiter': typeof WaiterRoute
   '/manager/add': typeof ManagerAddRoute
   '/manager/central': typeof ManagerCentralRoute
-  '/manager/': typeof ManagerIndexRoute
+  '/business/': typeof BusinessIndexRoute
   '/manager/unit/$type/$id': typeof ManagerUnitTypeIdRoute
 }
 export interface FileRouteTypes {
@@ -109,7 +109,7 @@ export interface FileRouteTypes {
     | '/waiter'
     | '/manager/add'
     | '/manager/central'
-    | '/manager/'
+    | '/business/'
     | '/manager/unit/$type/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -120,7 +120,7 @@ export interface FileRouteTypes {
     | '/waiter'
     | '/manager/add'
     | '/manager/central'
-    | '/manager'
+    | '/business'
     | '/manager/unit/$type/$id'
   id:
     | '__root__'
@@ -131,7 +131,7 @@ export interface FileRouteTypes {
     | '/waiter'
     | '/manager/add'
     | '/manager/central'
-    | '/manager/'
+    | '/business/'
     | '/manager/unit/$type/$id'
   fileRoutesById: FileRoutesById
 }
@@ -143,7 +143,7 @@ export interface RootRouteChildren {
   WaiterRoute: typeof WaiterRoute
   ManagerAddRoute: typeof ManagerAddRoute
   ManagerCentralRoute: typeof ManagerCentralRoute
-  ManagerIndexRoute: typeof ManagerIndexRoute
+  BusinessIndexRoute: typeof BusinessIndexRoute
   ManagerUnitTypeIdRoute: typeof ManagerUnitTypeIdRoute
 }
 
@@ -184,11 +184,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/manager/': {
-      id: '/manager/'
-      path: '/manager'
-      fullPath: '/manager/'
-      preLoaderRoute: typeof ManagerIndexRouteImport
+    '/business/': {
+      id: '/business/'
+      path: '/business'
+      fullPath: '/business/'
+      preLoaderRoute: typeof BusinessIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/manager/central': {
@@ -223,9 +223,19 @@ const rootRouteChildren: RootRouteChildren = {
   WaiterRoute: WaiterRoute,
   ManagerAddRoute: ManagerAddRoute,
   ManagerCentralRoute: ManagerCentralRoute,
-  ManagerIndexRoute: ManagerIndexRoute,
+  BusinessIndexRoute: BusinessIndexRoute,
   ManagerUnitTypeIdRoute: ManagerUnitTypeIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

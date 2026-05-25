@@ -3,7 +3,7 @@ import { MapPin, Plus, Sparkles, PartyPopper, Users, Store, UserCircle2, Shoppin
 import { ManagerShell } from "@/components/manager/Shell";
 import { MY_UNITS, UNIT_TYPE_META, type UnitType } from "@/lib/manager/units";
 
-export const Route = createFileRoute("/manager/central")({
+export const Route = createFileRoute("/business/central")({
   ssr: false,
   head: () => ({
     meta: [

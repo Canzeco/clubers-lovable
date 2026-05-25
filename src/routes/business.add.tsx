@@ -4,7 +4,7 @@ import { Search, Store, PartyPopper, Users, UserCircle2, ShoppingBag, Wrench, Sm
 import { ManagerShell } from "@/components/manager/Shell";
 import { UNIT_TYPE_META, type UnitType } from "@/lib/manager/units";
 
-export const Route = createFileRoute("/manager/add")({
+export const Route = createFileRoute("/business/add")({
   ssr: false,
   head: () => ({
     meta: [

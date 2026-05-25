@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Mail, Lock } from "lucide-react";
 
-export const Route = createFileRoute("/manager/")({
+export const Route = createFileRoute("/business/")({
   ssr: false,
   head: () => ({
     meta: [
