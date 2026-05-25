@@ -3,7 +3,7 @@
 // functions in `clubersApi` for Supabase Edge Function calls later.
 
 export type Tier = "bronze" | "silver" | "gold" | "diamond";
-export type Category = "place" | "event" | "community" | "person";
+export type Category = "place" | "event" | "experience" | "community" | "person";
 export type Participation = "listed" | "partner";
 export type PerkKind = "cashback" | "discount";
 export type FiscalType = "formal" | "informal";
@@ -41,6 +41,8 @@ export interface Listing {
   fiscalType?: FiscalType;
   // For events
   whenLabel?: string; // "Vie 14 dic · 22:00"
+  // For experiences
+  durationLabel?: string; // "2 h" · "Half day"
   // For communities
   members?: number;          // 1820
   entryRule?: string;        // "Solo @tec.mx" · "Aprobación del admin" · "Abierto"
