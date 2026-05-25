@@ -1145,13 +1145,16 @@ function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
   onOpen: (l: Listing) => void; onToggleSave: (id: string) => void;
 }) {
   const items = SEED_LISTINGS.filter(l => saved.has(l.id));
-  const groups: Array<{ cat: Category; label: string }> = [
+  const groups: Array<{ cat: Category | null; label: string }> = [
+    { cat: null,        label: "All" },
     { cat: "place",     label: t.discover.cats.place },
     { cat: "event",     label: t.discover.cats.event },
     { cat: "experience",label: t.discover.cats.experience },
     { cat: "community", label: t.discover.cats.community },
     { cat: "person",    label: t.discover.cats.person },
   ];
+  const [selCat, setSelCat] = useState<Category | null>(null);
+  const filtered = selCat ? items.filter(l => l.category === selCat) : items;
   return (
     <div className="h-full overflow-y-auto px-5 pb-28 pt-6">
       <h1 className="font-display text-2xl font-bold">{t.saved.title}</h1>
@@ -1179,27 +1182,25 @@ function Saved({ tier, saved, reservations, onOpen, onToggleSave }: {
       )}
 
       <section className="mt-6">
-        {items.length === 0 ? (
-          <p className="mt-3 rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center text-sm text-white/55">{t.saved.empty}</p>
+        <div className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {groups.map(g => {
+            const count = g.cat ? items.filter(l => l.category === g.cat).length : items.length;
+            const active = selCat === g.cat;
+            return (
+              <button key={g.label} onClick={() => setSelCat(g.cat)}
+                className={`shrink-0 rounded-full border px-3 py-1.5 text-xs transition ${active ? "border-white/80 bg-white text-black" : "border-white/15 bg-white/[0.04] text-white/70"}`}>
+                {g.label} <span className={`ml-1 ${active ? "text-black/55" : "text-white/40"}`}>{count}</span>
+              </button>
+            );
+          })}
+        </div>
+        {filtered.length === 0 ? (
+          <p className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center text-sm text-white/55">{t.saved.empty}</p>
         ) : (
-          <div className="space-y-6">
-            {groups.map(g => {
-              const inGroup = items.filter(l => l.category === g.cat);
-              if (inGroup.length === 0) return null;
-              return (
-                <div key={g.cat}>
-                  <div className="flex items-center justify-between">
-                    <p className="eyebrow !text-white/40">{g.label}</p>
-                    <span className="text-[10px] uppercase tracking-wider text-white/35">{inGroup.length}</span>
-                  </div>
-                  <div className="mt-2 space-y-3">
-                    {inGroup.map(l => (
-                      <CatalogCard key={l.id} listing={l} tier={tier} onOpen={() => onOpen(l)} saved onToggleSave={() => onToggleSave(l.id)} />
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
+          <div className="mt-4 space-y-3">
+            {filtered.map(l => (
+              <CatalogCard key={l.id} listing={l} tier={tier} onOpen={() => onOpen(l)} saved onToggleSave={() => onToggleSave(l.id)} />
+            ))}
           </div>
         )}
       </section>
