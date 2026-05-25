@@ -1435,6 +1435,7 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
     { id: "spotify",   label: "Spotify",   desc: "Music & vibe matching", icon: <Sparkles className="h-4 w-4" /> },
     { id: "google",    label: "Google",    desc: "Calendar & places visited", icon: <MapPin className="h-4 w-4" /> },
     { id: "tiktok",    label: "TikTok",    desc: "Trends you actually care about", icon: <Flame className="h-4 w-4" /> },
+    { id: "amazon",    label: "Amazon",    desc: "Shopping taste & better deals", icon: <ShoppingBag className="h-4 w-4" /> },
   ];
   const connectedCount = Object.values(connections).filter(Boolean).length;
   const tabs: Array<{ id: typeof view; label: string }> = [
