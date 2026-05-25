@@ -283,7 +283,7 @@ export const t = {
   nav: { discover: "Descubre", saved: "Guarda", qr: "QR", share: "Comparte", profile: "Perfil" },
   discover: {
     ai: "AI Planner", swipe: "Swipe", map: "Mapa", catalog: "Catálogo",
-    cats: { place: "Lugares", experience: "Experiencias", event: "Eventos" },
+    cats: { place: "Lugares", experience: "Experiencias", event: "Eventos", community: "Comunidades", person: "Gente" },
     aiHero: "¿Qué se te antoja esta noche?",
     aiPlaceholder: "Cena en rooftop y algo en vivo, bajo $800, caminando en San Pedro…",
     aiBuilding: "Armando tu noche…",
