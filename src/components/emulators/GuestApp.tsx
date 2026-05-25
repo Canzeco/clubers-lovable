@@ -145,40 +145,55 @@ function Discover({
 
   return (
     <div className="relative flex h-full flex-col">
-      {/* Header */}
-      <header className="px-5 pt-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="font-display text-3xl font-bold tracking-tight">
-              <span className="bg-gradient-to-r from-fuchsia-300 via-rose-300 to-amber-200 bg-clip-text text-transparent">{t.brand}</span>
-            </h1>
-            <p className="mt-0.5 text-xs text-white/55">{t.tagline}</p>
+      {/* Header — Mesita-style top bar */}
+      <header className="px-4 pt-4">
+        <div className="flex items-center gap-2">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-rose-500 text-white shadow-lg shadow-fuchsia-500/30">
+            <Flame className="h-5 w-5" />
           </div>
-          <TierBadge tier={tier} />
+          <div className="flex flex-1 items-center divide-x divide-white/10 rounded-full border border-white/10 bg-white/[0.04] px-1 py-1.5">
+            <div className="flex flex-1 items-center gap-2 px-3">
+              <MapPin className="h-4 w-4 text-fuchsia-300" />
+              <div className="leading-tight">
+                <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/45">Where</p>
+                <p className="font-display text-[13px] font-semibold">Monterrey</p>
+              </div>
+            </div>
+            <div className="flex flex-1 items-center gap-2 px-3">
+              <Calendar className="h-4 w-4 text-fuchsia-300" />
+              <div className="leading-tight">
+                <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-white/45">When <span className="ml-0.5 text-white/70">8PM</span></p>
+                <p className="font-display text-[13px] font-semibold">Tonight</p>
+              </div>
+            </div>
+          </div>
+          <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white shadow-lg ${TIER_META[tier].bg}`}>
+            {tier[0].toUpperCase()}
+          </div>
         </div>
 
-        {/* Category tabs */}
-        <div className="mt-4 flex gap-1.5 overflow-x-auto rounded-full border border-white/10 bg-white/5 p-1 text-xs scrollbar-hide">
-          {(["place", "experience", "event", "community", "person"] as Category[]).map(c => (
-            <button key={c} onClick={() => setCat(c)}
-              className={`shrink-0 rounded-full px-3 py-1.5 font-medium transition ${cat === c ? "bg-white text-black" : "text-white/65 hover:text-white"}`}>
-              {t.discover.cats[c]}
+        {/* Mode segmented control — Mesita style */}
+        <div className="mt-4 flex items-center gap-0.5 rounded-full border border-white/10 bg-white/[0.04] p-1">
+          {([
+            { id: "swipe" as const,   Icon: Flame,      label: t.discover.swipe },
+            { id: "catalog" as const, Icon: LayoutGrid, label: t.discover.catalog },
+            { id: "map" as const,     Icon: MapPin,     label: t.discover.map },
+            { id: "ai" as const,      Icon: Sparkles,   label: t.discover.ai },
+          ]).map(({ id, Icon, label }) => (
+            <button key={id} onClick={() => setMode(id)}
+              className={`flex flex-1 items-center justify-center gap-1.5 rounded-full py-2 text-xs font-medium transition ${mode === id ? "bg-white text-black" : "text-white/65"}`}>
+              <Icon className="h-3.5 w-3.5" />
+              {label}
             </button>
           ))}
         </div>
 
-        {/* Mode pills */}
-        <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1 text-xs scrollbar-hide">
-          {([
-            { id: "ai" as const,      Icon: Sparkles,     label: t.discover.ai },
-            { id: "swipe" as const,   Icon: Flame,        label: t.discover.swipe },
-            { id: "map" as const,     Icon: MapPin,       label: t.discover.map },
-            { id: "catalog" as const, Icon: LayoutGrid,   label: t.discover.catalog },
-          ]).map(({ id, Icon, label }) => (
-            <button key={id} onClick={() => setMode(id)}
-              className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 transition ${mode === id ? "border-fuchsia-300/60 bg-fuchsia-300/15 text-fuchsia-100" : "border-white/10 bg-white/5 text-white/65"}`}>
-              <Icon className="h-3.5 w-3.5" />
-              {label}
+        {/* Category chips */}
+        <div className="mt-2.5 flex gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-hide">
+          {(["place", "experience", "event", "community", "person"] as Category[]).map(c => (
+            <button key={c} onClick={() => setCat(c)}
+              className={`shrink-0 rounded-full border px-2.5 py-1 font-medium transition ${cat === c ? "border-fuchsia-300/50 bg-fuchsia-500/15 text-fuchsia-100" : "border-white/10 bg-transparent text-white/55 hover:text-white/80"}`}>
+              {t.discover.cats[c]}
             </button>
           ))}
         </div>
@@ -195,7 +210,7 @@ function Discover({
         ) : mode === "ai" ? (
           <AIPlanner tier={tier} onOpen={onOpenListing} onReserve={onReserve} saved={saved} onToggleSave={onToggleSave} />
         ) : mode === "swipe" ? (
-          <SwipeDeck listings={listings} tier={tier} onOpen={onOpenListing} onSave={(id) => onToggleSave(id)} />
+          <SwipeDeck listings={listings} tier={tier} onOpen={onOpenListing} onSave={(id) => onToggleSave(id)} onReserve={onReserve} />
         ) : mode === "map" ? (
           <MapView listings={listings} tier={tier} onOpen={onOpenListing} />
         ) : (
@@ -350,7 +365,7 @@ function PlanCard({ step, listing, tier, saved, onOpen, onSave, onReserve }: {
 }
 
 /* ── Swipe Deck ─────────────────────────────────────────────── */
-function SwipeDeck({ listings, tier, onOpen, onSave }: { listings: Listing[]; tier: Tier; onOpen: (l: Listing) => void; onSave: (id: string) => void }) {
+function SwipeDeck({ listings, tier, onOpen, onSave, onReserve }: { listings: Listing[]; tier: Tier; onOpen: (l: Listing) => void; onSave: (id: string) => void; onReserve: (l: Listing) => void }) {
   const [idx, setIdx] = useState(0);
   const [drag, setDrag] = useState({ y: 0 });
   const [flying, setFlying] = useState<"up" | "down" | null>(null);
@@ -375,10 +390,15 @@ function SwipeDeck({ listings, tier, onOpen, onSave }: { listings: Listing[]; ti
   const flyY = flying === "up" ? -800 : flying === "down" ? 800 : drag.y;
   const rot = (drag.y / 30);
 
+  const advance = (dir: "up" | "down") => {
+    if (dir === "up") onSave(current.id);
+    setFlying(dir);
+    setTimeout(() => { setIdx(i => (i + 1) % listings.length); setDrag({ y: 0 }); setFlying(null); }, 220);
+  };
+
   return (
-    <div className="relative h-full px-4 pb-24 pt-2">
-      <p className="mb-2 text-center text-[11px] text-white/45">{t.discover.swipeHint}</p>
-      <div className="relative h-full">
+    <div className="relative flex h-full flex-col px-4 pb-24 pt-3">
+      <div className="relative flex-1">
         {next && <SwipeCard listing={next} tier={tier} style={{ transform: "scale(0.95) translateY(8px)", opacity: 0.6 }} />}
         <SwipeCard
           listing={current} tier={tier}
@@ -387,6 +407,21 @@ function SwipeDeck({ listings, tier, onOpen, onSave }: { listings: Listing[]; ti
           style={{ transform: `translateY(${flyY}px) rotate(${rot}deg)`, transition: flying ? "transform 220ms ease-out" : startY.current ? "none" : "transform 200ms" }}
           overlay={drag.y < -40 ? "save" : drag.y > 40 ? "skip" : null}
         />
+      </div>
+      {/* Action bar — Mesita-style */}
+      <div className="mt-3 flex items-center gap-2">
+        <button onClick={() => advance("down")}
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] py-3 text-sm text-white/70 transition hover:bg-white/[0.08]">
+          <X className="h-4 w-4" /> {t.discover.skip}
+        </button>
+        <button onClick={() => onOpen(current)}
+          className="flex items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-5 py-3 text-sm text-white/85 transition hover:bg-white/[0.08]">
+          <LayoutGrid className="h-4 w-4" /> {t.discover.cats[current.category]}
+        </button>
+        <button onClick={() => onReserve(current)}
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-500 py-3 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/30 transition hover:brightness-110">
+          <BadgeCheck className="h-4 w-4" /> {t.discover.saveOrReserve}
+        </button>
       </div>
     </div>
   );
@@ -397,7 +432,8 @@ function SwipeCard({ listing, tier, style, overlay, onPointerDown, onPointerMove
   onPointerDown?: (e: React.PointerEvent) => void; onPointerMove?: (e: React.PointerEvent) => void; onPointerUp?: () => void;
   onClick?: () => void;
 }) {
-  const perk = listing.perks?.[tier];
+  const isPartner = listing.participation === "partner";
+  const galleryCount = Math.max(listing.gallery?.length ?? 0, 6);
   return (
     <div
       onPointerDown={onPointerDown} onPointerMove={onPointerMove}
@@ -406,28 +442,39 @@ function SwipeCard({ listing, tier, style, overlay, onPointerDown, onPointerMove
       style={style}
     >
       <img src={listing.cover} alt={listing.name} className="h-full w-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/30" />
-      {listing.participation === "partner" && (
-        <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[10px] text-fuchsia-200 backdrop-blur"><BadgeCheck className="h-3 w-3" />Partner</span>
-      )}
-      <div className="absolute inset-x-0 bottom-0 p-5">
-        <div className="flex flex-wrap gap-1.5">
-          {listing.vibes.slice(0, 3).map(v => (
-            <span key={v} className="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] text-white/85 backdrop-blur">#{v}</span>
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+
+      {/* Top: pagination dots + counter */}
+      <div className="absolute inset-x-5 top-4 flex items-center justify-between">
+        <div className="flex flex-1 items-center justify-center gap-1.5">
+          {Array.from({ length: galleryCount }).map((_, i) => (
+            <span key={i} className={`h-1 rounded-full transition ${i === 0 ? "w-5 bg-white" : "w-1 bg-white/35"}`} />
           ))}
         </div>
-        <h3 className="mt-3 font-display text-3xl font-bold text-white">{listing.name}</h3>
-        <p className="text-sm text-white/70">{listing.subcategory} · {listing.zone} · {"$".repeat(listing.priceLevel)}</p>
-        <div className="mt-2 flex items-center gap-3 text-xs text-white/80">
-          <span className="inline-flex items-center gap-1"><Star className="h-3.5 w-3.5 fill-amber-300 text-amber-300" />{listing.clubersRating.toFixed(1)} Clubers</span>
-          <span className="text-white/40">·</span>
-          <span>{listing.googleRating.toFixed(1)} Google</span>
-        </div>
-        <div className="mt-4 rounded-xl border border-white/15 bg-black/40 p-3 backdrop-blur">
-          <p className="text-[10px] uppercase tracking-wider text-white/50">{t.venue.yourPerk}</p>
-          <p className={`mt-0.5 text-base font-semibold ${perk ? "text-fuchsia-200" : "text-white/55"}`}>
-            {perk?.label ?? "Sin perk · venue listado"}
-          </p>
+        <span className="absolute right-0 text-[11px] font-medium text-white/70">1 / {galleryCount}</span>
+      </div>
+
+      {/* Bottom: eyebrow, name, meta, chips */}
+      <div className="absolute inset-x-0 bottom-0 p-5">
+        <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-white/65">
+          {listing.subcategory}{listing.vibes[0] ? ` · ${listing.vibes[0]}` : ""}
+        </p>
+        <h3 className="mt-2 font-display text-[34px] font-bold leading-[1.05] text-white">{listing.name}</h3>
+        <p className="mt-1.5 text-[13px] text-white/65">
+          {"$".repeat(listing.priceLevel)} · until {listing.hours.split("–").pop()?.trim() ?? listing.hours}
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+          <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold tracking-wider text-black">
+            <Star className="h-3 w-3" /> NEW
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-2.5 py-1 text-[10px] font-semibold tracking-wider text-white backdrop-blur">
+            <Globe className="h-3 w-3" /> WEB
+          </span>
+          {isPartner && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-fuchsia-500/90 px-2.5 py-1 text-[10px] font-semibold tracking-wider text-white">
+              <BadgeCheck className="h-3 w-3" /> PARTNER
+            </span>
+          )}
         </div>
       </div>
 
