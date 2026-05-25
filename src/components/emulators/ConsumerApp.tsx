@@ -1501,6 +1501,98 @@ function Profile({ tier, paths, onUpgrade, savedCount, memberships, onLeaveMembe
         </div>
       </div>
 
+      {view === "card" && (
+        <section className="mt-5 space-y-4">
+          {/* Discoverability toggle */}
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${discoverable ? "bg-emerald-400/15 text-emerald-300" : "bg-white/10 text-white/55"}`}>
+                {discoverable ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold">Discoverable in people search</p>
+                <p className="text-[10px] text-white/50">Venues, groups & people can find you by vibe.</p>
+              </div>
+            </div>
+            <button onClick={() => setDiscoverable(v => !v)}
+              className={`relative h-6 w-11 shrink-0 rounded-full transition ${discoverable ? "bg-emerald-400/80" : "bg-white/15"}`}>
+              <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition ${discoverable ? "left-[22px]" : "left-0.5"}`} />
+            </button>
+          </div>
+
+          {/* The Card */}
+          <div className="relative overflow-hidden rounded-[28px] border border-white/15 bg-gradient-to-br from-white/[0.09] via-white/[0.04] to-transparent p-5 shadow-2xl shadow-black/50">
+            <div className={`pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full ${TIER_META[tier].bg} opacity-40 blur-3xl`} />
+            <div className="pointer-events-none absolute -left-16 -bottom-16 h-48 w-48 rounded-full bg-fuchsia-500/30 opacity-40 blur-3xl" />
+
+            <div className="relative flex items-start justify-between gap-3">
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/55">Mesita · Card</span>
+              <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white ${TIER_META[tier].bg}`}>
+                <Crown className="h-2.5 w-2.5" /> {TIER_META[tier].label}
+              </span>
+            </div>
+
+            <div className="relative mt-4 flex items-center gap-3">
+              <div className={`h-16 w-16 rounded-2xl ${TIER_META[tier].bg} p-[2px] shadow-lg shadow-black/40`}>
+                <div className="flex h-full w-full items-center justify-center rounded-[14px] bg-black/60">
+                  <User className="h-7 w-7 text-white" />
+                </div>
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-display text-2xl font-bold leading-tight truncate">{SEED_USER.name}</p>
+                <p className="mt-0.5 truncate text-xs text-white/60">
+                  <Instagram className="-mt-0.5 mr-1 inline h-3 w-3" />{SEED_USER.handle} · {paths.followers.followers.toLocaleString()} followers
+                </p>
+              </div>
+            </div>
+
+            {/* Vibe tags */}
+            <div className="relative mt-4 flex flex-wrap gap-1.5">
+              {["Rooftop nights","Natural wine","Indie electronic","Pádel","San Pedro"].map(tag => (
+                <span key={tag} className="rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-1 text-[10px] font-medium text-white/80">{tag}</span>
+              ))}
+            </div>
+
+            {/* AI Fit */}
+            <div className="relative mt-4 rounded-2xl border border-violet-300/20 bg-gradient-to-br from-violet-500/15 via-fuchsia-500/10 to-transparent p-3">
+              <div className="flex items-center gap-1.5">
+                <Sparkles className="h-3.5 w-3.5 text-violet-200" />
+                <p className="text-[10px] font-bold uppercase tracking-wider text-violet-200">AI Fit</p>
+              </div>
+              <p className="mt-1.5 text-[12px] leading-snug text-white/85">
+                High-signal rooftop regular with a curated late-week rhythm. Strong overlap with creative founders & natural-wine crowds in San Pedro. Likely a great +1 for intimate openings and Thursday-night sets.
+              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                {[
+                  { k: "Taste match", v: "94%" },
+                  { k: "Scene", v: "Nightlife · Food" },
+                  { k: "Energy", v: "Thu–Sat" },
+                ].map(m => (
+                  <span key={m.k} className="rounded-md bg-black/30 px-2 py-0.5 text-[9px] text-white/70">
+                    <span className="text-white/45">{m.k}</span> <span className="font-semibold text-white">{m.v}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative mt-4 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 text-[10px] text-white/55">
+                <Search className="h-3 w-3" />
+                {discoverable ? "Visible in people search" : "Hidden from search"}
+              </div>
+              <button className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1.5 text-[11px] font-semibold text-black">
+                <Share2 className="h-3 w-3" /> Share card
+              </button>
+            </div>
+          </div>
+
+          <p className="flex items-start gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-[10px] text-white/55">
+            <Lock className="mt-0.5 h-3 w-3 shrink-0 text-emerald-300/70" />
+            <span>Your card is generated from your connectors and activity. You control what's visible — Mesita never shares your contact info.</span>
+          </p>
+        </section>
+      )}
+
       {view === "class" && (
         <section className="mt-5 space-y-3">
           {(["bronze","silver","gold","diamond"] as Tier[]).map(tk => {
