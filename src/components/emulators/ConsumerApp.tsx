@@ -1097,6 +1097,24 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
 
         <p className="text-sm leading-relaxed text-white/80">{listing.description}</p>
 
+        {/* Product menu */}
+        <ProductMenu listing={listing} />
+
+        {/* Promos matrix per tier */}
+        <PromosMatrix listing={listing} currentTier={tier} />
+
+        {/* Google reviews */}
+        <GoogleReviewsCarousel listing={listing} />
+
+        {/* Mesita reviews & visitors */}
+        <MesitaReviewsCarousel listing={listing} />
+
+        {/* Location map */}
+        <LocationMap listing={listing} />
+
+        {/* Hours & popular times */}
+        <PopularTimesCarousel listing={listing} />
+
         {/* Product / Service hero */}
         {(listing.category === "product" || listing.category === "service") && (
           <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-500/10 to-sky-500/10 p-4">
