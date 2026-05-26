@@ -1248,6 +1248,15 @@ function Info({ icon, label }: { icon: React.ReactNode; label: string }) {
   );
 }
 
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between py-2">
+      <dt className="text-white/55">{label}</dt>
+      <dd className="max-w-[60%] truncate text-right font-medium text-white capitalize">{value}</dd>
+    </div>
+  );
+}
+
 /* ─────────────────────────────────────────────────────────────
    VENUE DETAIL — sub-sections (mock data)
    ───────────────────────────────────────────────────────────── */
