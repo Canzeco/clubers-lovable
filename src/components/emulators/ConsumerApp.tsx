@@ -998,13 +998,25 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
             <span>{"$".repeat(listing.priceLevel)}</span>
             <span className="text-white/30">·</span>
             <span className={listing.openNow ? "text-emerald-300" : "text-white/50"}>{listing.openNow ? t.discover.openNow : t.discover.closed}</span>
+            <span className="text-white/30">·</span>
+            <span>{listing.walkMin} min</span>
           </div>
+          <p className="mt-2 flex items-start gap-1.5 text-[11px] text-white/55">
+            <MapPin className="mt-0.5 h-3 w-3 shrink-0" />
+            <span>Av. {listing.zone} 1248, {listing.zone}, MX</span>
+          </p>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {listing.vibes.map(v => (
               <span key={v} className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] text-white/85">#{v}</span>
             ))}
           </div>
         </div>
+
+        {/* Media — square 1:1 carousel */}
+        <MediaCarouselSquare photos={photos} />
+
+        {/* Reviews summary */}
+        <ReviewsSummary listing={listing} />
 
         {/* Perk panel */}
         <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-fuchsia-500/15 to-rose-500/10 p-4">
@@ -1084,6 +1096,24 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
         )}
 
         <p className="text-sm leading-relaxed text-white/80">{listing.description}</p>
+
+        {/* Product menu */}
+        <ProductMenu listing={listing} />
+
+        {/* Promos matrix per tier */}
+        <PromosMatrix listing={listing} currentTier={tier} />
+
+        {/* Google reviews */}
+        <GoogleReviewsCarousel listing={listing} />
+
+        {/* Mesita reviews & visitors */}
+        <MesitaReviewsCarousel listing={listing} />
+
+        {/* Location map */}
+        <LocationMap listing={listing} />
+
+        {/* Hours & popular times */}
+        <PopularTimesCarousel listing={listing} />
 
         {/* Product / Service hero */}
         {(listing.category === "product" || listing.category === "service") && (
@@ -1266,6 +1296,291 @@ function Info({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-white/80">
       <span className="text-white/55">{icon}</span>{label}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   VENUE DETAIL — sub-sections (mock data)
+   ───────────────────────────────────────────────────────────── */
+
+function HScroll({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="-mx-5 flex snap-x snap-mandatory gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {children}
+    </div>
+  );
+}
+
+function SectionTitle({ icon, title, hint }: { icon: React.ReactNode; title: string; hint?: string }) {
+  return (
+    <div className="mb-2 flex items-end justify-between">
+      <div className="flex items-center gap-2">
+        <span className="text-fuchsia-300">{icon}</span>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">{title}</p>
+      </div>
+      {hint && <p className="text-[10px] text-white/40">{hint}</p>}
+    </div>
+  );
+}
+
+function MediaCarouselSquare({ photos }: { photos: string[] }) {
+  const [idx, setIdx] = useState(0);
+  const list = photos.length > 0 ? photos : [""];
+  return (
+    <div>
+      <SectionTitle icon={<LayoutGrid className="h-3.5 w-3.5" />} title="Media" hint={`${idx + 1} / ${list.length}`} />
+      <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/10 bg-black">
+        <img src={list[idx]} alt="" className="h-full w-full object-cover" />
+        {list.length > 1 && (
+          <>
+            <button onClick={() => setIdx(i => (i - 1 + list.length) % list.length)} className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/60 p-1.5 backdrop-blur">
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button onClick={() => setIdx(i => (i + 1) % list.length)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/60 p-1.5 backdrop-blur">
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1">
+              {list.map((_, i) => (
+                <button key={i} onClick={() => setIdx(i)} className={`h-1 rounded-full transition ${i === idx ? "w-5 bg-white" : "w-1.5 bg-white/45"}`} />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function StarRow({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="flex items-center justify-between rounded-lg bg-white/[0.03] px-2.5 py-1.5">
+      <span className="text-[11px] text-white/70">{label}</span>
+      <span className="flex items-center gap-1 text-[11px] font-semibold text-white">
+        <Star className="h-3 w-3 fill-amber-300 text-amber-300" />
+        {value.toFixed(1)}
+      </span>
+    </div>
+  );
+}
+
+function ReviewsSummary({ listing }: { listing: Listing }) {
+  const c = listing.clubersRating;
+  // Deterministic mock sub-ratings around clubersRating
+  const food = Math.min(5, c + 0.2);
+  const service = Math.max(0, c - 0.1);
+  const ambiance = Math.min(5, c + 0.3);
+  const overall = c;
+  const googleN = 1240 + listing.name.length * 31;
+  const igFollowers = 18400 + listing.name.length * 220;
+  const fbFollowers = 9200 + listing.name.length * 90;
+  const fbStars = Math.max(3.8, Math.min(5, c - 0.2));
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <SectionTitle icon={<Star className="h-3.5 w-3.5" />} title="Reviews summary" />
+      <div className="grid grid-cols-2 gap-1.5">
+        <StarRow label="Mesita · Food" value={food} />
+        <StarRow label="Mesita · Service" value={service} />
+        <StarRow label="Mesita · Ambiance" value={ambiance} />
+        <StarRow label="Mesita · Overall" value={overall} />
+      </div>
+      <div className="mt-3 grid grid-cols-3 gap-1.5">
+        <div className="rounded-lg border border-white/10 bg-white/[0.03] p-2 text-center">
+          <p className="text-[9px] uppercase tracking-wider text-white/45">Google</p>
+          <p className="mt-0.5 flex items-center justify-center gap-1 text-xs font-semibold">
+            <Star className="h-3 w-3 fill-amber-300 text-amber-300" />{listing.googleRating.toFixed(1)}
+          </p>
+          <p className="text-[9px] text-white/45">{googleN.toLocaleString()} reviews</p>
+        </div>
+        <div className="rounded-lg border border-white/10 bg-white/[0.03] p-2 text-center">
+          <p className="text-[9px] uppercase tracking-wider text-white/45">Instagram</p>
+          <p className="mt-0.5 flex items-center justify-center gap-1 text-xs font-semibold"><Instagram className="h-3 w-3" />{(igFollowers / 1000).toFixed(1)}K</p>
+          <p className="text-[9px] text-white/45">followers</p>
+        </div>
+        <div className="rounded-lg border border-white/10 bg-white/[0.03] p-2 text-center">
+          <p className="text-[9px] uppercase tracking-wider text-white/45">Facebook</p>
+          <p className="mt-0.5 flex items-center justify-center gap-1 text-xs font-semibold"><Star className="h-3 w-3 fill-amber-300 text-amber-300" />{fbStars.toFixed(1)}</p>
+          <p className="text-[9px] text-white/45">{(fbFollowers / 1000).toFixed(1)}K fans</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const MOCK_MENU = [
+  { name: "Tasting menu", desc: "7 courses · chef's selection", price: 1290 },
+  { name: "Wagyu tostada", desc: "A5 wagyu · black truffle", price: 320 },
+  { name: "Smoked octopus", desc: "Charred citrus · chile morita", price: 280 },
+  { name: "Mezcal flight", desc: "3 x 1oz · espadín, tobalá, ensamble", price: 240 },
+  { name: "Cacao dessert", desc: "Tabasco cacao · sea salt", price: 180 },
+];
+
+function ProductMenu({ listing }: { listing: Listing }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <SectionTitle icon={<ShoppingBag className="h-3.5 w-3.5" />} title="Menu" hint={`${"$".repeat(listing.priceLevel)} · MXN`} />
+      <ul className="divide-y divide-white/5">
+        {MOCK_MENU.map(m => (
+          <li key={m.name} className="flex items-center justify-between gap-3 py-2.5">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-white">{m.name}</p>
+              <p className="truncate text-[11px] text-white/55">{m.desc}</p>
+            </div>
+            <p className="shrink-0 font-display text-sm font-bold">${m.price}</p>
+          </li>
+        ))}
+      </ul>
+      <button className="mt-2 w-full rounded-lg border border-white/10 bg-white/[0.03] py-2 text-[11px] font-medium text-white/75">See full menu</button>
+    </div>
+  );
+}
+
+function PromosMatrix({ listing, currentTier }: { listing: Listing; currentTier: Tier }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <SectionTitle icon={<Gift className="h-3.5 w-3.5" />} title="Promos by tier" hint="What each tier gets" />
+      <div className="grid grid-cols-4 gap-1.5">
+        {TIERS.map(t => {
+          const p = listing.perks?.[t];
+          const active = t === currentTier;
+          return (
+            <div key={t} className={`rounded-xl border p-2 text-center ${active ? "border-fuchsia-300/50 bg-fuchsia-500/10" : "border-white/10 bg-white/[0.03]"}`}>
+              <p className={`text-[9px] font-semibold uppercase tracking-wider ${active ? "text-fuchsia-200" : "text-white/55"}`}>
+                {TIER_META[t].label}
+              </p>
+              <p className="mt-1 font-display text-base font-bold text-white">{p ? `${p.pct}%` : "—"}</p>
+              <p className="text-[9px] capitalize text-white/45">{p?.kind ?? "no perk"}</p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const MOCK_GOOGLE_REVIEWS = [
+  { name: "Andrea L.", stars: 5, text: "Easily the best tasting menu in the city. Service was attentive without being intrusive." },
+  { name: "Mateo R.", stars: 4, text: "Beautiful space, food is exceptional. A bit loud on weekends." },
+  { name: "Sofía G.", stars: 5, text: "Came for an anniversary — the staff went above and beyond. Worth every peso." },
+  { name: "Javier T.", stars: 4, text: "Great cocktails and ambient music. The smoked octopus is a must." },
+];
+
+const MOCK_MESITA_REVIEWS = [
+  { name: "Lucía", tier: "diamond" as Tier, food: 4.9, service: 4.8, ambiance: 5.0, text: "Felt like a private event. Bronze cashback hit my wallet before I left." },
+  { name: "Diego", tier: "gold"   as Tier, food: 4.7, service: 4.5, ambiance: 4.8, text: "Reserved through Mesita in 10 seconds. Discount was automatic." },
+  { name: "Renata", tier: "silver" as Tier, food: 4.6, service: 4.7, ambiance: 4.9, text: "Honest review: portions are small but every bite counts." },
+  { name: "Iván", tier: "diamond" as Tier, food: 5.0, service: 5.0, ambiance: 4.9, text: "Brought 6 friends — the team treated us like regulars on visit one." },
+];
+
+function GoogleReviewsCarousel({ listing }: { listing: Listing }) {
+  return (
+    <div>
+      <SectionTitle icon={<Globe className="h-3.5 w-3.5" />} title="Google reviews" hint={`${listing.googleRating.toFixed(1)} ★`} />
+      <HScroll>
+        {MOCK_GOOGLE_REVIEWS.map((r, i) => (
+          <div key={i} className="w-64 shrink-0 snap-start rounded-2xl border border-white/10 bg-white/[0.04] p-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold">{r.name}</p>
+              <span className="flex items-center gap-0.5 text-[11px] text-amber-300"><Star className="h-3 w-3 fill-amber-300" />{r.stars}</span>
+            </div>
+            <p className="mt-1.5 text-[11px] leading-relaxed text-white/70">{r.text}</p>
+          </div>
+        ))}
+      </HScroll>
+    </div>
+  );
+}
+
+function MesitaReviewsCarousel({ listing }: { listing: Listing }) {
+  return (
+    <div>
+      <SectionTitle icon={<Heart className="h-3.5 w-3.5" />} title="Mesita reviews & visitors" hint={`${listing.clubersRating.toFixed(1)} ★`} />
+      <HScroll>
+        {MOCK_MESITA_REVIEWS.map((r, i) => (
+          <div key={i} className="w-64 shrink-0 snap-start rounded-2xl border border-white/10 bg-gradient-to-br from-fuchsia-500/10 to-rose-500/5 p-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold">{r.name}</p>
+              <TierBadge tier={r.tier} small />
+            </div>
+            <div className="mt-1.5 grid grid-cols-3 gap-1 text-[10px] text-white/65">
+              <span>Food <span className="text-white">{r.food}</span></span>
+              <span>Svc <span className="text-white">{r.service}</span></span>
+              <span>Amb <span className="text-white">{r.ambiance}</span></span>
+            </div>
+            <p className="mt-1.5 text-[11px] leading-relaxed text-white/75">{r.text}</p>
+          </div>
+        ))}
+      </HScroll>
+    </div>
+  );
+}
+
+function LocationMap({ listing }: { listing: Listing }) {
+  return (
+    <div>
+      <SectionTitle icon={<MapPin className="h-3.5 w-3.5" />} title="Location" hint={`${listing.walkMin} min walk`} />
+      <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(800px 400px at 30% 40%, oklch(0.30 0.10 280 / 0.8), transparent 60%), radial-gradient(600px 300px at 70% 70%, oklch(0.35 0.10 320 / 0.7), transparent 60%), linear-gradient(180deg, oklch(0.16 0.04 280), oklch(0.10 0.02 280))",
+          }}
+        />
+        <svg className="absolute inset-0 h-full w-full opacity-30" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+              <path d="M 32 0 L 0 0 0 32" fill="none" stroke="white" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="flex flex-col items-center">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-rose-500 shadow-lg shadow-fuchsia-500/40">
+              <MapPin className="h-4 w-4 text-white" />
+            </div>
+            <div className="mt-1 rounded-md bg-black/70 px-2 py-0.5 text-[10px] font-medium backdrop-blur">{listing.name}</div>
+          </div>
+        </div>
+      </div>
+      <p className="mt-2 text-[11px] text-white/55">Av. {listing.zone} 1248, {listing.zone}, MX</p>
+    </div>
+  );
+}
+
+const MOCK_POPULAR = [
+  { day: "Mon", bars: [10, 15, 20, 35, 50, 60, 45, 30] },
+  { day: "Tue", bars: [12, 18, 25, 40, 55, 65, 50, 35] },
+  { day: "Wed", bars: [15, 20, 30, 45, 60, 75, 60, 40] },
+  { day: "Thu", bars: [20, 28, 38, 55, 75, 90, 80, 55] },
+  { day: "Fri", bars: [25, 35, 50, 70, 90, 100, 95, 75] },
+  { day: "Sat", bars: [30, 40, 55, 75, 95, 100, 98, 80] },
+  { day: "Sun", bars: [22, 30, 42, 58, 70, 78, 60, 40] },
+];
+
+function PopularTimesCarousel({ listing }: { listing: Listing }) {
+  return (
+    <div>
+      <SectionTitle icon={<Clock className="h-3.5 w-3.5" />} title="Hours & popular times" hint="GMT-6 · Monterrey" />
+      <div className="mb-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-[11px] text-white/75">
+        <span className={listing.openNow ? "text-emerald-300" : "text-white/50"}>{listing.openNow ? "Open now" : "Closed"}</span>
+        <span className="text-white/30"> · </span>
+        <span>{listing.hours}</span>
+      </div>
+      <HScroll>
+        {MOCK_POPULAR.map(d => (
+          <div key={d.day} className="w-32 shrink-0 snap-start rounded-2xl border border-white/10 bg-white/[0.04] p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-white/55">{d.day}</p>
+            <div className="mt-2 flex h-16 items-end justify-between gap-0.5">
+              {d.bars.map((b, i) => (
+                <div key={i} className="w-1.5 rounded-sm bg-gradient-to-t from-fuchsia-500/70 to-rose-400/70" style={{ height: `${b}%` }} />
+              ))}
+            </div>
+            <p className="mt-1 text-[9px] text-white/40">6p — 1a</p>
+          </div>
+        ))}
+      </HScroll>
     </div>
   );
 }
