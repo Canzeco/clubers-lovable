@@ -998,13 +998,25 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
             <span>{"$".repeat(listing.priceLevel)}</span>
             <span className="text-white/30">·</span>
             <span className={listing.openNow ? "text-emerald-300" : "text-white/50"}>{listing.openNow ? t.discover.openNow : t.discover.closed}</span>
+            <span className="text-white/30">·</span>
+            <span>{listing.walkMin} min</span>
           </div>
+          <p className="mt-2 flex items-start gap-1.5 text-[11px] text-white/55">
+            <MapPin className="mt-0.5 h-3 w-3 shrink-0" />
+            <span>Av. {listing.zone} 1248, {listing.zone}, MX</span>
+          </p>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {listing.vibes.map(v => (
               <span key={v} className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] text-white/85">#{v}</span>
             ))}
           </div>
         </div>
+
+        {/* Media — square 1:1 carousel */}
+        <MediaCarouselSquare photos={photos} />
+
+        {/* Reviews summary */}
+        <ReviewsSummary listing={listing} />
 
         {/* Perk panel */}
         <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-fuchsia-500/15 to-rose-500/10 p-4">
