@@ -1232,11 +1232,9 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <Info icon={<Clock className="h-3.5 w-3.5" />} label={listing.hours} />
-          <Info icon={<MapPin className="h-3.5 w-3.5" />} label={`${listing.walkMin} min walk`} />
-          <Info icon={<Globe className="h-3.5 w-3.5" />} label="Website" />
-          <Info icon={<Instagram className="h-3.5 w-3.5" />} label="Instagram" />
+        <div className="flex gap-2 text-xs">
+          <a className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] py-2 text-white/80"><Globe className="h-3.5 w-3.5 text-white/55" /> Website</a>
+          <a className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] py-2 text-white/80"><Instagram className="h-3.5 w-3.5 text-white/55" /> Instagram</a>
         </div>
       </div>
 
