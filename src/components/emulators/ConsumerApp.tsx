@@ -967,44 +967,28 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
 
   return (
     <div className="absolute inset-0 z-30 overflow-y-auto bg-[oklch(0.10_0.02_280)] text-white">
-      <div className="relative h-72">
-        <img src={photos[photoIdx]} alt={listing.name} className="h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[oklch(0.10_0.02_280)] via-transparent to-black/40" />
-        <button onClick={onClose} className="absolute left-4 top-4 rounded-full bg-black/55 p-2 backdrop-blur"><ChevronLeft className="h-4 w-4" /></button>
-        <button onClick={onToggleSave} className="absolute right-4 top-4 rounded-full bg-black/55 p-2 backdrop-blur">
+      {/* Sticky top bar — back + save */}
+      <div className="sticky top-0 z-10 flex items-center justify-between bg-[oklch(0.10_0.02_280)]/85 px-4 py-3 backdrop-blur-xl">
+        <button onClick={onClose} className="rounded-full bg-white/10 p-2"><ChevronLeft className="h-4 w-4" /></button>
+        <button onClick={onToggleSave} className="rounded-full bg-white/10 p-2">
           <Heart className={`h-4 w-4 ${saved ? "fill-rose-400 text-rose-400" : ""}`} />
         </button>
-        {photos.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1">
-            {photos.map((_, i) => (
-              <button key={i} onClick={() => setPhotoIdx(i)} className={`h-1 rounded-full transition ${i === photoIdx ? "w-6 bg-white" : "w-2 bg-white/40"}`} />
-            ))}
-          </div>
-        )}
-        {listing.participation === "partner" && (
-          <span className="absolute right-4 bottom-4 inline-flex items-center gap-1 rounded-full bg-fuchsia-500/95 px-3 py-1 text-[11px] font-medium text-white shadow-lg"><BadgeCheck className="h-3 w-3" /> {t.venue.partner}</span>
-        )}
       </div>
 
       <div className="space-y-5 px-5 pb-32 pt-5">
         <div>
-          <p className="text-[11px] uppercase tracking-wider text-white/45">{listing.subcategory} · {listing.zone}</p>
+          <div className="flex items-center gap-2">
+            <p className="text-[11px] uppercase tracking-wider text-white/45">{listing.subcategory} · {listing.zone}</p>
+            {listing.participation === "partner" && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-fuchsia-500/90 px-2 py-0.5 text-[10px] font-medium text-white"><BadgeCheck className="h-3 w-3" /> {t.venue.partner}</span>
+            )}
+          </div>
           <h2 className="mt-1 font-display text-3xl font-bold leading-tight">{listing.name}</h2>
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/75">
-            <span className="inline-flex items-center gap-1"><Star className="h-3.5 w-3.5 fill-amber-300 text-amber-300" />{listing.clubersRating.toFixed(1)} {t.venue.clubers}</span>
-            <span className="text-white/30">·</span>
-            <span>{listing.googleRating.toFixed(1)} {t.venue.google}</span>
-            <span className="text-white/30">·</span>
             <span>{"$".repeat(listing.priceLevel)}</span>
             <span className="text-white/30">·</span>
             <span className={listing.openNow ? "text-emerald-300" : "text-white/50"}>{listing.openNow ? t.discover.openNow : t.discover.closed}</span>
-            <span className="text-white/30">·</span>
-            <span>{listing.walkMin} min</span>
           </div>
-          <p className="mt-2 flex items-start gap-1.5 text-[11px] text-white/55">
-            <MapPin className="mt-0.5 h-3 w-3 shrink-0" />
-            <span>Av. {listing.zone} 1248, {listing.zone}, MX</span>
-          </p>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {listing.vibes.map(v => (
               <span key={v} className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] text-white/85">#{v}</span>
@@ -1039,18 +1023,6 @@ function VenueDetail({ listing, tier, saved, onClose, onToggleSave, onReserve, o
             </button>
           )}
         </div>
-
-        {listing.welcomePerk && (
-          <div className="rounded-2xl border border-amber-300/30 bg-amber-300/10 p-3">
-            <div className="flex items-start gap-2">
-              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
-              <div>
-                <p className="text-xs font-semibold text-amber-100">{t.venue.welcome}: {listing.welcomePerk.label}</p>
-                <p className="text-[11px] text-amber-100/70">{t.venue.welcomeBanner}</p>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Community group perks */}
         {(unlockedCommunityPerks.length > 0 || lockedCommunityPerks.length > 0) && (
